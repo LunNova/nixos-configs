@@ -5,10 +5,9 @@
 
 {
   imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix")
+    [
+      (modulesPath + "/installer/scan/not-detected.nix")
     ];
-
-  services.xserver.videoDrivers = [ "nvidia" "amd" ];
 
   nixpkgs.config.allowUnfree = true;
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "usb_storage" "usbhid" "sd_mod" ];
@@ -17,12 +16,14 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-label/NIXROOT";
+    {
+      device = "/dev/disk/by-label/NIXROOT";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-label/NIXBOOT";
+    {
+      device = "/dev/disk/by-label/NIXBOOT";
       fsType = "vfat";
     };
 
@@ -35,10 +36,10 @@
   # high-resolution display
   # hardware.video.hidpi.enable = lib.mkDefault true;
 
-  systemd.network.links."10-en-wlan-0" = {
-    matchConfig.PermanentMACAddress = "e0:d4:64:8f:f4:03";
-    linkConfig.Name = "en-wlan-0";
-  };
+  #systemd.network.links."10-en-wlan-0" = {
+  #  matchConfig.PermanentMACAddress = "e0:d4:64:8f:f4:03";
+  #  linkConfig.Name = "en-wlan-0";
+  #};
 
   systemd.network.links."10-en-usb-0" = {
     matchConfig.PermanentMACAddress = "8c:ae:4c:dd:20:d8";

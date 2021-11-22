@@ -4,11 +4,28 @@
 
 { config, pkgs, ... }:
 
+let
+  nvidia = true;
+  nvidiaPrime = false;
+  kernelPackages = pkgs.linuxPackages_latest;
+  kernel = kernelPackages.kernel;
+  nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
+    export __NV_PRIME_RENDER_OFFLOAD=1
+    export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
+    export __GLX_VENDOR_LIBRARY_NAME=nvidia
+    export __VK_LAYER_NV_optimus=NVIDIA_only
+    exec -a "$0" "$@"
+  '';
+in
+
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
+
+  services.xserver.videoDrivers = if nvidia then [ "nvidia" ] else [ "amdgpu" ];
 
   fileSystems."/" = { options = [ "noatime" "nodiratime" ]; };
   services.fstrim = { enable = true; interval = "weekly"; };
@@ -22,14 +39,16 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelParams = [ "nowatchdog" "mitigations=off" ];
+  boot.kernelParams = [ "mitigations=off" ];
+  boot.blacklistedKernelModules = [ "nouveau" ];
 
   systemd.extraConfig = "DefaultTimeoutStopSec=10s";
 
   networking.hostName = "lun-laptop-1-nixos"; # Define your hostname.
-  # Not enabling wpa_supplicant as we use NetworkManager for wifi
-  #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  #networking.wireless.interfaces = [ "en-wlan-0" ];
+
+  networking.networkmanager.enable = true;
+  networking.networkmanager.wifi.backend = "iwd";
+  networking.resolvconf.dnsExtensionMechanism = false;
 
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";
@@ -38,28 +57,29 @@
   # Per-interface useDHCP will be mandatory in the future, so this generated config
   # replicates the default behaviour.
   networking.useDHCP = false;
-  networking.interfaces.en-usb-0.useDHCP = true;
+  #networking.interfaces.en-usb-0.useDHCP = true;
   #networking.interfaces.en-wlan-0.useDHCP = true;
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
-     font = "Lat2-Terminus16";
-     keyMap = "us";
+    font = "Lat2-Terminus16";
+    keyMap = "us";
   };
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
-
   # Enable the Plasma 5 Desktop Environment.
   services.xserver.displayManager.sddm.enable = true;
   services.xserver.desktopManager.plasma5.enable = true;
-  
+  #services.xserver.useGlamor = true;
+  #services.xserver.displayManager.sddm.settings.Wayland.SessionDir = "${pkgs.plasma5Packages.plasma-workspace}/share/wayland-sessions";
+  services.xserver.desktopManager.plasma5.runUsingSystemd = true;
+  services.xserver.displayManager.sessionPackages = [
+    (pkgs.plasma-workspace.overrideAttrs
+      (old: { passthru.providedSessions = [ "plasmawayland" ]; }))
+  ];
 
   # Configure keymap in X11
   services.xserver.layout = "us";
@@ -77,8 +97,6 @@
     enable = true;
     # Disable mouse accel
     mouse = { accelProfile = "flat"; };
-    # Disable touchpad accel
-    # touchpad = { accelProfile = "flat"; };
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -92,12 +110,53 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
     firefox
     nano
     kate
+    ripgrep
+    neovim
+    fd
+    (pkgs.lib.mkIf nvidiaPrime nvidia-offload)
   ];
+
+  hardware.nvidia = pkgs.lib.mkIf nvidiaPrime {
+    modesetting.enable = false;
+    #powerManagement.enable = true;
+    #powerManagement.finegrained = true;
+    #nvidiaPersistenced = true;
+    #package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
+    prime = {
+      amdgpuBusId = "PCI:4:0:0";
+      nvidiaBusId = "PCI:1:0:0";
+      offload.enable = true;
+      #sync.enable = true;  # Do all rendering on the dGPU
+    };
+  };
+
+  systemd.services.display-manager.after = pkgs.lib.mkIf nvidia [ "dev-dri-card0.device" "dev-dri-card1.device" ];
+  systemd.services.display-manager.wants = pkgs.lib.mkIf nvidia [ "dev-dri-card0.device" "dev-dri-card1.device" ];
+
+  # https://wiki.archlinux.org/title/NVIDIA/Troubleshooting#Xorg_fails_during_boot,_but_otherwise_starts_fine
+  services.udev.packages = pkgs.lib.mkIf nvidia [
+    (pkgs.writeTextFile {
+      name = "dri_device_udev";
+      text = ''
+        ACTION=="add", KERNEL=="card*", SUBSYSTEM=="drm", TAG+="systemd"
+      '';
+
+      destination = "/etc/udev/rules.d/99-systemd-dri-devices.rules";
+    })
+  ];
+  services.udev.extraRules = pkgs.lib.mkIf (!nvidia) ''
+    # Remove nVidia devices, when present.
+    # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{remove}="1"
+    #'';
+
+  hardware.opengl = {
+    enable = true;
+    driSupport32Bit = true;
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

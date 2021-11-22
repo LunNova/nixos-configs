@@ -19,7 +19,11 @@
   # changes in each release.
   home.stateVersion = "21.05";
 
-  home.packages = with pkgs; [ direnv ];
+  home.packages = with pkgs; [
+    direnv
+    discord
+    lutris
+  ];
 
   services.lorri.enable = true;
 
@@ -31,5 +35,9 @@
       rebase.autostash = true;
       init.defaultBranch = "main";
     };
+  };
+
+  programs.vscode = {
+    enable = true;
   };
 }
