@@ -120,6 +120,8 @@ in
     (pkgs.lib.mkIf nvidiaPrime nvidia-offload)
   ];
 
+  hardware.openrazer.enable = true;
+
   hardware.nvidia = pkgs.lib.mkIf nvidiaPrime {
     modesetting.enable = false;
     #powerManagement.enable = true;
