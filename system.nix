@@ -92,6 +92,8 @@ in
   sound.enable = true;
   hardware.pulseaudio.enable = true;
 
+  sconfig.scroll-boost = true; # modules/scroll-boost
+
   services.xserver.libinput = {
     # Enable touchpad/mouse
     enable = true;
@@ -104,7 +106,11 @@ in
     isNormalUser = true;
     # Change after install
     initialPassword = "nix-placeholder";
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [
+      "wheel" # Enable ‘sudo’ for the user.
+      "plugdev" # openrazer requires this
+      "docker"
+    ];
   };
 
   # List packages installed in system profile. To search, run:

@@ -7,7 +7,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixpkgs, home-manager, ... }:
+  outputs = { self, nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
@@ -31,7 +31,10 @@
       nixosConfigurations = {
         lun-laptop-1-nixos = lib.nixosSystem {
           inherit system;
-          modules = [ ./system.nix ];
+          modules = [
+            ./system.nix
+            ./modules/scroll-boost
+          ];
         };
       };
     };
