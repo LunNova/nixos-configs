@@ -23,6 +23,7 @@
     direnv
     discord
     lutris
+    ark
   ];
 
   services.lorri.enable = true;
