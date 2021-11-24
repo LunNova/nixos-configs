@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, mach-nix, ... }:
 
 let
   nvidia = true;
@@ -128,6 +128,7 @@ in
     neovim
     fd
     (pkgs.lib.mkIf nvidiaPrime nvidia-offload)
+    my.key-mapper
   ];
 
   hardware.openrazer.enable = true;
