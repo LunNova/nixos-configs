@@ -93,6 +93,7 @@ in
   hardware.pulseaudio.enable = true;
 
   sconfig.scroll-boost = true; # modules/scroll-boost
+  sconfig.yubikey = true; # modules/yubikey
 
   services.xserver.libinput = {
     # Enable touchpad/mouse

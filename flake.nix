@@ -34,6 +34,7 @@
           modules = [
             ./system.nix
             ./modules/scroll-boost
+            ./modules/yubikey
           ];
         };
       };
