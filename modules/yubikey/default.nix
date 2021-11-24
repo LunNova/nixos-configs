@@ -12,7 +12,7 @@ in
   config.environment.systemPackages = with pkgs; lib.mkIf cfg [
     yubikey-personalization
     yubikey-manager
-    yubikey-manager-gui
+    yubikey-manager-qt
     yubikey-personalization-gui
   ];
 }
