@@ -10,5 +10,6 @@ in
 
   config.services.udev.packages = mapper-pkg;
   config.services.dbus.packages = mapper-pkg;
+  config.systemd.packages = mapper-pkg;
   config.environment.systemPackages = mapper-pkg;
 }

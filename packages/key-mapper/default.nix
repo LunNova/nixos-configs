@@ -23,8 +23,9 @@ pkgs.python3Packages.buildPythonApplication rec {
   };
 
   patches = [ ];
+  # if debugging
+  # substituteInPlace keymapper/logger.py --replace "logger.setLevel(logging.INFO)"  "logger.setLevel(logging.DEBUG)"
   prePatch = ''
-    substituteInPlace keymapper/logger.py --replace "logger.setLevel(logging.INFO)"  "logger.setLevel(logging.DEBUG)"
     substituteInPlace keymapper/data.py --replace "/usr/share/key-mapper"  "$out/usr/share/key-mapper"
   '';
 
@@ -51,6 +52,9 @@ pkgs.python3Packages.buildPythonApplication rec {
 
   postInstall = ''
     sed -r "s#RUN\+\=\"/bin/key-mapper-control#RUN\+\=\"$out/bin/key-mapper-control#g" -i data/key-mapper.rules
+    sed -r "s#ExecStart\=/usr/bin/key-mapper-service#ExecStart\=$out/bin/key-mapper-service#g" -i data/key-mapper.service
+    sed -r "s#WantedBy\=default.target#WantedBy\=graphical.target#g" -i data/key-mapper.service
+
     install -D data/key-mapper.rules $out/etc/udev/rules.d/99-key-mapper.rules
     install -D data/key-mapper.service $out/lib/systemd/system/key-mapper.service
     install -D data/key-mapper.policy $out/share/polkit-1/actions/key-mapper.policy
