@@ -1,5 +1,4 @@
 { config, pkgs, ... }:
-
 {
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -24,6 +23,16 @@
     discord
     lutris
     ark
+    osu-lazer
+    glxinfo
+    vulkan-tools
+    wineWowPackages.fonts
+    wineWowPackages.staging
+    (lutris.override {
+      lutris-unwrapped = (lutris-unwrapped.override {
+        wine = wineWowPackages.staging;
+      });
+    })
   ];
 
   services.lorri.enable = true;
