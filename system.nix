@@ -112,6 +112,7 @@ in
     extraGroups = [
       "wheel" # Enable ‘sudo’ for the user.
       "plugdev" # openrazer requires this
+      "openrazer"
       "docker"
     ];
   };
