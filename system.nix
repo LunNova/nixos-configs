@@ -96,6 +96,7 @@ in
 
   sconfig.scroll-boost = true; # modules/scroll-boost
   sconfig.yubikey = true; # modules/yubikey
+  sconfig.key-mapper = true; # modules/key-mapper
 
   services.xserver.libinput = {
     # Enable touchpad/mouse
@@ -128,7 +129,6 @@ in
     neovim
     fd
     (pkgs.lib.mkIf nvidiaPrime nvidia-offload)
-    my.key-mapper
   ];
 
   hardware.openrazer.enable = true;

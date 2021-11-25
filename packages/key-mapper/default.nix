@@ -19,15 +19,45 @@ pkgs.python3Packages.buildPythonApplication rec {
     repo = "key-mapper";
     rev = version;
     sha256 = "07dgp4vays1w4chhd22vlp9bxc49lcgzkvmjqgbr00m3781yjsf7";
+    leaveDotGit = true; # install script uses commit hash
   };
 
   patches = [ ];
+  prePatch = ''
+    substituteInPlace keymapper/logger.py --replace "logger.setLevel(logging.INFO)"  "logger.setLevel(logging.DEBUG)"
+    substituteInPlace keymapper/data.py --replace "/usr/share/key-mapper"  "$out/usr/share/key-mapper"
+  '';
 
   doCheck = false; # fails atm as can't import modules when testing due to some sort of path issue
+  pythonImportsCheck = [
+    "evdev"
+    "keymapper"
+  ];
 
-  nativeBuildInputs = with pkgs; [ gettext gtk3 git glib gobject-introspection pkgs.xlibs.xmodmap ];
+  nativeBuildInputs = with pkgs; [
+    gettext gtk3 git glib gobject-introspection pkgs.xlibs.xmodmap
+    python3.pkgs.pygobject3
+  ];
 
-  buildInputs = with python3.pkgs; [ python3 pkgconfig pygobject3 evdev pydbus psutil pkgs.xlibs.xmodmap ] ++ nativeBuildInputs;
+  propagatedBuildInputs = with python3.pkgs; [
+    setuptools # needs pkg_resources
+    pygobject3
+    evdev
+    pkgconfig
+    pydbus
+    psutil
+    pkgs.xlibs.xmodmap
+  ];
+
+  postInstall = ''
+    sed -r "s#RUN\+\=\"/bin/key-mapper-control#RUN\+\=\"$out/bin/key-mapper-control#g" -i data/key-mapper.rules
+    install -D data/key-mapper.rules $out/etc/udev/rules.d/99-key-mapper.rules
+    install -D data/key-mapper.service $out/lib/systemd/system/key-mapper.service
+    install -D data/key-mapper.policy $out/share/polkit-1/actions/key-mapper.policy
+    install -D data/keymapper.Control.conf $out/etc/dbus-1/system.d/keymapper.Control.conf
+    install -D -t $out/usr/share/key-mapper/ data/*
+    install -m755 -D -t $out/bin/ bin/*
+  '';
 
   meta = {
     platforms = lib.platforms.unix;

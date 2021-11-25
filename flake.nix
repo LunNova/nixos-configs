@@ -51,6 +51,7 @@
             ./system.nix
             ./modules/scroll-boost
             ./modules/yubikey
+            ./modules/key-mapper
           ];
         };
       };
