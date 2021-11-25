@@ -73,6 +73,8 @@ in
   # Enable the Plasma 5 Desktop Environment.
   services.xserver.displayManager.sddm.enable = true;
   services.xserver.desktopManager.plasma5.enable = true;
+  # mouse accel off for kde - doesn't exist
+  #services.xserver.desktopManager.plasma5.kcminputrc.XLbInptAccelProfileFlat=true;
   #services.xserver.useGlamor = true;
   #services.xserver.displayManager.sddm.settings.Wayland.SessionDir = "${pkgs.plasma5Packages.plasma-workspace}/share/wayland-sessions";
   services.xserver.desktopManager.plasma5.runUsingSystemd = true;

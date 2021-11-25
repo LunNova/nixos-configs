@@ -41,4 +41,9 @@
   programs.vscode = {
     enable = true;
   };
+
+  xdg.configFile."kcminputrc".text = ''
+    [Mouse]
+    XLbInptAccelProfileFlat=true
+  '';
 }
