@@ -22,7 +22,7 @@ jobs:
     - run: nix flake show
     - run: nix flake check
     - run: >
-       nix-shell -p nixos-rebuild --run 'nix flake show --json | jq \'.nixosConfigurations | keys[] as $k | select(.[$k].type=="nixos-configuration") | $k\' -cr | xargs -tI{} nixos-rebuild build --flake .#{}'
+       nix-shell -p nixos-rebuild --run 'nix flake show --json | jq '\''.nixosConfigurations | keys[] as $k | select(.[$k].type=="nixos-configuration") | $k'\'' -cr | xargs -tI{} nixos-rebuild build --flake .#{}'
     - run: >
        nix flake show --json | jq '[leaf_paths as $path | select(getpath($path) == "derivation") | {"key": $path | join(".") | sub(".type";""), "value": getpath($path)}] | from_entries | keys|.[]' -cr | xargs -I{} nix build .#{}
     - run: echo Done
