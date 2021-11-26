@@ -25,7 +25,14 @@ pkgs.python3Packages.buildPythonApplication rec {
     "keymapper"
   ];
 
+  # Nixpkgs 15.9.4.3. When using wrapGAppsHook with special derivers you can end up with double wrapped binaries.
+  dontWrapGApps = true;
+  preFixup = ''
+    makeWrapperArgs+=("''${gappsWrapperArgs[@]}")
+  '';
+
   nativeBuildInputs = with pkgs; [
+    wrapGAppsHook
     gettext gtk3 git glib gobject-introspection pkgs.xlibs.xmodmap
     python3.pkgs.pygobject3
   ];
