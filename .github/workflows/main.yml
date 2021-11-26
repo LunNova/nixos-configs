@@ -3,8 +3,10 @@ name: "Test"
 permissions:
   contents: read
 on:
-  pull_request:
   push:
+    branches:
+      - main
+  pull_request:
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -16,7 +18,7 @@ jobs:
     - uses: cachix/cachix-action@v10
       with:
         name: mycache
-    - run: nix build .#
+    - run: nixos-rebuild build .#
     - run: >
        nix flake show --json | jq '[leaf_paths as $path | select(getpath($path) == "derivation") | {"key": $path | join(".") | sub(".type";""), "value": getpath($path)}] | from_entries | keys|.[]' -cr | xargs -I{} nix build .#{}
     - run: echo Done
