@@ -1,0 +1,22 @@
+# https://nixos.org/guides/continuous-integration-github-actions.html
+name: "Test"
+permissions:
+  contents: read
+on:
+  pull_request:
+  push:
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.3.4
+    - uses: cachix/install-nix-action@v13
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+    - uses: cachix/cachix-action@v9
+      with:
+        name: mycache
+    - run: nix build .#
+    - run: >
+       nix flake show --json | jq '[leaf_paths as $path | select(getpath($path) == "derivation") | {"key": $path | join(".") | sub(".type";""), "value": getpath($path)}] | from_entries | keys|.[]' -cr | xargs -I{} nix build .#{}
+    - run: echo Done
