@@ -1,0 +1,33 @@
+# https://nixos.org/guides/continuous-integration-github-actions.html
+name: "Test"
+permissions:
+  contents: read
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.3.4
+    - uses: cachix/install-nix-action@v16
+      with:
+        install_url: https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.5pre20211026_5667822/install
+        extra_nix_config: |
+          experimental-features = nix-command flakes
+    - uses: cachix/cachix-action@v10
+      with:
+        name: nix-community
+    - run: nix-channel --add https://nixos.org/channels/nixpkgs-unstable
+    - run: nix-channel --add https://nixos.org/channels/nixos-unstable
+    - run: nix-channel --update
+    - run: nix flake metadata
+    - run: nix flake show
+    - run: nix flake check
+    - run: >
+       nix-shell -p nixos-rebuild --run 'nix flake show --json | jq '\''.nixosConfigurations | keys[] as $k | select(.[$k].type=="nixos-configuration") | $k'\'' -cr | xargs -tI{} nixos-rebuild build --flake .#{}'
+    - run: >
+       nix flake show --json | jq '[leaf_paths as $path | select(getpath($path) == "derivation") | {"key": $path | join(".") | sub(".type";""), "value": getpath($path)}] | from_entries | keys|.[]' -cr | xargs -I{} nix build .#{}
+    - run: echo Done
