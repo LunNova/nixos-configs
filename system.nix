@@ -96,6 +96,7 @@ in
 
   sconfig.scroll-boost = true; # modules/scroll-boost
   sconfig.yubikey = true; # modules/yubikey
+  sconfig.key-mapper = true; # modules/key-mapper
 
   services.xserver.libinput = {
     # Enable touchpad/mouse
