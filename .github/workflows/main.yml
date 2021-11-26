@@ -18,7 +18,7 @@ jobs:
     - uses: cachix/cachix-action@v10
       with:
         name: mycache
-    - run: nix flake ,etadata
+    - run: nix flake metadata
     - run: nix flake show
     - run: nix flake check
     - run: >
