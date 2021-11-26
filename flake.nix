@@ -5,14 +5,9 @@
     nixpkgs.url = "nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    pypi-deps-db.url = "github:DavHau/pypi-deps-db";
-    pypi-deps-db.flake = false;
-    mach-nix.url = "github:DavHau/mach-nix/3.3.0";
-    mach-nix.inputs.nixpkgs.follows = "nixpkgs";
-    mach-nix.inputs.pypi-deps-db.follows = "pypi-deps-db";
   };
 
-  outputs = { self, nixpkgs, mach-nix, home-manager, ... }:
+  outputs = { self, nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";
       mkPkgs = pkgs: extraOverlays:
@@ -26,7 +21,7 @@
     in
     {
       # = mapModules ./packages (p: pkgs.callPackage p { });
-      packages."${system}".key-mapper = pkgs.callPackage packages/key-mapper { mach-nix = mach-nix.lib.${system}; };
+      packages."${system}".key-mapper = pkgs.callPackage packages/key-mapper { };
 
       overlay = final: prev: {
         my = self.packages."${system}";

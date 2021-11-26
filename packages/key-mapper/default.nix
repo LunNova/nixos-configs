@@ -1,14 +1,4 @@
-{ lib, mach-nix, python3, pkgs, pkgconfig }:
-
-# TODO: a mess, files get put directly in /usr/ and /etc and so on by the install script
-# https://github.com/sezanzeb/key-mapper/blob/70bc804f15c3539c87add5dff7a2082b7358396e/setup.py#L110-L124
-
-# mach-nix.buildPythonApplication {
-#   src = builtins.fetchTarball { url = "https://github.com/sezanzeb/key-mapper/tarball/2803bb841e19232ec08c57bdfca66d0535131dab"; sha256 = "07dgp4vays1w4chhd22vlp9bxc49lcgzkvmjqgbr00m3781yjsf7"; };
-
-#   nativeBuildInputs = with pkgs; [ gettext ];
-#   #_.key-mapper.nativeBuildInputs.add = with mach-nix.nixpkgs; [ gettext ];
-# }
+{ lib, python3, pkgs, pkgconfig }:
 
 pkgs.python3Packages.buildPythonApplication rec {
   pname = "key-mapper";
@@ -55,6 +45,7 @@ pkgs.python3Packages.buildPythonApplication rec {
     sed -r "s#ExecStart\=/usr/bin/key-mapper-service#ExecStart\=$out/bin/key-mapper-service#g" -i data/key-mapper.service
     sed -r "s#WantedBy\=default.target#WantedBy\=graphical.target#g" -i data/key-mapper.service
 
+    install -D -t $out/share/applications/ data/*.desktop
     install -D data/key-mapper.rules $out/etc/udev/rules.d/99-key-mapper.rules
     install -D data/key-mapper.service $out/lib/systemd/system/key-mapper.service
     install -D data/key-mapper.policy $out/share/polkit-1/actions/key-mapper.policy
