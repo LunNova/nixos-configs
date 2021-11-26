@@ -20,6 +20,9 @@ jobs:
     - uses: cachix/cachix-action@v10
       with:
         name: nix-community
+    - run: nix-channel --add https://nixos.org/channels/nixpkgs-unstable
+    - run: nix-channel --add https://nixos.org/channels/nixos-unstable
+    - run: nix-channel --update
     - run: nix flake metadata
     - run: nix flake show
     - run: nix flake check
