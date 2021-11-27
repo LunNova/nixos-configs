@@ -83,6 +83,9 @@ in
       (old: { passthru.providedSessions = [ "plasmawayland" ]; }))
   ];
 
+  # Used to set power profiles, should have support in asus-wmi https://asus-linux.org/blog/updates-2021-07-16/
+  services.power-profiles-daemon.enable = true;
+
   # Configure keymap in X11
   services.xserver.layout = "us";
   # services.xserver.xkbOptions = "eurosign:e";
