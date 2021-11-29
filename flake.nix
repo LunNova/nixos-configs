@@ -47,6 +47,7 @@
             ./modules/scroll-boost
             ./modules/yubikey
             ./modules/key-mapper
+            ./modules/amd-nvidia-laptop
           ];
         };
       };

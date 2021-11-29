@@ -1,4 +1,4 @@
-{ config, lib, pkgs,  ... }:
+{ config, lib, pkgs, ... }:
 let
   cfg = config.sconfig.key-mapper;
   mapper-pkg = with pkgs; lib.mkIf cfg [

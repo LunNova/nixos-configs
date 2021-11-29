@@ -25,6 +25,12 @@ in
       ./hardware-configuration.nix
     ];
 
+  services.xserver.videoDrivers = lib.mkDefault [ "amdgpu" ];
+
+  specialisations.nvidia.configuration = {
+    sconfig.amd-nvidia-laptop.enable = true;
+  };
+
   services.xserver.videoDrivers = if nvidia then [ "nvidia" ] else [ "amdgpu" ];
 
   fileSystems."/" = { options = [ "noatime" "nodiratime" ]; };
