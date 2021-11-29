@@ -34,7 +34,12 @@ pkgs.python3Packages.buildPythonApplication rec {
 
   nativeBuildInputs = with pkgs; [
     wrapGAppsHook
-    gettext gtk3 git glib gobject-introspection pkgs.xlibs.xmodmap
+    gettext
+    gtk3
+    git
+    glib
+    gobject-introspection
+    pkgs.xlibs.xmodmap
     python3.pkgs.pygobject3
   ];
 
