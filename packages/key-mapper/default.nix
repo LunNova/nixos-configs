@@ -9,6 +9,7 @@ pkgs.python3Packages.buildPythonApplication rec {
     repo = "key-mapper";
     rev = version;
     sha256 = "07dgp4vays1w4chhd22vlp9bxc49lcgzkvmjqgbr00m3781yjsf7";
+    # TODO remove this due to "leaveDotGit = true is still not completely deterministic" https://github.com/NixOS/nixpkgs/issues/8567
     leaveDotGit = true; # install script uses commit hash
   };
 
