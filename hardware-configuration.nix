@@ -10,6 +10,7 @@
     ];
 
   nixpkgs.config.allowUnfree = true;
+  hardware.cpu.amd.updateMicrocode = true; # OR hardware.cpu.intel.updateMicrocode = true;
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "usb_storage" "usbhid" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
