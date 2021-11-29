@@ -5,7 +5,7 @@ pkgs.python3Packages.buildPythonApplication rec {
   version = "1.2.1";
 
   src = pkgs.fetchFromGitHub {
-    owner = "sezanzeb/key-mapper";
+    owner = "sezanzeb";
     repo = "key-mapper";
     rev = version;
     sha256 = "07dgp4vays1w4chhd22vlp9bxc49lcgzkvmjqgbr00m3781yjsf7";
