@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, inputs, self, ... }:
 {
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -42,8 +42,10 @@
     userName = "Luna Nova";
     userEmail = "git@nyx.nova.fail";
     extraConfig = {
-      rebase.autostash = true;
+      diff.colorMoved = "zebra";
+      fetch.prune = true;
       init.defaultBranch = "main";
+      rebase.autostash = true;
     };
   };
 

@@ -2,20 +2,11 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
-  nvidia = true;
-  nvidiaPrime = false;
   kernelPackages = pkgs.linuxPackages_latest;
   kernel = kernelPackages.kernel;
-  nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
-    export __NV_PRIME_RENDER_OFFLOAD=1
-    export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
-    export __GLX_VENDOR_LIBRARY_NAME=nvidia
-    export __VK_LAYER_NV_optimus=NVIDIA_only
-    exec -a "$0" "$@"
-  '';
 in
 
 {
@@ -27,11 +18,56 @@ in
 
   services.xserver.videoDrivers = lib.mkDefault [ "amdgpu" ];
 
-  specialisations.nvidia.configuration = {
+  # remove nvidia devices if not using nvidia config
+  services.udev.extraRules = pkgs.lib.mkIf (!config.sconfig.amd-nvidia-laptop.enable) ''
+    # Remove nVidia devices, when present.
+    # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{remove}="1"
+    #'';
+
+  specialisation.nvidia.configuration = {
     sconfig.amd-nvidia-laptop.enable = true;
   };
 
-  services.xserver.videoDrivers = if nvidia then [ "nvidia" ] else [ "amdgpu" ];
+  specialisation.wayland-test.configuration = {
+    services.xserver.videoDrivers = lib.mkForce [ "nvidia" "amdgpu" ];
+
+    # boot.kernelParams = [ "nvidia-drm.modeset=1" ];
+    hardware.nvidia.modesetting.enable = true;
+
+    services.xserver.displayManager.gdm.enable = true;
+    services.xserver.displayManager.gdm.wayland = true;
+    services.xserver.displayManager.gdm.nvidiaWayland = true;
+
+    services.xserver.desktopManager.gnome.enable = true;
+    services.xserver.desktopManager.xfce.enable = true;
+    services.xserver.displayManager.sddm.enable = lib.mkForce false;
+    # https://github.com/NixOS/nixpkgs/issues/75867
+    programs.ssh.askPassword = pkgs.lib.mkForce "${pkgs.gnome.seahorse.out}/libexec/seahorse/ssh-askpass";
+
+    #services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
+
+    environment.systemPackages = with pkgs; [
+      greetd.tuigreet
+    ];
+
+    qt5.enable = true;
+    qt5.platformTheme = "gtk2";
+    qt5.style = "gtk2";
+
+    services.dbus.packages = with pkgs; [ gnome3.dconf ];
+    programs.light.enable = true;
+    programs.sway.enable = true;
+
+    services.greetd = {
+      enable = true;
+      settings = {
+        default_session = {
+          command = "${lib.makeBinPath [pkgs.greetd.tuigreet] }/tuigreet --time --cmd sway";
+          user = "greeter";
+        };
+      };
+    };
+  };
 
   fileSystems."/" = { options = [ "noatime" "nodiratime" ]; };
   services.fstrim = { enable = true; interval = "weekly"; };
@@ -137,30 +173,20 @@ in
     ripgrep
     neovim
     fd
-    (pkgs.lib.mkIf nvidiaPrime nvidia-offload)
   ];
 
   hardware.openrazer.enable = true;
 
-  hardware.nvidia = pkgs.lib.mkIf nvidiaPrime {
-    modesetting.enable = false;
-    #powerManagement.enable = true;
-    #powerManagement.finegrained = true;
-    #nvidiaPersistenced = true;
-    #package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
-    prime = {
-      amdgpuBusId = "PCI:4:0:0";
-      nvidiaBusId = "PCI:1:0:0";
-      offload.enable = true;
-      #sync.enable = true;  # Do all rendering on the dGPU
-    };
+  hardware.opengl = {
+    enable = true;
+    driSupport32Bit = true;
   };
 
-  systemd.services.display-manager.after = pkgs.lib.mkIf nvidia [ "dev-dri-card0.device" "dev-dri-card1.device" ];
-  systemd.services.display-manager.wants = pkgs.lib.mkIf nvidia [ "dev-dri-card0.device" "dev-dri-card1.device" ];
-
   # https://wiki.archlinux.org/title/NVIDIA/Troubleshooting#Xorg_fails_during_boot,_but_otherwise_starts_fine
-  services.udev.packages = pkgs.lib.mkIf nvidia [
+  # TODO: no way to make this a glob?
+  systemd.services.display-manager.after = [ "dev-dri-card0.device" "dev-dri-card1.device" "dev-dri-card2.device" ];
+  systemd.services.display-manager.wants = [ "dev-dri-card0.device" "dev-dri-card1.device" "dev-dri-card2.device" ];
+  services.udev.packages = [
     (pkgs.writeTextFile {
       name = "dri_device_udev";
       text = ''
@@ -170,15 +196,6 @@ in
       destination = "/etc/udev/rules.d/99-systemd-dri-devices.rules";
     })
   ];
-  services.udev.extraRules = pkgs.lib.mkIf (!nvidia) ''
-    # Remove nVidia devices, when present.
-    # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{remove}="1"
-    #'';
-
-  hardware.opengl = {
-    enable = true;
-    driSupport32Bit = true;
-  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
