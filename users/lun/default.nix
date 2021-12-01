@@ -57,4 +57,6 @@
     [Mouse]
     XLbInptAccelProfileFlat=true
   '';
+
+  imports = [ ./fish.nix ];
 }
