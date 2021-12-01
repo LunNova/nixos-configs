@@ -153,6 +153,7 @@ in
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.lun = {
     isNormalUser = true;
+    shell = pkgs.fish;
     # Change after install
     initialPassword = "nix-placeholder";
     extraGroups = [
@@ -163,9 +164,15 @@ in
     ];
   };
 
+  programs.zsh.enable = true;
+  programs.fish.enable = true;
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    bash
+    zsh
+    fish
     wget
     firefox
     nano
@@ -183,9 +190,9 @@ in
   };
 
   # https://wiki.archlinux.org/title/NVIDIA/Troubleshooting#Xorg_fails_during_boot,_but_otherwise_starts_fine
-  # TODO: no way to make this a glob?
-  systemd.services.display-manager.after = [ "dev-dri-card0.device" "dev-dri-card1.device" "dev-dri-card2.device" ];
-  systemd.services.display-manager.wants = [ "dev-dri-card0.device" "dev-dri-card1.device" "dev-dri-card2.device" ];
+  # TODO: no way to make this a glob? should match number of GPUs
+  systemd.services.display-manager.after = [ "dev-dri-card0.device" "dev-dri-card1.device" ];
+  systemd.services.display-manager.wants = [ "dev-dri-card0.device" "dev-dri-card1.device" ];
   services.udev.packages = [
     (pkgs.writeTextFile {
       name = "dri_device_udev";
