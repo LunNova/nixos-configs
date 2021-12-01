@@ -1,5 +1,5 @@
-#! /usr/bin/env nix-shell
-#! nix-shell -i bash -p bash nixpkgs-fmt
+#!/bin/sh
 set -xeuo pipefail
 
-nixpkgs-fmt .
+# nixpkgs/nixos-21.11
+nix run nixpkgs/96b4157790fc96e70d6e6c115e3f34bba7be490f#nixpkgs-fmt .
