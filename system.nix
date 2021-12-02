@@ -28,46 +28,98 @@ in
     sconfig.amd-nvidia-laptop.enable = true;
   };
 
-  specialisation.wayland-test.configuration = {
-    services.xserver.videoDrivers = lib.mkForce [ "nvidia" "amdgpu" ];
+  specialisation.wayland-test.configuration =
+    let
+      # https://github.com/cole-mickens/nixcfg/blob/main/mixins/nvidia.nix
+      waylandEnv = { WLR_NO_HARDWARE_CURSORS = "1"; };
+      nvidia-wlroots-overlay = (final: prev: {
+        wlroots = prev.wlroots.overrideAttrs (old: {
+          # HACK: https://forums.developer.nvidia.com/t/nvidia-495-does-not-advertise-ar24-xr24-as-shm-formats-as-required-by-wayland-wlroots/194651
+          postPatch = ''
+            sed -i 's/assert(argb8888 &&/assert(true || argb8888 ||/g' 'render/wlr_renderer.c'
+          '';
+        });
+      });
+      prime-run = pkgs.writeShellScriptBin "prime-run" ''
+        export __NV_PRIME_RENDER_OFFLOAD=1
+        export __GLX_VENDOR_LIBRARY_NAME=nvidia
+        export __VK_LAYER_NV_optimus=NVIDIA_only
+        exec -a "$0" "$@"
+      '';
+    in
+    {
+      services.xserver.videoDrivers = lib.mkForce [ "nvidia" "amdgpu" ];
 
-    # boot.kernelParams = [ "nvidia-drm.modeset=1" ];
-    hardware.nvidia.modesetting.enable = true;
+      environment.systemPackages = with pkgs; [
+        prime-run
+        glxinfo
+      ];
 
-    services.xserver.displayManager.gdm.enable = true;
-    services.xserver.displayManager.gdm.wayland = true;
-    services.xserver.displayManager.gdm.nvidiaWayland = true;
+      nixpkgs.overlays = [ nvidia-wlroots-overlay ];
 
-    services.xserver.desktopManager.gnome.enable = true;
-    services.xserver.desktopManager.xfce.enable = true;
-    services.xserver.displayManager.sddm.enable = lib.mkForce false;
-    # https://github.com/NixOS/nixpkgs/issues/75867
-    programs.ssh.askPassword = pkgs.lib.mkForce "${pkgs.gnome.seahorse.out}/libexec/seahorse/ssh-askpass";
+      environment.variables = waylandEnv;
+      environment.sessionVariables = waylandEnv;
 
-    #services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
+      hardware.nvidia.modesetting.enable = true;
 
-    environment.systemPackages = with pkgs; [
-      greetd.tuigreet
-    ];
+      services.xserver.autorun = false;
+      services.xserver.displayManager.gdm.enable = true;
+      services.xserver.displayManager.gdm.wayland = true;
+      services.xserver.displayManager.gdm.nvidiaWayland = true;
 
-    qt5.enable = true;
-    qt5.platformTheme = "gtk2";
-    qt5.style = "gtk2";
+      services.xserver.desktopManager.gnome.enable = true;
+      services.xserver.desktopManager.xfce.enable = true;
+      services.xserver.displayManager.sddm.enable = lib.mkForce false;
+      # https://github.com/NixOS/nixpkgs/issues/75867
+      programs.ssh.askPassword = pkgs.lib.mkForce "${pkgs.gnome.seahorse.out}/libexec/seahorse/ssh-askpass";
 
-    services.dbus.packages = with pkgs; [ gnome3.dconf ];
-    programs.light.enable = true;
-    programs.sway.enable = true;
+      #services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
 
-    services.greetd = {
-      enable = true;
-      settings = {
-        default_session = {
-          command = "${lib.makeBinPath [pkgs.greetd.tuigreet] }/tuigreet --time --cmd sway";
-          user = "greeter";
-        };
+      # environment.systemPackages = with pkgs; [
+      #   greetd.tuigreet
+      # ];
+
+      qt5.enable = true;
+      qt5.platformTheme = "gtk2";
+      qt5.style = "gtk2";
+
+      services.dbus.packages = with pkgs; [ gnome3.dconf ];
+      programs.light.enable = true;
+      programs.sway = {
+        enable = true;
+        wrapperFeatures.gtk = true; # so that gtk works properly
+        extraPackages = with pkgs; [
+          swaylock
+          swayidle
+          wl-clipboard
+          mako # notification daemon
+          alacritty # Alacritty is the default terminal in the config
+          dmenu # Dmenu is the default in the config but i recommend wofi since its wayland native
+          kanshi # sway monitor settings / autorandr equivalent? https://github.com/RaitoBezarius/nixos-x230/blob/764d2237ab59ded81492b6c76bc29da027e9fdb3/sway.nix example using it
+        ];
       };
+
+      hardware.opengl = {
+        extraPackages = [
+          pkgs.amdvlk
+          pkgs.mesa.drivers
+        ];
+        extraPackages32 = [
+          pkgs.driversi686Linux.amdvlk
+          pkgs.pkgsi686Linux.mesa.drivers
+        ];
+      };
+
+      # services.greetd = {
+      #   enable = true;
+      #   settings = {
+      #     default_session = {
+      #       command = "${lib.makeBinPath [pkgs.greetd.tuigreet] }/tuigreet --time --cmd sway";
+      #       user = "greeter";
+      #     };
+      #   };
+      # };
     };
-  };
 
   fileSystems."/" = { options = [ "noatime" "nodiratime" ]; };
   services.fstrim = { enable = true; interval = "weekly"; };
@@ -186,6 +238,7 @@ in
 
   hardware.opengl = {
     enable = true;
+    driSupport = true;
     driSupport32Bit = true;
   };
 
