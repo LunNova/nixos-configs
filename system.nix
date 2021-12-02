@@ -221,6 +221,9 @@ in
 
   programs.zsh.enable = true;
   programs.fish.enable = true;
+  programs.neovim.enable = true;
+  programs.neovim.viAlias = true;
+  programs.neovim.vimAlias = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
