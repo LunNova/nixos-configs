@@ -28,6 +28,9 @@ in
     sconfig.amd-nvidia-laptop.enable = true;
   };
 
+  # Don't clear console when getty starts
+  services.getty.extraArgs = [ "--noclear" ];
+
   specialisation.wayland-test.configuration =
     let
       # https://github.com/cole-mickens/nixcfg/blob/main/mixins/nvidia.nix
