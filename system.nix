@@ -29,7 +29,10 @@ in
   };
 
   # Don't clear console when getty starts
-  services.getty.extraArgs = [ "--noclear" ];
+  services.getty.extraArgs = [
+    "--noclear"
+    "--long-hostname"
+  ];
 
   specialisation.wayland-test.configuration =
     let
