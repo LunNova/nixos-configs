@@ -185,6 +185,9 @@ in
 
   # Used to set power profiles, should have support in asus-wmi https://asus-linux.org/blog/updates-2021-07-16/
   services.power-profiles-daemon.enable = true;
+  # Zephyrus G14: without it get 2h battery life idle, with like 6h idle
+  # runs powertop --auto-tune at boot
+  powerManagement.powertop.enable = true;
 
   # Configure keymap in X11
   services.xserver.layout = "us";
