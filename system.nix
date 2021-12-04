@@ -28,16 +28,10 @@ in
     sconfig.amd-nvidia-laptop.enable = true;
   };
 
-  # Don't clear console when getty starts
-  services.getty.extraArgs = [
-    "--noclear"
-    "--long-hostname"
-  ];
-
   # Persist console when getty starts
   systemd.services."getty@".serviceConfig.TTYVTDisallocate = "no";
   # Disable getty on tty1 (no login prompt)
-  systemd.units."getty@tty1".enable = false;
+  systemd.units."getty@tty1.service".enable = false;
   # Log to tty1
   services.journald.console = "/dev/tty1";
   services.syslogd.tty = "/dev/tty1";
