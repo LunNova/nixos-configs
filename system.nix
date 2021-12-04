@@ -206,6 +206,19 @@ in
   sound.enable = true;
   hardware.pulseaudio.enable = true;
 
+  specialisation.pipewire.configuration = {
+    sound.enable = lib.mkForce false;
+    hardware.pulseaudio.enable = lib.mkForce false;
+
+    security.rtkit.enable = true;
+    services.pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+    };
+  };
+
   sconfig.scroll-boost = true; # modules/scroll-boost
   sconfig.yubikey = true; # modules/yubikey
   sconfig.key-mapper = true; # modules/key-mapper
@@ -228,6 +241,8 @@ in
       "plugdev" # openrazer requires this
       "openrazer"
       "docker"
+      "video"
+      "audio"
     ];
   };
 
