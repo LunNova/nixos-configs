@@ -34,6 +34,8 @@ in
     "--long-hostname"
   ];
 
+  systemd.services."getty@".serviceConfig.TTYVTDisallocate = "no";
+
   specialisation.wayland-test.configuration =
     let
       # https://github.com/cole-mickens/nixcfg/blob/main/mixins/nvidia.nix
