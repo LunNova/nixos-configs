@@ -46,6 +46,7 @@
       fetch.prune = true;
       init.defaultBranch = "main";
       rebase.autostash = true;
+      pull.rebase = true;
     };
   };
 
