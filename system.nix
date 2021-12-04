@@ -140,6 +140,8 @@ in
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelParams = [ "mitigations=off" ];
+  # allow all sysrq keys again - frequently have trouble and need to force sync/unmount/reboot when doing stuff with nvidia
+  boot.kernel.sysctl."kernel.sysrq" = 1;
   boot.blacklistedKernelModules = [ "nouveau" ];
 
   systemd.extraConfig = "DefaultTimeoutStopSec=10s";
