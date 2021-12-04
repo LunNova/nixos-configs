@@ -157,6 +157,9 @@ in
   networking.networkmanager.wifi.backend = "iwd";
   networking.resolvconf.dnsExtensionMechanism = false;
 
+  services.avahi.enable = true;
+  services.avahi.nssmdns = true;
+
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";
 
