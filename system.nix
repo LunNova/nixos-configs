@@ -82,6 +82,11 @@ in
       programs.ssh.askPassword = pkgs.lib.mkForce "${pkgs.gnome.seahorse.out}/libexec/seahorse/ssh-askpass";
 
       #services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
+      services.xserver.displayManager.sessionPackages = [
+        (pkgs.plasma-workspace.overrideAttrs
+          (old: { passthru.providedSessions = [ "plasmawayland" ]; }))
+      ];
+
 
       # environment.systemPackages = with pkgs; [
       #   greetd.tuigreet
@@ -182,10 +187,6 @@ in
   #services.xserver.useGlamor = true;
   #services.xserver.displayManager.sddm.settings.Wayland.SessionDir = "${pkgs.plasma5Packages.plasma-workspace}/share/wayland-sessions";
   services.xserver.desktopManager.plasma5.runUsingSystemd = true;
-  services.xserver.displayManager.sessionPackages = [
-    (pkgs.plasma-workspace.overrideAttrs
-      (old: { passthru.providedSessions = [ "plasmawayland" ]; }))
-  ];
 
   # Used to set power profiles, should have support in asus-wmi https://asus-linux.org/blog/updates-2021-07-16/
   services.power-profiles-daemon.enable = true;
