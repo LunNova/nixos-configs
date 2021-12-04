@@ -1,5 +1,6 @@
 { lib, python3, pkgs, pkgconfig }:
 
+let rev = "2803bb841e19232ec08c57bdfca66d0535131dab"; in
 pkgs.python3Packages.buildPythonApplication rec {
   pname = "key-mapper";
   version = "1.2.1";
@@ -7,16 +8,15 @@ pkgs.python3Packages.buildPythonApplication rec {
   src = pkgs.fetchFromGitHub {
     owner = "sezanzeb";
     repo = "key-mapper";
-    rev = version;
+    rev = rev;
     sha256 = "07dgp4vays1w4chhd22vlp9bxc49lcgzkvmjqgbr00m3781yjsf7";
-    # TODO remove this due to "leaveDotGit = true is still not completely deterministic" https://github.com/NixOS/nixpkgs/issues/8567
-    leaveDotGit = true; # install script uses commit hash
   };
 
   patches = [ ];
   # if debugging
   # substituteInPlace keymapper/logger.py --replace "logger.setLevel(logging.INFO)"  "logger.setLevel(logging.DEBUG)"
   prePatch = ''
+    echo "COMMIT_HASH = '${rev}'" > keymapper/commit_hash.py
     substituteInPlace keymapper/data.py --replace "/usr/share/key-mapper"  "$out/usr/share/key-mapper"
   '';
 
