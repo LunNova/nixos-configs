@@ -34,7 +34,13 @@ in
     "--long-hostname"
   ];
 
+  # Persist console when getty starts
   systemd.services."getty@".serviceConfig.TTYVTDisallocate = "no";
+  # Disable getty on tty1 (no login prompt)
+  systemd.units."getty@tty1".enable = false;
+  # Log to tty1
+  services.journald.console = "/dev/tty1";
+  services.syslogd.tty = "/dev/tty1";
 
   specialisation.wayland-test.configuration =
     let
@@ -257,21 +263,6 @@ in
     driSupport = true;
     driSupport32Bit = true;
   };
-
-  # https://wiki.archlinux.org/title/NVIDIA/Troubleshooting#Xorg_fails_during_boot,_but_otherwise_starts_fine
-  # TODO: no way to make this a glob? should match number of GPUs
-  systemd.services.display-manager.after = [ "dev-dri-card0.device" "dev-dri-card1.device" ];
-  systemd.services.display-manager.wants = [ "dev-dri-card0.device" "dev-dri-card1.device" ];
-  services.udev.packages = [
-    (pkgs.writeTextFile {
-      name = "dri_device_udev";
-      text = ''
-        ACTION=="add", KERNEL=="card*", SUBSYSTEM=="drm", TAG+="systemd"
-      '';
-
-      destination = "/etc/udev/rules.d/99-systemd-dri-devices.rules";
-    })
-  ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
