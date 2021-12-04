@@ -59,5 +59,15 @@
     XLbInptAccelProfileFlat=true
   '';
 
+  home.file.
+  ".mozilla/native-messaging-hosts/fx_cast_bridge.json".source =
+    let patched_fx_cast_bridge = pkgs.fx_cast_bridge.overrideAttrs (oldAttrs: {
+      prePatch = ''
+        substituteInPlace app/src/bridge/components/discovery.ts --replace "\"DNSServiceGetAddrInfo\" in mdns.dns_sd" "(!mdns.isAvahi && \"DNSServiceGetAddrInfo\" in mdns.dns_sd)"
+      '';
+    });
+    in
+    "${patched_fx_cast_bridge}/lib/mozilla/native-messaging-hosts/fx_cast_bridge.json";
+
   imports = [ ./fish.nix ];
 }
