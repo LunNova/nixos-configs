@@ -21,6 +21,21 @@ in
   config = lib.mkIf cfg.enable {
     services.xserver.videoDrivers = [ "nvidia" ];
 
+    # https://wiki.archlinux.org/title/NVIDIA/Troubleshooting#Xorg_fails_during_boot,_but_otherwise_starts_fine
+    # TODO: no way to make this a glob? should match number of GPUs
+    systemd.services.display-manager.after = [ "dev-dri-card0.device" "dev-dri-card1.device" ];
+    systemd.services.display-manager.wants = [ "dev-dri-card0.device" "dev-dri-card1.device" ];
+    services.udev.packages = [
+      (pkgs.writeTextFile {
+        name = "dri_device_udev";
+        text = ''
+          ACTION=="add", KERNEL=="card*", SUBSYSTEM=="drm", TAG+="systemd"
+        '';
+
+        destination = "/etc/udev/rules.d/99-systemd-dri-devices.rules";
+      })
+    ];
+
     environment.systemPackages = [ (lib.mkIf cfg.prime nvidia-offload) ];
     hardware.nvidia = lib.mkIf cfg.prime {
       modesetting.enable = false;
