@@ -31,9 +31,10 @@
         "type": "github"
       },
       "original": {
-        "id": "nixpkgs",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
         "rev": "6752dcd0a143eb4a3340d3bc055f49ea03f649d3",
-        "type": "indirect"
+        "type": "github"
       }
     },
     "root": {
