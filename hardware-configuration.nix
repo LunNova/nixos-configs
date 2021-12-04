@@ -34,8 +34,8 @@
     }
   ];
 
-  # high-resolution display
-  # hardware.video.hidpi.enable = lib.mkDefault true;
+  # high-resolution display (was autodetected but wrong, have good eyesight and like more screen real estate)
+  hardware.video.hidpi.enable = false;
 
   #systemd.network.links."10-en-wlan-0" = {
   #  matchConfig.PermanentMACAddress = "e0:d4:64:8f:f4:03";
