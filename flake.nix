@@ -18,6 +18,7 @@
         };
       pkgs = mkPkgs nixpkgs [ self.overlay ];
       lib = nixpkgs.lib;
+      readModules = path: builtins.map (x: path + "/${x}") (builtins.attrNames (builtins.readDir path));
     in
     {
       packages."${system}" = {
@@ -35,16 +36,12 @@
             { nixpkgs.pkgs = pkgs; }
             home-manager.nixosModules.home-manager
             ./system.nix
-            ./modules/scroll-boost
-            ./modules/yubikey
-            ./modules/key-mapper
-            ./modules/amd-nvidia-laptop
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users = import ./users self;
             }
-          ];
+          ] ++ (readModules ./modules);
         };
       };
     };
