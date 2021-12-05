@@ -202,21 +202,16 @@ in
   # Enable CUPS to print documents.
   # services.printing.enable = true;
 
-  # Enable sound.
-  sound.enable = true;
-  hardware.pulseaudio.enable = true;
+  # Enable sound.{
+  sound.enable = false;
+  hardware.pulseaudio.enable = false;
 
-  specialisation.pipewire.configuration = {
-    sound.enable = lib.mkForce false;
-    hardware.pulseaudio.enable = lib.mkForce false;
-
-    security.rtkit.enable = true;
-    services.pipewire = {
-      enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
-    };
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
   };
 
   sconfig.scroll-boost = true; # modules/scroll-boost
