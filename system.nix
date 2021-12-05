@@ -144,7 +144,10 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelParams = [ "mitigations=off" ];
+  boot.kernelParams = [
+    "mitigations=off"
+    "fbcon=scrollback:256k"
+  ];
   # allow all sysrq keys again - frequently have trouble and need to force sync/unmount/reboot when doing stuff with nvidia
   boot.kernel.sysctl."kernel.sysrq" = 1;
   boot.blacklistedKernelModules = [ "nouveau" ];
