@@ -216,6 +216,13 @@ in
   sconfig.scroll-boost = true; # modules/scroll-boost
   sconfig.yubikey = true; # modules/yubikey
   sconfig.key-mapper = true; # modules/key-mapper
+  sconfig.tty12-journal.enable = true;
+
+  services.journald.extraConfig = ''
+    SystemMaxUse=500M
+    MaxFileSec=1day
+    MaxRetentionSec=1month
+  '';
 
   services.xserver.libinput = {
     # Enable touchpad/mouse
