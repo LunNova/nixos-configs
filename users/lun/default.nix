@@ -33,6 +33,8 @@
         wine = wineWowPackages.staging;
       });
     })
+    nixpkgs-fmt
+    rnix-lsp
   ];
 
   services.lorri.enable = true;

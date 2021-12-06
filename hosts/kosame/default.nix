@@ -150,7 +150,7 @@ in
 
   systemd.extraConfig = "DefaultTimeoutStopSec=10s";
 
-  networking.hostName = "lun-laptop-1-nixos"; # Define your hostname.
+  networking.hostName = "lun-kosame-nixos"; # Define your hostname.
 
   networking.networkmanager.enable = true;
   networking.networkmanager.wifi.backend = "iwd";
