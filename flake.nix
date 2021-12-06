@@ -23,6 +23,20 @@
       pkgs = mkPkgs nixpkgs [ self.overlay ];
       lib = nixpkgs.lib;
       readModules = path: builtins.map (x: path + "/${x}") (builtins.attrNames (builtins.readDir path));
+      readHosts = path: builtins.map (x: path + "/${x}") (builtins.attrNames (builtins.readDir path));
+      makeHost = path: lib.nixosSystem {
+        inherit system;
+        modules = [
+          { nixpkgs.pkgs = pkgs; }
+          home-manager.nixosModules.home-manager
+          path
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users = import ./users self;
+          }
+        ] ++ (readModules ./modules);
+      };
     in
     {
       packages."${system}" = {
@@ -33,20 +47,10 @@
         my = self.packages."${system}";
       };
 
+      # TODO load automatically with readDir
       nixosConfigurations = {
-        lun-laptop-1-nixos = lib.nixosSystem {
-          inherit system;
-          modules = [
-            { nixpkgs.pkgs = pkgs; }
-            home-manager.nixosModules.home-manager
-            ./system.nix
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users = import ./users self;
-            }
-          ] ++ (readModules ./modules);
-        };
+        lun-kosame-nixos = makeHost ./hosts/kosame;
+        lun-amaya-nixos = makeHost ./hosts/amaya;
       };
 
       checks."${system}" = {
