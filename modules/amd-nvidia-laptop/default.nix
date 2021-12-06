@@ -21,6 +21,9 @@ in
   config = lib.mkIf cfg.enable {
     services.xserver.videoDrivers = [ "nvidia" ];
 
+    # TODO https://forums.developer.nvidia.com/t/bug-nvidia-v495-29-05-driver-spamming-dbus-enabled-applications-with-invalid-messages/192892/14
+    # apply patch for nvidia powerd issue
+
     # https://wiki.archlinux.org/title/NVIDIA/Troubleshooting#Xorg_fails_during_boot,_but_otherwise_starts_fine
     # TODO: no way to make this a glob? should match number of GPUs
     systemd.services.display-manager.after = [ "dev-dri-card0.device" "dev-dri-card1.device" ];
