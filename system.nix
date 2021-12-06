@@ -30,9 +30,6 @@ in
 
   # Persist console when getty starts
   systemd.services."getty@".serviceConfig.TTYVTDisallocate = "no";
-  # Log to tty1
-  services.journald.console = "/dev/tty11";
-  services.syslogd.tty = "/dev/tty11";
 
   specialisation.wayland-test.configuration =
     let
@@ -146,7 +143,6 @@ in
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelParams = [
     "mitigations=off"
-    "fbcon=scrollback:256k"
   ];
   # allow all sysrq keys again - frequently have trouble and need to force sync/unmount/reboot when doing stuff with nvidia
   boot.kernel.sysctl."kernel.sysrq" = 1;
