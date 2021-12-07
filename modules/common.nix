@@ -23,6 +23,7 @@
       package = pkgs.nixFlakes;
       daemonCPUSchedPolicy = "idle";
       extraOptions = "experimental-features = nix-command flakes";
+      autoOptimiseStore = true;
     };
 
     # NETWORKING
