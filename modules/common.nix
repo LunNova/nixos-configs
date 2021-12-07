@@ -55,6 +55,9 @@
       extraModulePackages = [ ];
     };
 
+    # HARDENING
+    security.sudo.execWheelOnly = true;
+
     # CHECKS
     assertions = [
       {
