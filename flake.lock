@@ -15,6 +15,21 @@
         "type": "github"
       }
     },
+    "flake-utils_2": {
+      "locked": {
+        "lastModified": 1623875721,
+        "narHash": "sha256-A8BU7bjS5GirpAUv4QA+QnJ4CceLHkcXdRp4xITDB0s=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "f7e004a55b120c02ecb6219596820fcd32ca8772",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -36,6 +51,29 @@
         "type": "github"
       }
     },
+    "nix-gaming": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "oglfPatches": "oglfPatches",
+        "tkgPatches": "tkgPatches",
+        "utils": "utils"
+      },
+      "locked": {
+        "lastModified": 1637691862,
+        "narHash": "sha256-ZkUW8JfjDmFZnRQKeBKQvqlWLRgIq4p6v2QfLrjSm0s=",
+        "owner": "fufexan",
+        "repo": "nix-gaming",
+        "rev": "caf86b1dd4b4cdd59970590eaaa9c009c9f1e6ea",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fufexan",
+        "repo": "nix-gaming",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1638352693,
@@ -49,6 +87,23 @@
         "owner": "NixOS",
         "repo": "nixpkgs",
         "rev": "6752dcd0a143eb4a3340d3bc055f49ea03f649d3",
+        "type": "github"
+      }
+    },
+    "oglfPatches": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1629854275,
+        "narHash": "sha256-hnj86MirD0jU4NzkdRoaODuryGRPUavA9qhGWlixk2Y=",
+        "owner": "openglfreak",
+        "repo": "wine-tkg-userpatches",
+        "rev": "c5d849279c8a90123162d92413aa249c2f044dc0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "openglfreak",
+        "repo": "wine-tkg-userpatches",
+        "rev": "c5d849279c8a90123162d92413aa249c2f044dc0",
         "type": "github"
       }
     },
@@ -79,8 +134,45 @@
       "inputs": {
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
+        "nix-gaming": "nix-gaming",
         "nixpkgs": "nixpkgs",
         "pre-commit-hooks": "pre-commit-hooks"
+      }
+    },
+    "tkgPatches": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1628767531,
+        "narHash": "sha256-tcprbnfojbCQLiebOaiOp0Occ/6f0m38N56bzgGKuJc=",
+        "owner": "Frogging-Family",
+        "repo": "wine-tkg-git",
+        "rev": "de6cd55961861c254bb4d96481a75bfb78553e5d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Frogging-Family",
+        "ref": "6.14.r6.g1bc4da9d",
+        "repo": "wine-tkg-git",
+        "type": "github"
+      }
+    },
+    "utils": {
+      "inputs": {
+        "flake-utils": "flake-utils_2"
+      },
+      "locked": {
+        "lastModified": 1626816926,
+        "narHash": "sha256-mJKFdfc4UWL49ar2Tc4krKMnDUa0Dkhj8QmbR3SThHo=",
+        "owner": "gytis-ivaskevicius",
+        "repo": "flake-utils-plus",
+        "rev": "5dba7556e1c7f36152c9f65c16bc813ec73ee6a5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gytis-ivaskevicius",
+        "ref": "staging",
+        "repo": "flake-utils-plus",
+        "type": "github"
       }
     }
   },

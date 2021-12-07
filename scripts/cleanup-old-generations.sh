@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -xeuo pipefail
 
 sudo nix-collect-garbage --delete-older-than 3d
