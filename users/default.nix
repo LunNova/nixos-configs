@@ -8,7 +8,12 @@ let cfg = config.my.home-manager; in
     default = [ ];
   };
 
-  config = lib.mkIf (builtins.elem "lun" cfg.enabled-users) {
+
+  config = {
+    home-manager = {
+      backupFileExtension = "hmbak";
+    };
+  } // lib.mkIf (builtins.elem "lun" cfg.enabled-users) {
     home-manager.users = {
       lun = ./lun;
     };
