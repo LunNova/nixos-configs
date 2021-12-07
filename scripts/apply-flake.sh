@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -xeuo pipefail
 
-cd $(readlink -f "$(dirname $(readlink -f "$0"))/..")
+cd "$(readlink -f "$(dirname "$(readlink -f "$0")")/..")"
 
 if [[ -v 1 ]]; then
     echo "Activating spec $1"

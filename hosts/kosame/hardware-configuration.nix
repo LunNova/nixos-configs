@@ -9,12 +9,7 @@
       (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  nixpkgs.config.allowUnfree = true;
-  hardware.cpu.amd.updateMicrocode = true; # OR hardware.cpu.intel.updateMicrocode = true;
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "usb_storage" "usbhid" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-amd" ];
-  boot.extraModulePackages = [ ];
+  hardware.cpu.amd.updateMicrocode = true;
 
   fileSystems."/" =
     {
@@ -36,11 +31,6 @@
 
   # high-resolution display (was autodetected but wrong, have good eyesight and like more screen real estate)
   hardware.video.hidpi.enable = false;
-
-  #systemd.network.links."10-en-wlan-0" = {
-  #  matchConfig.PermanentMACAddress = "e0:d4:64:8f:f4:03";
-  #  linkConfig.Name = "en-wlan-0";
-  #};
 
   systemd.network.links."10-en-usb-0" = {
     matchConfig.PermanentMACAddress = "8c:ae:4c:dd:20:d8";

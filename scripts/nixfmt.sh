@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -xeuo pipefail
 
 # nixpkgs/nixos-21.11

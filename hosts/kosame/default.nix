@@ -16,6 +16,9 @@ in
       ./hardware-configuration.nix
     ];
 
+  networking.hostName = "lun-kosame-nixos"; # Define your hostname.
+  networking.hostId = "457d8520";
+
   services.xserver.videoDrivers = lib.mkDefault [ "amdgpu" ];
 
   # remove nvidia devices if not using nvidia config
@@ -27,9 +30,6 @@ in
   specialisation.nvidia.configuration = {
     sconfig.amd-nvidia-laptop.enable = true;
   };
-
-  # Persist console when getty starts
-  systemd.services."getty@".serviceConfig.TTYVTDisallocate = "no";
 
   specialisation.wayland-test.configuration =
     let
@@ -132,11 +132,6 @@ in
   fileSystems."/" = { options = [ "noatime" "nodiratime" ]; };
   services.fstrim = { enable = true; interval = "weekly"; };
 
-  nix.package = pkgs.nixFlakes;
-  nix.extraOptions = ''
-    experimental-features = nix-command flakes
-  '';
-
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -144,17 +139,10 @@ in
   boot.kernelParams = [
     "mitigations=off"
   ];
-  # allow all sysrq keys again - frequently have trouble and need to force sync/unmount/reboot when doing stuff with nvidia
-  boot.kernel.sysctl."kernel.sysrq" = 1;
-  boot.blacklistedKernelModules = [ "nouveau" ];
 
   systemd.extraConfig = "DefaultTimeoutStopSec=10s";
 
-  networking.hostName = "lun-kosame-nixos"; # Define your hostname.
 
-  networking.networkmanager.enable = true;
-  networking.networkmanager.wifi.backend = "iwd";
-  networking.resolvconf.dnsExtensionMechanism = false;
 
   services.avahi.enable = true;
   services.avahi.nssmdns = true;
@@ -170,11 +158,6 @@ in
   #networking.interfaces.en-wlan-0.useDHCP = true;
 
   # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-  console = {
-    font = "Lat2-Terminus16";
-    keyMap = "us";
-  };
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
@@ -210,6 +193,7 @@ in
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    lowLatency.enable = true;
   };
   hardware.bluetooth.enable = true;
 
@@ -229,22 +213,6 @@ in
     enable = true;
     # Disable mouse accel
     mouse = { accelProfile = "flat"; };
-  };
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.lun = {
-    isNormalUser = true;
-    shell = pkgs.fish;
-    # Change after install
-    initialPassword = "nix-placeholder";
-    extraGroups = [
-      "wheel" # Enable ‘sudo’ for the user.
-      "plugdev" # openrazer requires this
-      "openrazer"
-      "docker"
-      "video"
-      "audio"
-    ];
   };
 
   programs.zsh.enable = true;
@@ -287,7 +255,6 @@ in
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [ 22 ];

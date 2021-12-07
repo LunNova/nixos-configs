@@ -9,9 +9,11 @@
     pre-commit-hooks.inputs.flake-utils.follows = "flake-utils";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
+    nix-gaming.url = github:fufexan/nix-gaming;
+    nix-gaming.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, home-manager, pre-commit-hooks, ... }:
+  outputs = { self, nixpkgs, home-manager, pre-commit-hooks, nix-gaming, ... }:
     let
       system = "x86_64-linux";
       mkPkgs = pkgs: extraOverlays:
@@ -29,11 +31,14 @@
         modules = [
           { nixpkgs.pkgs = pkgs; }
           home-manager.nixosModules.home-manager
+          nix-gaming.nixosModules.pipewireLowLatency
           path
+          ./users
           {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users = import ./users self;
+            config = {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+            };
           }
         ] ++ (readModules ./modules);
       };
@@ -57,7 +62,14 @@
         pre-commit-check = pre-commit-hooks.lib.${system}.run {
           src = ./.;
           hooks = {
+            nix-linter.enable = false; # TODO: fix these errors
             nixpkgs-fmt.enable = true;
+            shellcheck = {
+              enable = true;
+              files = "\\.sh$";
+              types_or = lib.mkForce [ ];
+            };
+            shfmt = { };
           };
         };
       };
