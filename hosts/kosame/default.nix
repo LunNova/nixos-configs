@@ -18,6 +18,7 @@ in
 
   networking.hostName = "lun-kosame-nixos"; # Define your hostname.
   networking.hostId = "457d8520";
+  system.stateVersion = "21.05";
 
   services.xserver.videoDrivers = lib.mkDefault [ "amdgpu" ];
 
@@ -140,15 +141,7 @@ in
     "mitigations=off"
   ];
 
-  systemd.extraConfig = "DefaultTimeoutStopSec=10s";
-
-
-
-  services.avahi.enable = true;
-  services.avahi.nssmdns = true;
-
   # Set your time zone.
-  time.timeZone = "America/Los_Angeles";
 
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
   # Per-interface useDHCP will be mandatory in the future, so this generated config
@@ -197,79 +190,10 @@ in
   };
   hardware.bluetooth.enable = true;
 
-  sconfig.scroll-boost = true; # modules/scroll-boost
-  sconfig.yubikey = true; # modules/yubikey
-  sconfig.key-mapper = true; # modules/key-mapper
-  sconfig.tty12-journal.enable = true;
-
-  services.journald.extraConfig = ''
-    SystemMaxUse=500M
-    MaxFileSec=1day
-    MaxRetentionSec=1month
-  '';
-
-  services.xserver.libinput = {
-    # Enable touchpad/mouse
-    enable = true;
-    # Disable mouse accel
-    mouse = { accelProfile = "flat"; };
-  };
-
-  programs.zsh.enable = true;
-  programs.fish.enable = true;
-  programs.neovim.enable = true;
-  programs.neovim.viAlias = true;
-  programs.neovim.vimAlias = true;
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    bash
-    zsh
-    fish
-    wget
-    firefox
-    nano
-    kate
-    ripgrep
-    neovim
-    fd
-  ];
-
-  hardware.openrazer.enable = true;
-
   hardware.opengl = {
     enable = true;
     driSupport = true;
     driSupport32Bit = true;
   };
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-
-  # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 22 ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "21.05"; # Did you read the comment?
-
-  programs.steam.enable = true;
 }
 

@@ -52,14 +52,11 @@
     };
   };
 
+  programs.firefox.enable = true;
+
   programs.vscode = {
     enable = true;
   };
-
-  xdg.configFile."kcminputrc".text = ''
-    [Mouse]
-    XLbInptAccelProfileFlat=true
-  '';
 
   home.file.
   ".mozilla/native-messaging-hosts/fx_cast_bridge.json".source =
