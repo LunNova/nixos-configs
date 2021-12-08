@@ -16,8 +16,8 @@ in
       ./hardware-configuration.nix
     ];
 
-  networking.hostName = "lun-kosame-nixos"; # Define your hostname.
-  networking.hostId = "457d8520";
+  networking.hostName = "lun-kosame-nixos";
+  sconfig.machineId = "0715dc6a95b3419e8e2465240b7e598b";
   system.stateVersion = "21.05";
 
   services.xserver.videoDrivers = lib.mkDefault [ "amdgpu" ];
@@ -130,39 +130,12 @@ in
       # };
     };
 
-  fileSystems."/" = { options = [ "noatime" "nodiratime" ]; };
-  services.fstrim = { enable = true; interval = "weekly"; };
 
   # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelParams = [
     "mitigations=off"
   ];
 
-  # Set your time zone.
-
-  # The global useDHCP flag is deprecated, therefore explicitly set to false here.
-  # Per-interface useDHCP will be mandatory in the future, so this generated config
-  # replicates the default behaviour.
-  networking.useDHCP = false;
-  #networking.interfaces.en-usb-0.useDHCP = true;
-  #networking.interfaces.en-wlan-0.useDHCP = true;
-
-  # Select internationalisation properties.
-
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Enable the Plasma 5 Desktop Environment.
-  services.xserver.displayManager.sddm.enable = true;
-  services.xserver.desktopManager.plasma5.enable = true;
-  # mouse accel off for kde - doesn't exist
-  #services.xserver.desktopManager.plasma5.kcminputrc.XLbInptAccelProfileFlat=true;
-  #services.xserver.useGlamor = true;
-  #services.xserver.displayManager.sddm.settings.Wayland.SessionDir = "${pkgs.plasma5Packages.plasma-workspace}/share/wayland-sessions";
-  services.xserver.desktopManager.plasma5.runUsingSystemd = true;
 
   # Used to set power profiles, should have support in asus-wmi https://asus-linux.org/blog/updates-2021-07-16/
   services.power-profiles-daemon.enable = true;
@@ -171,29 +144,9 @@ in
   powerManagement.powertop.enable = true;
 
   # Configure keymap in X11
-  services.xserver.layout = "us";
   # services.xserver.xkbOptions = "eurosign:e";
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
-
-  # Enable sound.
-  sound.enable = false;
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    lowLatency.enable = true;
-  };
-  hardware.bluetooth.enable = true;
-
-  hardware.opengl = {
-    enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
-  };
 }
 

@@ -23,12 +23,4 @@
       device = "/.swapfile";
     }
   ];
-
-  # high-resolution display (was autodetected but wrong, have good eyesight and like more screen real estate)
-  hardware.video.hidpi.enable = false;
-
-  systemd.network.links."10-en-usb-0" = {
-    matchConfig.PermanentMACAddress = "8c:ae:4c:dd:20:d8";
-    linkConfig.Name = "en-usb-0";
-  };
 }

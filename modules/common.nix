@@ -12,8 +12,11 @@
       defaultLocale = "en_US.UTF-8";
       supportedLocales = [ "en_US.UTF-8/UTF-8" ];
     };
-    time.timeZone = "America/Los_Angeles";
-    time.hardwareClockInLocalTime = true;
+    time = {
+      timeZone = "America/Los_Angeles";
+      hardwareClockInLocalTime = true;
+    };
+    services.xserver.layout = "us";
 
     # CONSOLE
     console = {
@@ -22,6 +25,9 @@
     };
     # Persist console when getty starts
     systemd.services."getty@".serviceConfig.TTYVTDisallocate = "no";
+
+    # DISPLAYS
+    hardware.video.hidpi.enable = false;
 
     # LOGGING
     services.journald.extraConfig = ''
@@ -117,15 +123,38 @@
       fd
     ];
 
+    # DESKTOP ENV
+    # Enable the X11 windowing system.
+    services.xserver.enable = true;
+    services.xserver.displayManager.sddm.enable = true;
+    services.xserver.desktopManager.plasma5.enable = true;
+    services.xserver.desktopManager.plasma5.runUsingSystemd = true;
+
+    # SOUND
+    sound.enable = false;
+    hardware.pulseaudio.enable = false;
+    security.rtkit.enable = true;
+    services.pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+      lowLatency.enable = true;
+    };
+    hardware.bluetooth.enable = true;
+
+    # GRAPHICS ACCEL
+    hardware.opengl = {
+      enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
+    };
+
     # CHECKS
     assertions = [
       {
         assertion = config.hardware.cpu.amd.updateMicrocode || config.hardware.cpu.intel.updateMicrocode;
         message = "updateMicrocode should be set for intel or amd";
-      }
-      {
-        assertion = config.networking.hostId != null;
-        message = "Set the networking.hostId option. Use `head -c4 /dev/random | od -A none -t x4` to generate.";
       }
     ];
   };
