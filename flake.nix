@@ -55,7 +55,7 @@
       # TODO load automatically with readDir
       nixosConfigurations = {
         lun-kosame-nixos = makeHost ./hosts/kosame;
-        lun-amaya-nixos = makeHost ./hosts/amaya;
+        lun-hisame-nixos = makeHost ./hosts/hisame;
       };
 
       checks."${system}" = {
