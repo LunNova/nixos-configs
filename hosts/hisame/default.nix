@@ -30,11 +30,37 @@ let name = "hisame"; in
             "mode=755"
           ];
         };
-        "/boot" = { device = "/dev/disk/by-partlabel/_esp"; fsType = "vfat"; options = [ "discard" "noatime" ]; };
-        "/persist" = { device = "/dev/disk/by-partlabel/${name}_persist"; fsType = "ext4"; options = [ "discard" "noatime" ]; };
-        "/nix" = { device = "/persist/nix/"; noCheck = true; options = [ "bind" ]; };
-        "/home" = { device = "/persist/home/"; noCheck = true; options = [ "bind" ]; };
-        "/var/log" = { device = "/persist/var/log"; noCheck = true; options = [ "bind" ]; };
+        "/boot" = {
+          device = "/dev/disk/by-partlabel/_esp";
+          fsType = "vfat";
+          neededForBoot = true;
+          options = [ "discard" "noatime" ];
+        };
+        "/persist" = {
+          device = "/dev/disk/by-partlabel/${name}_persist";
+          fsType = "ext4";
+          neededForBoot = true;
+          options = [ "discard" "noatime" ];
+        };
+        "/nix" = {
+          device = "/persist/nix";
+          noCheck = true;
+          fsType = "none";
+          neededForBoot = true;
+          options = [ "bind" ];
+        };
+        "/home" = {
+          device = "/persist/home";
+          noCheck = true;
+          neededForBoot = true;
+          options = [ "bind" ];
+        };
+        "/var/log" = {
+          device = "/persist/var/log";
+          noCheck = true;
+          neededForBoot = true;
+          options = [ "bind" ];
+        };
       };
     swapDevices = [ ];
   };
