@@ -11,16 +11,33 @@ https://gitlab.com/hlissner/dotfiles/-/tree/master
 
 # Fresh install
 
-Set up partitions for new system and mount under /mnt.
+Similar to [tmpfs on root](https://elis.nu/blog/2020/05/nixos-tmpfs-as-root/).
+
+Set up persist and EFI partitions, then:
 
 ```
-mkdir -p /mnt/{boot,persist,home}
+#!/usr/bin/env bash
+set -xeuo pipefail
 
-mount /dev/disk/by-partlabel/_esp /mnt/boot
-mount /dev/disk/by-partlabel/hostname_persist /mnt/persist
+BOOT_PARTITION=/dev/disk/by-partlabel/_esp
+PERSIST_PARTITION=/dev/disk/by-partlabel/hostname_persist
+FLAKE=github:TransLunarInjection/nixos-configs/dev#hostname
+
+mount -t tmpfs none /mnt
+
+mkdir -p /mnt/{boot,persist}
+
+mount $BOOT_PARTITION /mnt/boot
+mount $PERSIST_PARTITION /mnt/persist
+
+mkdir -p /mnt/{boot,persist,home,nix,var/log} /mnt/persist/{home,nix,var/log}
+
+mount -o bind /mnt/persist/nix /mnt/nix
+mount -o bind /mnt/persist/home /mnt/home
+mount -o bind /mnt/persist/var/log /mnt/var/log
 
 # Install nixos:
-nix-shell -p git nixFlakes --run "nixos-install --no-root-passwd --root /mnt --flake github:TransLunarInjection/nixos-configs#hostname"
+nix-shell -p git nixFlakes --run "nixos-install --impure --no-root-passwd --root /mnt --flake $FLAKE"
 # Install refind efi boot manager
-nix-shell -p efibootmgr --run "refind-install --root /mnt"
+nix-shell -p efibootmgr refind --run "refind-install --root /mnt"
 ```
