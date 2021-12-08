@@ -23,15 +23,6 @@ jobs:
         extraPullNames: nix-community
         authToken: '${{ secrets.CACHIX_TOKEN }}'
     - run: git status
-    - run: git diff-index -C HEAD --
-    - run: git update-index
-    - run: git update-index --refresh
-    - run: git diff-index -C HEAD --
     - run: nix flake metadata
     - run: nix flake show
-    - run: nix flake check
-    - run: >
-       nix flake show --json | jq '.nixosConfigurations | keys[] as $k | select(.[$k].type=="nixos-configuration") | $k' -cr | xargs -tI{} nix build .#nixosConfigurations.{}.config.system.build.toplevel
-    - run: >
-       nix flake show --json | jq 'del(.devShell) | [leaf_paths as $path | select(getpath($path) == "derivation") | {"key": $path | join(".") | sub(".type";""), "value": getpath($path)}] | from_entries | keys|.[]' -cr | xargs -tI{} nix build .#{}
-    - run: echo Done
+    - run: scripts/check.sh all
