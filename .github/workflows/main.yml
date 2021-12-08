@@ -24,6 +24,9 @@ jobs:
         authToken: '${{ secrets.CACHIX_TOKEN }}'
     - run: git status
     - run: git diff-index -C HEAD --
+    - run: git update-index
+    - run: git update-index --refresh
+    - run: git diff-index -C HEAD --
     - run: nix flake metadata
     - run: nix flake show
     - run: nix flake check
