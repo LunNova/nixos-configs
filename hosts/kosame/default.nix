@@ -4,11 +4,6 @@
 
 { config, pkgs, lib, ... }:
 
-let
-  kernelPackages = pkgs.linuxPackages_latest;
-  kernel = kernelPackages.kernel;
-in
-
 {
   imports =
     [
