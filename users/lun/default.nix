@@ -58,6 +58,8 @@
     enable = true;
   };
 
+  programs.nix-index.enable = true;
+
   home.file.
   ".mozilla/native-messaging-hosts/fx_cast_bridge.json".source =
     let patched_fx_cast_bridge = pkgs.fx_cast_bridge.overrideAttrs (oldAttrs: {
