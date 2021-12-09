@@ -30,6 +30,11 @@
         inherit system;
         modules = [
           { nixpkgs.pkgs = pkgs; }
+          {
+            # pin system nixpkgs to the same version as the flake input
+            # (don't see a way to declaratively set channels but this seems to work fine?)
+            nix.nixPath = [ "nixpkgs=${nixpkgs}" ];
+          }
           home-manager.nixosModules.home-manager
           nix-gaming.nixosModules.pipewireLowLatency
           path
