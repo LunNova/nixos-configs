@@ -22,6 +22,26 @@
           config.allowUnfree = true;
           overlays = extraOverlays;
         };
+
+      lock = builtins.fromJSON (builtins.readFile ./flake.lock);
+      nixpkgs-unfree-path = ./hack-nixpkgs-unfree;
+      nixpkgs-unfree-relocked = pkgs.stdenv.mkDerivation {
+        name = "nixpkgs-unfree-relocked";
+        outputs = [ "out" ];
+        dontUnpack = true;
+        fixupPhase = "";
+        installPhase = ''
+          mkdir -p $out
+          cp -t $out ${nixpkgs-unfree-path}/{flake.nix,flake.lock,default.nix}
+          substituteInPlace $out/default.nix --replace "nixpkgs = null" 'nixpkgs = "${nixpkgs}"'
+          substituteInPlace $out/flake.lock --replace \
+            "%REV%" "${lock.nodes.nixpkgs.locked.rev}" --replace \
+            "%HASH%" "${lock.nodes.nixpkgs.locked.narHash}"
+          substituteInPlace $out/flake.nix --replace \
+            "%REV%" "${lock.nodes.nixpkgs.locked.rev}"
+        '';
+      };
+
       pkgs = mkPkgs nixpkgs [ self.overlay ];
       lib = nixpkgs.lib;
       readModules = path: builtins.map (x: path + "/${x}") (builtins.attrNames (builtins.readDir path));
@@ -33,7 +53,8 @@
           {
             # pin system nixpkgs to the same version as the flake input
             # (don't see a way to declaratively set channels but this seems to work fine?)
-            nix.nixPath = [ "nixpkgs=${nixpkgs}" ];
+            nix.registry.nixpkgs.flake = nixpkgs-unfree-relocked;
+            nix.nixPath = [ "nixpkgs=${nixpkgs-unfree-relocked}" ];
           }
           home-manager.nixosModules.home-manager
           nix-gaming.nixosModules.pipewireLowLatency
