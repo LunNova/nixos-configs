@@ -72,7 +72,6 @@
       initrd.kernelModules = [ ];
       kernelModules = [ "kvm-amd" "kvm-intel" ];
       extraModulePackages = [ ];
-      tmpOnTmpfs = true;
     };
 
     # HARDWARE
