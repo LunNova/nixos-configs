@@ -63,6 +63,12 @@ let name = "hisame"; in
           neededForBoot = true;
           options = [ "bind" ];
         };
+        "/tmp" = {
+          fsType = "tmpfs";
+          device = "tmpfs";
+          neededForBoot = true;
+          options = [ "mode=1777" "rw" "nosuid" "nodev" "size=32G" ];
+        };
       };
     swapDevices = [ ];
   };
