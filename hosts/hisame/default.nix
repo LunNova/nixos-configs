@@ -70,6 +70,8 @@ let name = "hisame"; in
           options = [ "mode=1777" "rw" "nosuid" "nodev" "size=32G" ];
         };
       };
-    swapDevices = [ ];
+    swapDevices = [{
+      device = "/dev/disk/by-partlabel/_swap";
+    }];
   };
 }
