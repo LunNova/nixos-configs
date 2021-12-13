@@ -26,6 +26,7 @@ jobs:
         extraPullNames: nix-community
         authToken: '${{ secrets.CACHIX_TOKEN }}'
     - run: git status
+    - run: nix show-config
     - run: nix flake metadata
     - run: nix flake show
     - run: scripts/check.sh all
