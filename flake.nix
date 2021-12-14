@@ -11,9 +11,30 @@
     flake-utils.url = "github:numtide/flake-utils";
     nix-gaming.url = github:fufexan/nix-gaming;
     nix-gaming.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Powercord. pcp- and pct- prefix have meaning, cause inclusion as powercord plugin/theme
+    powercord = { url = "github:powercord-org/powercord"; flake = false; };
+    powercord-overlay = {
+      url = "github:LavaDesu/powercord-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.powercord.follows = "powercord";
+    };
+    pcp-tweaks = { url = "github:NurMarvin/discord-tweaks"; flake = false; };
+    pcp-theme-toggler = { url = "github:redstonekasi/theme-toggler"; flake = false; };
+    pcp-better-status-indicators = { url = "github:GriefMoDz/better-status-indicators"; flake = false; };
+    pcp-webhook-tag = { url = "github:BenSegal855/webhook-tag"; flake = false; };
+    pct-tokyonight = { url = "github:Dyzean/Tokyo-Night"; flake = false; };
   };
 
-  outputs = { self, nixpkgs, home-manager, pre-commit-hooks, nix-gaming, ... }:
+  outputs =
+    { self
+    , nixpkgs
+    , home-manager
+    , pre-commit-hooks
+    , nix-gaming
+    , powercord-overlay
+    , ...
+    }@args:
     let
       system = "x86_64-linux";
       mkPkgs = pkgs: extraOverlays:
@@ -22,7 +43,7 @@
           config.allowUnfree = true;
           overlays = extraOverlays;
         };
-
+      filterInputs = prefix: builtins.attrValues (lib.filterAttrs (name: value: (lib.hasPrefix prefix name)) args);
       lock = builtins.fromJSON (builtins.readFile ./flake.lock);
       nixpkgs-unfree-path = ./hack-nixpkgs-unfree;
       nixpkgs-unfree-relocked = pkgs.stdenv.mkDerivation {
@@ -33,7 +54,7 @@
         installPhase = ''
           mkdir -p $out
           cp -t $out ${nixpkgs-unfree-path}/{flake.nix,flake.lock,default.nix}
-          substituteInPlace $out/default.nix --replace "nixpkgs = null" 'nixpkgs = "${nixpkgs}"'
+          substituteInPlace $out/default.nix --replace "nixpkgs = null" 'nixpkgs = "${args.nixpkgs}"'
           substituteInPlace $out/flake.lock --replace \
             "%REV%" "${lock.nodes.nixpkgs.locked.rev}" --replace \
             "%HASH%" "${lock.nodes.nixpkgs.locked.narHash}"
@@ -42,8 +63,8 @@
         '';
       };
 
-      pkgs = mkPkgs nixpkgs [ self.overlay ];
-      lib = nixpkgs.lib;
+      pkgs = mkPkgs args.nixpkgs [ self.overlay powercord-overlay.overlay ];
+      lib = args.nixpkgs.lib;
       readModules = path: builtins.map (x: path + "/${x}") (builtins.attrNames (builtins.readDir path));
       readHosts = path: builtins.map (x: path + "/${x}") (builtins.attrNames (builtins.readDir path));
       makeHost = path: lib.nixosSystem {
@@ -70,12 +91,16 @@
       };
     in
     {
+      inherit args;
+
       packages."${system}" = {
         key-mapper = pkgs.callPackage packages/key-mapper { };
       };
 
       overlay = final: prev: {
         my = self.packages."${system}";
+        powercord-plugins = filterInputs "pcp-";
+        powercord-themes = filterInputs "pct-";
       };
 
       # TODO load automatically with readDir

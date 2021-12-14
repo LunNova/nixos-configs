@@ -1,5 +1,10 @@
 { config, lib, pkgs, inputs, self, ... }:
 {
+  imports = [
+    ./discord.nix
+    ./shells/default.nix
+  ];
+
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
@@ -19,7 +24,6 @@
   home.stateVersion = "21.05";
 
   home.packages = with pkgs; [
-    discord
     lutris
     ark
     osu-lazer
@@ -69,6 +73,4 @@
     in
     "${patched_fx_cast_bridge}/lib/mozilla/native-messaging-hosts/fx_cast_bridge.json";
   home.file.".mozilla/native-messaging-hosts/org.kde.plasma.browser_integration.json".source = "${pkgs.plasma-browser-integration}/lib/mozilla/native-messaging-hosts/org.kde.plasma.browser_integration.json";
-
-  imports = [ ./shells/default.nix ];
 }

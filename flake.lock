@@ -30,6 +30,21 @@
         "type": "github"
       }
     },
+    "flake-utils_3": {
+      "locked": {
+        "lastModified": 1629481132,
+        "narHash": "sha256-JHgasjPR0/J1J3DRm4KxM4zTyAj4IOJY8vIl75v/kPI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "997f7efcb746a9c140ce1f13c72263189225f482",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -107,6 +122,126 @@
         "type": "github"
       }
     },
+    "pcp-better-status-indicators": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1638530151,
+        "narHash": "sha256-DhTne4HdDpxEgBquFzw3jraL1SX2HiG791HdKd9s9Xw=",
+        "owner": "GriefMoDz",
+        "repo": "better-status-indicators",
+        "rev": "545a0b9d837fc6178bc6df4476f88ed0397ad74c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "GriefMoDz",
+        "repo": "better-status-indicators",
+        "type": "github"
+      }
+    },
+    "pcp-theme-toggler": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1636501799,
+        "narHash": "sha256-wq1x1rNBkcTuATDbR9yLykUmMRGGRPg6fDfPxl4qE2Q=",
+        "owner": "redstonekasi",
+        "repo": "theme-toggler",
+        "rev": "c8063b35ec9d42064d36845950a53cd6e2099458",
+        "type": "github"
+      },
+      "original": {
+        "owner": "redstonekasi",
+        "repo": "theme-toggler",
+        "type": "github"
+      }
+    },
+    "pcp-tweaks": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1627600834,
+        "narHash": "sha256-xSzbP86w5OUy1ZO1iHgv1drbujtlPQAgJmLA3x7UOFc=",
+        "owner": "NurMarvin",
+        "repo": "discord-tweaks",
+        "rev": "bc28b090f9ed706d7f8271aeaa64bdcb886fd0ef",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NurMarvin",
+        "repo": "discord-tweaks",
+        "type": "github"
+      }
+    },
+    "pcp-webhook-tag": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1622073512,
+        "narHash": "sha256-tK/3OklIoLor9wukYUAkPK8pTcfWjsL6Yrq38FhS+go=",
+        "owner": "BenSegal855",
+        "repo": "webhook-tag",
+        "rev": "557613fb123fc0c7929d61bd31a15dfc7a004a4a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "BenSegal855",
+        "repo": "webhook-tag",
+        "type": "github"
+      }
+    },
+    "pct-tokyonight": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1629377944,
+        "narHash": "sha256-DLMWZ/7ZemYtXh7fx+JV2MXU+f2uwl9hzbZYeK0YWl8=",
+        "owner": "Dyzean",
+        "repo": "Tokyo-Night",
+        "rev": "46f8b033c1eb1aefbc0eac99b541a7426b5f020c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Dyzean",
+        "repo": "Tokyo-Night",
+        "type": "github"
+      }
+    },
+    "powercord": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1634897852,
+        "narHash": "sha256-VuPvcTGkhTnZhrAskKWjuT8AigL+T7Lg3kUNRBJXi5E=",
+        "owner": "powercord-org",
+        "repo": "powercord",
+        "rev": "1d2318bcd7c5e5a5230d8bf25813ed648cfd7b76",
+        "type": "github"
+      },
+      "original": {
+        "owner": "powercord-org",
+        "repo": "powercord",
+        "type": "github"
+      }
+    },
+    "powercord-overlay": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "powercord": [
+          "powercord"
+        ],
+        "utils": "utils_2"
+      },
+      "locked": {
+        "lastModified": 1634905040,
+        "narHash": "sha256-DAzzwfZCRk9HTlDwdrleFGlg8Y5wVFDvIXsnZnNnn9s=",
+        "owner": "LavaDesu",
+        "repo": "powercord-overlay",
+        "rev": "b80649b63864bdc06c65d069ae9e8d440fd7e68a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "LavaDesu",
+        "repo": "powercord-overlay",
+        "type": "github"
+      }
+    },
     "pre-commit-hooks": {
       "inputs": {
         "flake-utils": [
@@ -136,6 +271,13 @@
         "home-manager": "home-manager",
         "nix-gaming": "nix-gaming",
         "nixpkgs": "nixpkgs",
+        "pcp-better-status-indicators": "pcp-better-status-indicators",
+        "pcp-theme-toggler": "pcp-theme-toggler",
+        "pcp-tweaks": "pcp-tweaks",
+        "pcp-webhook-tag": "pcp-webhook-tag",
+        "pct-tokyonight": "pct-tokyonight",
+        "powercord": "powercord",
+        "powercord-overlay": "powercord-overlay",
         "pre-commit-hooks": "pre-commit-hooks"
       }
     },
@@ -171,6 +313,24 @@
       "original": {
         "owner": "gytis-ivaskevicius",
         "ref": "staging",
+        "repo": "flake-utils-plus",
+        "type": "github"
+      }
+    },
+    "utils_2": {
+      "inputs": {
+        "flake-utils": "flake-utils_3"
+      },
+      "locked": {
+        "lastModified": 1632420560,
+        "narHash": "sha256-8Tsa4Hp/CHCA6J8/E7EODhp75z5N1NBhFiOb3lBv/tI=",
+        "owner": "gytis-ivaskevicius",
+        "repo": "flake-utils-plus",
+        "rev": "4b1bcafcfcd78bd36ceabfe3872822ba5c7fcbe8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gytis-ivaskevicius",
         "repo": "flake-utils-plus",
         "type": "github"
       }
