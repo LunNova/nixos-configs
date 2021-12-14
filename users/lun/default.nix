@@ -68,6 +68,7 @@
     });
     in
     "${patched_fx_cast_bridge}/lib/mozilla/native-messaging-hosts/fx_cast_bridge.json";
+  home.file.".mozilla/native-messaging-hosts/org.kde.plasma.browser_integration.json".source = "${pkgs.plasma-browser-integration}/lib/mozilla/native-messaging-hosts/org.kde.plasma.browser_integration.json";
 
   imports = [ ./shells/default.nix ];
 }
