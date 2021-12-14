@@ -13,6 +13,10 @@
       ./fish_right_prompt.fish;
     #".config/fish/conf.d/ssh-agent.fish".source = ./ssh-agent.fish;
 
+    ".config/fish/conf.d/direnv.fish".text = ''
+      direnv hook fish | source
+    '';
+
     # global fish config
     ".config/fish/conf.d/lun.fish".text = ''
       set -gx EDITOR vim

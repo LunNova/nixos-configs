@@ -19,7 +19,6 @@
   home.stateVersion = "21.05";
 
   home.packages = with pkgs; [
-    direnv
     discord
     lutris
     ark
@@ -70,5 +69,5 @@
     in
     "${patched_fx_cast_bridge}/lib/mozilla/native-messaging-hosts/fx_cast_bridge.json";
 
-  imports = [ ./fish.nix ];
+  imports = [ ./shells/default.nix ];
 }
