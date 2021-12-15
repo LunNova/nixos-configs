@@ -85,6 +85,7 @@
             # (don't see a way to declaratively set channels but this seems to work fine?)
             nix.registry.nixpkgs.flake = nixpkgs-unfree-relocked;
             nix.nixPath = [ "nixpkgs=${nixpkgs-unfree-relocked}" ];
+            system.configurationRevision = lib.mkIf (args.self ? rev) args.self.rev; # set configurationRevision if available
           }
           home-manager.nixosModules.home-manager
           nix-gaming.nixosModules.pipewireLowLatency
