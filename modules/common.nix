@@ -41,7 +41,10 @@
     nix = {
       package = pkgs.nixFlakes;
       daemonCPUSchedPolicy = "idle";
-      extraOptions = "experimental-features = nix-command flakes";
+      extraOptions = lib.mkMerge [
+        "experimental-features = nix-command flakes"
+        "warn-dirty = false"
+      ];
       autoOptimiseStore = true;
     };
 
