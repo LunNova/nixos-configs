@@ -120,6 +120,7 @@
       kate
       ripgrep
       fd
+      killall
     ];
 
     # DESKTOP ENV
