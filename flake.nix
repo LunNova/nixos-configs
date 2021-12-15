@@ -13,6 +13,8 @@
     nix-gaming.inputs.nixpkgs.follows = "nixpkgs";
     nixos-hardware.url = github:NixOS/nixos-hardware/master;
 
+    minimal-shell.url = "github:LunNova/nix-minimal-shell";
+
     # Powercord. pcp- and pct- prefix have meaning, cause inclusion as powercord plugin/theme
     powercord = { url = "github:powercord-org/powercord"; flake = false; };
     powercord-overlay = {
@@ -131,8 +133,9 @@
           };
         };
       };
-      devShell."${system}" = nixpkgs.legacyPackages.${system}.mkShell {
-        inherit (self.checks.${system}.pre-commit-check) shellHook;
+      devShell.${system} = args.minimal-shell.lib.minimal-shell {
+        inherit pkgs system;
+        shellHooks = self.checks.${system}.pre-commit-check.shellHook;
       };
     };
 }

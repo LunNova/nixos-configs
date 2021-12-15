@@ -66,6 +66,21 @@
         "type": "github"
       }
     },
+    "minimal-shell": {
+      "locked": {
+        "lastModified": 1639587364,
+        "narHash": "sha256-wSoH84Xy7kipuHEOx1xZ29HhWB7/qBwJs7MHdsOeg2I=",
+        "owner": "LunNova",
+        "repo": "nix-minimal-shell",
+        "rev": "fee8e6005bda62dbe20cc1b4c45a22bca4cd813f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "LunNova",
+        "repo": "nix-minimal-shell",
+        "type": "github"
+      }
+    },
     "nix-gaming": {
       "inputs": {
         "nixpkgs": [
@@ -266,6 +281,7 @@
       "inputs": {
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
+        "minimal-shell": "minimal-shell",
         "nix-gaming": "nix-gaming",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
