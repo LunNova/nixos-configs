@@ -1,13 +1,16 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, nixos-hardware-modules-path, ... }:
 let name = "hisame"; in
 {
+  imports = [
+    "${nixos-hardware-modules-path}/common/gpu/amd"
+  ];
+
   config = {
     networking.hostName = "lun-${name}-nixos";
     sconfig.machineId = "63d3399d2f2f65c96848f11d73082aef";
     system.stateVersion = "21.11";
 
     hardware.cpu.amd.updateMicrocode = true;
-    services.xserver.videoDrivers = [ "amdgpu" ];
 
     boot.kernelParams = [ "boot.shell_on_fail" "boot.trace" ];
 

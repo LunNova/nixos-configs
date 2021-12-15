@@ -87,6 +87,22 @@
         "type": "github"
       }
     },
+    "nixos-hardware": {
+      "locked": {
+        "lastModified": 1639240632,
+        "narHash": "sha256-BAXhgnPOW1COIfZ9EOOFTdolalYS73MFHSRajgrSdZw=",
+        "owner": "NixOS",
+        "repo": "nixos-hardware",
+        "rev": "2a7063461c3751d83869a2a0a8ebc59e34bec5b2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "master",
+        "repo": "nixos-hardware",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1639435656,
@@ -251,6 +267,7 @@
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "nix-gaming": "nix-gaming",
+        "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "pcp-better-status-indicators": "pcp-better-status-indicators",
         "pcp-theme-toggler": "pcp-theme-toggler",

@@ -11,6 +11,7 @@
     flake-utils.url = "github:numtide/flake-utils";
     nix-gaming.url = github:fufexan/nix-gaming;
     nix-gaming.inputs.nixpkgs.follows = "nixpkgs";
+    nixos-hardware.url = github:NixOS/nixos-hardware/master;
 
     # Powercord. pcp- and pct- prefix have meaning, cause inclusion as powercord plugin/theme
     powercord = { url = "github:powercord-org/powercord"; flake = false; };
@@ -69,6 +70,12 @@
       readHosts = path: builtins.map (x: path + "/${x}") (builtins.attrNames (builtins.readDir path));
       makeHost = path: lib.nixosSystem {
         inherit system;
+
+        specialArgs =
+          {
+            nixos-hardware-modules-path = "${args.nixos-hardware}";
+          };
+
         modules = [
           { nixpkgs.pkgs = pkgs; }
           {
