@@ -124,6 +124,8 @@
       ripgrep
       fd
       killall
+      traceroute
+      dnsutils
     ];
 
     # DESKTOP ENV
