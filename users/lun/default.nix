@@ -2,6 +2,7 @@
 {
   imports = [
     ./discord.nix
+    ./kdeconfig.nix
     ./shells/default.nix
   ];
 
