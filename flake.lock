@@ -1,0 +1,66 @@
+{
+  "nodes": {
+    "flake-compat": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1627913399,
+        "narHash": "sha256-hY8g6H2KFL8ownSiFeMOjwPC8P0ueXpCVEbxgda3pko=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "12c64ca55c1014cdc1b16ed5a804aa8576601ff2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1639161226,
+        "narHash": "sha256-75Y08ynJDTq6HHGIF+8IADBJSVip0UyWQH7jqSFnRR8=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "573095944e7c1d58d30fc679c81af63668b54056",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-21.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-unfree-test": {
+      "inputs": {
+        "flake-compat": "flake-compat",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1639096980,
+        "narHash": "sha256-YnOkDfkoJaiebCb0mHAm778cqhKb8XzzOAC3VRoB4wA=",
+        "owner": "lunnova",
+        "repo": "nixos-configs",
+        "rev": "22e0092cfc9ee7c8a786ea80fd127cea54b8c8c1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lunnova",
+        "ref": "nixpkgs-unfree-test",
+        "repo": "nixos-configs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "nixpkgs": "nixpkgs",
+        "nixpkgs-unfree-test": "nixpkgs-unfree-test"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
