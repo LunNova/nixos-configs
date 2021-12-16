@@ -22,11 +22,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.powercord.follows = "powercord";
     };
+    # TODO: check for web access loading scripts and patch out
     pcp-tweaks = { url = "github:NurMarvin/discord-tweaks"; flake = false; };
     pcp-theme-toggler = { url = "github:redstonekasi/theme-toggler"; flake = false; };
     pcp-better-status-indicators = { url = "github:GriefMoDz/better-status-indicators"; flake = false; };
     pcp-webhook-tag = { url = "github:BenSegal855/webhook-tag"; flake = false; };
-    pct-tokyonight = { url = "github:Dyzean/Tokyo-Night"; flake = false; };
+    # TODO: locked version of this which doesn't hit web
+    pct-clearvision = { url = "github:ClearVision/ClearVision-v6"; flake = false; };
+    # TODO: background overrides here instead of manually configured?
   };
 
   outputs =

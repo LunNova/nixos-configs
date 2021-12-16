@@ -198,19 +198,19 @@
         "type": "github"
       }
     },
-    "pct-tokyonight": {
+    "pct-clearvision": {
       "flake": false,
       "locked": {
-        "lastModified": 1629377944,
-        "narHash": "sha256-DLMWZ/7ZemYtXh7fx+JV2MXU+f2uwl9hzbZYeK0YWl8=",
-        "owner": "Dyzean",
-        "repo": "Tokyo-Night",
-        "rev": "46f8b033c1eb1aefbc0eac99b541a7426b5f020c",
+        "lastModified": 1638974139,
+        "narHash": "sha256-xmI3CXqDN1VghCqqs4PrnYi48k+PrQ8xbYADDxtID8w=",
+        "owner": "ClearVision",
+        "repo": "ClearVision-v6",
+        "rev": "a7f565da1e00b5ad51c095f22f2752909901b7dd",
         "type": "github"
       },
       "original": {
-        "owner": "Dyzean",
-        "repo": "Tokyo-Night",
+        "owner": "ClearVision",
+        "repo": "ClearVision-v6",
         "type": "github"
       }
     },
@@ -289,7 +289,7 @@
         "pcp-theme-toggler": "pcp-theme-toggler",
         "pcp-tweaks": "pcp-tweaks",
         "pcp-webhook-tag": "pcp-webhook-tag",
-        "pct-tokyonight": "pct-tokyonight",
+        "pct-clearvision": "pct-clearvision",
         "powercord": "powercord",
         "powercord-overlay": "powercord-overlay",
         "pre-commit-hooks": "pre-commit-hooks"
