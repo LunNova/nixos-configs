@@ -9,14 +9,5 @@
     };
 
     hardware.openrazer.enable = true;
-
-    home-manager.sharedModules = [
-      {
-        xdg.configFile."kcminputrc".text = ''
-          [Mouse]
-          XLbInptAccelProfileFlat=true
-        '';
-      }
-    ];
   };
 }
