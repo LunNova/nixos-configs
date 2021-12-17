@@ -12,6 +12,6 @@
       allowedUDPPorts = [ config.services.tailscale.port ];
     };
 
-    lun.persistence.files = [ "/var/lib/tailscale/tailscaled.state" ];
+    lun.persistence.dirs = [ "/var/lib/tailscale" ];
   };
 }
