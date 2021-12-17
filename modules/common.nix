@@ -81,6 +81,7 @@
     hardware = {
       enableRedistributableFirmware = true;
     };
+    services.fstrim.enable = true;
 
     # HARDENING
     nix.allowedUsers = [ "@users" ];
