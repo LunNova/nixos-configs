@@ -9,12 +9,29 @@
     '';
 
     ".config/fish/functions/fish_prompt.fish".source = ./fish_prompt.fish;
-    ".config/fish/functions/fish_right_prompt.fish".source =
-      ./fish_right_prompt.fish;
+    ".config/fish/functions/fish_right_prompt.fish".text = ''
+      function fish_right_prompt
+          set -l st $status
+          set -l nsi (${pkgs.any-nix-shell}/bin/nix-shell-info)
+
+          if [ $nsi ]
+            echo $nsi
+          end
+
+          if [ $st != 0 ]
+            echo (set_color $theme_color_error) ↵ $st(set_color $theme_color_normal)
+          end
+      end
+    '';
+
     #".config/fish/conf.d/ssh-agent.fish".source = ./ssh-agent.fish;
 
     ".config/fish/conf.d/direnv.fish".text = ''
-      direnv hook fish | source
+      eval (pushd /; ${pkgs.direnv}/bin/direnv hook fish; popd;)
+    '';
+
+    ".config/fish/conf.d/any-nix-shell.fish".text = ''
+      ${pkgs.any-nix-shell}/bin/any-nix-shell fish | source
     '';
 
     # global fish config
