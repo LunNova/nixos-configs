@@ -12,7 +12,6 @@ let name = "hisame"; in
 
     hardware.cpu.amd.updateMicrocode = true;
 
-    boot.kernelParams = [ "boot.shell_on_fail" "boot.trace" ];
 
     my.home-manager.enabled-users = [ "lun" ];
 
