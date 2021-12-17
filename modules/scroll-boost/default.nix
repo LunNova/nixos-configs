@@ -12,10 +12,18 @@ in
         xorg = super.xorg.overrideScope' (selfB: superB: {
           inherit (super.xorg) xlibsWrapper;
           xf86inputlibinput = superB.xf86inputlibinput.overrideAttrs (attr: {
-            patches = [ ./libinput.patch ];
+            patches = [ ./libinput.patch ./no-accel.patch ];
           });
+        });
+        libinput = super.libinput.overrideAttrs (old: {
+          patches = (old.patches or [ ]) ++ [ ./libinput-no-accel.patch ];
         });
       })
     ];
+    etc."libinput/local-overrides.quirks".text = ''
+      [Never Debounce]
+      MatchUdevType=mouse
+      ModelBouncingKeys=1
+    '';
   };
 }

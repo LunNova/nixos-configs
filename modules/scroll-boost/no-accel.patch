@@ -1,0 +1,22 @@
+diff --git a/src/xf86libinput.c b/src/xf86libinput.c
+index 620af6d..d1bf974 100644
+@@ -4199,9 +4199,7 @@ LibinputSetPropertyAccelProfile(DeviceIn
+ 
+ 	data = (BOOL*)val->data;
+ 
+-	if (data[0])
+-		profiles |= LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE;
+-	if (data[1])
++	if (1)
+ 		profiles |= LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT;
+ 
+ 	if (checkonly) {
+@@ -5196,7 +5194,7 @@ LibinputInitAccelProperty(DeviceIntPtr d
+ 	profile = libinput_device_config_accel_get_profile(device);
+ 	switch(profile) {
+ 	case LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE:
+-		profiles[0] = TRUE;
++		profiles[1] = TRUE;
+ 		break;
+ 	case LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT:
+ 		profiles[1] = TRUE;
