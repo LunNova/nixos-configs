@@ -72,7 +72,6 @@
       pkgs = mkPkgs args.nixpkgs [ self.overlay powercord-overlay.overlay ];
       lib = args.nixpkgs.lib;
       readModules = path: builtins.map (x: path + "/${x}") (builtins.attrNames (builtins.readDir path));
-      readHosts = path: builtins.map (x: path + "/${x}") (builtins.attrNames (builtins.readDir path));
       makeHost = path: lib.nixosSystem {
         inherit system;
 

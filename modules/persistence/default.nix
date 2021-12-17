@@ -6,7 +6,6 @@ let
   addCheckDesc = desc: elemType: check: lib.types.addCheck elemType check
     // { description = "${elemType.description} (with check: ${desc})"; };
   isNonEmpty = s: (builtins.match "[ \t\n]*" s) == null;
-  nonEmptyStr = addCheckDesc "non-empty" lib.types.str isNonEmpty;
   nonEmptyWithoutTrailingSlash = addCheckDesc "non-empty without trailing slash" lib.types.str
     (s: isNonEmpty s && (builtins.match ".+/" s) == null);
 in
@@ -32,10 +31,12 @@ in
 
   config = lib.mkIf cfg.enable {
     systemd.tmpfiles.rules =
-      let escapedFiles = (builtins.map (path: lib.escape [ "\"" "\\" ] path) cfg.files);
+      let escapedFiles = (builtins.map (lib.escape [ "\"" "\\" ]) cfg.files);
       in
       (builtins.map (path: "L+ \"${path}\" - - - - ${persistPath}/${path}") escapedFiles);
 
-    fileSystems = (builtins.listToAttrs (builtins.map (path: { name = path; value = { device = "${persistPath}/${path}"; noCheck = true; neededForBoot = true; options = [ "bind" ]; }; }) cfg.dirs));
+    fileSystems =
+      let pathToFilesystem = (name: { inherit name; value = { device = "${persistPath}/${name}"; noCheck = true; neededForBoot = true; options = [ "bind" ]; }; });
+      in (builtins.listToAttrs (builtins.map pathToFilesystem cfg.dirs));
   };
 }

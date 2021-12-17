@@ -35,16 +35,15 @@ let
     };
   };
   lines = lib.flatten (lib.mapAttrsToList
-    (file: groups:
+    (file:
       lib.mapAttrsToList
-        (group: keys:
+        (group:
           lib.mapAttrsToList
             (key: value:
               "$DRY_RUN_CMD ${pkgs.libsForQt5.kconfig}/bin/kwriteconfig5 --file $confdir/'${file}' --group '${group}' --key '${key}' '${
                 toValue value
               }'")
-            keys)
-        groups)
+        ))
     configs);
 in
 {

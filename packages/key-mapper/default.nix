@@ -6,9 +6,9 @@ pkgs.python3Packages.buildPythonApplication rec {
   version = "1.2.1";
 
   src = pkgs.fetchFromGitHub {
+    inherit rev;
     owner = "sezanzeb";
     repo = "key-mapper";
-    rev = rev;
     sha256 = "07dgp4vays1w4chhd22vlp9bxc49lcgzkvmjqgbr00m3781yjsf7";
   };
 
