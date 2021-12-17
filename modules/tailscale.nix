@@ -11,5 +11,7 @@
       # allow the Tailscale UDP port through the firewall
       allowedUDPPorts = [ config.services.tailscale.port ];
     };
+
+    lun.persistence.files = [ "/var/lib/tailscale/tailscaled.state" ];
   };
 }

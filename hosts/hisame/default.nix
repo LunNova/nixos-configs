@@ -23,6 +23,8 @@ let name = "hisame"; in
           "ssh/ssh_host_ed25519_key"
           "ssh/ssh_host_rsa_key"
         ]);
+
+    lun.persistence.enable = true;
     fileSystems =
       {
         "/" = {
