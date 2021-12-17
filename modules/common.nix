@@ -39,10 +39,10 @@
     # NIX
     nixpkgs.config.allowUnfree = true;
     nix = {
-      package = pkgs.nixFlakes;
+      package = pkgs.nixUnstable;
       daemonCPUSchedPolicy = "idle";
       extraOptions = lib.mkMerge [
-        "experimental-features = nix-command flakes"
+        "experimental-features = nix-command flakes ca-derivations"
         "warn-dirty = false"
       ];
       autoOptimiseStore = true;
