@@ -64,6 +64,7 @@ __default_var theme_color_normal                           normal
 __default_var theme_color_time                             666666
 __default_var theme_color_path                             brwhite
 __default_var theme_color_prompt                           white
+__default_var theme_color_direnv                       bryellow
 __default_var theme_color_virtualenv                       bryellow
 __default_var theme_color_status_prefix                    brblue
 __default_var theme_color_status_jobs                      brgreen
@@ -96,6 +97,11 @@ __default_var theme_prompt_virtualenv_char_begin           '('
 __default_var theme_prompt_virtualenv_char_end             ')'
 __default_var theme_prompt_virtualenv_color_char_begin     normal
 __default_var theme_prompt_virtualenv_color_char_end       normal
+
+__default_var theme_prompt_direnv_char_begin           '('
+__default_var theme_prompt_direnv_char_end             ')'
+__default_var theme_prompt_direnv_color_char_begin     normal
+__default_var theme_prompt_direnv_color_char_end       normal
 
 __default_var theme_prompt_batt_charging_char              '↑'
 __default_var theme_prompt_batt_discharging_char           '↓'
@@ -191,7 +197,13 @@ function __theme_print_prompt_char
     print_colored $theme_prompt_char $theme_color_prompt
 end
 function __theme_print_pwd
-    print_colored (prompt_pwd) $theme_color_path
+    set -l pwd_color $theme_color_path
+    if [ "$DIRENV_DIR" != '' ]
+        set -l pwd_color $theme_color_path_in_direnv
+    end
+    set -g $fish_prompt_pwd_dir_length 0
+
+    print_colored (prompt_pwd) $pwd_color
 end
 function __theme_print_pwd_rw
     [ "$theme_display_rw" = 'no' ]; and return;
@@ -237,14 +249,18 @@ function __theme_print_virtualenv
 
     set -l basename (basename "$VIRTUAL_ENV")
 
-    # special case for Aspen magic directories (http://www.zetadev.com/software/aspen/)
-    if test "$basename" = "__"
-        set basename (basename (dirname "$VIRTUAL_ENV"))
-    end
-
     print_colored $theme_prompt_virtualenv_char_begin $theme_prompt_virtualenv_color_char_begin
     print_colored $basename $theme_color_virtualenv
     print_colored $theme_prompt_virtualenv_char_end $theme_prompt_virtualenv_color_char_end
+end
+function __theme_print_direnv
+    [ "$theme_display_direnv" = 'no' -o -z "$DIRENV_DIR" ]; and return
+
+    set -l basename (basename (string trim -l -c '-' -- "$DIRENV_DIR"))
+
+    print_colored $theme_prompt_direnv_char_begin $theme_prompt_direnv_color_char_begin
+    print_colored $basename $theme_color_direnv
+    print_colored $theme_prompt_direnv_char_end $theme_prompt_direnv_color_char_end
 end
 function __theme_reset_color
     set_color $theme_color_normal
@@ -277,6 +293,7 @@ function fish_prompt
         (__theme_print_battery_status) \
     )
     set -l line2 (string join " " \
+        (__theme_print_direnv) \
         (__theme_print_virtualenv) \
         (__theme_print_prompt_char)\
     )
