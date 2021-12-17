@@ -25,7 +25,7 @@ end
 #set -g theme_display_time yes
 #
 ## Display the user's current group
-#set -g theme_display_group no
+set -g theme_display_group no
 #
 # Display the system hostname
 #set -g theme_display_hostname no
@@ -241,7 +241,10 @@ function __theme_print_userhost
 
     if [ "$theme_display_hostname" != 'no' ]
         print_colored $theme_prompt_userhost_separator $theme_color_separator
-        print_colored (prompt_hostname) $theme_color_host
+        set -l host (string replace -r -- "\..*" "" $hostname)
+        set -l host (string replace -r -- "-nixos\$" "" $host)
+        set -l host (string replace -r -- "^$USER-" "" $host)
+        print_colored $host $theme_color_host
     end
 end
 function __theme_print_virtualenv
@@ -259,7 +262,7 @@ function __theme_print_direnv
     set -l basename (basename (string trim -l -c '-' -- "$DIRENV_DIR"))
 
     print_colored $theme_prompt_direnv_char_begin $theme_prompt_direnv_color_char_begin
-    print_colored $basename $theme_color_direnv
+    print_colored env:$basename $theme_color_direnv
     print_colored $theme_prompt_direnv_char_end $theme_prompt_direnv_color_char_end
 end
 function __theme_reset_color
