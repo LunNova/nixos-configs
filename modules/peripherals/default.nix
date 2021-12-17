@@ -8,6 +8,10 @@
       mouse = { accelProfile = "flat"; };
     };
 
+    services.fwupd.enable = true;
     hardware.openrazer.enable = true;
+    hardware.steam-hardware.enable = true;
+    hardware.enableRedistributableFirmware = true;
+    hardware.wirelessRegulatoryDatabase = true;
   };
 }
