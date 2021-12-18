@@ -7,10 +7,11 @@
     sconfig.tty12-journal.enable = true;
 
     # LANGUAGE / I18N
-    i18n = {
-      defaultLocale = "en_US.UTF-8";
-      supportedLocales = [ "en_US.UTF-8/UTF-8" ];
-    };
+    i18n = let locale = "en_US.UTF-8"; in
+      {
+        defaultLocale = locale;
+        supportedLocales = [ "${locale}/UTF-8" ];
+      };
     time = {
       timeZone = "America/Los_Angeles";
       hardwareClockInLocalTime = true;
