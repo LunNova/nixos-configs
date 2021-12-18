@@ -2,7 +2,6 @@
 {
   config = {
     my.home-manager.enabled-users = [ "lun" ];
-    sconfig.scroll-boost = true; # modules/scroll-boost
     sconfig.yubikey = true; # modules/yubikey
     sconfig.key-mapper = true; # modules/key-mapper
     sconfig.tty12-journal.enable = true;

@@ -1,15 +1,6 @@
 diff '--color=auto' --show-c-function -ur libinput-1.19.1/src/evdev.c libinput-1.19.1-no-accel/src/evdev.c
 --- libinput-1.19.1/src/evdev.c	2021-09-27 18:51:11.900797800 -0700
 +++ libinput-1.19.1-no-accel/src/evdev.c	2021-12-17 10:25:44.803464279 -0800
-@@ -1170,6 +1170,8 @@ evdev_init_accel(struct evdev_device *de
- 	else if (device->tags & EVDEV_TAG_TRACKPOINT)
- 		filter = create_pointer_accelerator_filter_trackpoint(device->trackpoint_multiplier,
- 								      device->use_velocity_averaging);
-+	else if (device->tags & EVDEV_TAG_EXTERNAL_MOUSE)
-+		filter = NULL;
- 	else if (device->dpi < DEFAULT_MOUSE_DPI)
- 		filter = create_pointer_accelerator_filter_linear_low_dpi(device->dpi,
- 									  device->use_velocity_averaging);
 @@ -1273,7 +1275,7 @@ evdev_accel_config_get_default_profile(s
  		return LIBINPUT_CONFIG_ACCEL_PROFILE_NONE;
  
