@@ -43,12 +43,26 @@
     }@args:
     let
       system = "x86_64-linux";
-      mkPkgs = pkgs: extraOverlays:
-        import pkgs {
-          inherit system;
-          config.allowUnfree = true;
-          overlays = extraOverlays;
-        };
+      defaultPkgsConfig = {
+        inherit system;
+        config.allowUnfree = true;
+        overlays = [ self.overlay powercord-overlay.overlay ];
+      };
+      mkPkgs = pkgs: extra:
+        (import pkgs (recursiveMerge [ defaultPkgsConfig extra ]));
+      recursiveMerge = attrList:
+        let f = attrPath:
+          with lib; with builtins;
+          zipAttrsWith (n: values:
+            if tail values == [ ]
+            then head values
+            else if all isList values
+            then unique (concatLists values)
+            else if all isAttrs values
+            then f (attrPath ++ [ n ]) values
+            else last values
+          );
+        in f [ ] attrList;
       filterInputs = prefix: builtins.attrValues (lib.filterAttrs (name: value: (lib.hasPrefix prefix name)) args);
       lock = builtins.fromJSON (builtins.readFile ./flake.lock);
       nixpkgs-unfree-path = ./hack-nixpkgs-unfree;
@@ -68,11 +82,10 @@
             "%REV%" "${lock.nodes.nixpkgs.locked.rev}"
         '';
       };
-
-      pkgs = mkPkgs args.nixpkgs [ self.overlay powercord-overlay.overlay ];
+      pkgs = mkPkgs args.nixpkgs { };
       lib = args.nixpkgs.lib;
       readModules = path: builtins.map (x: path + "/${x}") (builtins.attrNames (builtins.readDir path));
-      makeHost = path: lib.nixosSystem {
+      makeHost = pkgs: path: lib.nixosSystem {
         inherit system;
 
         specialArgs =
@@ -105,6 +118,10 @@
     {
       inherit args;
 
+      caPkgs = mkPkgs args.nixpkgs {
+        config.contentAddressedByDefault = true;
+      };
+
       packages."${system}" = {
         key-mapper = pkgs.callPackage packages/key-mapper { };
       };
@@ -117,8 +134,8 @@
 
       # TODO load automatically with readDir
       nixosConfigurations = {
-        lun-kosame-nixos = makeHost ./hosts/kosame;
-        lun-hisame-nixos = makeHost ./hosts/hisame;
+        lun-kosame-nixos = makeHost pkgs ./hosts/kosame;
+        lun-hisame-nixos = makeHost pkgs ./hosts/hisame;
       };
 
       checks."${system}" = {
