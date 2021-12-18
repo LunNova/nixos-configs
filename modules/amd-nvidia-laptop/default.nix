@@ -39,18 +39,18 @@ in
       })
     ];
 
+    services.xserver.displayManager.gdm.wayland = lib.mkForce false;
+    services.xserver.displayManager.gdm.nvidiaWayland = lib.mkForce false;
+
     environment.systemPackages = [ (lib.mkIf cfg.prime nvidia-offload) ];
     hardware.nvidia = lib.mkIf cfg.prime {
       modesetting.enable = false;
       #powerManagement.enable = true;
       #powerManagement.finegrained = true;
-      #nvidiaPersistenced = true;
-      #package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
       prime = {
         amdgpuBusId = "PCI:4:0:0";
         nvidiaBusId = "PCI:1:0:0";
         offload.enable = true;
-        #sync.enable = true;  # Do all rendering on the dGPU
       };
     };
   };
