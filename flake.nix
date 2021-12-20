@@ -98,6 +98,7 @@
           {
             # pin system nixpkgs to the same version as the flake input
             # (don't see a way to declaratively set channels but this seems to work fine?)
+            # TODO try https://github.com/tejing1/nixos-config/blob/df7f087c1ec0183422df22398d9b06c523adae84/nixosConfigurations/tejingdesk/registry.nix#L26-L28 approach
             nix.registry.pkgs.flake = nixpkgs-unfree-relocked;
             nix.registry.nixpkgs.flake = nixpkgs;
             nix.nixPath = [ "pkgs=${nixpkgs-unfree-relocked}" ];
