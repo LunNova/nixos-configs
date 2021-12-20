@@ -157,7 +157,17 @@
       };
       devShell.${system} = args.minimal-shell.lib.minimal-shell {
         inherit pkgs system;
-        shellHooks = self.checks.${system}.pre-commit-check.shellHook;
+        passthru = {
+          tempBuildInputs = [ pkgs.nixpkgs-fmt ];
+        };
+        # TODO handle buildInputs in minimal-shell
+        shellHooks = self.checks.${system}.pre-commit-check.shellHook + ''
+
+        for p in $tempBuildInputs; do
+          export PATH=$p/bin''${PATH:+:}$PATH
+        done
+        unset tempBuildInputs;
+        '';
       };
     };
 }
