@@ -99,6 +99,7 @@
             # pin system nixpkgs to the same version as the flake input
             # (don't see a way to declaratively set channels but this seems to work fine?)
             nix.registry.pkgs.flake = nixpkgs-unfree-relocked;
+            nix.registry.nixpkgs.flake = nixpkgs;
             nix.nixPath = [ "pkgs=${nixpkgs-unfree-relocked}" ];
             system.configurationRevision = lib.mkIf (args.self ? rev) args.self.rev; # set configurationRevision if available
           }
