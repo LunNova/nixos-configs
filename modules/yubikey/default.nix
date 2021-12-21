@@ -17,6 +17,7 @@ in
       yubikey-personalization-gui
     ];
 
+    # TODO: this needs to set appid and origin and add config to set those upstream
     security.pam.u2f = {
       enable = true;
       cue = true;

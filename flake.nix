@@ -15,6 +15,8 @@
 
     minimal-shell.url = "github:LunNova/nix-minimal-shell";
 
+    deploy-rs.url = "github:serokell/deploy-rs";
+
     # Powercord. pcp- and pct- prefix have meaning, cause inclusion as powercord plugin/theme
     powercord = { url = "github:powercord-org/powercord"; flake = false; };
     powercord-overlay = {
@@ -39,6 +41,7 @@
     , pre-commit-hooks
     , nix-gaming
     , powercord-overlay
+    , deploy-rs
     , ...
     }@args:
     let
@@ -141,21 +144,26 @@
         lun-hisame-nixos = makeHost pkgs ./hosts/hisame;
       };
 
-      checks."${system}" = {
-        pre-commit-check = pre-commit-hooks.lib.${system}.run {
-          src = ./.;
-          hooks = {
-            nix-linter.enable = false; # TODO: fix these errors
-            nixpkgs-fmt.enable = true;
-            shellcheck = {
-              enable = true;
-              files = "\\.sh$";
-              types_or = lib.mkForce [ ];
+      deploy.nodes.lun-kosame-nixos.profiles.system = { };
+
+      checks = recursiveMerge [{
+        "${system}" = {
+          pre-commit-check = pre-commit-hooks.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              nix-linter.enable = false; # TODO: fix these errors
+              nixpkgs-fmt.enable = true;
+              shellcheck = {
+                enable = true;
+                files = "\\.sh$";
+                types_or = lib.mkForce [ ];
+              };
+              shfmt = { };
             };
-            shfmt = { };
           };
         };
-      };
+      }
+        (builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) args.deploy-rs.lib)];
       devShell.${system} = args.minimal-shell.lib.minimal-shell {
         inherit pkgs system;
         passthru = {
