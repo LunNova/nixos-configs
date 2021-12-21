@@ -63,7 +63,7 @@
             else last values
           );
         in f [ ] attrList;
-      filterInputs = prefix: builtins.attrValues (lib.filterAttrs (name: value: (lib.hasPrefix prefix name)) args);
+      filterInputs = prefix: lib.filterAttrs (name: value: (lib.hasPrefix prefix name)) args;
       lock = builtins.fromJSON (builtins.readFile ./flake.lock);
       nixpkgs-unfree-path = ./hack-nixpkgs-unfree;
       nixpkgs-unfree-relocked = pkgs.stdenv.mkDerivation {
@@ -126,10 +126,11 @@
 
       packages."${system}" = {
         key-mapper = pkgs.callPackage packages/key-mapper { };
+        powercord = pkgs.callPackage packages/powercord { plugins = { }; themes = { }; };
       };
 
       overlay = final: prev: {
-        my = self.packages."${system}";
+        lun = self.packages."${system}";
         powercord-plugins = filterInputs "pcp-";
         powercord-themes = filterInputs "pct-";
       };

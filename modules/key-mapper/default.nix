@@ -2,7 +2,7 @@
 let
   cfg = config.sconfig.key-mapper;
   mapper-pkg = with pkgs; lib.mkIf cfg [
-    my.key-mapper
+    lun.key-mapper
   ];
 in
 {
