@@ -33,7 +33,7 @@ in
     systemd.tmpfiles.rules =
       let escapedFiles = (builtins.map (lib.escape [ "\"" "\\" ]) cfg.files);
       in
-      (builtins.map (path: "L+ \"${path}\" - - - - ${persistPath}/${path}") escapedFiles);
+      (builtins.map (path: "L+ \"${path}\" - - - - ${persistPath}${path}") escapedFiles);
 
     fileSystems =
       let pathToFilesystem = (name: { inherit name; value = { device = "${persistPath}/${name}"; noCheck = true; neededForBoot = true; options = [ "bind" ]; }; });
