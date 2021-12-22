@@ -24,7 +24,7 @@
       end
     '';
 
-    #".config/fish/conf.d/ssh-agent.fish".source = ./ssh-agent.fish;
+    ".config/fish/conf.d/ssh-agent.fish".source = ./ssh_agent.fish;
 
     ".config/fish/conf.d/direnv.fish".text = ''
       eval (pushd /; ${pkgs.direnv}/bin/direnv hook fish; popd;)
