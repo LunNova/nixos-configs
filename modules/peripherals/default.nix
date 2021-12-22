@@ -14,5 +14,7 @@
     hardware.enableRedistributableFirmware = true;
     hardware.wirelessRegulatoryDatabase = true;
     hardware.ledger.enable = true;
+    # use with piper for gaming mouse configuration
+    services.ratbagd.enable = true;
   };
 }
