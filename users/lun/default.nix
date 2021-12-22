@@ -46,8 +46,13 @@
   programs.git = {
     enable = true;
     userName = "Luna Nova";
-    userEmail = "git@nyx.nova.fail";
+    userEmail = "git@lunnova.dev";
     extraConfig = {
+      checkout.defaultRemote = "origin";
+      core.eol = "lf";
+      gpg.format = "ssh";
+      commit.gpgsign = true;
+      user.signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZjpZ0wdmXwnVycJw8abOpspCbfWwDDm9WA8L/k9AID lun_signing_2021-12-21";
       diff.colorMoved = "zebra";
       fetch.prune = true;
       init.defaultBranch = "main";

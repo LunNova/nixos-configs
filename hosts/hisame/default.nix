@@ -16,13 +16,6 @@ let name = "hisame"; in
     my.home-manager.enabled-users = [ "lun" ];
 
     users.mutableUsers = false;
-    environment.etc =
-      builtins.listToAttrs (map
-        (name: { inherit name; value.source = "/persist/etc/${name}"; })
-        [
-          "ssh/ssh_host_ed25519_key"
-          "ssh/ssh_host_rsa_key"
-        ]);
 
     lun.persistence.enable = true;
     fileSystems =

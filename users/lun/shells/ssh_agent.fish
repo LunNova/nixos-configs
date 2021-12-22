@@ -24,7 +24,7 @@ if status --is-interactive
     if string match -rv "/run/user/.*" "$SSH_AUTH_SOCK" >/dev/null
       # Check the agent's actually running
       if ps -p "$SSH_AGENT_PID" >/dev/null
-        set -e SSH_ASKPASS
+        #set -e SSH_ASKPASS
         exit
       end
     end

@@ -66,8 +66,15 @@
     services.openssh = {
       enable = true;
       permitRootLogin = "no";
+      # TODO: ssh-keygen -A at boot so these get generated while still using startWhenNeeded?
+      # Maybe should always pregen when setting up a new system because will be using agenix later so this is irrelevant
       startWhenNeeded = true;
+      passwordAuthentication = false;
+      challengeResponseAuthentication = false;
+      extraConfig = "UsePAM no";
+      banner = "This computer system may not be used for any purpose.\nBe gay, do crime.\n";
     };
+    lun.persistence.dirs = [ "/etc/ssh" ];
 
     # BOOT
     boot = {
