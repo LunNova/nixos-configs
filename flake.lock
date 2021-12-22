@@ -52,11 +52,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1639774225,
-        "narHash": "sha256-pdXvYneQVzB14fD+Q283s17tXRyQMs2JMx4mZ4JeSYg=",
+        "lastModified": 1640126586,
+        "narHash": "sha256-Brja0wQZFSl+hduOcBfE/oVPs0QattbILSMHC7/9fEg=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "8b44e81978a2bef60c83ecc0199ab2523310214a",
+        "rev": "1b03a8ab7af9385b70b7d7c319c4a31a58c5cfa5",
         "type": "github"
       },
       "original": {
@@ -104,11 +104,11 @@
     },
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1639240632,
-        "narHash": "sha256-BAXhgnPOW1COIfZ9EOOFTdolalYS73MFHSRajgrSdZw=",
+        "lastModified": 1639986101,
+        "narHash": "sha256-Ow0+pkY7qMw6lMAvR1mEdUT9svJnrkbaRoqp4bkMTpg=",
         "owner": "NixOS",
         "repo": "nixos-hardware",
-        "rev": "2a7063461c3751d83869a2a0a8ebc59e34bec5b2",
+        "rev": "3f92db38374b2977aea8daf4c4fe2fa0eddbd60c",
         "type": "github"
       },
       "original": {
@@ -120,11 +120,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1639699734,
-        "narHash": "sha256-tlX6WebGmiHb2Hmniff+ltYp+7dRfdsBxw9YczLsP60=",
+        "lastModified": 1640139330,
+        "narHash": "sha256-Nkp3wUOGwtoQ7EH28RLVJ7EqB/e0TU7VcsM7GLy+SdY=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "03ec468b14067729a285c2c7cfa7b9434a04816c",
+        "rev": "81cef6b70fb5d5cdba5a0fef3f714c2dadaf0d6d",
         "type": "github"
       },
       "original": {
@@ -201,11 +201,11 @@
     "pct-clearvision": {
       "flake": false,
       "locked": {
-        "lastModified": 1638974139,
-        "narHash": "sha256-xmI3CXqDN1VghCqqs4PrnYi48k+PrQ8xbYADDxtID8w=",
+        "lastModified": 1640065205,
+        "narHash": "sha256-rP+KRnoHm39mliavC3AV+bhqRxcv5Cs9lW3FSl+vdVc=",
         "owner": "ClearVision",
         "repo": "ClearVision-v6",
-        "rev": "a7f565da1e00b5ad51c095f22f2752909901b7dd",
+        "rev": "ae847edfb33f60c5d0d862e1b999ccf9505dcbdf",
         "type": "github"
       },
       "original": {
@@ -217,11 +217,11 @@
     "powercord": {
       "flake": false,
       "locked": {
-        "lastModified": 1634897852,
-        "narHash": "sha256-VuPvcTGkhTnZhrAskKWjuT8AigL+T7Lg3kUNRBJXi5E=",
+        "lastModified": 1640040234,
+        "narHash": "sha256-vqSlRVyHSA4F840yr32bhhXcSL+ffwkn0FXq02dc7VY=",
         "owner": "powercord-org",
         "repo": "powercord",
-        "rev": "1d2318bcd7c5e5a5230d8bf25813ed648cfd7b76",
+        "rev": "b64b144959a922a41e4d15122b195354577bc582",
         "type": "github"
       },
       "original": {
