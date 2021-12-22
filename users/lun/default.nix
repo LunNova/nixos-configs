@@ -58,6 +58,15 @@
       init.defaultBranch = "main";
       rebase.autostash = true;
       pull.rebase = true;
+      merge = {
+        tool = "vscode";
+      };
+      mergeTool = {
+        keepBackup = false;
+        vscode = {
+          cmd = "code --wait --new-window $MERGED";
+        };
+      };
     };
   };
 
