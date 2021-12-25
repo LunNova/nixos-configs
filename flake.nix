@@ -124,9 +124,8 @@
         config.contentAddressedByDefault = true;
       };
 
-      packages."${system}" = {
-        key-mapper = pkgs.callPackage packages/key-mapper { };
-        powercord = pkgs.callPackage packages/powercord { plugins = { }; themes = { }; };
+      packages."${system}" = import ./packages {
+        inherit system pkgs;
       };
 
       overlay = final: prev: {

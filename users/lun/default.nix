@@ -3,6 +3,7 @@
   imports = [
     ./discord.nix
     ./kdeconfig.nix
+    ./xdg-mime-apps.nix
     ./shells/default.nix
   ];
 
@@ -25,20 +26,15 @@
   home.stateVersion = "21.11";
 
   home.packages = with pkgs; [
-    lutris
     ark
     osu-lazer
     glxinfo
     vulkan-tools
     wineWowPackages.fonts
     wineWowPackages.staging
-    (lutris.override {
-      lutris-unwrapped = (lutris-unwrapped.override {
-        wine = wineWowPackages.staging;
-      });
-    })
     nixpkgs-fmt
     rnix-lsp
+    lun.lutris
   ];
 
   services.lorri.enable = true;
