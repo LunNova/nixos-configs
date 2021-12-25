@@ -10,12 +10,12 @@ stdenvNoCC.mkDerivation {
 
   installPhase =
     let
-      fromDrvs = drvs: builtins.trace drvs (lib.mapAttrsToList
+      fromDrvs = drvs: lib.mapAttrsToList
         (k: drv: {
           inherit (drv) outPath;
           name = lib.strings.sanitizeDerivationName k;
         })
-        drvs);
+        drvs;
 
       map = n: l: lib.concatMapStringsSep "\n"
         (e: ''
