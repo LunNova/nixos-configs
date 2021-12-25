@@ -54,15 +54,13 @@
       init.defaultBranch = "main";
       rebase.autostash = true;
       pull.rebase = true;
-      merge = {
-        tool = "vscode";
-      };
+      merge.tool = "vscode";
+      diff.tool = "vscode";
       mergeTool = {
         keepBackup = false;
-        vscode = {
-          cmd = "code --wait --new-window $MERGED";
-        };
+        vscode.cmd = "code --wait --new-window $MERGED";
       };
+      difftool.vscode.cmd = "code --wait --new-window --diff $LOCAL $REMOTE";
     };
   };
 
