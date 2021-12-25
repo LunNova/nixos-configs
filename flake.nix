@@ -140,6 +140,33 @@
         lun-hisame-nixos = makeHost pkgs ./hosts/hisame;
       };
 
+      homeConfigurations =
+        let
+          homeManagerConfiguration = { configuration, pkgs, extraModules ? [ ], check ? true, extraSpecialArgs ? { } }:
+            import "${home-manager}/modules" {
+              inherit pkgs check extraSpecialArgs;
+              configuration = { ... }: {
+                imports = [ configuration ] ++ extraModules;
+              };
+            };
+        in
+        {
+          lun =
+            let username = "lun"; in
+            homeManagerConfiguration
+              {
+                inherit pkgs;
+                configuration = {
+                  _module.args.pkgs = lib.mkForce pkgs;
+                  _module.args.pkgs_i686 = lib.mkForce { };
+                  imports = [ ];
+                  home.stateVersion = "21.05";
+                  home.homeDirectory = "/home/${username}";
+                  home.username = "${username}";
+                };
+              };
+        };
+
       checks."${system}" = {
         pre-commit-check = pre-commit-hooks.lib.${system}.run {
           src = ./.;
