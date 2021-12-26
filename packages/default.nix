@@ -7,7 +7,7 @@ let
     patches = old.patches ++ [ ];
     propagatedBuildInputs = old.propagatedBuildInputs ++ [ pkgs.wineWowPackages.fonts ];
   });
-  xdg-open-handlr = pkgs.callPackage ./xdg-open-handlr { };
+  xdg-open-with-portal = pkgs.callPackage ./xdg-open-with-portal { };
 in
 {
   key-mapper = pkgs.callPackage ./key-mapper { };
@@ -16,10 +16,10 @@ in
     themes = { };
   };
   handlr = pkgs.callPackage ./handlr { };
-  xdg-open-handlr = xdg-open-handlr;
+  xdg-open-with-portal = xdg-open-with-portal;
   lutris-unwrapped = lutris-unwrapped;
   lutris = pkgs.lutris.override {
     lutris-unwrapped = lutris-unwrapped;
-    extraLibraries = pkgs: [ (pkgs.hiPrio xdg-open-handlr) ];
+    extraLibraries = pkgs: [ (pkgs.hiPrio xdg-open-with-portal) ];
   };
 }
