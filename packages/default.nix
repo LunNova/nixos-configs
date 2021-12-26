@@ -15,7 +15,6 @@ in
     plugins = { };
     themes = { };
   };
-  handlr = pkgs.callPackage ./handlr { };
   xdg-open-with-portal = xdg-open-with-portal;
   lutris-unwrapped = lutris-unwrapped;
   lutris = pkgs.lutris.override {
