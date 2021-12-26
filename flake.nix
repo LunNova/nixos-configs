@@ -128,11 +128,16 @@
         inherit system pkgs;
       };
 
-      overlay = final: prev: {
-        lun = self.packages."${system}";
-        powercord-plugins = filterInputs "pcp-";
-        powercord-themes = filterInputs "pct-";
-      };
+      overlay = final: prev:
+        let lun = self.packages."${system}"; in
+        {
+          inherit lun;
+          powercord-plugins = filterInputs "pcp-";
+          powercord-themes = filterInputs "pct-";
+          steam = prev.steam.override {
+            extraPkgs = pkgs: [ (pkgs.hiPrio lun.xdg-open-with-portal) ];
+          };
+        };
 
       # TODO load automatically with readDir
       nixosConfigurations = {
