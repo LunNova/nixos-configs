@@ -14,4 +14,4 @@ fi
 
 # home-manager switch used to handle this?
 # since swapping to home-manager.nixosModules.home-manager seem to need to do this to get changes to happen immediately
-sudo systemctl restart home-manager-lun
+sudo systemctl restart home-manager-"$USER"
