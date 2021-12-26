@@ -4,9 +4,42 @@
 pkgs.writeShellScriptBin "xdg-open" ''
   #!/bin/sh
 
-  echo "xdg-open workaround: Launching $@"
+  targetFile=$1
 
-  env -i RUST_BACKTRACE=1 USER="$USER" HOME="$HOME" \
-      XDG_DATA_HOME=$XDG_DATA_HOME XDG_DATA_DIRS=$XDG_DATA_DIRS XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR XAUTHORITY=$XAUTHORITY DISPLAY=$DISPLAY KDE_SESSION_VERSION=$KDE_SESSION_VERSION XDG_CURRENT_DESKTOP=X-Generic \
-      bash -lc 'env | sort >> ~/dev/xdg-open-log && ${pkgs.lun.handlr}/bin/handlr open '"$@"
+  # trying to avoid issues if whatever handles org.freedesktop.portal ends up calling this script again
+  if ! ${pkgs.psmisc}/bin/pstree -s -p $$ | grep -q xdg-desktop-portal ; then
+    >&2 echo "xdg-open workaround: using org.freedesktop.portal to open $targetFile"
+
+    openFile=OpenFile
+    # https://github.com/flatpak/xdg-desktop-portal/issues/683
+    # if [ -d "$targetFile" ]; then
+    #   openFile=OpenDirectory
+    # fi
+
+    if [ -e "$targetFile" ]; then
+      exec 3< "$targetFile"
+      gdbus call --session \
+        --dest org.freedesktop.portal.Desktop \
+        --object-path /org/freedesktop/portal/desktop \
+        --method org.freedesktop.portal.OpenURI.$openFile \
+        --timeout 5 \
+        "" "3" {}
+    else
+      if ! echo "$targetFile" | grep -q '://'; then
+        targetFile="https://$targetFile"
+      fi
+
+      gdbus call --session \
+        --dest org.freedesktop.portal.Desktop \
+        --object-path /org/freedesktop/portal/desktop \
+        --method org.freedesktop.portal.OpenURI.OpenURI \
+        --timeout 5 \
+        "" "$targetFile" {}
+    fi
+  else
+    >&2 echo "xdg-open workaround: using xdg-open to open $targetFile as seem to have been invoked recursively"
+    env -i RUST_BACKTRACE=1 USER="$USER" HOME="$HOME" \
+      $(systemctl --user show-environment | grep -v \$\' | xargs)
+      ${pkgs.xdg-utils}/bin/xdg-open "$targetFile"
+  fi
 ''
