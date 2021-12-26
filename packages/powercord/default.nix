@@ -4,9 +4,13 @@
 , plugins ? { }
 , themes ? { }
 }:
+let unwrapped = powercord-unwrapped.overrideAttrs (old: {
+  patches = old.patches ++ [ ./disable-back-handling.js.patch ];
+});
+in
 stdenvNoCC.mkDerivation {
   name = "powercord";
-  src = powercord-unwrapped.out;
+  src = unwrapped.out;
 
   installPhase =
     let
@@ -31,13 +35,13 @@ stdenvNoCC.mkDerivation {
     ''
       cp -a $src $out
       chmod 755 $out
-      ln -s ${powercord-unwrapped.deps}/node_modules $out/node_modules
+      ln -s ${unwrapped.deps}/node_modules $out/node_modules
       ${mappedPlugins}
       ${mappedThemes}
     '';
 
-  passthru.unwrapped = powercord-unwrapped;
-  meta = powercord-unwrapped.meta // {
-    priority = (powercord-unwrapped.meta.priority or 0) - 1;
+  passthru.unwrapped = unwrapped;
+  meta = unwrapped.meta // {
+    priority = (unwrapped.meta.priority or 0) - 1;
   };
 }

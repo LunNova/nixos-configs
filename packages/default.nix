@@ -11,7 +11,10 @@ let
 in
 {
   key-mapper = pkgs.callPackage ./key-mapper { };
-  powercord = pkgs.callPackage ./powercord { plugins = { }; themes = { }; };
+  powercord = pkgs.callPackage ./powercord {
+    plugins = { };
+    themes = { };
+  };
   handlr = pkgs.callPackage ./handlr { };
   xdg-open-handlr = xdg-open-handlr;
   lutris-unwrapped = lutris-unwrapped;
