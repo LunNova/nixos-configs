@@ -72,6 +72,9 @@
 
   programs.nix-index.enable = true;
 
+  # FIXME: makes firefox open blank window?
+  # systemd.user.startServices = "sd-switch";
+
   home.file.
   ".mozilla/native-messaging-hosts/fx_cast_bridge.json".source =
     let patched_fx_cast_bridge = pkgs.fx_cast_bridge.overrideAttrs (oldAttrs: {
