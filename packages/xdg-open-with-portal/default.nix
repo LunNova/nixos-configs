@@ -1,12 +1,10 @@
 { writeShellScriptBin
 , glib
-, bash
 }:
 # TODO can this maybe suck less
 # https://discourse.nixos.org/t/making-xdg-open-more-resilient/16777
 writeShellScriptBin "xdg-open" ''
-  #!${bash}/bin/bash
-
+  # uncomment to get logs somewhere and tail -f it.
   # exec > >(tee -i ~/dev/xdg-open-portal-log.txt)
   # exec 2>&1
 
