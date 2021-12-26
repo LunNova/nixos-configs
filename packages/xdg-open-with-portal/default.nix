@@ -11,7 +11,6 @@ writeShellScriptBin "xdg-open" ''
   # exec 2>&1
 
   targetFile=$1
-  beginswith() { case $2 in "$1"*) true;; *) false;; esac; }
 
   >&2 echo "xdg-open workaround: using org.freedesktop.portal to open $targetFile"
 
@@ -21,7 +20,7 @@ writeShellScriptBin "xdg-open" ''
   #   openFile=OpenDirectory
   # fi
 
-  if beginswith . "$targetFile" || beginswith / "$targetFile" || [ -e "$targetFile" ]; then
+  if [ -e "$targetFile" ]; then
     exec 3< "$targetFile"
     ${glib}/bin/gdbus call --session \
       --dest org.freedesktop.portal.Desktop \
