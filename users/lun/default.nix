@@ -26,7 +26,6 @@
   home.stateVersion = "21.11";
 
   home.packages = with pkgs; [
-    ark
     osu-lazer
     glxinfo
     vulkan-tools
@@ -34,6 +33,9 @@
     wineWowPackages.staging
     nixpkgs-fmt
     rnix-lsp
+    ark
+    unar
+    p7zip
     lun.lutris
   ];
 
