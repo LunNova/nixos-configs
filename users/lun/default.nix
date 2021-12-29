@@ -77,14 +77,5 @@
   # FIXME: makes firefox open blank window?
   # systemd.user.startServices = "sd-switch";
 
-  home.file.
-  ".mozilla/native-messaging-hosts/fx_cast_bridge.json".source =
-    let patched_fx_cast_bridge = pkgs.fx_cast_bridge.overrideAttrs (oldAttrs: {
-      prePatch = ''
-        substituteInPlace app/src/bridge/components/discovery.ts --replace "\"DNSServiceGetAddrInfo\" in mdns.dns_sd" "(!mdns.isAvahi && \"DNSServiceGetAddrInfo\" in mdns.dns_sd)"
-      '';
-    });
-    in
-    "${patched_fx_cast_bridge}/lib/mozilla/native-messaging-hosts/fx_cast_bridge.json";
   home.file.".mozilla/native-messaging-hosts/org.kde.plasma.browser_integration.json".source = "${pkgs.plasma-browser-integration}/lib/mozilla/native-messaging-hosts/org.kde.plasma.browser_integration.json";
 }
