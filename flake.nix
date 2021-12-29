@@ -116,6 +116,9 @@
           }
         ] ++ (readModules ./modules);
       };
+      localPackages = import ./packages {
+        inherit system pkgs;
+      };
     in
     {
       inherit args;
@@ -124,19 +127,23 @@
         config.contentAddressedByDefault = true;
       };
 
-      packages."${system}" = import ./packages {
-        inherit system pkgs;
-      };
+      packages."${system}" = lib.filterAttrs (k: lib.isDerivation) localPackages;
 
       overlay = final: prev:
-        let lun = self.packages."${system}"; in
         {
-          inherit lun;
+          lun = localPackages;
           powercord-plugins = filterInputs "pcp-";
           powercord-themes = filterInputs "pct-";
           steam = prev.steam.override {
-            extraPkgs = pkgs: [ (pkgs.hiPrio lun.xdg-open-with-portal) ];
+            extraPkgs = pkgs: [ (pkgs.hiPrio localPackages.xdg-open-with-portal) ];
           };
+          kwinft = localPackages.kwinft;
+          plasma5Packages = prev.plasma5Packages.overrideScope' (self2: super2: {
+            plasma5 = super2.plasma5.overrideScope' (self1: super1: {
+              kwin = localPackages.kwinft.kwin;
+              plasma-workspace = prev.plasma5Packages.plasma5.plasma-workspace;
+            });
+          });
         };
 
       # TODO load automatically with readDir

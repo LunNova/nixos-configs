@@ -15,6 +15,7 @@ in
     plugins = { };
     themes = { };
   };
+  kwinft = pkgs.lib.recurseIntoAttrs (pkgs.callPackage ./kwinft { });
   xdg-open-with-portal = xdg-open-with-portal;
   lutris-unwrapped = lutris-unwrapped;
   lutris = pkgs.lutris.override {
