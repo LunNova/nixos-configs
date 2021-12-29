@@ -24,6 +24,13 @@
     # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{remove}="1"
     #'';
 
+  systemd.sleep.extraConfig = ''
+    AllowHibernation=yes
+    AllowSuspend=no
+    AllowSuspendThenHibernate=no
+    AllowHybridSleep=no
+  '';
+
   specialisation.nvidia.configuration = {
     sconfig.amd-nvidia-laptop.enable = true;
   };
@@ -62,14 +69,12 @@
 
       hardware.nvidia.modesetting.enable = true;
 
-      services.xserver.autorun = false;
       services.xserver.displayManager.gdm.enable = true;
+      services.xserver.displayManager.sddm.enable = lib.mkForce false;
       services.xserver.displayManager.gdm.wayland = true;
       services.xserver.displayManager.gdm.nvidiaWayland = true;
 
       services.xserver.desktopManager.gnome.enable = true;
-      services.xserver.desktopManager.xfce.enable = true;
-      services.xserver.displayManager.sddm.enable = lib.mkForce false;
       # https://github.com/NixOS/nixpkgs/issues/75867
       programs.ssh.askPassword = pkgs.lib.mkForce "${pkgs.gnome.seahorse.out}/libexec/seahorse/ssh-askpass";
 
