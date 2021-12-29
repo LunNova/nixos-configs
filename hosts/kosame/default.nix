@@ -2,14 +2,17 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, nixos-hardware-modules-path, ... }:
 
 {
   imports =
     [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      "${nixos-hardware-modules-path}/asus/battery.nix"
     ];
+
+  hardware.asus.battery.chargeUpto = 70;
 
   networking.hostName = "lun-kosame-nixos";
   sconfig.machineId = "0715dc6a95b3419e8e2465240b7e598b";
@@ -112,6 +115,8 @@
       qt5.enable = true;
       qt5.platformTheme = "gtk2";
       qt5.style = "gtk2";
+
+      powerManagement.powertop.enable = lib.mkForce false;
 
       services.dbus.packages = with pkgs; [ gnome3.dconf ];
       programs.light.enable = true;
