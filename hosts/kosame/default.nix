@@ -25,8 +25,8 @@
     #'';
 
   systemd.sleep.extraConfig = ''
-    AllowHibernation=yes
-    AllowSuspend=no
+    AllowHibernation=no
+    AllowSuspend=yes
     AllowSuspendThenHibernate=no
     AllowHybridSleep=no
   '';
@@ -84,7 +84,27 @@
           (old: { passthru.providedSessions = [ "plasmawayland" ]; }))
       ];
 
-
+      hardware.nvidia = {
+        powerManagement.enable = true;
+      };
+      boot.kernelParams = [ "nvidia.NVreg_DynamicPowerManagement=0x02" ];
+      services.udev.extraRules = ''
+        # Remove NVIDIA USB xHCI Host Controller devices, if present
+        ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c0330", ATTR{remove}="1"
+        # Remove NVIDIA USB Type-C UCSI devices, if present
+        ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c8000", ATTR{remove}="1"
+        # Remove NVIDIA Audio devices, if present
+        ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{remove}="1"
+        # Enable runtime PM for NVIDIA VGA/3D controller devices on driver bind
+        ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="auto"
+        ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="auto"
+        # Disable runtime PM for NVIDIA VGA/3D controller devices on driver unbind
+        ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="on"
+        ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="on"
+      '';
+      boot.extraModprobeConfig = ''
+        options nvidia "NVreg_DynamicPowerManagement=0x02"
+      '';
       # environment.systemPackages = with pkgs; [
       #   greetd.tuigreet
       # ];
@@ -97,10 +117,19 @@
       programs.light.enable = true;
       programs.sway = {
         enable = true;
+        extraOptions = [ "--unsupported-gpu" ];
         wrapperFeatures.gtk = true; # so that gtk works properly
+        extraSessionCommands = ''
+          export MOZ_ENABLE_WAYLAND=1
+          export MOZ_USE_XINPUT2=1
+          export XDG_SESSION_TYPE=wayland
+          export XDG_CURRENT_DESKTOP=sway
+          systemctl --user import-environment
+        '';
         extraPackages = with pkgs; [
           swaylock
           swayidle
+          xwayland
           wl-clipboard
           mako # notification daemon
           alacritty # Alacritty is the default terminal in the config
@@ -109,6 +138,15 @@
         ];
       };
 
+      xdg.portal = {
+        enable = true;
+        gtkUsePortal = true;
+        extraPortals = with pkgs; [
+          xdg-desktop-portal-wlr
+        ];
+      };
+
+      # TODO: remove one of?
       hardware.opengl = {
         extraPackages = [
           pkgs.amdvlk
