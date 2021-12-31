@@ -40,6 +40,18 @@
 
   environment.systemPackages = lib.mkIf (pkgs.plasma5Packages.plasma5.kwin == pkgs.kwinft.kwin) [ pkgs.kwinft.disman pkgs.kwinft.kdisplay ];
 
+  specialisation.nvidia-sync-test.configuration = {
+    hardware.nvidia = {
+      modesetting.enable = false;
+      powerManagement.enable = true;
+      prime = {
+        amdgpuBusId = "PCI:4:0:0";
+        nvidiaBusId = "PCI:1:0:0";
+        sync.enable = true;
+      };
+    };
+  };
+
   specialisation.wayland-test.configuration =
     let
       # https://github.com/cole-mickens/nixcfg/blob/main/mixins/nvidia.nix
