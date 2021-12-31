@@ -86,6 +86,7 @@
 
       hardware.nvidia.modesetting.enable = true;
 
+      services.xserver.autorun = false;
       services.xserver.displayManager.gdm.enable = true;
       services.xserver.displayManager.sddm.enable = lib.mkForce false;
       services.xserver.displayManager.gdm.wayland = true;
@@ -106,10 +107,6 @@
       };
       boot.kernelParams = [ "nvidia.NVreg_DynamicPowerManagement=0x02" ];
       services.udev.extraRules = ''
-        # Remove NVIDIA USB xHCI Host Controller devices, if present
-        ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c0330", ATTR{remove}="1"
-        # Remove NVIDIA USB Type-C UCSI devices, if present
-        ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c8000", ATTR{remove}="1"
         # Remove NVIDIA Audio devices, if present
         ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{remove}="1"
         # Enable runtime PM for NVIDIA VGA/3D controller devices on driver bind
@@ -127,8 +124,8 @@
       # ];
 
       qt5.enable = true;
-      qt5.platformTheme = "gtk2";
-      qt5.style = "gtk2";
+      qt5.platformTheme = "gnome";
+      qt5.style = "adwaita-dark";
 
       powerManagement.powertop.enable = lib.mkForce false;
 
@@ -137,14 +134,10 @@
       programs.sway = {
         enable = true;
         extraOptions = [ "--unsupported-gpu" ];
-        wrapperFeatures.gtk = true; # so that gtk works properly
-        extraSessionCommands = ''
-          export MOZ_ENABLE_WAYLAND=1
-          export MOZ_USE_XINPUT2=1
-          export XDG_SESSION_TYPE=wayland
-          export XDG_CURRENT_DESKTOP=sway
-          systemctl --user import-environment
-        '';
+        wrapperFeatures = {
+          base = true;
+          gtk = true;
+        };
         extraPackages = with pkgs; [
           swaylock
           swayidle
@@ -153,26 +146,25 @@
           mako # notification daemon
           alacritty # Alacritty is the default terminal in the config
           dmenu # Dmenu is the default in the config but i recommend wofi since its wayland native
+          wofi
           kanshi # sway monitor settings / autorandr equivalent? https://github.com/RaitoBezarius/nixos-x230/blob/764d2237ab59ded81492b6c76bc29da027e9fdb3/sway.nix example using it
         ];
       };
 
       xdg.portal = {
         enable = true;
+        wlr = {
+          enable = true;
+        };
         gtkUsePortal = true;
-        extraPortals = with pkgs; [
-          xdg-desktop-portal-wlr
-        ];
       };
 
       # TODO: remove one of?
       hardware.opengl = {
         extraPackages = [
-          pkgs.amdvlk
           pkgs.mesa.drivers
         ];
         extraPackages32 = [
-          pkgs.driversi686Linux.amdvlk
           pkgs.pkgsi686Linux.mesa.drivers
         ];
       };
@@ -194,12 +186,13 @@
     "mitigations=off"
   ];
 
+  boot.blacklistedKernelModules = [ "nouveau" ];
 
   # Used to set power profiles, should have support in asus-wmi https://asus-linux.org/blog/updates-2021-07-16/
   services.power-profiles-daemon.enable = true;
   # Zephyrus G14: without it get 2h battery life idle, with like 6h idle
   # runs powertop --auto-tune at boot
-  powerManagement.powertop.enable = true;
+  powerManagement.powertop.enable = false;
 
   # Configure keymap in X11
   # services.xserver.xkbOptions = "eurosign:e";

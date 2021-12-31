@@ -4,6 +4,7 @@
     ./discord.nix
     ./kdeconfig.nix
     ./xdg-mime-apps.nix
+    ./sway
     ./shells/default.nix
   ];
 
