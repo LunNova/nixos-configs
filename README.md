@@ -9,6 +9,8 @@ Various flake things: https://github.com/Icy-Thought/Snowflake
 
 https://gitlab.com/hlissner/dotfiles/-/tree/master
 
+Sway setup https://github.com/lovesegfault/nix-config
+
 # Fresh install
 
 Similar to [tmpfs on root](https://elis.nu/blog/2020/05/nixos-tmpfs-as-root/).
