@@ -13,6 +13,10 @@
     nix-gaming.inputs.nixpkgs.follows = "nixpkgs";
     nixos-hardware.url = github:NixOS/nixos-hardware/master;
 
+    # TODO: updated sources?
+    #    nixpkgs-wayland = { url = "github:nix-community/nixpkgs-wayland"; };
+    #    nixpkgs-wayland.inputs.nixpkgs.follows = "nixpkgs";
+
     minimal-shell.url = "github:LunNova/nix-minimal-shell";
 
     # Powercord. pcp- and pct- prefix have meaning, cause inclusion as powercord plugin/theme
@@ -39,6 +43,7 @@
     , pre-commit-hooks
     , nix-gaming
     , powercord-overlay
+      #    , nixpkgs-wayland
     , ...
     }@args:
     let
