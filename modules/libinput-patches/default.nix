@@ -26,7 +26,7 @@ in
     (lib.mkIf cfg.accel-default-off ({
       nixpkgs.overlays = [
         (self: super: {
-          libinput = super.libinput.overrideAttrs (old: {
+          runtime-patched.libinput = super.libinput.overrideAttrs (old: {
             patches = (old.patches or [ ]) ++ [ ./libinput-no-accel.patch ];
           });
         })
