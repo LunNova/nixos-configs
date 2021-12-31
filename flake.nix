@@ -119,6 +119,8 @@
       localPackages = import ./packages {
         inherit system pkgs;
       };
+      setIf = flag: set: if flag then set else { };
+      enableKwinFt = false;
     in
     {
       inherit args;
@@ -138,13 +140,15 @@
             extraPkgs = pkgs: [ (pkgs.hiPrio localPackages.xdg-open-with-portal) ];
           };
           kwinft = localPackages.kwinft;
+
+        } // (setIf enableKwinFt {
           plasma5Packages = prev.plasma5Packages.overrideScope' (self2: super2: {
             plasma5 = super2.plasma5.overrideScope' (self1: super1: {
               kwin = localPackages.kwinft.kwin;
               plasma-workspace = prev.plasma5Packages.plasma5.plasma-workspace;
             });
           });
-        };
+        });
 
       # TODO load automatically with readDir
       nixosConfigurations = {

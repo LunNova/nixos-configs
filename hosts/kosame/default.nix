@@ -38,6 +38,8 @@
     sconfig.amd-nvidia-laptop.enable = true;
   };
 
+  environment.systemPackages = lib.mkIf (pkgs.plasma5Packages.plasma5.kwin == pkgs.kwinft.kwin) [ pkgs.kwinft.disman pkgs.kwinft.kdisplay ];
+
   specialisation.wayland-test.configuration =
     let
       # https://github.com/cole-mickens/nixcfg/blob/main/mixins/nvidia.nix
