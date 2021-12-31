@@ -22,4 +22,5 @@ in
     lutris-unwrapped = lutris-unwrapped;
     extraLibraries = pkgs: [ (pkgs.hiPrio xdg-open-with-portal) ];
   };
+  spawn = pkgs.callPackage ./spawn { };
 }
