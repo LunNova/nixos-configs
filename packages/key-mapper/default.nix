@@ -59,6 +59,8 @@ pkgs.python3Packages.buildPythonApplication rec {
     sed -r "s#ExecStart\=/usr/bin/key-mapper-service#ExecStart\=$out/bin/key-mapper-service#g" -i data/key-mapper.service
     sed -r "s#WantedBy\=default.target#WantedBy\=graphical.target#g" -i data/key-mapper.service
 
+    chmod +x data/*.desktop
+
     install -D -t $out/share/applications/ data/*.desktop
     install -D -t $out/share/polkit-1/actions/ data/key-mapper.policy
     install -D data/key-mapper.rules $out/etc/udev/rules.d/99-key-mapper.rules
