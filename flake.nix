@@ -13,8 +13,8 @@
     nix-gaming.inputs.nixpkgs.follows = "nixpkgs";
     nixos-hardware.url = github:NixOS/nixos-hardware/master;
 
-    nixpkgs-wayland = { url = "github:LunNova/nixpkgs-wayland/update"; };
-    nixpkgs-wayland.inputs.nixpkgs.follows = "nixpkgs";
+    # nixpkgs-wayland = { url = "github:LunNova/nixpkgs-wayland/update"; };
+    # nixpkgs-wayland.inputs.nixpkgs.follows = "nixpkgs";
 
     minimal-shell.url = "github:LunNova/nix-minimal-shell";
 
@@ -42,7 +42,7 @@
     , pre-commit-hooks
     , nix-gaming
     , powercord-overlay
-    , nixpkgs-wayland
+      # , nixpkgs-wayland
     , ...
     }@args:
     let
@@ -53,7 +53,7 @@
         overlays = [
           self.overlay
           powercord-overlay.overlay
-          nixpkgs-wayland.overlay
+          # nixpkgs-wayland.overlay
         ];
       };
       mkPkgs = pkgs: extra:
@@ -145,6 +145,17 @@
           lun = localPackages;
           powercord-plugins = filterInputs "pcp-";
           powercord-themes = filterInputs "pct-";
+          # pipewire = prev.pipewire.overrideAttrs (old: {
+          #   version = "0.3.42";
+          #   src = pkgs.fetchFromGitLab {
+          #     domain = "gitlab.freedesktop.org";
+          #     owner = "pipewire";
+          #     repo = "pipewire";
+          #     rev = "0.3.42";
+          #     sha256 = "sha256-Iyd5snOt+iCT7W0+FlfvhMUZo/gF+zr9JX4HIGVdHto=";
+          #   };
+          #   buildInputs = old.buildInputs ++ [ pkgs.openssl pkgs.lilv ];
+          # });
           steam = prev.steam.override {
             extraPkgs = pkgs: [ (pkgs.hiPrio localPackages.xdg-open-with-portal) ];
           };

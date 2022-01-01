@@ -42,8 +42,26 @@
 
   specialisation.wayland-test.configuration =
     let
+      drmDevices = "/dev/dri/card0";
       # https://github.com/cole-mickens/nixcfg/blob/main/mixins/nvidia.nix
-      waylandEnv = { WLR_NO_HARDWARE_CURSORS = "1"; };
+      waylandEnv = {
+        # https://lamarque-lvs.blogspot.com/2021/12/nvidia-optimus-with-wayland-help-needed.html
+        WLR_NO_HARDWARE_CURSORS = "1";
+        KWIN_DRM_DEVICES = drmDevices;
+        WLR_DRM_DEVICES = drmDevices;
+        GBM_BACKEND = "nvidia-drm";
+        GBM_BACKENDS_PATH = "/run/opengl-driver/lib/gbm";
+        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+        __VK_LAYER_NV_optimus = "NVIDIA_only";
+
+        __GL_VRR_ALLOWED = "0";
+        __GL_GSYNC_ALLOWED = "0";
+
+        # https://github.com/NVIDIA/libglvnd/blob/master/src/EGL/icd_enumeration.md
+        # https://github.com/NixOS/nixpkgs/blob/a0dbe47318bbab7559ffbfa7c4872a517833409f/pkgs/development/libraries/libglvnd/default.nix#L33
+        #__EGL_VENDOR_LIBRARY_CONFIG_DIRS = "/run/opengl-driver/share/glvnd/egl_vendor.d/";
+        #__EGL_EXTERNAL_PLATFORM_CONFIG_DIRS = "/etc/egl/egl_external_platform.d/:/run/opengl-driver/share/egl/egl_external_platform.d/";
+      };
       nvidia-wlroots-overlay = (final: prev: {
         wlroots = prev.wlroots.overrideAttrs (old: {
           # HACK: https://forums.developer.nvidia.com/t/nvidia-495-does-not-advertise-ar24-xr24-as-shm-formats-as-required-by-wayland-wlroots/194651
@@ -60,7 +78,9 @@
       '';
     in
     {
-      services.xserver.videoDrivers = lib.mkForce [ "nvidia" "amdgpu" ];
+      services.xserver.videoDrivers = lib.mkForce [ "nvidia" ];
+      boot.initrd.kernelModules = [ "nvidia" "nvidia_drm" "nvidia_modeset" ];
+      boot.blacklistedKernelModules = [ "amdgpu" "radeon" "nouveau" ];
 
       environment.systemPackages = with pkgs; [
         prime-run
@@ -144,14 +164,16 @@
       };
 
       # TODO: remove one of?
-      hardware.opengl = {
-        extraPackages = [
-          pkgs.mesa.drivers
-        ];
-        extraPackages32 = [
-          pkgs.pkgsi686Linux.mesa.drivers
-        ];
-      };
+      # hardware.opengl = {
+      #   extraPackages = [
+      #     pkgs.amdvlk
+      #     # pkgs.mesa.drivers
+      #   ];
+      #   extraPackages32 = [
+      #     pkgs.driversi686Linux.amdvlk
+      #     # pkgs.pkgsi686Linux.mesa.drivers
+      #   ];
+      # };
 
       # services.greetd = {
       #   enable = true;
@@ -170,7 +192,7 @@
     "mitigations=off"
   ];
 
-  boot.blacklistedKernelModules = [ "nouveau" ];
+  boot.blacklistedKernelModules = [ "radeon" "nouveau" ];
 
   # Used to set power profiles, should have support in asus-wmi https://asus-linux.org/blog/updates-2021-07-16/
   services.power-profiles-daemon.enable = true;
