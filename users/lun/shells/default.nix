@@ -2,6 +2,7 @@
 {
   imports = [
     ./fish.nix
+    ./tmux.nix
   ];
 
   home.packages = [

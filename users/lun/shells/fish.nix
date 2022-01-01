@@ -58,8 +58,7 @@
 
   home.packages = [ pkgs.fishPlugins.foreign-env ];
 
-  # programs.fish.shellAliases = {
-  #   pbcopy = "${pkgs.xclip}/bin/xclip -selection clipboard";
-  #   pbpaste = "${pkgs.xclip}/bin/xclip -selection clipboard -o";
-  # };
+  programs.fish.shellAliases = {
+    tm = "tmux new-session -A -s main";
+  };
 }
