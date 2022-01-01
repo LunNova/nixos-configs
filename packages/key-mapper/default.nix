@@ -18,6 +18,7 @@ pkgs.python3Packages.buildPythonApplication rec {
   prePatch = ''
     echo "COMMIT_HASH = '${rev}'" > keymapper/commit_hash.py
     substituteInPlace keymapper/data.py --replace "/usr/share/key-mapper"  "$out/usr/share/key-mapper"
+    substituteInPlace keymapper/system_mapping.py --replace '["xmodmap", "-pke"]' '["${pkgs.xlibs.xmodmap}/bin/xmodmap", "-pke"]'
   '';
 
   doCheck = false; # fails atm as can't import modules when testing due to some sort of path issue
@@ -59,6 +60,7 @@ pkgs.python3Packages.buildPythonApplication rec {
     sed -r "s#WantedBy\=default.target#WantedBy\=graphical.target#g" -i data/key-mapper.service
 
     install -D -t $out/share/applications/ data/*.desktop
+    install -D -t $out/share/polkit-1/actions/ data/key-mapper.policy
     install -D data/key-mapper.rules $out/etc/udev/rules.d/99-key-mapper.rules
     install -D data/key-mapper.service $out/lib/systemd/system/key-mapper.service
     install -D data/key-mapper.policy $out/share/polkit-1/actions/key-mapper.policy

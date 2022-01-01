@@ -12,4 +12,5 @@ in
   config.services.dbus.packages = mapper-pkg;
   config.systemd.packages = mapper-pkg;
   config.environment.systemPackages = mapper-pkg;
+  config.systemd.services.key-mapper.wantedBy = [ "graphical.target" ];
 }
