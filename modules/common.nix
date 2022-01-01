@@ -97,6 +97,7 @@
     };
     # https://github.com/NixOS/nixpkgs/blob/d6fe32c6b9059a054ca0cda9a2bb99753d1134df/nixos/modules/profiles/hardened.nix#L95
     boot.kernel.sysctl = with lib; {
+      "kernel.sysrq" = 1; #allow all sysrqs
       # Enable strict reverse path filtering (that is, do not attempt to route
       # packets that "obviously" do not belong to the iface's network; dropped
       # packets are logged as martians).
