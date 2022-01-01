@@ -13,9 +13,8 @@
     nix-gaming.inputs.nixpkgs.follows = "nixpkgs";
     nixos-hardware.url = github:NixOS/nixos-hardware/master;
 
-    # TODO: updated sources?
-    #    nixpkgs-wayland = { url = "github:nix-community/nixpkgs-wayland"; };
-    #    nixpkgs-wayland.inputs.nixpkgs.follows = "nixpkgs";
+    nixpkgs-wayland = { url = "github:LunNova/nixpkgs-wayland/update"; };
+    nixpkgs-wayland.inputs.nixpkgs.follows = "nixpkgs";
 
     minimal-shell.url = "github:LunNova/nix-minimal-shell";
 
@@ -43,7 +42,7 @@
     , pre-commit-hooks
     , nix-gaming
     , powercord-overlay
-      #    , nixpkgs-wayland
+    , nixpkgs-wayland
     , ...
     }@args:
     let
@@ -51,7 +50,11 @@
       defaultPkgsConfig = {
         inherit system;
         config.allowUnfree = true;
-        overlays = [ self.overlay powercord-overlay.overlay ];
+        overlays = [
+          self.overlay
+          powercord-overlay.overlay
+          nixpkgs-wayland.overlay
+        ];
       };
       mkPkgs = pkgs: extra:
         (import pkgs (recursiveMerge [ defaultPkgsConfig extra ]));
@@ -130,6 +133,7 @@
     {
       inherit args;
 
+      pkgs = pkgs;
       caPkgs = mkPkgs args.nixpkgs {
         config.contentAddressedByDefault = true;
       };
