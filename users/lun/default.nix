@@ -3,10 +3,19 @@
   imports = [
     ./discord.nix
     ./kdeconfig.nix
+    ./syncthing.nix
     ./xdg-mime-apps.nix
     ./sway
     ./shells/default.nix
   ];
+
+  # workaround https://github.com/nix-community/home-manager/issues/2064#issuecomment-887300055
+  systemd.user.targets.tray = {
+    Unit = {
+      Description = "Home Manager System Tray";
+      Requires = [ "graphical-session-pre.target" ];
+    };
+  };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;

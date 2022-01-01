@@ -109,25 +109,25 @@ in
     wrapperFeatures.gtk = false;
   };
 
-  systemd.user.services.sway-inactive-windows-transparency =
-    let
-      inherit (pkgs.sway-contrib) inactive-windows-transparency; in
-    {
-      Unit = {
-        Description = "Set opacity of onfocused windows in SwayWM";
-        PartOf = "graphical-session.target";
-        StartLimitIntervalSec = "0";
-      };
-      Service = {
-        Type = "simple";
-        ExecStart = ''
-          ${inactive-windows-transparency}/bin/inactive-windows-transparency.py -o 0.9
-        '';
-        Restart = "on-failure";
-        RestartSec = "1";
-      };
-      Install = { WantedBy = [ "sway-session.target" ]; };
-    };
+  # systemd.user.services.sway-inactive-windows-transparency =
+  #   let
+  #     inherit (pkgs.sway-contrib) inactive-windows-transparency; in
+  #   {
+  #     Unit = {
+  #       Description = "Set opacity of onfocused windows in SwayWM";
+  #       PartOf = "graphical-session.target";
+  #       StartLimitIntervalSec = "0";
+  #     };
+  #     Service = {
+  #       Type = "simple";
+  #       ExecStart = ''
+  #         ${inactive-windows-transparency}/bin/inactive-windows-transparency.py -o 0.9
+  #       '';
+  #       Restart = "on-failure";
+  #       RestartSec = "1";
+  #     };
+  #     Install = { WantedBy = [ "sway-session.target" ]; };
+  #   };
 
   systemd.user.services = {
     mako = {
