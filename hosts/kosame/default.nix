@@ -111,10 +111,6 @@
       #   greetd.tuigreet
       # ];
 
-      qt5.enable = true;
-      qt5.platformTheme = "gnome";
-      qt5.style = "adwaita-dark";
-
       powerManagement.powertop.enable = lib.mkForce false;
 
       services.dbus.packages = with pkgs; [ gnome3.dconf ];
