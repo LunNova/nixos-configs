@@ -64,6 +64,7 @@
         vscode.cmd = "code --wait --new-window $MERGED";
       };
       difftool.vscode.cmd = "code --wait --new-window --diff $LOCAL $REMOTE";
+      include.path = "./local";
     };
   };
 
