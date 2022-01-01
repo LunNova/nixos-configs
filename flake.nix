@@ -192,6 +192,7 @@
             homeManagerConfiguration
               {
                 inherit pkgs;
+                extraSpecialArgs = { nixosConfig = null; };
                 configuration = {
                   _module.args.pkgs = lib.mkForce pkgs;
                   _module.args.pkgs_i686 = lib.mkForce { };

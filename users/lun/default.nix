@@ -7,6 +7,7 @@
     ./xdg-mime-apps.nix
     ./sway
     ./shells/default.nix
+    ./on-nixos/default.nix
   ];
 
   # workaround https://github.com/nix-community/home-manager/issues/2064#issuecomment-887300055
