@@ -72,5 +72,9 @@ in
       device = swap;
     }];
     boot.resumeDevice = swap;
+    # see: https://github.com/NixOS/nixpkgs/issues/109048
+    services.udev.extraRules = ''
+      ACTION=="add", SUBSYSTEM=="usb", DRIVER=="usb", ATTR{power/wakeup}="disabled"
+    '';
   };
 }
