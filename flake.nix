@@ -109,6 +109,7 @@
             # TODO try https://github.com/tejing1/nixos-config/blob/df7f087c1ec0183422df22398d9b06c523adae84/nixosConfigurations/tejingdesk/registry.nix#L26-L28 approach
             nix.registry.pkgs.flake = nixpkgs-unfree-relocked;
             nix.registry.nixpkgs.flake = nixpkgs;
+            environment.etc."nix/path/nixpkgs".source = nixpkgs;
             nix.nixPath = [ "pkgs=${nixpkgs-unfree-relocked}" ];
             system.configurationRevision = lib.mkIf (args.self ? rev) args.self.rev; # set configurationRevision if available
           }
