@@ -12,13 +12,13 @@ let name = "hisame"; in
 
     hardware.cpu.amd.updateMicrocode = true;
 
-
     my.home-manager.enabled-users = [ "lun" ];
 
     users.mutableUsers = false;
 
     lun.persistence.enable = true;
     fileSystems =
+      let swap = "/dev/disk/by-partlabel/_swap"; in
       {
         "/" = {
           device = "tmpfs";
@@ -68,7 +68,8 @@ let name = "hisame"; in
         };
       };
     swapDevices = [{
-      device = "/dev/disk/by-partlabel/_swap";
+      device = swap;
     }];
+    resumeDevice = swap;
   };
 }
