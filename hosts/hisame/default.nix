@@ -71,6 +71,6 @@ in
     swapDevices = [{
       device = swap;
     }];
-    resumeDevice = swap;
+    boot.resumeDevice = swap;
   };
 }
