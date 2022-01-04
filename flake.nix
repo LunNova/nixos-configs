@@ -110,7 +110,8 @@
             nix.registry.pkgs.flake = nixpkgs-unfree-relocked;
             nix.registry.nixpkgs.flake = nixpkgs;
             environment.etc."nix/path/nixpkgs".source = nixpkgs;
-            nix.nixPath = [ "pkgs=${nixpkgs-unfree-relocked}" ];
+            environment.etc."nix/path/pkgs".source = nixpkgs-unfree-relocked;
+            nix.nixPath = [ "/etc/nix/path" ];
             system.configurationRevision = lib.mkIf (args.self ? rev) args.self.rev; # set configurationRevision if available
           }
           home-manager.nixosModules.home-manager
