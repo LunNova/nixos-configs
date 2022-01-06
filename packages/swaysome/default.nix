@@ -11,12 +11,12 @@ rustPlatform.buildRustPackage {
     sha256 = "sha256-IZyIhEslfBl/4u1t4dKyuevY5JGjkOJblcwtSskvrA4=";
   };
 
-  cargoSha256 = "sha256-fFHb2wPMZOtq/eQgs3TSQg1J3v1iMfnOG4JH41z7c0c=";
+  cargoSha256 = "sha256-X135rKHs236yqhVnjLRLj1bi/DAWUDS+OHcwZoHoGzw=";
 
   meta = with lib; {
     description = "This binary helps you configure sway to work a bit more like Awesome. This currently means workspaces that are name-spaced on a per-screen basis.";
     homepage = "https://crates.io/crates/swaysome";
     license = licenses.mit;
-    #maintainers = with maintainers; [ ];
+    maintainers = with maintainers; [ ];
   };
 }
