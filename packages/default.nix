@@ -23,4 +23,5 @@ in
     extraLibraries = pkgs: [ (pkgs.hiPrio xdg-open-with-portal) ];
   };
   spawn = pkgs.callPackage ./spawn { };
+  swaysome = pkgs.callPackage ./swaysome { };
 }
