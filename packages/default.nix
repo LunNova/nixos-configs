@@ -24,4 +24,5 @@ in
   };
   spawn = pkgs.callPackage ./spawn { };
   swaysome = pkgs.callPackage ./swaysome { };
+  sworkstyle = pkgs.callPackage ./sworkstyle { };
 }
