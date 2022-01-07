@@ -89,6 +89,7 @@ in
       input type:pointer {
         accel_profile flat
       }
+      exec_always pkill kanshi; exec kanshi &> $XDG_RUNTIME_DIR/kanshi.log
     '';
 
     # export FREETYPE_PROPERTIES=truetype:interpreter-version=35
