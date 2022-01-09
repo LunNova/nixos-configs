@@ -44,6 +44,10 @@ in
 
       keybindings =
         let
+          up = "w";
+          left = "a";
+          down = "s";
+          right = "d";
           modifier = config.wayland.windowManager.sway.config.modifier;
           terminal = config.wayland.windowManager.sway.config.terminal;
           pactl = "${pkgs.pulseaudio}/bin/pactl";
@@ -63,6 +67,16 @@ in
           "XF86AudioRaiseVolume" = execSpawn "${pamixer} -i 5";
           "Shift+XF86AudioRaiseVolume" = execSpawn "${pamixer} -i 5 --allow-boost";
           "XF86AudioMicMute" = execSpawn "${pactl} set-source-mute @DEFAULT_SOURCE@ toggle";
+          # move workspace to output
+          "${modifier}+Control+Shift+${left}" = "move workspace to output left";
+          "${modifier}+Control+Shift+${right}" = "move workspace to output right";
+          "${modifier}+Control+Shift+${up}" = "move workspace to output up";
+          "${modifier}+Control+Shift+${down}" = "move workspace to output down";
+          # move workspace to output with arrow keys
+          "${modifier}+Control+Shift+Left" = "move workspace to output left";
+          "${modifier}+Control+Shift+Right" = "move workspace to output right";
+          "${modifier}+Control+Shift+Up  " = "move workspace to output up";
+          "${modifier}+Control+Shift+Down" = "move workspace to output down";
         };
 
       output = {
@@ -107,7 +121,6 @@ in
     '';
 
     systemdIntegration = true;
-    wrapperFeatures.gtk = false;
   };
 
   # systemd.user.services.sway-inactive-windows-transparency =
