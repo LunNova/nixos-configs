@@ -13,6 +13,8 @@ in
     sconfig.machineId = "63d3399d2f2f65c96848f11d73082aef";
     system.stateVersion = "21.11";
 
+    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_xanmod;
+
     hardware.cpu.amd.updateMicrocode = true;
 
     my.home-manager.enabled-users = [ "lun" ];
