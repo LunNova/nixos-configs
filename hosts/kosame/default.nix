@@ -74,6 +74,8 @@
         #__EGL_VENDOR_LIBRARY_CONFIG_DIRS = "/run/opengl-driver/share/glvnd/egl_vendor.d/";
         #__EGL_EXTERNAL_PLATFORM_CONFIG_DIRS = "/etc/egl/egl_external_platform.d/:/run/opengl-driver/share/egl/egl_external_platform.d/";
       };
+      # TODO: remove once this MR is in
+      # https://gitlab.freedesktop.org/wlroots/wlroots/-/merge_requests/3419
       nvidia-wlroots-overlay = (final: prev: {
         wlroots = prev.wlroots.overrideAttrs (old: {
           # HACK: https://forums.developer.nvidia.com/t/nvidia-495-does-not-advertise-ar24-xr24-as-shm-formats-as-required-by-wayland-wlroots/194651
