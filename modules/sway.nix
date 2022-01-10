@@ -13,7 +13,7 @@
     extraOptions = [ "--unsupported-gpu" ];
     wrapperFeatures = {
       base = true;
-      gtk = true;
+      gtk = false;
     };
     extraPackages = with pkgs; [
       swaylock
