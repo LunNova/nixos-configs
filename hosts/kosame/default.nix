@@ -9,15 +9,28 @@
     [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      "${nixos-hardware-modules-path}/asus/battery.nix"
+      #"${nixos-hardware-modules-path}/asus/battery.nix"
     ];
 
-  hardware.asus.battery.chargeUpto = 70;
+  # TODO report issue, not reliable
+  # hardware.asus.battery.chargeUpto = 70;
+  systemd.services.battery-charge-threshold = {
+    wantedBy = [ "multi-user.target" "suspend.target" ];
+    after = [ "multi-user.target" "suspend.target" ];
+    description = "Set the battery charge threshold";
+    startLimitBurst = 70;
+    serviceConfig = {
+      Type = "oneshot";
+      Restart = "on-failure";
+      ExecStart = "/bin/sh -c 'echo 70 > /sys/class/power_supply/BAT0/charge_control_end_threshold'";
+    };
+  };
 
   networking.hostName = "lun-kosame-nixos";
   sconfig.machineId = "0715dc6a95b3419e8e2465240b7e598b";
   system.stateVersion = "21.05";
   boot.cleanTmpDir = true;
+  boot.kernelPackages = lib.mkForce pkgs.linuxPackages_xanmod;
 
   services.xserver.videoDrivers = lib.mkDefault [ "amdgpu" ];
 
@@ -46,16 +59,15 @@
       # https://github.com/cole-mickens/nixcfg/blob/main/mixins/nvidia.nix
       waylandEnv = {
         # https://lamarque-lvs.blogspot.com/2021/12/nvidia-optimus-with-wayland-help-needed.html
-        WLR_NO_HARDWARE_CURSORS = "1";
-        KWIN_DRM_DEVICES = drmDevices;
-        WLR_DRM_DEVICES = drmDevices;
-        GBM_BACKEND = "nvidia-drm";
-        GBM_BACKENDS_PATH = "/run/opengl-driver/lib/gbm";
-        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-        __VK_LAYER_NV_optimus = "NVIDIA_only";
-
-        __GL_VRR_ALLOWED = "0";
-        __GL_GSYNC_ALLOWED = "0";
+        #WLR_NO_HARDWARE_CURSORS = "1";
+        #KWIN_DRM_DEVICES = drmDevices;
+        #WLR_DRM_DEVICES = drmDevices;
+        #GBM_BACKEND = "nvidia-drm";
+        #GBM_BACKENDS_PATH = "/run/opengl-driver/lib/gbm";
+        #__GLX_VENDOR_LIBRARY_NAME = "nvidia";
+        #__VK_LAYER_NV_optimus = "NVIDIA_only";
+        #__GL_VRR_ALLOWED = "0";
+        #__GL_GSYNC_ALLOWED = "0";
 
         # https://github.com/NVIDIA/libglvnd/blob/master/src/EGL/icd_enumeration.md
         # https://github.com/NixOS/nixpkgs/blob/a0dbe47318bbab7559ffbfa7c4872a517833409f/pkgs/development/libraries/libglvnd/default.nix#L33
@@ -78,9 +90,9 @@
       '';
     in
     {
-      services.xserver.videoDrivers = lib.mkForce [ "nvidia" ];
+      services.xserver.videoDrivers = lib.mkForce [ "nvidia" "amdgpu" ];
       boot.initrd.kernelModules = [ "nvidia" "nvidia_drm" "nvidia_modeset" ];
-      boot.blacklistedKernelModules = [ "amdgpu" "radeon" "nouveau" ];
+      #boot.blacklistedKernelModules = [ "amdgpu" "radeon" "nouveau" ];
 
       environment.systemPackages = with pkgs; [
         prime-run
@@ -95,10 +107,6 @@
       hardware.nvidia.modesetting.enable = true;
 
       services.xserver.autorun = false;
-      services.xserver.displayManager.gdm.enable = true;
-      services.xserver.displayManager.sddm.enable = lib.mkForce false;
-      services.xserver.displayManager.gdm.wayland = true;
-      services.xserver.displayManager.gdm.nvidiaWayland = true;
 
       services.xserver.desktopManager.gnome.enable = true;
       # https://github.com/NixOS/nixpkgs/issues/75867
@@ -113,7 +121,6 @@
       hardware.nvidia = {
         powerManagement.enable = true;
       };
-      boot.kernelParams = [ "nvidia.NVreg_DynamicPowerManagement=0x02" ];
       services.udev.extraRules = ''
         # Remove NVIDIA Audio devices, if present
         ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{remove}="1"
@@ -127,39 +134,25 @@
       boot.extraModprobeConfig = ''
         options nvidia "NVreg_DynamicPowerManagement=0x02"
       '';
-      # environment.systemPackages = with pkgs; [
-      #   greetd.tuigreet
-      # ];
 
       powerManagement.powertop.enable = lib.mkForce false;
 
       services.dbus.packages = with pkgs; [ gnome3.dconf ];
 
       # TODO: remove one of?
-      # hardware.opengl = {
-      #   extraPackages = [
-      #     pkgs.amdvlk
-      #     # pkgs.mesa.drivers
-      #   ];
-      #   extraPackages32 = [
-      #     pkgs.driversi686Linux.amdvlk
-      #     # pkgs.pkgsi686Linux.mesa.drivers
-      #   ];
-      # };
-
-      # services.greetd = {
-      #   enable = true;
-      #   settings = {
-      #     default_session = {
-      #       command = "${lib.makeBinPath [pkgs.greetd.tuigreet] }/tuigreet --time --cmd sway";
-      #       user = "greeter";
-      #     };
-      #   };
-      # };
+      hardware.opengl = {
+        extraPackages = [
+          pkgs.libglvnd
+          pkgs.mesa.drivers
+        ];
+        extraPackages32 = [
+          #pkgs.driversi686Linux.amdvlk
+          pkgs.pkgsi686Linux.libglvnd
+          pkgs.pkgsi686Linux.mesa.drivers
+        ];
+      };
     };
 
-
-  # Use the systemd-boot EFI boot loader.
   boot.kernelParams = [
     "mitigations=off"
   ];
@@ -171,11 +164,5 @@
   # Zephyrus G14: without it get 2h battery life idle, with like 6h idle
   # runs powertop --auto-tune at boot
   powerManagement.powertop.enable = false;
-
-  # Configure keymap in X11
-  # services.xserver.xkbOptions = "eurosign:e";
-
-  # Enable CUPS to print documents.
-  # services.printing.enable = true;
 }
 
