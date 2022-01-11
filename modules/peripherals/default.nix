@@ -16,5 +16,11 @@
     hardware.ledger.enable = true;
     # use with piper for gaming mouse configuration
     services.ratbagd.enable = true;
+
+    # no USB wakeups
+    # see: https://github.com/NixOS/nixpkgs/issues/109048
+    services.udev.extraRules = ''
+      ACTION=="add", SUBSYSTEM=="usb", DRIVER=="usb", ATTR{power/wakeup}="disabled"
+    '';
   };
 }
