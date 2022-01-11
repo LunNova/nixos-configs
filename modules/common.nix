@@ -154,7 +154,9 @@
     security.rtkit.enable = true;
     services.pipewire = {
       enable = true;
-      jack.enable = true;
+      media-session.enable = false;
+      wireplumber.enable = true;
+      jack.enable = false;
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
