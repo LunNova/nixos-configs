@@ -12,8 +12,9 @@ in
 
     environment.systemPackages = with pkgs; lib.mkIf cfg [
       yubikey-personalization
-      yubikey-manager
-      yubikey-manager-qt
+      # TODO: reenable once build is fixed
+      # yubikey-manager
+      # yubikey-manager-qt
       yubikey-personalization-gui
     ];
 
