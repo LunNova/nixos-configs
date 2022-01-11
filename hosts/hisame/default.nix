@@ -5,7 +5,6 @@ let
 in
 {
   imports = [
-    "${nixos-hardware-modules-path}/common/gpu/amd"
   ];
 
   config = {
@@ -13,7 +12,24 @@ in
     sconfig.machineId = "63d3399d2f2f65c96848f11d73082aef";
     system.stateVersion = "21.11";
 
+    boot.kernelParams = [
+      "mitigations=off"
+    ];
     boot.kernelPackages = lib.mkForce pkgs.linuxPackages_xanmod;
+
+    boot.initrd.kernelModules = [ "amdgpu" ];
+    services.xserver.videoDrivers = [ "amdgpu" ];
+    hardware.opengl = {
+      extraPackages = [
+        pkgs.rocm-opencl-icd
+        pkgs.rocm-opencl-runtime
+        pkgs.libglvnd
+        pkgs.mesa.drivers
+      ];
+      extraPackages32 = [
+        pkgs.pkgsi686Linux.mesa.drivers
+      ];
+    };
 
     hardware.cpu.amd.updateMicrocode = true;
 
