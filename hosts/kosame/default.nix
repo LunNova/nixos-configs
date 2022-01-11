@@ -108,8 +108,6 @@
 
       hardware.nvidia.modesetting.enable = true;
 
-      services.xserver.autorun = false;
-
       services.xserver.desktopManager.gnome.enable = true;
       # https://github.com/NixOS/nixpkgs/issues/75867
       programs.ssh.askPassword = pkgs.lib.mkForce "${pkgs.gnome.seahorse.out}/libexec/seahorse/ssh-askpass";
