@@ -77,6 +77,7 @@ in
           "${modifier}+Control+Shift+Right" = "move workspace to output right";
           "${modifier}+Control+Shift+Up  " = "move workspace to output up";
           "${modifier}+Control+Shift+Down" = "move workspace to output down";
+          "${modifier}+Control+Alt+Shift+Q" = "exec swaymsg -t get_tree | ${pkgs.jq}/bin/jq 'recurse(.nodes[], .floating_nodes[]) | select(.focused).pid' | xargs -L 1 kill -9";
         };
 
       output = {
