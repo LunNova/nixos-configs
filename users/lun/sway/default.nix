@@ -157,6 +157,19 @@ in
       };
       Install = { WantedBy = [ "sway-session.target" ]; };
     };
+    polkit-agent = {
+      Unit = {
+        Description = "polkit-gnome-authentication-agent-1";
+      };
+      Service = {
+        Type = "simple";
+        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        Restart = "on-failure";
+        RestartSec = 1;
+        TimeoutStopSec = 10;
+      };
+      Install = { WantedBy = [ "sway-session.target" ]; };
+    };
   };
 
   # home.file.".config/sway/config".text = ''
