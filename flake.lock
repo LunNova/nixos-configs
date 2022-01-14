@@ -37,11 +37,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1641937533,
-        "narHash": "sha256-IJbR1nNV6v/ruWv9iUFi9/qa8tFLmMhbVjzvhSWCWJY=",
+        "lastModified": 1642117744,
+        "narHash": "sha256-/SvxBe/m6JiRSlKIrgD6LQxee9GGewFyq+lsPxoViMY=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "d07df8d9a80a4a34ea881bee7860ae437c5d44a5",
+        "rev": "a5dd5d5f197724f3065fd39c59c7ccea3c8dcb8f",
         "type": "github"
       },
       "original": {
@@ -186,11 +186,11 @@
     "pct-clearvision": {
       "flake": false,
       "locked": {
-        "lastModified": 1641994154,
-        "narHash": "sha256-10AN2HS8sTWglavnipXXkMCqM3xLpNgYVI3xeU9lehA=",
+        "lastModified": 1642120325,
+        "narHash": "sha256-E7mUfPl3+YkzAxHbyMKlx56efyFgQ803EQ/fIsu0mAE=",
         "owner": "ClearVision",
         "repo": "ClearVision-v6",
-        "rev": "6d4c18bba092faf6d526be38bd6bf59efad78674",
+        "rev": "f92499e7e8e4f940b18e983f14ba56dee4f82a01",
         "type": "github"
       },
       "original": {
