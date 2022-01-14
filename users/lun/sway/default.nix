@@ -4,7 +4,7 @@ let
   bar = "${config.programs.waybar.package}/bin/waybar";
   drun = execSpawn "${pkgs.wofi}/bin/wofi --show drun";
   menu = execSpawn "${pkgs.wofi}/bin/wofi --show dmenu";
-  screenshot = execSpawn "${pkgs.sway-contrib.grimshot}/bin/grimshot";
+  screenshot = execSpawn "${pkgs.sway-contrib.grimshot}/bin/grimshot --notify copy area";
 in
 {
   imports = [
