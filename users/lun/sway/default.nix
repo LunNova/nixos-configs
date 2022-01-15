@@ -109,6 +109,7 @@ in
     '';
 
     # export FREETYPE_PROPERTIES=truetype:interpreter-version=35
+    # TODO doesn't do anything when using null/system sway package
     extraSessionCommands = ''
       export ECORE_EVAS_ENGINE=wayland_egl
       export ELM_ENGINE=wayland_egl
