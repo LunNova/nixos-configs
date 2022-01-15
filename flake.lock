@@ -186,11 +186,11 @@
     "pct-clearvision": {
       "flake": false,
       "locked": {
-        "lastModified": 1642120325,
-        "narHash": "sha256-E7mUfPl3+YkzAxHbyMKlx56efyFgQ803EQ/fIsu0mAE=",
+        "lastModified": 1642156450,
+        "narHash": "sha256-pqL2ukU3SwulQugmtCLgLVDHufKpUf47ycE18y5+vjU=",
         "owner": "ClearVision",
         "repo": "ClearVision-v6",
-        "rev": "f92499e7e8e4f940b18e983f14ba56dee4f82a01",
+        "rev": "151afe303edef9cf2995a70c43b53e0e66d790e0",
         "type": "github"
       },
       "original": {
