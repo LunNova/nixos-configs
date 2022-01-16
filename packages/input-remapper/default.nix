@@ -7,7 +7,7 @@
 , input_remapper_src_hash ? "sha256-llSgPwCLY34sAmDEuF/w2qeXdPFLLo1MIPBmbxwZZ3k="
 }:
 
-pkgs.python3Packages.buildPythonApplication rec {
+pkgs.python3Packages.buildPythonApplication {
   pname = "input-remapper";
   version = input_remapper_version;
 
@@ -17,6 +17,11 @@ pkgs.python3Packages.buildPythonApplication rec {
     repo = "input-remapper";
     sha256 = "sha256-llSgPwCLY34sAmDEuF/w2qeXdPFLLo1MIPBmbxwZZ3k=";
   };
+
+  # Fixes error
+  # Couldn’t recognize the image file format for file "*.svg"
+  # at startup, see https://github.com/NixOS/nixpkgs/issues/56943
+  strictDeps = false;
 
   patches = [ ];
   # if debugging
