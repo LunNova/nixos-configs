@@ -3,7 +3,7 @@
   config = {
     my.home-manager.enabled-users = [ "lun" ];
     sconfig.yubikey = true; # modules/yubikey
-    sconfig.key-mapper = true; # modules/key-mapper
+    sconfig.input-remapper = true; # modules/input-remapper
     sconfig.tty12-journal.enable = true;
 
     # LANGUAGE / I18N

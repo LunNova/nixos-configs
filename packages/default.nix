@@ -10,7 +10,7 @@ let
   xdg-open-with-portal = pkgs.callPackage ./xdg-open-with-portal { };
 in
 {
-  key-mapper = pkgs.callPackage ./key-mapper { };
+  input-remapper = pkgs.callPackage ./input-remapper { };
   powercord = pkgs.callPackage ./powercord {
     plugins = { };
     themes = { };
