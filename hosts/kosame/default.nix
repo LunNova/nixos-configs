@@ -155,7 +155,10 @@
 
   boot.kernelParams = [
     "mitigations=off"
+    "mem_sleep_default=deep" # S3 by default
   ];
+  # Enables S3 by replacing ACPI DSDT table with one which reports it
+  boot.initrd.prepend = [ "${./acpi_override}" ];
 
   boot.blacklistedKernelModules = [ "radeon" "nouveau" ];
 
