@@ -1,17 +1,30 @@
 { lib
 , python3
-, pkgs
 , pkgconfig
+, wrapGAppsHook
+, gettext
+, gtk3
+, git
+, glib
+, gobject-introspection
+, xlibs
+, pygobject3
+, setuptools
+, evdev
+, pydbus
+, psutil
+, fetchFromGitHub
+, buildPythonApplication
 , input_remapper_version ? "1.3.0"
 , input_remapper_src_rev ? "76c3cadcfaa3f244d62bd911aa6642a86233ffa0"
 , input_remapper_src_hash ? "sha256-llSgPwCLY34sAmDEuF/w2qeXdPFLLo1MIPBmbxwZZ3k="
 }:
 
-pkgs.python3Packages.buildPythonApplication {
+buildPythonApplication {
   pname = "input-remapper";
   version = input_remapper_version;
 
-  src = pkgs.fetchFromGitHub {
+  src = fetchFromGitHub {
     rev = input_remapper_src_rev;
     owner = "sezanzeb";
     repo = "input-remapper";
@@ -29,7 +42,7 @@ pkgs.python3Packages.buildPythonApplication {
   prePatch = ''
     echo "COMMIT_HASH = '${input_remapper_src_rev}'" > inputremapper/commit_hash.py
     substituteInPlace inputremapper/data.py --replace "/usr/share/input-remapper"  "$out/usr/share/input-remapper"
-    substituteInPlace inputremapper/system_mapping.py --replace '["xmodmap", "-pke"]' '["${pkgs.xlibs.xmodmap}/bin/xmodmap", "-pke"]'
+    substituteInPlace inputremapper/system_mapping.py --replace '["xmodmap", "-pke"]' '["${xlibs.xmodmap}/bin/xmodmap", "-pke"]'
   '';
 
   doCheck = false; # fails atm as can't import modules when testing due to some sort of path issue
@@ -44,25 +57,25 @@ pkgs.python3Packages.buildPythonApplication {
     makeWrapperArgs+=("''${gappsWrapperArgs[@]}")
   '';
 
-  nativeBuildInputs = with pkgs; [
+  nativeBuildInputs = [
     wrapGAppsHook
     gettext
     gtk3
     git
     glib
     gobject-introspection
-    pkgs.xlibs.xmodmap
-    python3.pkgs.pygobject3
+    xlibs.xmodmap
+    pygobject3
   ];
 
-  propagatedBuildInputs = with python3.pkgs; [
+  propagatedBuildInputs = [
     setuptools # needs pkg_resources
     pygobject3
     evdev
     pkgconfig
     pydbus
     psutil
-    pkgs.xlibs.xmodmap
+    xlibs.xmodmap
   ];
 
   # FIXME: don't install udev rules for now due to issue with hanging event handler
