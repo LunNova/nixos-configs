@@ -128,6 +128,7 @@
       };
       localPackages = import ./packages {
         inherit system pkgs;
+        flake-args = args;
       };
       setIf = flag: set: if flag then set else { };
       enableKwinFt = false;

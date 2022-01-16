@@ -1,4 +1,4 @@
-{ system, pkgs }:
+{ system, pkgs, flake-args }:
 let
   lutris-unwrapped = (pkgs.lutris-unwrapped.override {
     #wine = pkgs.wineWowPackages.staging;
