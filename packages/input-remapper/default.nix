@@ -75,7 +75,9 @@ pkgs.python3Packages.buildPythonApplication rec {
     install -D data/input-remapper.policy $out/share/polkit-1/actions/input-remapper.policy
     install -D data/inputremapper.Control.conf $out/etc/dbus-1/system.d/inputremapper.Control.conf
     install -D -t $out/usr/share/input-remapper/ data/*
-    install -m755 -D -t $out/bin/ bin/*
+
+    # Only install input-remapper prefixed binaries, we don't care about deprecated key-mapper ones
+    install -m755 -D -t $out/bin/ bin/input-remapper*
   '';
 
   meta = {
