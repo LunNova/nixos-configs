@@ -137,7 +137,7 @@
 
       powerManagement.powertop.enable = lib.mkForce false;
 
-      services.dbus.packages = with pkgs; [ gnome3.dconf ];
+      services.dbus.packages = with pkgs; [ dconf ];
 
       # TODO: remove one of?
       hardware.opengl = {
