@@ -22,5 +22,8 @@
     services.udev.extraRules = ''
       ACTION=="add", SUBSYSTEM=="usb", DRIVER=="usb", ATTR{power/wakeup}="disabled"
     '';
+
+    services.udev.packages = [ pkgs.vial ];
+    environment.systemPackages = [ pkgs.vial ];
   };
 }
