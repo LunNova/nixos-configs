@@ -70,7 +70,7 @@
       # Maybe should always pregen when setting up a new system because will be using agenix later so this is irrelevant
       startWhenNeeded = true;
       passwordAuthentication = false;
-      challengeResponseAuthentication = false;
+      kbdInteractiveAuthentication = false;
       extraConfig = "UsePAM no";
       banner = "This computer system may not be used for any purpose.\nBe gay, do crime.\n";
     };
