@@ -135,6 +135,7 @@
       killall
       traceroute
       dnsutils
+      libfaketime
     ];
 
     # DESKTOP ENV
