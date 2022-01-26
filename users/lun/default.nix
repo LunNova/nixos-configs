@@ -50,8 +50,6 @@
     lun.lutris
   ];
 
-  services.lorri.enable = true;
-
   programs.git = {
     enable = true;
     userName = "Luna Nova";
