@@ -37,11 +37,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1643147247,
-        "narHash": "sha256-mAtAuWDfxqEBp2n8w5277jG99jTXuA2rNBWR176A5nQ=",
+        "lastModified": 1643151280,
+        "narHash": "sha256-sVlOWjDm+QU9vIjY+awfOwB5T/Sl8R+LkP9sNXhVCw4=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "f206f94ac50fdfa5c73e28c6999094cd4c82d477",
+        "rev": "990ca662c4b92636053ea399f5fb80702830522c",
         "type": "github"
       },
       "original": {
@@ -74,11 +74,11 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1642719993,
-        "narHash": "sha256-osCgh6MHvhwS30591CEwQ15KKtRWb73xY3Y0x3ZqpxE=",
+        "lastModified": 1643191269,
+        "narHash": "sha256-/NxMii5wEL7ZcE3bg1CT5xKuyGDtrSYP+j2qCKmZEEA=",
         "owner": "fufexan",
         "repo": "nix-gaming",
-        "rev": "e935a8490bd218fe48ed89737c91d33fdf82ec29",
+        "rev": "a91e2c2c422dd94eb7fdd0e3e235c2c38c047fd4",
         "type": "github"
       },
       "original": {
@@ -186,11 +186,11 @@
     "pct-clearvision": {
       "flake": false,
       "locked": {
-        "lastModified": 1643018036,
-        "narHash": "sha256-vIt4nvBWE5K6JeNpidOTF2NwpJeZTsu2UyD7iGoDs0A=",
+        "lastModified": 1643166157,
+        "narHash": "sha256-fwRJw+SaqH3Z8EAYj8toEamry0PGLQFum3jwHP/6NRk=",
         "owner": "ClearVision",
         "repo": "ClearVision-v6",
-        "rev": "88f71097c82a564df5c8bd2bba3261d0fb0ccb1d",
+        "rev": "bb5fded161482b369b65fdf7d7da789ff81e9c51",
         "type": "github"
       },
       "original": {
