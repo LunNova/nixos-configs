@@ -172,6 +172,9 @@
       driSupport32Bit = true;
     };
 
+    # BLUETOOTH
+    services.blueman.enable = true;
+
     # CHECKS
     assertions = [
       {
