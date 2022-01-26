@@ -58,6 +58,8 @@
       drmDevices = "/dev/dri/card0";
       # https://github.com/cole-mickens/nixcfg/blob/main/mixins/nvidia.nix
       waylandEnv = {
+        WLR_RENDERER = "vulkan";
+        VK_LAYER_PATH = "${pkgs.vulkan-validation-layers}/share/vulkan/explicit_layer.d";
         # https://lamarque-lvs.blogspot.com/2021/12/nvidia-optimus-with-wayland-help-needed.html
         #WLR_NO_HARDWARE_CURSORS = "1";
         #KWIN_DRM_DEVICES = drmDevices;
