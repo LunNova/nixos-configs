@@ -2,7 +2,7 @@
 let
   lutris-unwrapped = (pkgs.lutris-unwrapped.override {
     #wine = pkgs.wineWowPackages.staging;
-    wine = pkgs.emptyDirectory;
+    wine = pkgs.wine-wayland;
   }).overrideAttrs (old: {
     patches = old.patches ++ [ ];
     propagatedBuildInputs = old.propagatedBuildInputs ++ [ pkgs.wineWowPackages.fonts ];
