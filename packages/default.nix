@@ -1,8 +1,8 @@
 { system, pkgs, flake-args }:
 let
   lutris-unwrapped = (pkgs.lutris-unwrapped.override {
-    #wine = pkgs.wineWowPackages.staging;
-    wine = pkgs.wine-wayland;
+    # TODO wine build with wayland and GE patches?
+    wine = pkgs.wineWowPackages.wayland;
   }).overrideAttrs (old: {
     patches = old.patches ++ [ ];
     propagatedBuildInputs = old.propagatedBuildInputs ++ [ pkgs.wineWowPackages.fonts ];
