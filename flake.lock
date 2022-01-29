@@ -37,11 +37,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1643151280,
-        "narHash": "sha256-sVlOWjDm+QU9vIjY+awfOwB5T/Sl8R+LkP9sNXhVCw4=",
+        "lastModified": 1643411645,
+        "narHash": "sha256-q1TjWmK1MeGNfcU8ud11v9ZTqq2UI8YiCVKCD2MeAEk=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "990ca662c4b92636053ea399f5fb80702830522c",
+        "rev": "acf824c9ed70f623b424c2ca41d0f6821014c67c",
         "type": "github"
       },
       "original": {
@@ -74,11 +74,11 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1643191269,
-        "narHash": "sha256-/NxMii5wEL7ZcE3bg1CT5xKuyGDtrSYP+j2qCKmZEEA=",
+        "lastModified": 1643301896,
+        "narHash": "sha256-w0MISQZXB287rlrXg5bjy1UjfxVAaGl87+xWRfeEQgc=",
         "owner": "fufexan",
         "repo": "nix-gaming",
-        "rev": "a91e2c2c422dd94eb7fdd0e3e235c2c38c047fd4",
+        "rev": "8ff6455f064337326ffc8bb69ab93f184d3fad3d",
         "type": "github"
       },
       "original": {
@@ -105,16 +105,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1643080866,
-        "narHash": "sha256-iO3Z6jw0HEiie8UnXVpq1SxphprDYBXrVzubEa5D4eE=",
-        "owner": "NixOS",
+        "lastModified": 1643419015,
+        "narHash": "sha256-ehKRym5ZRfxzXPxe9JJ1K1yx959PxooKg5frsmJN0sM=",
+        "owner": "LunNova",
         "repo": "nixpkgs",
-        "rev": "c07b471b52be8fbc49a7dc194e9b37a6e19ee04d",
+        "rev": "1861748a307c643edba7bac7961ad4f82c1fb48f",
         "type": "github"
       },
       "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
+        "owner": "LunNova",
+        "ref": "qt515-update",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -186,11 +186,11 @@
     "pct-clearvision": {
       "flake": false,
       "locked": {
-        "lastModified": 1643166157,
-        "narHash": "sha256-fwRJw+SaqH3Z8EAYj8toEamry0PGLQFum3jwHP/6NRk=",
+        "lastModified": 1643219902,
+        "narHash": "sha256-fiNwjwGPU9I0OzlO2adB+iEakUBJJmjdibQrRW66pmo=",
         "owner": "ClearVision",
         "repo": "ClearVision-v6",
-        "rev": "bb5fded161482b369b65fdf7d7da789ff81e9c51",
+        "rev": "cd6381e38033cf4d490f22f933f515a2c4750f10",
         "type": "github"
       },
       "original": {
