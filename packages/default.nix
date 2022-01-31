@@ -25,5 +25,4 @@ in
   spawn = pkgs.callPackage ./spawn { };
   swaysome = pkgs.callPackage ./swaysome { };
   sworkstyle = pkgs.callPackage ./sworkstyle { };
-  sway_1_7 = pkgs.sway.override { sway-unwrapped = pkgs.callPackage ./sway { nixpkgs-sway-path = "${flake-args.nixpkgs}/pkgs/applications/window-managers/sway/"; }; };
 }
