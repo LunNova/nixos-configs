@@ -131,14 +131,18 @@
 
       # TODO: remove one of?
       hardware.opengl = {
+        package = lib.mkForce pkgs.mesa.drivers;
+        package32 = lib.mkForce pkgs.pkgsi686Linux.mesa.drivers;
         extraPackages = [
           pkgs.libglvnd
-          pkgs.mesa.drivers
+          (pkgs.hiPrio config.hardware.nvidia.package.out)
+          #(pkgs.lowPrio pkgs.mesa.drivers)
         ];
         extraPackages32 = [
           #pkgs.driversi686Linux.amdvlk
           pkgs.pkgsi686Linux.libglvnd
-          pkgs.pkgsi686Linux.mesa.drivers
+          (pkgs.hiPrio config.hardware.nvidia.package.lib32)
+          #pkgs.pkgsi686Linux.mesa.drivers
         ];
       };
     };
