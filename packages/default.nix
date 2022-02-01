@@ -9,6 +9,11 @@ let
     propagatedBuildInputs = old.propagatedBuildInputs ++ [ pkgs.wineWowPackages.fonts ];
   });
   xdg-open-with-portal = pkgs.callPackage ./xdg-open-with-portal { };
+  wrapScripts = path:
+    let
+      scripts = builtins.attrNames (builtins.readDir path);
+    in
+    map (x: pkgs.writeScriptBin x (builtins.readFile "${path}/${x}")) scripts;
 in
 {
   input-remapper = pkgs.python3Packages.callPackage ./input-remapper { };
@@ -26,4 +31,5 @@ in
   spawn = pkgs.callPackage ./spawn { };
   swaysome = pkgs.callPackage ./swaysome { };
   sworkstyle = pkgs.callPackage ./sworkstyle { };
+  lun-scripts = pkgs.symlinkJoin { name = "lun-scripts"; paths = wrapScripts ./lun-scripts; };
 }
