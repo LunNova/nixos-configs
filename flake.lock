@@ -105,16 +105,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1643419015,
-        "narHash": "sha256-ehKRym5ZRfxzXPxe9JJ1K1yx959PxooKg5frsmJN0sM=",
-        "owner": "LunNova",
+        "lastModified": 1643524588,
+        "narHash": "sha256-Qh5AazxdOQRORbGkkvpKoovDl6ej/4PhDabFsqnueqw=",
+        "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "1861748a307c643edba7bac7961ad4f82c1fb48f",
+        "rev": "efeefb2af1469a5d1f0ae7ca8f0dfd9bb87d5cfb",
         "type": "github"
       },
       "original": {
-        "owner": "LunNova",
-        "ref": "qt515-update",
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }

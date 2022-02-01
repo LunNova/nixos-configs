@@ -2,7 +2,7 @@
   description = "lun's system config";
 
   inputs = {
-    nixpkgs.url = "github:LunNova/nixpkgs/qt515-update";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
