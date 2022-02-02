@@ -45,7 +45,7 @@
         "experimental-features = nix-command flakes ca-derivations"
         "warn-dirty = false"
       ];
-      autoOptimiseStore = true;
+      settings.auto-optimise-store = true;
     };
 
     # NETWORKING
@@ -91,7 +91,7 @@
     services.fstrim.enable = true;
 
     # HARDENING
-    nix.allowedUsers = [ "@users" ];
+    nix.settings.allowed-users = [ "@users" ];
     security = {
       sudo.execWheelOnly = true;
     };
