@@ -34,6 +34,21 @@
 
   services.xserver.videoDrivers = lib.mkDefault [ "amdgpu" ];
 
+  # TODO: Remove after https://github.com/NixOS/nixpkgs/pull/153091
+  hardware.opengl = {
+    package = lib.mkForce pkgs.mesa.drivers;
+    package32 = lib.mkForce pkgs.pkgsi686Linux.mesa.drivers;
+    # Optionally add amdvlk - IME mesa works better
+    extraPackages = [
+      pkgs.libglvnd
+      (pkgs.hiPrio config.hardware.nvidia.package.out)
+    ];
+    extraPackages32 = [
+      pkgs.pkgsi686Linux.libglvnd
+      (pkgs.hiPrio config.hardware.nvidia.package.lib32)
+    ];
+  };
+
   # remove nvidia devices if not using nvidia config
   services.udev.extraRules = pkgs.lib.mkIf (!config.sconfig.amd-nvidia-laptop.enable) ''
     # Remove nVidia devices, when present.
@@ -128,23 +143,6 @@
       powerManagement.powertop.enable = lib.mkForce false;
 
       services.dbus.packages = with pkgs; [ dconf ];
-
-      # TODO: remove one of?
-      hardware.opengl = {
-        package = lib.mkForce pkgs.mesa.drivers;
-        package32 = lib.mkForce pkgs.pkgsi686Linux.mesa.drivers;
-        extraPackages = [
-          pkgs.libglvnd
-          (pkgs.hiPrio config.hardware.nvidia.package.out)
-          #(pkgs.lowPrio pkgs.mesa.drivers)
-        ];
-        extraPackages32 = [
-          #pkgs.driversi686Linux.amdvlk
-          pkgs.pkgsi686Linux.libglvnd
-          (pkgs.hiPrio config.hardware.nvidia.package.lib32)
-          #pkgs.pkgsi686Linux.mesa.drivers
-        ];
-      };
     };
 
   boot.kernelParams = [
