@@ -105,33 +105,17 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1643524588,
-        "narHash": "sha256-Qh5AazxdOQRORbGkkvpKoovDl6ej/4PhDabFsqnueqw=",
+        "lastModified": 1643919911,
+        "narHash": "sha256-f6/nmdX1Gsc17UL0u7FtBGUKEJ//CztzqTdghuVK4kY=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "efeefb2af1469a5d1f0ae7ca8f0dfd9bb87d5cfb",
+        "rev": "07a283bb00398dc8b32e31269ca1fa051c646305",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixos-unstable",
+        "ref": "master",
         "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "pcp-better-status-indicators": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1641630773,
-        "narHash": "sha256-s8ci6vRNmyiv26PeDP8Ev3j2xWi/7nue+UKnQrUq6qY=",
-        "owner": "GriefMoDz",
-        "repo": "better-status-indicators",
-        "rev": "ae36b47c59db5b4c08f728647ac763a63a0d4555",
-        "type": "github"
-      },
-      "original": {
-        "owner": "GriefMoDz",
-        "repo": "better-status-indicators",
         "type": "github"
       }
     },
@@ -269,7 +253,6 @@
         "nix-gaming": "nix-gaming",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
-        "pcp-better-status-indicators": "pcp-better-status-indicators",
         "pcp-theme-toggler": "pcp-theme-toggler",
         "pcp-tweaks": "pcp-tweaks",
         "pcp-webhook-tag": "pcp-webhook-tag",
