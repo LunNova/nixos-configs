@@ -24,7 +24,7 @@ in
   powercord = powercord;
   discord-electron-update = pkgs.callPackage ./discord-electron-update rec {
     ffmpeg = pkgs.ffmpeg-full;
-    electron = pkgs.electron_13;
+    electron = pkgs.electron_15;
     src = builtins.fetchurl {
       url =
         "https://dl-canary.discordapp.net/apps/linux/${version}/discord-canary-${version}.tar.gz";
