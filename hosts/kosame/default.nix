@@ -4,6 +4,35 @@
 
 { config, pkgs, lib, nixos-hardware-modules-path, ... }:
 
+let
+  drmDevices = "/dev/dri/card0";
+  # https://github.com/cole-mickens/nixcfg/blob/main/mixins/nvidia.nix
+  waylandEnv = {
+    WLR_RENDERER = "vulkan";
+    VK_LAYER_PATH = "${pkgs.vulkan-validation-layers}/share/vulkan/explicit_layer.d";
+    # https://lamarque-lvs.blogspot.com/2021/12/nvidia-optimus-with-wayland-help-needed.html
+    #WLR_NO_HARDWARE_CURSORS = "1";
+    #KWIN_DRM_DEVICES = drmDevices;
+    #WLR_DRM_DEVICES = drmDevices;
+    #GBM_BACKEND = "nvidia-drm";
+    #GBM_BACKENDS_PATH = "/run/opengl-driver/lib/gbm";
+    #__GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    #__VK_LAYER_NV_optimus = "NVIDIA_only";
+    #__GL_VRR_ALLOWED = "0";
+    #__GL_GSYNC_ALLOWED = "0";
+
+    # https://github.com/NVIDIA/libglvnd/blob/master/src/EGL/icd_enumeration.md
+    # https://github.com/NixOS/nixpkgs/blob/a0dbe47318bbab7559ffbfa7c4872a517833409f/pkgs/development/libraries/libglvnd/default.nix#L33
+    #__EGL_VENDOR_LIBRARY_CONFIG_DIRS = "/run/opengl-driver/share/glvnd/egl_vendor.d/";
+    #__EGL_EXTERNAL_PLATFORM_CONFIG_DIRS = "/etc/egl/egl_external_platform.d/:/run/opengl-driver/share/egl/egl_external_platform.d/";
+  };
+  prime-run = pkgs.writeShellScriptBin "prime-run" ''
+    export __NV_PRIME_RENDER_OFFLOAD=1
+    export __GLX_VENDOR_LIBRARY_NAME=nvidia
+    export __VK_LAYER_NV_optimus=NVIDIA_only
+    exec -a "$0" "$@"
+  '';
+in
 {
   imports =
     [
@@ -32,8 +61,6 @@
   boot.cleanTmpDir = true;
   boot.kernelPackages = lib.mkForce pkgs.linuxPackages_xanmod;
 
-  services.xserver.videoDrivers = lib.mkDefault [ "amdgpu" ];
-
   # TODO: Remove after https://github.com/NixOS/nixpkgs/pull/153091
   hardware.opengl = {
     package = lib.mkForce pkgs.mesa.drivers;
@@ -49,11 +76,6 @@
     ];
   };
 
-  # remove nvidia devices if not using nvidia config
-  services.udev.extraRules = pkgs.lib.mkIf (!config.sconfig.amd-nvidia-laptop.enable) ''
-    # Remove nVidia devices, when present.
-    # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{remove}="1"
-    #'';
 
   systemd.sleep.extraConfig = ''
     AllowHibernation=no
@@ -62,88 +84,55 @@
     AllowHybridSleep=no
   '';
 
-  specialisation.nvidia.configuration = {
-    sconfig.amd-nvidia-laptop.enable = true;
+  environment.systemPackages = with pkgs; [
+    prime-run
+    glxinfo
+  ] ++ (lib.optionals (pkgs.plasma5Packages.plasma5.kwin == pkgs.kwinft.kwin)
+    [
+      pkgs.kwinft.disman
+      pkgs.kwinft.kdisplay
+    ]);
+
+  lun.amd-nvidia-laptop.enable = true;
+  services.xserver.videoDrivers = lib.mkForce [ "nvidia" "amdgpu" ];
+  boot.initrd.kernelModules = [ "nvidia" "nvidia_drm" "nvidia_modeset" ];
+  environment.variables = waylandEnv;
+  environment.sessionVariables = waylandEnv;
+
+  hardware.nvidia.modesetting.enable = true;
+
+  # for gnome testing
+  # services.xserver.desktopManager.gnome.enable = true;
+  # # https://github.com/NixOS/nixpkgs/issues/75867
+  # programs.ssh.askPassword = pkgs.lib.mkForce "${pkgs.gnome.seahorse.out}/libexec/seahorse/ssh-askpass";
+
+  #services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
+  services.xserver.displayManager.sessionPackages = [
+    (pkgs.plasma-workspace.overrideAttrs
+      (old: { passthru.providedSessions = [ "plasmawayland" ]; }))
+  ];
+
+  hardware.nvidia = {
+    powerManagement.enable = true;
   };
+  services.udev.extraRules = ''
+    # Remove NVIDIA Audio devices, if present
+    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{remove}="1"
+    # Enable runtime PM for NVIDIA VGA/3D controller devices on driver bind
+    ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="auto"
+    ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="auto"
+    # Disable runtime PM for NVIDIA VGA/3D controller devices on driver unbind
+    ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="on"
+    ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="on"
+  '' + (lib.optionalString (!config.lun.amd-nvidia-laptop.enable) ''
+    # Remove nVidia devices, when present.
+    # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{remove}="1"
+    #'');
+  boot.extraModprobeConfig = ''
+    options nvidia "NVreg_DynamicPowerManagement=0x02"
+  '';
 
-  environment.systemPackages = lib.mkIf (pkgs.plasma5Packages.plasma5.kwin == pkgs.kwinft.kwin) [ pkgs.kwinft.disman pkgs.kwinft.kdisplay ];
-
-  specialisation.wayland-test.configuration =
-    let
-      drmDevices = "/dev/dri/card0";
-      # https://github.com/cole-mickens/nixcfg/blob/main/mixins/nvidia.nix
-      waylandEnv = {
-        WLR_RENDERER = "vulkan";
-        VK_LAYER_PATH = "${pkgs.vulkan-validation-layers}/share/vulkan/explicit_layer.d";
-        # https://lamarque-lvs.blogspot.com/2021/12/nvidia-optimus-with-wayland-help-needed.html
-        #WLR_NO_HARDWARE_CURSORS = "1";
-        #KWIN_DRM_DEVICES = drmDevices;
-        #WLR_DRM_DEVICES = drmDevices;
-        #GBM_BACKEND = "nvidia-drm";
-        #GBM_BACKENDS_PATH = "/run/opengl-driver/lib/gbm";
-        #__GLX_VENDOR_LIBRARY_NAME = "nvidia";
-        #__VK_LAYER_NV_optimus = "NVIDIA_only";
-        #__GL_VRR_ALLOWED = "0";
-        #__GL_GSYNC_ALLOWED = "0";
-
-        # https://github.com/NVIDIA/libglvnd/blob/master/src/EGL/icd_enumeration.md
-        # https://github.com/NixOS/nixpkgs/blob/a0dbe47318bbab7559ffbfa7c4872a517833409f/pkgs/development/libraries/libglvnd/default.nix#L33
-        #__EGL_VENDOR_LIBRARY_CONFIG_DIRS = "/run/opengl-driver/share/glvnd/egl_vendor.d/";
-        #__EGL_EXTERNAL_PLATFORM_CONFIG_DIRS = "/etc/egl/egl_external_platform.d/:/run/opengl-driver/share/egl/egl_external_platform.d/";
-      };
-      prime-run = pkgs.writeShellScriptBin "prime-run" ''
-        export __NV_PRIME_RENDER_OFFLOAD=1
-        export __GLX_VENDOR_LIBRARY_NAME=nvidia
-        export __VK_LAYER_NV_optimus=NVIDIA_only
-        exec -a "$0" "$@"
-      '';
-    in
-    {
-      services.xserver.videoDrivers = lib.mkForce [ "nvidia" "amdgpu" ];
-      boot.initrd.kernelModules = [ "nvidia" "nvidia_drm" "nvidia_modeset" ];
-      #boot.blacklistedKernelModules = [ "amdgpu" "radeon" "nouveau" ];
-
-      environment.systemPackages = with pkgs; [
-        prime-run
-        glxinfo
-      ];
-
-      environment.variables = waylandEnv;
-      environment.sessionVariables = waylandEnv;
-
-      hardware.nvidia.modesetting.enable = true;
-
-      services.xserver.desktopManager.gnome.enable = true;
-      # https://github.com/NixOS/nixpkgs/issues/75867
-      programs.ssh.askPassword = pkgs.lib.mkForce "${pkgs.gnome.seahorse.out}/libexec/seahorse/ssh-askpass";
-
-      #services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
-      services.xserver.displayManager.sessionPackages = [
-        (pkgs.plasma-workspace.overrideAttrs
-          (old: { passthru.providedSessions = [ "plasmawayland" ]; }))
-      ];
-
-      hardware.nvidia = {
-        powerManagement.enable = true;
-      };
-      services.udev.extraRules = ''
-        # Remove NVIDIA Audio devices, if present
-        ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{remove}="1"
-        # Enable runtime PM for NVIDIA VGA/3D controller devices on driver bind
-        ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="auto"
-        ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="auto"
-        # Disable runtime PM for NVIDIA VGA/3D controller devices on driver unbind
-        ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="on"
-        ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="on"
-      '';
-      boot.extraModprobeConfig = ''
-        options nvidia "NVreg_DynamicPowerManagement=0x02"
-      '';
-
-      powerManagement.powertop.enable = lib.mkForce false;
-
-      services.dbus.packages = with pkgs; [ dconf ];
-    };
+  services.dbus.packages = with pkgs; [ dconf ];
 
   boot.kernelParams = [
     "mitigations=off"

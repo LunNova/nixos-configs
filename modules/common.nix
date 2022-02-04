@@ -142,11 +142,11 @@
     # DESKTOP ENV
     # Enable the X11 windowing system.
     services.xserver.enable = true;
-    services.xserver.displayManager.sddm.enable = false;
+    services.xserver.displayManager.sddm.enable = true;
     xdg.portal.gtkUsePortal = true; # Use xdg-desktop-portal for file pickers
-    services.xserver.displayManager.gdm.enable = true;
-    services.xserver.displayManager.gdm.wayland = true;
-    services.xserver.displayManager.gdm.nvidiaWayland = true;
+    # services.xserver.displayManager.gdm.enable = true;
+    # services.xserver.displayManager.gdm.wayland = true;
+    # services.xserver.displayManager.gdm.nvidiaWayland = true;
     services.xserver.desktopManager.plasma5.enable = true;
     services.xserver.desktopManager.plasma5.runUsingSystemd = true;
 
