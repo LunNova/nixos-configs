@@ -61,20 +61,10 @@ in
   boot.cleanTmpDir = true;
   boot.kernelPackages = lib.mkForce pkgs.linuxPackages_xanmod;
 
-  # TODO: Remove after https://github.com/NixOS/nixpkgs/pull/153091
-  hardware.opengl = {
-    package = lib.mkForce pkgs.mesa.drivers;
-    package32 = lib.mkForce pkgs.pkgsi686Linux.mesa.drivers;
-    # Optionally add amdvlk - IME mesa works better
-    extraPackages = [
-      pkgs.libglvnd
-      (pkgs.hiPrio config.hardware.nvidia.package.out)
-    ];
-    extraPackages32 = [
-      pkgs.pkgsi686Linux.libglvnd
-      (pkgs.hiPrio config.hardware.nvidia.package.lib32)
-    ];
-  };
+  services.udev.extraRules = (lib.optionalString (!config.lun.amd-nvidia-laptop.enable) ''
+    # Remove nVidia devices, when present.
+    # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{remove}="1"
+    #'');
 
 
   systemd.sleep.extraConfig = ''
@@ -94,12 +84,8 @@ in
     ]);
 
   lun.amd-nvidia-laptop.enable = true;
-  services.xserver.videoDrivers = lib.mkForce [ "nvidia" "amdgpu" ];
-  boot.initrd.kernelModules = [ "nvidia" "nvidia_drm" "nvidia_modeset" ];
   environment.variables = waylandEnv;
   environment.sessionVariables = waylandEnv;
-
-  hardware.nvidia.modesetting.enable = true;
 
   # for gnome testing
   # services.xserver.desktopManager.gnome.enable = true;
@@ -112,26 +98,6 @@ in
       (old: { passthru.providedSessions = [ "plasmawayland" ]; }))
   ];
 
-  hardware.nvidia = {
-    powerManagement.enable = true;
-  };
-  services.udev.extraRules = ''
-    # Remove NVIDIA Audio devices, if present
-    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{remove}="1"
-    # Enable runtime PM for NVIDIA VGA/3D controller devices on driver bind
-    ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="auto"
-    ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="auto"
-    # Disable runtime PM for NVIDIA VGA/3D controller devices on driver unbind
-    ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="on"
-    ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="on"
-  '' + (lib.optionalString (!config.lun.amd-nvidia-laptop.enable) ''
-    # Remove nVidia devices, when present.
-    # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{remove}="1"
-    #'');
-  boot.extraModprobeConfig = ''
-    options nvidia "NVreg_DynamicPowerManagement=0x02"
-  '';
-
   services.dbus.packages = with pkgs; [ dconf ];
 
   boot.kernelParams = [
@@ -140,8 +106,6 @@ in
   ];
   # Enables S3 by replacing ACPI DSDT table with one which reports it
   boot.initrd.prepend = [ "${./acpi_override}" ];
-
-  boot.blacklistedKernelModules = [ "radeon" "nouveau" ];
 
   # Used to set power profiles, should have support in asus-wmi https://asus-linux.org/blog/updates-2021-07-16/
   services.power-profiles-daemon.enable = true;

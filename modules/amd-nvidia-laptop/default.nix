@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }:
 let
-  cfg = config.services.xserver // config.lun.amd-nvidia-laptop;
+  cfg = config.services.xserver;
+  lcfg = config.lun.amd-nvidia-laptop;
   nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
     export __NV_PRIME_RENDER_OFFLOAD=1
     export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
@@ -8,7 +9,7 @@ let
     export __VK_LAYER_NV_optimus=NVIDIA_only
     exec -a "$0" "$@"
   '';
-  igpuDriver = "amdgpu";
+  igpuDriver = "amdgpu"; # try modesetting or intel for intel?
   nvidiaDriver = "nvidia";
   igpuBusId = "PCI:4:0:0";
   nvidiaBusId = "PCI:1:0:0";
@@ -22,16 +23,33 @@ in
     enable = lib.mkEnableOption "Enable amd-nvidia-laptop";
   };
 
-  config = lib.mkIf cfg.enable {
-    services.xserver.exportConfiguration = true;
-    services.xserver.videoDrivers = [ "nvidia" ];
+  config = lib.mkIf lcfg.enable {
+    services.xserver.exportConfiguration = true; # Make it easier to look at current x conf in /etc/X11/
+    services.xserver.videoDrivers = [ "nvidia" "amdgpu" ];
+    boot.initrd.kernelModules = [ "amdgpu" "nvidia" "nvidia_drm" "nvidia_modeset" ];
+    boot.blacklistedKernelModules = [ "radeon" "nouveau" ];
+
+    # TODO: Remove after https://github.com/NixOS/nixpkgs/pull/153091
+    hardware.opengl = {
+      package = lib.mkForce pkgs.mesa.drivers;
+      package32 = lib.mkForce pkgs.pkgsi686Linux.mesa.drivers;
+      # Optionally add amdvlk - IME mesa works better
+      extraPackages = [
+        pkgs.libglvnd
+        (pkgs.hiPrio config.hardware.nvidia.package.out)
+      ];
+      extraPackages32 = [
+        pkgs.pkgsi686Linux.libglvnd
+        (pkgs.hiPrio config.hardware.nvidia.package.lib32)
+      ];
+    };
 
     # TODO https://forums.developer.nvidia.com/t/bug-nvidia-v495-29-05-driver-spamming-dbus-enabled-applications-with-invalid-messages/192892/14
-    # apply patch for nvidia powerd issue
+    # apply patch for nvidia powerd issue?
 
     # https://wiki.archlinux.org/title/NVIDIA/Troubleshooting#Xorg_fails_during_boot,_but_otherwise_starts_fine
     # TODO: no way to make this a glob? should match number of GPUs
-
+    # TODO: this is deprecated but works and isn't hw specific
     systemd.services.display-manager.wants = [ "systemd-udev-settle.service" ];
     systemd.services.display-manager.after = [ "systemd-udev-settle.service" ];
     systemd.services.display-manager.serviceConfig.ExecStartPre = [ "/bin/sh -c 'sleep 3'" ];
@@ -52,12 +70,28 @@ in
 
     environment.systemPackages = [ nvidia-offload ];
 
+    # This doesn't conflict with prime any more
     hardware.nvidia.modesetting.enable = true;
+    # This doesn't conflict with prime any more
     hardware.nvidia.powerManagement.enable = true;
+    #hardware.nvidia.powerManagement.finegrained = true; # Module prevents enabling this without offload but it shouldn't
+    services.udev.extraRules = ''
+      # Remove NVIDIA Audio devices, if present
+      ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{remove}="1"
+      # Enable runtime PM for NVIDIA VGA/3D controller devices on driver bind
+      ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="auto"
+      ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="auto"
+      # Disable runtime PM for NVIDIA VGA/3D controller devices on driver unbind
+      ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="on"
+      ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="on"
+    '';
+    boot.extraModprobeConfig = ''
+      options nvidia "NVreg_DynamicPowerManagement=0x02"
+    '';
 
     services.xserver.displayManager.setupCommands =
       let
-        sinkGpuProviderName =
+        igpuProviderName =
           if igpuDriver == "amdgpu" then
           # find the name of the provider if amdgpu
             "`${pkgs.xorg.xrandr}/bin/xrandr --listproviders | ${pkgs.gnugrep}/bin/grep -i AMD | ${pkgs.gnused}/bin/sed -n 's/^.*name://p'`"
@@ -66,9 +100,9 @@ in
       in
       lib.mkForce ''
         # Added by nvidia configuration module for Optimus/PRIME.
-        ${pkgs.xorg.xrandr}/bin/xrandr --setprovideroutputsource 1 0 || true
-        ${pkgs.xorg.xrandr}/bin/xrandr --setprovideroutputsource "${sinkGpuProviderName}" NVIDIA-0 || true
+        ${pkgs.xorg.xrandr}/bin/xrandr --setprovideroutputsource "${igpuProviderName}" NVIDIA-0 || true
         ${pkgs.xorg.xrandr}/bin/xrandr --auto
+        ${pkgs.xorg.xrandr}/bin/xrandr --output eDP-1-0 --left-of DP-0
       '';
 
     services.xserver.config = with lib; mkForce
@@ -160,7 +194,7 @@ in
       {
         name = igpuDriver;
         display = true;
-        modules = [ pkgs.xorg.xf86videoamdgpu ];
+        modules = lib.optional (igpuDriver == "amdgpu") pkgs.xorg.xf86videoamdgpu;
         deviceSection = ''
           BusID "${igpuBusId}"
         '';
