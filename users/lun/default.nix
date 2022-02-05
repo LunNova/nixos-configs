@@ -40,8 +40,8 @@
     osu-lazer
     glxinfo
     vulkan-tools
-    wineWowPackages.fonts
-    wineWowPackages.staging
+    # wineWowPackages.fonts
+    # wineWowPackages.staging
     nixpkgs-fmt
     rnix-lsp
     ark
