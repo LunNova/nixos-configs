@@ -203,8 +203,7 @@
                 configuration = {
                   _module.args.pkgs = lib.mkForce pkgs;
                   _module.args.pkgs_i686 = lib.mkForce { };
-                  imports = [ ];
-                  home.stateVersion = "21.05";
+                  imports = [ "${./users}/${username}" ];
                   home.homeDirectory = "/home/${username}";
                   home.username = "${username}";
                 };
