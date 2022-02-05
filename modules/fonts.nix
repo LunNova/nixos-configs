@@ -3,7 +3,7 @@
     enableDefaultFonts = true;
     fonts = with pkgs; [
       noto-fonts
-      # noto-fonts-cjk # Reenable after https://github.com/NixOS/nixpkgs/pull/156342 is merged
+      noto-fonts-cjk
       noto-fonts-emoji
       noto-fonts-extra
       liberation_ttf
