@@ -183,32 +183,22 @@
 
       assets = import ./assets;
 
-      homeConfigurations =
-        let
-          homeManagerConfiguration = { configuration, pkgs, extraModules ? [ ], check ? true, extraSpecialArgs ? { } }:
-            import "${home-manager}/modules" {
-              inherit pkgs check extraSpecialArgs;
-              configuration = { ... }: {
-                imports = [ configuration ] ++ extraModules;
-              };
+      homeConfigurations = {
+        lun =
+          let username = "lun"; in
+          import "${home-manager}/modules" {
+            inherit pkgs;
+            check = true;
+            extraSpecialArgs = { nixosConfig = null; lun = args.self; };
+            configuration = {
+              _module.args.pkgs = lib.mkForce pkgs;
+              _module.args.pkgs_i686 = lib.mkForce { };
+              imports = [ "${./users}/${username}" ];
+              home.homeDirectory = "/home/${username}";
+              home.username = "${username}";
             };
-        in
-        {
-          lun =
-            let username = "lun"; in
-            homeManagerConfiguration
-              {
-                inherit pkgs;
-                extraSpecialArgs = { nixosConfig = null; lun = args.self; };
-                configuration = {
-                  _module.args.pkgs = lib.mkForce pkgs;
-                  _module.args.pkgs_i686 = lib.mkForce { };
-                  imports = [ "${./users}/${username}" ];
-                  home.homeDirectory = "/home/${username}";
-                  home.username = "${username}";
-                };
-              };
-        };
+          };
+      };
 
       checks."${system}" = {
         pre-commit-check = pre-commit-hooks.lib.${system}.run {
