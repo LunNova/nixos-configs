@@ -47,7 +47,7 @@ in
     wantedBy = [ "multi-user.target" "suspend.target" ];
     after = [ "multi-user.target" "suspend.target" ];
     description = "Set the battery charge threshold";
-    startLimitBurst = 70;
+    startLimitBurst = 5;
     serviceConfig = {
       Type = "oneshot";
       Restart = "on-failure";
