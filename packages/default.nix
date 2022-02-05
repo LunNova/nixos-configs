@@ -22,8 +22,8 @@ let
   lun-scripts = wrapScripts ./lun-scripts;
 in
 {
+  inherit powercord xdg-open-with-portal;
   input-remapper = pkgs.python3Packages.callPackage ./input-remapper { };
-  powercord = powercord;
   discord-electron-update = pkgs.callPackage ./discord-electron-update rec {
     ffmpeg = pkgs.ffmpeg-full;
     electron = pkgs.electron_15;
@@ -46,15 +46,13 @@ in
     };
   };
   discord-plugged = pkgs.callPackage ./discord-plugged {
+    inherit powercord;
     powercord-overlay = flake-args.powercord-overlay;
-    powercord = powercord;
     discord-canary = pkgs.lun.discord-electron-update;
   };
   kwinft = pkgs.lib.recurseIntoAttrs (pkgs.callPackage ./kwinft { });
-  xdg-open-with-portal = xdg-open-with-portal;
-  lutris-unwrapped = lutris-unwrapped;
   lutris = pkgs.lutris.override {
-    lutris-unwrapped = lutris-unwrapped;
+    inherit lutris-unwrapped;
     extraLibraries = pkgs: [ (pkgs.hiPrio xdg-open-with-portal) ];
   };
   spawn = pkgs.callPackage ./spawn { };

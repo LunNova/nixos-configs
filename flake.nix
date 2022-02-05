@@ -56,7 +56,7 @@
       };
       mkPkgs = pkgs: extra:
         (import pkgs (recursiveMerge [ defaultPkgsConfig extra ]));
-      recursiveMerge = attrList:
+      recursiveMerge =
         let f = attrPath:
           with lib; with builtins;
           zipAttrsWith (n: values:
@@ -68,7 +68,7 @@
             then f (attrPath ++ [ n ]) values
             else last values
           );
-        in f [ ] attrList;
+        in f [ ];
       filterInputs = prefix: lib.filterAttrs (name: value: (lib.hasPrefix prefix name)) args;
       lock = builtins.fromJSON (builtins.readFile ./flake.lock);
       nixpkgs-unfree-path = ./hack-nixpkgs-unfree;

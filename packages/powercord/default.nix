@@ -17,20 +17,18 @@ stdenvNoCC.mkDerivation {
 
   installPhase =
     let
-      fromDrvs = drvs: lib.mapAttrsToList
+      fromDrvs = lib.mapAttrsToList
         (k: drv: {
           inherit (drv) outPath;
           name = lib.strings.sanitizeDerivationName k;
-        })
-        drvs;
+        });
 
-      map = n: l: lib.concatMapStringsSep "\n"
+      map = n: lib.concatMapStringsSep "\n"
         (e: ''
           chmod 755 $out/src/Powercord/${n}
           cp -a ${e.outPath} $out/src/Powercord/${n}/${e.name}
           chmod -R u+w $out/src/Powercord/${n}/${e.name}
-        '')
-        l;
+        '');
 
       mappedPlugins = map "plugins" (fromDrvs plugins);
       mappedThemes = map "themes" (fromDrvs themes);

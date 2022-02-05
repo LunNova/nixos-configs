@@ -1,5 +1,4 @@
 { stdenv
-, lib
 , fetchFromGitLab
 , qttools
 , qtbase
@@ -8,7 +7,6 @@
 , extra-cmake-modules
 , cmake
 , xorg
-, wlroots
 , pkgconfig
 , kwinft
 }:

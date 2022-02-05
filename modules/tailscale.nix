@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 {
   config = {
     environment.systemPackages = [ pkgs.tailscale ];

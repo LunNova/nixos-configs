@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ ... }:
 {
   programs.fish.enable = true;
   programs.neovim.enable = true;

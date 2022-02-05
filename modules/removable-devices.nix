@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ ... }:
 {
   config = {
     systemd.network.links."10-en-usb-8cd8" = {

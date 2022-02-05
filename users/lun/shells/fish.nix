@@ -1,4 +1,4 @@
-{ config, lib, pkgs, inputs, self, ... }:
+{ pkgs, ... }:
 {
   # this must also be done in system
   programs.fish.enable = true;

@@ -1,4 +1,4 @@
-{ config, lib, pkgs, inputs, self, ... }:
+{ pkgs, ... }:
 {
   imports = [
     ./fish.nix

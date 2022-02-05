@@ -2,7 +2,6 @@
 , lib
 , extra-cmake-modules
 , kdoctools
-, fetchpatch
 , fetchFromGitLab
 , libepoxy
 , lcms2
