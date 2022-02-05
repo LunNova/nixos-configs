@@ -225,6 +225,24 @@
           };
         };
       };
+      slowChecks.${system} = rec {
+        all-packages = pkgs.symlinkJoin {
+          name = "lun self.packages ${system}";
+          paths = lib.attrValues self.packages.${system};
+        };
+        all-systems = pkgs.symlinkJoin {
+          name = "lun self.nixosConfigurations";
+          paths = map (cfg: self.nixosConfigurations.${cfg}.config.system.build.toplevel) (builtins.attrNames self.nixosConfigurations);
+        };
+        all-users = pkgs.symlinkJoin {
+          name = "lun self.homeConfigurations";
+          paths = map (cfg: self.homeConfigurations.${cfg}.activationPackage) (builtins.attrNames self.homeConfigurations);
+        };
+        all = pkgs.symlinkJoin {
+          name = "lun all";
+          paths = [ all-packages all-systems all-users ];
+        };
+      };
       devShell.${system} = args.minimal-shell.lib.minimal-shell {
         inherit pkgs system;
         passthru = {

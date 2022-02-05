@@ -1,5 +1,6 @@
 { system, pkgs, flake-args }:
 let
+  lib = pkgs.lib;
   lutris-unwrapped = (pkgs.lutris-unwrapped.override {
     # TODO wine build with wayland and GE patches?
     # wine = pkgs.wineWowPackages.wayland;
@@ -13,11 +14,12 @@ let
     let
       scripts = builtins.attrNames (builtins.readDir path);
     in
-    map (x: pkgs.writeScriptBin x (builtins.readFile "${path}/${x}")) scripts;
+    builtins.listToAttrs (map (x: lib.nameValuePair x (pkgs.writeScriptBin x (builtins.readFile "${path}/${x}"))) scripts);
   powercord = pkgs.callPackage ./powercord {
     plugins = { };
     themes = { };
   };
+  lun-scripts = wrapScripts ./lun-scripts;
 in
 {
   input-remapper = pkgs.python3Packages.callPackage ./input-remapper { };
@@ -58,5 +60,5 @@ in
   spawn = pkgs.callPackage ./spawn { };
   swaysome = pkgs.callPackage ./swaysome { };
   sworkstyle = pkgs.callPackage ./sworkstyle { };
-  lun-scripts = pkgs.symlinkJoin { name = "lun-scripts"; paths = wrapScripts ./lun-scripts; };
+  lun-scripts = lun-scripts // { all = pkgs.symlinkJoin { name = "lun-scripts"; paths = lib.attrValues lun-scripts; }; };
 }
