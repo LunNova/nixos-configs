@@ -99,6 +99,7 @@
 
         specialArgs =
           {
+            lun = args.self;
             nixos-hardware-modules-path = "${args.nixos-hardware}";
           };
 
@@ -180,6 +181,8 @@
         lun-hisame-nixos = makeHost pkgs ./hosts/hisame;
       };
 
+      assets = import ./assets;
+
       homeConfigurations =
         let
           homeManagerConfiguration = { configuration, pkgs, extraModules ? [ ], check ? true, extraSpecialArgs ? { } }:
@@ -196,7 +199,7 @@
             homeManagerConfiguration
               {
                 inherit pkgs;
-                extraSpecialArgs = { nixosConfig = null; };
+                extraSpecialArgs = { nixosConfig = null; lun = args.self; };
                 configuration = {
                   _module.args.pkgs = lib.mkForce pkgs;
                   _module.args.pkgs_i686 = lib.mkForce { };

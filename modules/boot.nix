@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ lun, config, pkgs, lib, ... }:
 {
   config = {
     boot = {
@@ -6,6 +6,12 @@
       loader = {
         systemd-boot.enable = true;
         efi.canTouchEfiVariables = false;
+      };
+
+      plymouth = {
+        enable = true;
+        theme = "breeze";
+        logo = lun.assets.images.crescent_moon;
       };
     };
   };
