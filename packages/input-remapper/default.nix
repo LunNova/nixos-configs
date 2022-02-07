@@ -1,26 +1,33 @@
 { lib
+, python3
 , pkgconfig
 , wrapGAppsHook
 , gettext
 , gtk3
 , glib
+, dbus
 , gobject-introspection
-, xmodmap ? null # safe to override to null if you don't want xmodmap support
+, xmodmap
 , pygobject3
 , setuptools
 , evdev
+, pydantic
 , pydbus
 , psutil
 , fetchFromGitHub
 , buildPythonApplication
 , procps
-, findutils
+, gtksourceview4
 , withDebugLogLevel ? false
-, input_remapper_version ? "1.3.0"
-, input_remapper_src_rev ? "76c3cadcfaa3f244d62bd911aa6642a86233ffa0"
-, input_remapper_src_hash ? "sha256-llSgPwCLY34sAmDEuF/w2qeXdPFLLo1MIPBmbxwZZ3k="
+, withXmodmap ? true
+, input_remapper_version ? "1.4.1-dev"
+, input_remapper_src_rev ? "d1030d8ffe49791a3494ead1992d75c3a6c64c98"
+, input_remapper_src_hash ? "sha256-+oH1VxB7eIiUVQGVEcq0Fj9XCEqjgx0YyODoDTshcME="
 }:
 
+let
+  maybeXmodmap = lib.optional withXmodmap xmodmap;
+in
 buildPythonApplication {
   pname = "input-remapper";
   version = input_remapper_version;
@@ -42,27 +49,8 @@ buildPythonApplication {
     echo "COMMIT_HASH = '${input_remapper_src_rev}'" > inputremapper/commit_hash.py
 
     # fix FHS paths
-    substituteInPlace inputremapper/data.py \
+    substituteInPlace inputremapper/configs/data.py \
       --replace "/usr/share/input-remapper"  "$out/usr/share/input-remapper"
-
-    # no UI tests are ran, don't try to require Gtk at start of tests
-    substituteInPlace tests/test.py \
-      --replace 'gi.require_version("GtkSource", "4")' ""
-
-    # fix exit code for test script
-    # TODO: upstream
-    substituteInPlace tests/test.py \
-      --replace 'unittest.TextTestRunner(verbosity=2).run(testsuite)' 'sys.exit(not unittest.TextTestRunner(verbosity=2).run(testsuite).wasSuccessful())'
-
-    # fix test_rename_config
-    # TODO remove after release includes
-    # https://github.com/sezanzeb/input-remapper/commit/47bcefa7f382abc4c7b00cc9876262406c1615d2#diff-8bf02d9f9d1d918900aae47ea75ecd7d1330e2b0a34738b710be164dfbd31d3bL65
-    substituteInPlace tests/testcases/test_migrations.py \
-      --replace 'os.rmdir(new)' 'import shutil;shutil.rmtree(new)'
-
-    # use build dir not /tmp
-    # TODO remove after https://github.com/sezanzeb/input-remapper/pull/264 is merged and released
-    ${findutils}/bin/find tests -iname '*.py' | while read file; do substituteInPlace "$file" --replace '"/tmp' '"/build/tmp'; done
   '' + (lib.optionalString (withDebugLogLevel) ''
     # if debugging
     substituteInPlace inputremapper/logger.py --replace "logger.setLevel(logging.INFO)"  "logger.setLevel(logging.DEBUG)"
@@ -70,42 +58,37 @@ buildPythonApplication {
 
   doCheck = true;
   checkInputs = [
-    xmodmap
-    procps
+    psutil
   ];
-  disabledTests = [ ];
   pythonImportsCheck = [
     "evdev"
     "inputremapper"
   ];
 
   # Custom test script, can't use plain pytest / pytestCheckHook
-  # We only run tests which don't need UI or dbus
-  # Skipped
-  # test_daemon (dbus)
-  # test_gui (UI)
-  # test_data (checks for /usr and writable dir, not with nix)
-  # test_injector (not in the sandbox)
-  # test_macros, test_reader, test_keycode_mapper, test_consumer_control (relies on sleeping during tests or checking how long slept for so fails on slow system or high load)
-  installCheckPhase = (lib.optionalString (xmodmap != null) ''
-    export PATH=${lib.makeBinPath [ xmodmap ]}:$PATH
-  '') + ''
-    mkdir /build/tmp
-    python tests/test.py \
-      test_config \
-      test_context \
-      test_control \
-      test_dev_utils \
-      test_event_producer \
-      test_groups \
-      test_ipc \
-      test_key \
-      test_logger \
-      test_mapping \
-      test_migrations \
-      test_paths \
-      test_presets \
-      test_user
+  # We only run tests in the unit folder, integration tests require UI
+  # To allow tests which access the system and session DBUS to run, we start a dbus session
+  # and bind it to both the system and session buses
+  installCheckPhase = ''
+    echo "<busconfig>
+      <type>session</type>
+      <listen>unix:tmpdir=$TMPDIR</listen>
+      <listen>unix:path=/build/system_bus_socket</listen>
+      <standard_session_servicedirs/>
+      <policy context=\"default\">
+        <!-- Allow everything to be sent -->
+        <allow send_destination=\"*\" eavesdrop=\"true\"/>
+        <!-- Allow everything to be received -->
+        <allow eavesdrop=\"true\"/>
+        <!-- Allow anyone to own anything -->
+        <allow own=\"*\"/>
+      </policy>
+    </busconfig>" > dbus.cfg
+    PATH=${lib.makeBinPath ([ dbus procps ] ++ maybeXmodmap)}:$PATH \
+      USER="$(id -u -n)" \
+      DBUS_SYSTEM_BUS_ADDRESS=unix:path=/build/system_bus_socket \
+      ${dbus}/bin/dbus-run-session --config-file dbus.cfg \
+      python tests/test.py --start-dir unit
   '';
 
   # Nixpkgs 15.9.4.3. When using wrapGAppsHook with special derivers you can end up with double wrapped binaries.
@@ -113,28 +96,27 @@ buildPythonApplication {
   preFixup = ''
     makeWrapperArgs+=(
       "''${gappsWrapperArgs[@]}"
-      --prefix PATH : "${lib.makeBinPath [ xmodmap ]}"
+      --prefix PATH : "${lib.makeBinPath maybeXmodmap}"
     )
   '';
 
   nativeBuildInputs = [
     wrapGAppsHook
-    gettext
+    gettext # needed to build translations
     gtk3
     glib
     gobject-introspection
     pygobject3
-    xmodmap
-  ];
+  ] ++ maybeXmodmap;
 
   propagatedBuildInputs = [
     setuptools # needs pkg_resources
     pygobject3
     evdev
     pkgconfig
+    pydantic
     pydbus
-    psutil
-    xmodmap
+    gtksourceview4
   ];
 
   postInstall = ''
@@ -160,6 +142,7 @@ buildPythonApplication {
     homepage = "https://github.com/sezanzeb/input-remapper";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
-    maintainers = with maintainers; [ ]; # TODO: maintainers entry LunNova ];
+    maintainers = with maintainers; [ ]; #LunNova ];
+    mainProgram = "input-remapper-gtk";
   };
 }
