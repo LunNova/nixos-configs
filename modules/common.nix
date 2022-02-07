@@ -136,7 +136,7 @@
       traceroute
       dnsutils
       libfaketime
-      lun.lun-scripts.all
+      lun.lun
     ];
 
     # DESKTOP ENV
