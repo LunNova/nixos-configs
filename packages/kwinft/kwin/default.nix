@@ -69,8 +69,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitLab {
     owner = "kwinft";
     repo = pname;
-    rev = "13be8a5795369b6744a5b4a1cb80dc781144cab8";
-    sha256 = "sha256-DhwduF3LwvJZ6IuOBunWRanE4GN7Qf43SDv1Rj50bxY=";
+    rev = "5c53a02913320df693f8281a4c3b647dc88580fc";
+    hash = "sha256-WdN2UhrDcDS7HY67/QuVUILLr+8wsieOygFPU7Q5fGA=";
   };
 
   patches = [
