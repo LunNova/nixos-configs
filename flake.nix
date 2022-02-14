@@ -45,17 +45,35 @@
     }@args:
     let
       system = "x86_64-linux";
+      patchPackages = nixpkgs: patches: (if (patches == [ ]) then nixpkgs else
+      nixpkgs.legacyPackages.${system}.applyPatches {
+        inherit patches;
+        src = nixpkgs;
+        name = "nixpkgs-patched";
+      });
+      pkgsPatches = [ ];
       defaultPkgsConfig = {
         inherit system;
         config.allowUnfree = true;
         overlays = [
+          (final: prev: {
+            # https://github.com/NixOS/nixpkgs/pull/159112
+            discord-canary = let version = "0.0.133"; in
+              prev.discord-canary.overrideAttrs (prev: {
+                inherit version;
+                src = builtins.fetchurl {
+                  url = "https://dl-canary.discordapp.net/apps/linux/${version}/discord-canary-${version}.tar.gz";
+                  sha256 = "sha256:0wx8wkgkzvw9094baa3dni834l0n4p6ih024bj1851sgwwnidb0a";
+                };
+              });
+          })
           self.overlay
           powercord-overlay.overlay
           # nixpkgs-wayland.overlay
         ];
       };
       mkPkgs = pkgs: extra:
-        (import pkgs (recursiveMerge [ defaultPkgsConfig extra ]));
+        (import (patchPackages pkgs pkgsPatches) (recursiveMerge [ defaultPkgsConfig extra ]));
       recursiveMerge =
         let f = attrPath:
           with lib; with builtins;
