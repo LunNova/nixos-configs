@@ -28,23 +28,12 @@ in
   discord-electron-update = pkgs.callPackage ./discord-electron-update rec {
     ffmpeg = pkgs.ffmpeg-full;
     electron = pkgs.electron_15;
-    src = builtins.fetchurl {
-      url =
-        "https://dl-canary.discordapp.net/apps/linux/${version}/discord-canary-${version}.tar.gz";
-      sha256 = "1jjbd9qllgcdpnfxg5alxpwl050vzg13rh17n638wha0vv4mjhyv";
-    };
-    version = "0.0.132";
+    src = pkgs.discord-canary.src;
+    version = pkgs.discord-canary.version;
+    meta = pkgs.discord-canary.meta;
     pname = "discord-canary";
     binaryName = "DiscordCanary";
     desktopName = "Discord Canary";
-    meta = with pkgs.lib; {
-      description = "All-in-one cross-platform voice and text chat for gamers";
-      homepage = "https://discordapp.com/";
-      downloadPage = "https://discordapp.com/download";
-      license = licenses.unfree;
-      maintainers = with maintainers; [ ldesgoui MP2E devins2518 ];
-      platforms = [ "x86_64-linux" "x86_64-darwin" ];
-    };
   };
   discord-plugged = pkgs.callPackage ./discord-plugged {
     inherit powercord;
