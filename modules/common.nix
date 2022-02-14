@@ -175,6 +175,7 @@
 
     # BLUETOOTH
     services.blueman.enable = true;
+    programs.dconf.enable = true;
 
     # CHECKS
     assertions = [

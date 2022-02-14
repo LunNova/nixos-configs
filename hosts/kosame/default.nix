@@ -118,8 +118,6 @@ in
       (old: { passthru.providedSessions = [ "plasmawayland" ]; }))
   ];
 
-  services.dbus.packages = with pkgs; [ dconf ];
-
   boot.kernelParams = [
     "mitigations=off"
     "mem_sleep_default=deep" # S3 by default
