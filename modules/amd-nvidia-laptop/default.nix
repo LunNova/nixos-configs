@@ -19,8 +19,19 @@ let
   indent = prefixStringLines "  ";
 in
 {
+  # see https://download.nvidia.com/XFree86/Linux-x86_64/510.47.03/README/randr14.html
   options.lun.amd-nvidia-laptop = {
     enable = lib.mkEnableOption "Enable amd-nvidia-laptop";
+    sync = with lib; mkOption {
+      type = with types; bool;
+      description = "true for sync 'PRIME', false for offload 'Reverse PRIME'";
+      default = true;
+    };
+    layoutCommand = with lib; mkOption {
+      type = with types; nullOr str;
+      description = "xrandr layout command after enabling output source. If not set output source won't be enabled";
+      default = null;
+    };
   };
 
   config = lib.mkIf lcfg.enable {
@@ -87,7 +98,9 @@ in
     '';
     boot.extraModprobeConfig = ''
       options nvidia "NVreg_DynamicPowerManagement=0x02"
+      options nvidia-drm modeset=1
     '';
+    boot.kernelParams = [ "nvidia-drm.modeset=1" ];
 
     services.xserver.displayManager.setupCommands =
       let
@@ -97,13 +110,18 @@ in
             "`${pkgs.xorg.xrandr}/bin/xrandr --listproviders | ${pkgs.gnugrep}/bin/grep -i AMD | ${pkgs.gnused}/bin/sed -n 's/^.*name://p'`"
           else
             igpuDriver;
+        syncEnable = "${pkgs.xorg.xrandr}/bin/xrandr --setprovideroutputsource \"${igpuProviderName}\" NVIDIA-0 || true";
+        offloadEnable = "${pkgs.xorg.xrandr}/bin/xrandr --setprovideroutputsource NVIDIA-G0 \"${igpuProviderName}\" || true";
       in
-      lib.mkForce ''
-        # Added by nvidia configuration module for Optimus/PRIME.
-        ${pkgs.xorg.xrandr}/bin/xrandr --setprovideroutputsource "${igpuProviderName}" NVIDIA-0 || true
-        ${pkgs.xorg.xrandr}/bin/xrandr --auto
-        ${pkgs.xorg.xrandr}/bin/xrandr --output eDP-1-0 --left-of DP-0
-      '';
+      lib.mkForce (if lcfg.layoutCommand != null then
+        (
+          (if lcfg.sync then syncEnable else offloadEnable)
+          + ''
+            # Added by nvidia configuration module for Optimus/PRIME.
+            ${pkgs.xorg.xrandr}/bin/xrandr --auto
+            ${lcfg.layoutCommand}
+          ''
+        ) else "");
 
     services.xserver.config = with lib; mkForce
       ''
@@ -211,18 +229,23 @@ in
         screenSection =
           ''
             Option "RandRRotation" "on"
+          '' + (lib.optionalString (lcfg.sync) ''
             Option "AllowEmptyInitialConfiguration"
-          '';
+          '');
       }
     ];
 
     services.xserver.serverLayoutSection = lib.mkForce (
       ''
-        Inactive "Device-${igpuDriver}[0]"
-        #Inactive "Screen-${nvidiaDriver}[0]"
-        Option "AllowNVIDIAGPUScreens"
-        Screen 0 "Screen-${nvidiaDriver}[0]"
+        Inactive "Device-${if lcfg.sync then igpuDriver else nvidiaDriver}[0]"
+        Screen 0 "Screen-${if !lcfg.sync then igpuDriver else nvidiaDriver}[0]"
       ''
+      + (lib.optionalString lcfg.sync ''
+        Option "MetaModes" "nvidia-auto-select +0+0 {ForceCompositionPipeline=On, ForceFullCompositionPipeline=On}"
+      '')
+      + (lib.optionalString (!lcfg.sync) ''
+        Option "AllowNVIDIAGPUScreens"
+      '')
     );
   };
 }

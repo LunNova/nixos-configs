@@ -10,6 +10,11 @@ let
   waylandEnv = {
     WLR_RENDERER = "vulkan";
     VK_LAYER_PATH = "${pkgs.vulkan-validation-layers}/share/vulkan/explicit_layer.d";
+    #    KWIN_COMPOSE = "Q";
+    KWIN_OPENGL_INTERFACE = "egl";
+    #    KWIN_EXPLICIT_SYNC = "0";
+    #    KWIN_DRM_USE_MODIFIERS = "1";
+    #    KWIN_DRM_FORCE_EGL_STREAMS = "0";
     # https://lamarque-lvs.blogspot.com/2021/12/nvidia-optimus-with-wayland-help-needed.html
     #WLR_NO_HARDWARE_CURSORS = "1";
     #KWIN_DRM_DEVICES = drmDevices;
@@ -17,9 +22,9 @@ let
     #GBM_BACKEND = "nvidia-drm";
     #GBM_BACKENDS_PATH = "/run/opengl-driver/lib/gbm";
     #__GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    #__VK_LAYER_NV_optimus = "NVIDIA_only";
-    #__GL_VRR_ALLOWED = "0";
-    #__GL_GSYNC_ALLOWED = "0";
+    __VK_LAYER_NV_optimus = "NVIDIA_only";
+    __GL_VRR_ALLOWED = "0";
+    __GL_GSYNC_ALLOWED = "0";
 
     # https://github.com/NVIDIA/libglvnd/blob/master/src/EGL/icd_enumeration.md
     # https://github.com/NixOS/nixpkgs/blob/a0dbe47318bbab7559ffbfa7c4872a517833409f/pkgs/development/libraries/libglvnd/default.nix#L33
@@ -40,6 +45,16 @@ in
       ./hardware-configuration.nix
       #"${nixos-hardware-modules-path}/asus/battery.nix"
     ];
+
+  # This always crashes so is off but want to debug later
+  # specialisation.nvidia-offload.configuration = {
+  #   lun.amd-nvidia-laptop = {
+  #     sync = lib.mkForce false;
+  #     layoutCommand = lib.mkForce null; #"${pkgs.xorg.xrandr}/bin/xrandr --output DP-1-0 --left-of eDP || true";
+  #   };
+  # };
+
+  boot.plymouth.enable = lib.mkForce false;
 
   # TODO report issue, not reliable
   # hardware.asus.battery.chargeUpto = 70;
@@ -83,7 +98,11 @@ in
       pkgs.kwinft.kdisplay
     ]);
 
-  lun.amd-nvidia-laptop.enable = true;
+  lun.amd-nvidia-laptop = {
+    enable = true;
+    sync = true;
+    layoutCommand = "${pkgs.xorg.xrandr}/bin/xrandr --output eDP-1-0 --left-of DP-0 || true";
+  };
   environment.variables = waylandEnv;
   environment.sessionVariables = waylandEnv;
 
