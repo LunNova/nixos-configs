@@ -45,13 +45,25 @@
     }@args:
     let
       system = "x86_64-linux";
+      legacyPackages = nixpkgs.legacyPackages.${system};
       patchPackages = nixpkgs: patches: (if (patches == [ ]) then nixpkgs else
-      nixpkgs.legacyPackages.${system}.applyPatches {
+      legacyPackages.applyPatches {
         inherit patches;
         src = nixpkgs;
         name = "nixpkgs-patched";
       });
-      pkgsPatches = [ ];
+      pkgsPatches = [
+        (legacyPackages.fetchpatch {
+          # kde frameworks .91
+          url = "https://github.com/NixOS/nixpkgs/compare/b07a1f4c60e45acbd1c362035dd730e48a0bc64e.patch";
+          sha256 = "sha256-Seo4w8PbmSNMSmtyse4anz3yQMPOiEkEXzVBf9csjLY=";
+        })
+        (legacyPackages.fetchpatch {
+          # plasma 5.24.0
+          url = "https://github.com/NixOS/nixpkgs/compare/6789ffa09480429925be4b3202bdb342bc2e2d23.patch";
+          sha256 = "sha256-fs90qux6SsciO5xO9zVGnk5HP8amG862pwPTl0/gdQY=";
+        })
+      ];
       defaultPkgsConfig = {
         inherit system;
         config.allowUnfree = true;
