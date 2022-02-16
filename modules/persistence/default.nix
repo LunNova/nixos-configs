@@ -1,4 +1,4 @@
-# Copied from github:buckley310/nixos-config, MIT
+# Based off setup from github:buckley310/nixos-config although has diverged now
 { config, lib, ... }:
 let
   cfg = config.lun.persistence;
