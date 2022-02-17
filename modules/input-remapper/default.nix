@@ -1,9 +1,7 @@
 { config, lib, pkgs, ... }:
 let
   cfg = config.sconfig.input-remapper;
-  mapper-pkg = with pkgs; lib.mkIf cfg [
-    lun.input-remapper
-  ];
+  mapper-pkg = [ pkgs.input-remapper ];
 in
 {
   options.sconfig.input-remapper = lib.mkEnableOption "Enable input-remapper";

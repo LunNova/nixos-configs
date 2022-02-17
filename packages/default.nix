@@ -24,7 +24,6 @@ let
 in
 {
   inherit powercord xdg-open-with-portal;
-  input-remapper = pkgs.python3Packages.callPackage ./input-remapper { };
   discord-electron-update = pkgs.callPackage ./discord-electron-update rec {
     ffmpeg = pkgs.ffmpeg-full;
     electron = pkgs.electron_15;
