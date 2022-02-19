@@ -42,7 +42,7 @@
       package = pkgs.nixUnstable;
       daemonCPUSchedPolicy = "idle";
       extraOptions = lib.mkMerge [
-        "experimental-features = nix-command flakes ca-derivations"
+        "experimental-features = nix-command flakes"
         "warn-dirty = false"
       ];
       settings.auto-optimise-store = true;

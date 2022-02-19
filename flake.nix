@@ -166,9 +166,6 @@
       inherit args;
 
       pkgs = pkgs;
-      caPkgs = mkPkgs args.nixpkgs {
-        config.contentAddressedByDefault = true;
-      };
 
       packages."${system}" = lib.filterAttrs (k: lib.isDerivation) localPackages;
 
