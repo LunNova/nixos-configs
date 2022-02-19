@@ -3,7 +3,6 @@
   imports = [
     ./discord.nix
     ./gaming.nix
-    ./kdeconfig.nix
     ./syncthing.nix
     ./xdg-mime-apps.nix
     ./sway

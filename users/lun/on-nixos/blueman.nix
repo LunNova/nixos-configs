@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   services.blueman-applet.enable = true;
   systemd.user.services.blueman-applet = {
