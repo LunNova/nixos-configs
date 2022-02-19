@@ -5,6 +5,7 @@
     ./gaming.nix
     ./syncthing.nix
     ./xdg-mime-apps.nix
+    ./modern-unix.nix
     ./sway
     ./shells/default.nix
     ./on-nixos/default.nix
