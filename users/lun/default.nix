@@ -2,6 +2,7 @@
 {
   imports = [
     ./discord.nix
+    ./gaming.nix
     ./kdeconfig.nix
     ./syncthing.nix
     ./xdg-mime-apps.nix
@@ -37,17 +38,13 @@
   home.stateVersion = "21.11";
 
   home.packages = with pkgs; [
-    osu-lazer
     glxinfo
     vulkan-tools
-    # wineWowPackages.fonts
-    # wineWowPackages.staging
     nixpkgs-fmt
     rnix-lsp
     ark
     unar
     p7zip
-    lun.lutris
   ];
 
   programs.git = {
