@@ -59,8 +59,8 @@ in
   # TODO report issue, not reliable
   # hardware.asus.battery.chargeUpto = 70;
   systemd.services.battery-charge-threshold = {
-    wantedBy = [ "multi-user.target" "suspend.target" ];
-    after = [ "multi-user.target" "suspend.target" ];
+    wantedBy = [ "local-fs.target" "suspend.target" ];
+    after = [ "local-fs.target" "suspend.target" ];
     description = "Set the battery charge threshold";
     startLimitBurst = 5;
     startLimitIntervalSec = 1;
