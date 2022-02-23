@@ -37,11 +37,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1645140957,
-        "narHash": "sha256-WTJzLSCDLBI537o2L/3kRyqEV5YRT7+1QSGryeKReHE=",
+        "lastModified": 1645557328,
+        "narHash": "sha256-7PCAESO8HxuSk1hH1J2ld+kK6fugFqNd+vqIXSGz1ag=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "4f4165a8b9108818ab0193bbd1a252106870b2a2",
+        "rev": "838d40d61a91e3807836545c4b420572ab2d62eb",
         "type": "github"
       },
       "original": {
@@ -89,11 +89,11 @@
     },
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1644870092,
-        "narHash": "sha256-RLPD92lqXW98LDIbbwYqwAbt3R4iD1V1PiylfgBq5cU=",
+        "lastModified": 1645346782,
+        "narHash": "sha256-3qd0cu+2kapIP7cdHW9n8zh1wCvRGg83K7/cCj5Xv+A=",
         "owner": "NixOS",
         "repo": "nixos-hardware",
-        "rev": "10eab1c4cd8e715c0b41d32c28af2b89fc67bed0",
+        "rev": "1ccfe243aa6e94bf80f2a66f6be41d086d37fc87",
         "type": "github"
       },
       "original": {
@@ -105,16 +105,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1645303351,
-        "narHash": "sha256-YiL+Bv2brlsbXE0UOLFIFb9UT+nMP/h/VKRywOM9yJQ=",
+        "lastModified": 1645433236,
+        "narHash": "sha256-4va4MvJ076XyPp5h8sm5eMQvCrJ6yZAbBmyw95dGyw4=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "9ba3f626ce57e756fa38ec56e422a4b6d8113516",
+        "rev": "7f9b6e2babf232412682c09e57ed666d8f84ac2d",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "master",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -170,11 +170,11 @@
     "pct-clearvision": {
       "flake": false,
       "locked": {
-        "lastModified": 1645303200,
-        "narHash": "sha256-2D0+RwhIRJx5WevyqqtXh5OqEwACWQfZ53vgYREbuQY=",
+        "lastModified": 1645522597,
+        "narHash": "sha256-z04EUT2jNcTqVHcRmDZJuTvnIfuxs1aZ5UuXCLEGOdY=",
         "owner": "ClearVision",
         "repo": "ClearVision-v6",
-        "rev": "277e63b09cb7bd8a3d2b9c6cd570b9f93a146bac",
+        "rev": "3b3f394eac999bb607850a514cd5012363f4ae21",
         "type": "github"
       },
       "original": {
