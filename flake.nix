@@ -9,9 +9,9 @@
     pre-commit-hooks.inputs.flake-utils.follows = "flake-utils";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
-    nix-gaming.url = github:fufexan/nix-gaming;
+    nix-gaming.url = "github:fufexan/nix-gaming";
     nix-gaming.inputs.nixpkgs.follows = "nixpkgs";
-    nixos-hardware.url = github:NixOS/nixos-hardware/master;
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     minimal-shell.url = "github:LunNova/nix-minimal-shell";
 
@@ -119,7 +119,7 @@
         '';
       };
       pkgs = mkPkgs args.nixpkgs { };
-      lib = args.nixpkgs.lib;
+      inherit (args.nixpkgs) lib;
       readModules = path: builtins.map (x: path + "/${x}") (builtins.attrNames (builtins.readDir path));
       makeHost = pkgs: path: lib.nixosSystem {
         inherit system;
@@ -165,7 +165,7 @@
     {
       inherit args;
 
-      pkgs = pkgs;
+      inherit pkgs;
 
       packages."${system}" = lib.filterAttrs (k: lib.isDerivation) localPackages;
 
@@ -177,13 +177,13 @@
           steam = prev.steam.override {
             extraPkgs = pkgs: [ (pkgs.hiPrio localPackages.xdg-open-with-portal) ];
           };
-          kwinft = localPackages.kwinft;
+          inherit (localPackages) kwinft;
 
         } // (setIf enableKwinFt {
           plasma5Packages = prev.plasma5Packages.overrideScope' (self2: super2: {
             plasma5 = super2.plasma5.overrideScope' (self1: super1: {
-              kwin = localPackages.kwinft.kwin;
-              plasma-workspace = prev.plasma5Packages.plasma5.plasma-workspace;
+              inherit (localPackages.kwinft) kwin;
+              inherit (prev.plasma5Packages.plasma5) plasma-workspace;
             });
           });
         });

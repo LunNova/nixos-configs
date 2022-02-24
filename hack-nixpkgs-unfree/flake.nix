@@ -7,10 +7,10 @@
 
   outputs = { self, ... }@args:
     let
-      lib = args.nixpkgs.lib;
+      inherit (args.nixpkgs) lib;
       systems = lib.systems.supported.hydra;
     in
-    (args.nixpkgs // {
+    args.nixpkgs // {
       legacyPackages = (lib.genAttrs systems) (system: import args.nixpkgs { inherit system; config.allowUnfree = true; });
-    });
+    };
 }

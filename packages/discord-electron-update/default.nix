@@ -59,7 +59,7 @@
 }:
 
 let
-  asar = nodePackages.asar;
+  inherit (nodePackages) asar;
   libPath = lib.makeLibraryPath [
     libcxx
     systemd

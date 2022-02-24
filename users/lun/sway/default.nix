@@ -49,8 +49,8 @@ in
           left = "a";
           down = "s";
           right = "d";
-          modifier = config.wayland.windowManager.sway.config.modifier;
-          terminal = config.wayland.windowManager.sway.config.terminal;
+          inherit (config.wayland.windowManager.sway.config) modifier;
+          inherit (config.wayland.windowManager.sway.config) terminal;
           pactl = "${pkgs.pulseaudio}/bin/pactl";
           pamixer = "${pkgs.pamixer}/bin/pamixer";
         in

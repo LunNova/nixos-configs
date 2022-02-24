@@ -229,7 +229,7 @@ in
         screenSection =
           ''
             Option "RandRRotation" "on"
-          '' + (lib.optionalString (lcfg.sync) ''
+          '' + (lib.optionalString lcfg.sync ''
             Option "AllowEmptyInitialConfiguration"
           '');
       }

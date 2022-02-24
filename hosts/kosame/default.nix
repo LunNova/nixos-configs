@@ -77,10 +77,10 @@ in
   boot.cleanTmpDir = true;
   boot.kernelPackages = lib.mkForce pkgs.linuxPackages_xanmod;
 
-  services.udev.extraRules = (lib.optionalString (!config.lun.amd-nvidia-laptop.enable) ''
+  services.udev.extraRules = lib.optionalString (!config.lun.amd-nvidia-laptop.enable) ''
     # Remove nVidia devices, when present.
     # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{remove}="1"
-    #'');
+    #'';
 
 
   systemd.sleep.extraConfig = ''

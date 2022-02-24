@@ -1,6 +1,6 @@
 { system, pkgs, flake-args }:
 let
-  lib = pkgs.lib;
+  inherit (pkgs) lib;
   lutris-unwrapped = (pkgs.lutris-unwrapped.override {
     # TODO wine build with wayland and GE patches?
     # wine = pkgs.wineWowPackages.wayland;
@@ -27,16 +27,16 @@ in
   discord-electron-update = pkgs.callPackage ./discord-electron-update rec {
     ffmpeg = pkgs.ffmpeg-full;
     electron = pkgs.electron_15;
-    src = pkgs.discord-canary.src;
-    version = pkgs.discord-canary.version;
-    meta = pkgs.discord-canary.meta;
+    inherit (pkgs.discord-canary) src;
+    inherit (pkgs.discord-canary) version;
+    inherit (pkgs.discord-canary) meta;
     pname = "discord-canary";
     binaryName = "DiscordCanary";
     desktopName = "Discord Canary";
   };
   discord-plugged = pkgs.callPackage ./discord-plugged {
     inherit powercord;
-    powercord-overlay = flake-args.powercord-overlay;
+    inherit (flake-args) powercord-overlay;
     discord-canary = pkgs.lun.discord-electron-update;
   };
   kwinft = pkgs.lib.recurseIntoAttrs (pkgs.callPackage ./kwinft { });

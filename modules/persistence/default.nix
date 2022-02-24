@@ -2,7 +2,7 @@
 { config, lib, ... }:
 let
   cfg = config.lun.persistence;
-  persistPath = config.lun.persistence.persistPath;
+  inherit (config.lun.persistence) persistPath;
   addCheckDesc = desc: elemType: check: lib.types.addCheck elemType check
     // { description = "${elemType.description} (with check: ${desc})"; };
   isNonEmpty = s: (builtins.match "[ \t\n]*" s) == null;
@@ -31,12 +31,12 @@ in
 
   config = lib.mkIf cfg.enable {
     systemd.tmpfiles.rules =
-      let escapedFiles = (builtins.map (lib.escape [ "\"" "\\" ]) cfg.files);
+      let escapedFiles = builtins.map (lib.escape [ "\"" "\\" ]) cfg.files;
       in
-      (builtins.map (path: "L+ \"${path}\" - - - - ${persistPath}${path}") escapedFiles);
+      builtins.map (path: "L+ \"${path}\" - - - - ${persistPath}${path}") escapedFiles;
 
     fileSystems =
-      let pathToFilesystem = (name: { inherit name; value = { device = "${persistPath}/${name}"; noCheck = true; neededForBoot = true; options = [ "bind" ]; }; });
-      in (builtins.listToAttrs (builtins.map pathToFilesystem cfg.dirs));
+      let pathToFilesystem = name: { inherit name; value = { device = "${persistPath}/${name}"; noCheck = true; neededForBoot = true; options = [ "bind" ]; }; };
+      in builtins.listToAttrs (builtins.map pathToFilesystem cfg.dirs);
   };
 }

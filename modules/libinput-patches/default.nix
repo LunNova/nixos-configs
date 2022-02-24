@@ -23,7 +23,7 @@ in
         })
       ];
     })
-    (lib.mkIf cfg.accel-default-off ({
+    (lib.mkIf cfg.accel-default-off {
       nixpkgs.overlays = [
         (self: super: {
           runtime-patched.libinput = super.libinput.overrideAttrs (old: {
@@ -31,7 +31,7 @@ in
           });
         })
       ];
-    }))
+    })
     {
       environment.etc."libinput/local-overrides.quirks".text = ''
         [Never Debounce]
