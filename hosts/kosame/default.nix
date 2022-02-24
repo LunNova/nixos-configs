@@ -56,7 +56,7 @@ in
 
   boot.plymouth.enable = lib.mkForce false;
 
-  # TODO report issue, not reliable
+  # TODO replace once https://github.com/NixOS/nixos-hardware/pull/380 is merged
   # hardware.asus.battery.chargeUpto = 70;
   systemd.services.battery-charge-threshold = {
     wantedBy = [ "local-fs.target" "suspend.target" ];
