@@ -2,7 +2,7 @@
 
 let
   browser = [
-    "firefox.desktop"
+    "firefox.desktop" # assume firefox provides this
   ];
   associations = {
     "inode/directory" = [ "org.kde.dolphin.desktop" ];
@@ -26,14 +26,4 @@ in
   xdg.mimeApps.enable = true;
   xdg.mimeApps.associations.added = associations;
   xdg.mimeApps.defaultApplications = associations;
-  xdg.desktopEntries = {
-    firefox = {
-      name = "Firefox";
-      genericName = "Web Browser";
-      exec = "${config.programs.firefox.package}/bin/firefox %U";
-      terminal = false;
-      categories = [ "Application" "Network" "WebBrowser" ];
-      mimeType = [ "text/html" "text/xml" "x-scheme-handler/http" "x-scheme-handler/https" ];
-    };
-  };
 }

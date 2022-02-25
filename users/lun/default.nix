@@ -74,7 +74,6 @@
   };
 
   programs.firefox.enable = true;
-  programs.firefox.package = pkgs.firefox-bin;
 
   programs.vscode = {
     enable = true;
