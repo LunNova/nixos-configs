@@ -14,6 +14,8 @@ in
 
     boot.kernelParams = [
       "mitigations=off"
+      "quiet"
+      "splash"
     ];
     boot.kernelPackages = lib.mkForce pkgs.linuxPackages_xanmod;
 
