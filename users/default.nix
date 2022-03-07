@@ -31,6 +31,10 @@ let cfg = config.my.home-manager; in
         "docker"
         "video"
         "audio"
+
+        # printing
+        "scanner"
+        "lp"
       ];
     };
   };
