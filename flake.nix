@@ -26,7 +26,7 @@
     pcp-tweaks = { url = "github:NurMarvin/discord-tweaks"; flake = false; };
     pcp-theme-toggler = { url = "github:redstonekasi/theme-toggler"; flake = false; };
     #Doesn't work on electron 15
-    #pcp-better-status-indicators = { url = "github:GriefMoDz/better-status-indicators"; flake = false; };
+    pcp-better-status-indicators = { url = "github:GriefMoDz/better-status-indicators"; flake = false; };
     pcp-webhook-tag = { url = "github:BenSegal855/webhook-tag"; flake = false; };
     # TODO: locked version of this which doesn't hit web
     pct-clearvision = { url = "github:ClearVision/ClearVision-v6"; flake = false; };
