@@ -37,7 +37,7 @@ in
   discord-plugged = pkgs.callPackage ./discord-plugged {
     inherit powercord;
     inherit (flake-args) powercord-overlay;
-    discord-canary = pkgs.lun.discord-electron-update;
+    inherit (pkgs) discord-canary;
   };
   kwinft = pkgs.lib.recurseIntoAttrs (pkgs.callPackage ./kwinft { });
   lutris = pkgs.lutris.override {
