@@ -10,8 +10,7 @@
 
       plymouth = {
         enable = true;
-        theme = "breeze";
-        logo = lun.assets.images.crescent_moon;
+        logo = lun.assets.images.crescent_moon_100x100;
       };
     };
   };
