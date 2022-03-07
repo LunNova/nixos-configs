@@ -2,14 +2,14 @@
 let
   cfg = config.lun.ml;
   virtualisation = config.virtualisation.docker.enable;
-  nvidia = builtins.elem "nvidia" cfg.lun.ml.gpus;
-  amd = builtins.elem "amd" cfg.lun.ml.gpus;
+  nvidia = builtins.elem "nvidia" cfg.gpus;
+  amd = builtins.elem "amd" cfg.gpus;
 in
 {
   options.lun.ml = {
     enable = lib.mkEnableOption "Enable ml";
-    gpuVendors = with lib; mkOption {
-      type = with types; listOf enum [ "nvidia" "amd" "intel" ];
+    gpus = with lib; mkOption {
+      type = with types; listOf (enum [ "nvidia" "amd" "intel" ]);
       description = "";
       default = [ ];
     };
