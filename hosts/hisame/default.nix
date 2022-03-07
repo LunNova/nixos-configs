@@ -21,10 +21,12 @@ in
 
     boot.initrd.kernelModules = [ "amdgpu" ];
     services.xserver.videoDrivers = [ "amdgpu" ];
+    lun.ml = {
+      enable = true;
+      gpus = [ "amd" ];
+    };
     hardware.opengl = {
       extraPackages = [
-        pkgs.rocm-opencl-icd
-        pkgs.rocm-opencl-runtime
         pkgs.libglvnd
         pkgs.mesa.drivers
       ];
