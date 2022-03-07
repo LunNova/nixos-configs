@@ -216,15 +216,7 @@
         pre-commit-check = pre-commit-hooks.lib.${system}.run {
           src = ./.;
           hooks = {
-            statix = {
-              # TODO: use built-in later https://github.com/cachix/pre-commit-hooks.nix/pull/133
-              name = "statix";
-              description = "Lints and suggestions for the Nix programming language.";
-              entry = "${pkgs.statix}/bin/statix check -o errfmt";
-              files = "\\.nix$";
-              pass_filenames = false;
-              enable = true;
-            };
+            statix.enable = true;
             nixpkgs-fmt.enable = true;
             shellcheck = {
               enable = true;
