@@ -7,7 +7,6 @@ set -xeuo pipefail
 nix-collect-garbage --delete-older-than 3d
 /nix/var/nix/profiles/system/bin/switch-to-configuration boot
 
-# TODO autooptimise?
 nix-store --optimise
 
 fstrim -av
