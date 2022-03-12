@@ -45,6 +45,7 @@
     ark
     unar
     p7zip
+    pinta # paint.net alternative
   ];
 
   programs.git = {
