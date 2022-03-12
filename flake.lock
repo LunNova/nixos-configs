@@ -89,11 +89,11 @@
     },
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1646751686,
-        "narHash": "sha256-hnHZ2qaXVIm05+1EqWNg/yaaeTTNR8TPd7jaOM/DNZA=",
+        "lastModified": 1646825982,
+        "narHash": "sha256-uWvS4UFkdE4Iqk1pXhxkZqPsqI+Z2V9VRmLxGUFejbY=",
         "owner": "NixOS",
         "repo": "nixos-hardware",
-        "rev": "c730530902842de8968fe234b6e0833fa669d466",
+        "rev": "816a935bf5aa5f77cb1f03ebfe20ab13b112d0f1",
         "type": "github"
       },
       "original": {
@@ -105,16 +105,32 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1646756826,
-        "narHash": "sha256-rnapN7SyRsYBIiLrQ4YyJpbiPKqfLfpFz/nZ03FWdQ0=",
+        "lastModified": 1647108058,
+        "narHash": "sha256-qCt3+Tz4r+efp7K5C1HbLzMknxevZ0YXNbyfdf0zYbE=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "31c068329c532ff91929f6d7cc4262cc2463dd70",
+        "rev": "295cda2612d6b8a487f8fced27e7721e64443760",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "master",
+        "ref": "staging-next",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-stable": {
+      "locked": {
+        "lastModified": 1647115357,
+        "narHash": "sha256-aM96c8AhD9CxfZUV0mz8OvckJFeUUMFgqp9fFlwu3Hs=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "1feaa242b99f140e8a89079d5747da38042b76f6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "release-21.11",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -122,11 +138,11 @@
     "pcp-better-status-indicators": {
       "flake": false,
       "locked": {
-        "lastModified": 1646576198,
-        "narHash": "sha256-bXA4U2QV2ugtU8catynnevfjdstGpXnDAT9ODftrO/c=",
+        "lastModified": 1646776938,
+        "narHash": "sha256-OYV/9/FqgiJhcPh5JTN3118ybUNYO8elTU2BopCtG1U=",
         "owner": "GriefMoDz",
         "repo": "better-status-indicators",
-        "rev": "1b95adf1e1153c140f72d9923051684d3f08ca34",
+        "rev": "da023ae0fe88c41fa192de07208c8c30d48d9fe5",
         "type": "github"
       },
       "original": {
@@ -269,6 +285,7 @@
         "nix-gaming": "nix-gaming",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-stable": "nixpkgs-stable",
         "pcp-better-status-indicators": "pcp-better-status-indicators",
         "pcp-theme-toggler": "pcp-theme-toggler",
         "pcp-tweaks": "pcp-tweaks",
