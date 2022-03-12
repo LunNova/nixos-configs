@@ -117,5 +117,8 @@ in
   # Zephyrus G14: without it get 2h battery life idle, with like 6h idle
   # runs powertop --auto-tune at boot
   powerManagement.powertop.enable = false;
+
+  # defaults to 16 on this machine which OOMs some builds
+  nix.settings.cores = 8;
 }
 
