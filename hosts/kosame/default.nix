@@ -43,7 +43,7 @@ in
     [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      #"${nixos-hardware-modules-path}/asus/battery.nix"
+      "${nixos-hardware-modules-path}/asus/battery.nix"
     ];
 
   # This always crashes so is off but want to debug later
@@ -56,20 +56,7 @@ in
 
   boot.plymouth.enable = lib.mkForce false;
 
-  # TODO replace once https://github.com/NixOS/nixos-hardware/pull/380 is merged
-  # hardware.asus.battery.chargeUpto = 70;
-  systemd.services.battery-charge-threshold = {
-    wantedBy = [ "local-fs.target" "suspend.target" ];
-    after = [ "local-fs.target" "suspend.target" ];
-    description = "Set the battery charge threshold";
-    startLimitBurst = 5;
-    startLimitIntervalSec = 1;
-    serviceConfig = {
-      Type = "oneshot";
-      Restart = "on-failure";
-      ExecStart = "/bin/sh -c 'echo 65 > /sys/class/power_supply/BAT0/charge_control_end_threshold'";
-    };
-  };
+  hardware.asus.battery.chargeUpto = 70;
 
   networking.hostName = "lun-kosame-nixos";
   sconfig.machineId = "0715dc6a95b3419e8e2465240b7e598b";
