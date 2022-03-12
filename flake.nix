@@ -2,7 +2,8 @@
   description = "lun's system config";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/master";
+    nixpkgs.url = "github:NixOS/nixpkgs/staging-next";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/release-21.11";
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
@@ -44,14 +45,9 @@
     , ...
     }@args:
     let
+      lunLib = import ./lib { inherit (args) nixpkgs; };
       system = "x86_64-linux";
-      legacyPackages = nixpkgs.legacyPackages.${system};
-      patchPackages = nixpkgs: patches: (if (patches == [ ]) then nixpkgs else
-      legacyPackages.applyPatches {
-        inherit patches;
-        src = nixpkgs;
-        name = "nixpkgs-patched";
-      });
+
       pkgsPatches = [ ];
       defaultPkgsConfig = {
         inherit system;
@@ -73,41 +69,9 @@
           # nixpkgs-wayland.overlay
         ];
       };
-      mkPkgs = pkgs: extra:
-        (import (patchPackages pkgs pkgsPatches) (recursiveMerge [ defaultPkgsConfig extra ]));
-      recursiveMerge =
-        let f = attrPath:
-          with lib; with builtins;
-          zipAttrsWith (n: values:
-            if tail values == [ ]
-            then head values
-            else if all isList values
-            then unique (concatLists values)
-            else if all isAttrs values
-            then f (attrPath ++ [ n ]) values
-            else last values
-          );
-        in f [ ];
-      filterInputs = prefix: lib.filterAttrs (name: value: (lib.hasPrefix prefix name)) args;
-      lock = builtins.fromJSON (builtins.readFile ./flake.lock);
-      nixpkgs-unfree-path = ./hack-nixpkgs-unfree;
-      nixpkgs-unfree-relocked = pkgs.stdenv.mkDerivation {
-        name = "nixpkgs-unfree-relocked";
-        outputs = [ "out" ];
-        dontUnpack = true;
-        fixupPhase = "";
-        installPhase = ''
-          mkdir -p $out
-          cp -t $out ${nixpkgs-unfree-path}/{flake.nix,flake.lock,default.nix}
-          substituteInPlace $out/default.nix --replace "nixpkgs = null" 'nixpkgs = "${args.nixpkgs}"'
-          substituteInPlace $out/flake.lock --replace \
-            "%REV%" "${lock.nodes.nixpkgs.locked.rev}" --replace \
-            "%HASH%" "${lock.nodes.nixpkgs.locked.narHash}"
-          substituteInPlace $out/flake.nix --replace \
-            "%REV%" "${lock.nodes.nixpkgs.locked.rev}"
-        '';
-      };
-      pkgs = mkPkgs args.nixpkgs { };
+
+      pkgs = lunLib.mkPkgs args.nixpkgs system pkgsPatches defaultPkgsConfig;
+      pkgs-stable = lunLib.mkPkgs args.nixpkgs system pkgsPatches defaultPkgsConfig;
       inherit (args.nixpkgs) lib;
       readModules = path: builtins.map (x: path + "/${x}") (builtins.attrNames (builtins.readDir path));
       makeHost = pkgs: path: lib.nixosSystem {
@@ -115,6 +79,7 @@
 
         specialArgs =
           {
+            inherit pkgs-stable;
             lun = args.self;
             nixos-hardware-modules-path = "${args.nixos-hardware}";
           };
@@ -125,10 +90,10 @@
             # pin system nixpkgs to the same version as the flake input
             # (don't see a way to declaratively set channels but this seems to work fine?)
             # TODO try https://github.com/tejing1/nixos-config/blob/df7f087c1ec0183422df22398d9b06c523adae84/nixosConfigurations/tejingdesk/registry.nix#L26-L28 approach
-            nix.registry.pkgs.flake = nixpkgs-unfree-relocked;
+            nix.registry.pkgs.flake = lunLib.relock.nixpkgs-unfree-relocked pkgs args.nixpkgs;
             nix.registry.nixpkgs.flake = nixpkgs;
             environment.etc."nix/path/nixpkgs".source = nixpkgs;
-            environment.etc."nix/path/pkgs".source = nixpkgs-unfree-relocked;
+            environment.etc."nix/path/pkgs".source = lunLib.relock.nixpkgs-unfree-relocked pkgs args.nixpkgs;
             nix.nixPath = [ "/etc/nix/path" ];
             system.configurationRevision = lib.mkIf (args.self ? rev) args.self.rev; # set configurationRevision if available
           }
@@ -148,7 +113,6 @@
         inherit system pkgs;
         flake-args = args;
       };
-      setIf = flag: set: if flag then set else { };
       enableKwinFt = false;
     in
     {
@@ -161,14 +125,17 @@
       overlay = final: prev:
         {
           lun = localPackages;
-          powercord-plugins = filterInputs "pcp-";
-          powercord-themes = filterInputs "pct-";
+          powercord-plugins = lunLib.filterPrefix "pcp-" args;
+          powercord-themes = lunLib.filterPrefix "pct-" args;
           steam = prev.steam.override {
             extraPkgs = pkgs: [ (pkgs.hiPrio localPackages.xdg-open-with-portal) ];
           };
           inherit (localPackages) kwinft;
-
-        } // (setIf enableKwinFt {
+          # gst-plugins-bad pulls in opencv which we don't want
+          gst_all_1 = prev.gst_all_1 // {
+            gst-plugins-bad = pkgs.emptyDirectory;
+          };
+        } // (lunLib.setIf enableKwinFt {
           plasma5Packages = prev.plasma5Packages.overrideScope' (self2: super2: {
             plasma5 = super2.plasma5.overrideScope' (self1: super1: {
               inherit (localPackages.kwinft) kwin;
@@ -190,7 +157,11 @@
           import "${home-manager}/modules" {
             inherit pkgs;
             check = true;
-            extraSpecialArgs = { nixosConfig = null; lun = args.self; };
+            extraSpecialArgs = {
+              inherit pkgs-stable;
+              nixosConfig = null;
+              lun = args.self;
+            };
             configuration = {
               _module.args.pkgs = lib.mkForce pkgs;
               _module.args.pkgs_i686 = lib.mkForce { };
@@ -237,16 +208,10 @@
       devShell.${system} = args.minimal-shell.lib.minimal-shell {
         inherit pkgs system;
         passthru = {
-          tempBuildInputs = [ pkgs.nixpkgs-fmt ];
+          nativeBuildInputs = [ pkgs.nixpkgs-fmt ];
         };
         # TODO handle buildInputs in minimal-shell
-        shellHooks = self.checks.${system}.pre-commit-check.shellHook + ''
-
-        for p in $tempBuildInputs; do
-          export PATH=$p/bin''${PATH:+:}$PATH
-        done
-        unset tempBuildInputs;
-        '';
+        shellHooks = self.checks.${system}.pre-commit-check.shellHook;
       };
     };
 }
