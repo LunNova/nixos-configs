@@ -149,6 +149,8 @@
     # services.xserver.displayManager.gdm.nvidiaWayland = true;
     services.xserver.desktopManager.plasma5.enable = true;
     services.xserver.desktopManager.plasma5.runUsingSystemd = true;
+    # vlc is smaller than gstreamer
+    services.xserver.desktopManager.plasma5.phononBackend = "vlc";
 
     # SOUND
     sound.enable = false;
