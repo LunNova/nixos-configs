@@ -48,7 +48,14 @@
       lunLib = import ./lib { inherit (args) nixpkgs; };
       system = "x86_64-linux";
 
-      pkgsPatches = [ ];
+      pkgsPatches = let legacyPackages = nixpkgs.legacyPackages.${system}; in
+        [
+          # (legacyPackages.fetchpatch {
+          #   # steam fixes https://github.com/NixOS/nixpkgs/pull/157907/commits
+          #   url = "https://github.com/NixOS/nixpkgs/compare/98c65522923ca488a562b0f334c39fb6f051955a.patch";
+          #   sha256 = "sha256-cZ2w3bH9w2GtiAJICy7iLiOE2Rfv789SL/0l2xGcDd8=";
+          # })
+        ];
       defaultPkgsConfig = {
         inherit system;
         config.allowUnfree = true;
