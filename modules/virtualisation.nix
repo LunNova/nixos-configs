@@ -2,7 +2,10 @@
 {
   config = {
     virtualisation.docker.enable = true;
-    lun.persistence.dirs = [ "/var/lib/docker" ];
+    lun.persistence.dirs = [
+      "/var/lib/docker"
+      "/var/lib/libvirt"
+    ];
 
     environment.systemPackages = with pkgs; [
       virtmanager
