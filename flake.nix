@@ -139,9 +139,15 @@
           };
           inherit (localPackages) kwinft;
           # gst-plugins-bad pulls in opencv which we don't want
-          gst_all_1 = prev.gst_all_1 // {
-            gst-plugins-bad = pkgs.emptyDirectory;
-          };
+          # TODO: upstream option for this
+          # gst_all_1 = (prev.gst_all_1 // {
+          #   gst-plugins-bad = (prev.gst_all_1.gst-plugins-bad.override {
+          #     opencv4 = prev.emptyDirectory;
+          #   }).overrideAttrs
+          #     (prev: {
+          #       mesonFlags = prev.mesonFlags ++ [ "-Dopencv=disabled" ];
+          #     });
+          # });
         } // (lunLib.setIf enableKwinFt {
           plasma5Packages = prev.plasma5Packages.overrideScope' (self2: super2: {
             plasma5 = super2.plasma5.overrideScope' (self1: super1: {
