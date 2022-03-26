@@ -46,6 +46,7 @@
     unar
     p7zip
     pinta # paint.net alternative
+    calibre
   ];
 
   programs.git = {
