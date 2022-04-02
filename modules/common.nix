@@ -51,7 +51,7 @@
     # NETWORKING
     networking = {
       networkmanager.enable = true;
-      networkmanager.wifi.backend = "iwd";
+      # networkmanager.wifi.backend = "iwd";
       # TODO: diagnose why we need this on home network
       resolvconf.dnsExtensionMechanism = false;
     };
