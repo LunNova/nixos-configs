@@ -11,7 +11,7 @@
       liberation_ttf
       fira-code
       fira-code-symbols
-      mplus-outline-fonts
+      mplus-outline-fonts.osdnRelease
       dina-font
       proggyfonts
       font-awesome_4
