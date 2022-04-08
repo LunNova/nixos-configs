@@ -6,7 +6,6 @@ let
     # wine = pkgs.wineWowPackages.wayland;
     wine = pkgs.emptyDirectory; # don't use system wine with lutris
   }).overrideAttrs (old: {
-    patches = old.patches ++ [ ];
     propagatedBuildInputs = old.propagatedBuildInputs ++ [ pkgs.wineWowPackages.fonts ];
   });
   xdg-open-with-portal = pkgs.callPackage ./xdg-open-with-portal { };
