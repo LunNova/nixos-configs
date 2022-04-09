@@ -84,7 +84,7 @@
       };
 
       pkgs = lunLib.mkPkgs args.nixpkgs system pkgsPatches defaultPkgsConfig;
-      pkgs-stable = lunLib.mkPkgs args.nixpkgs system pkgsPatches defaultPkgsConfig;
+      pkgs-stable = lunLib.mkPkgs args.nixpkgs-stable system [ ] defaultPkgsConfig;
       inherit (args.nixpkgs) lib;
       readModules = path: builtins.map (x: path + "/${x}") (builtins.attrNames (builtins.readDir path));
       makeHost = pkgs: path: lib.nixosSystem {
