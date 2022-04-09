@@ -50,6 +50,12 @@
 
       pkgsPatches = let legacyPackages = nixpkgs.legacyPackages.${system}; in
         [
+          # c270defab79e46b4c98039b09ab6209d1a69ffb3
+          (legacyPackages.fetchpatch {
+            # pycurl build failure https://github.com/NixOS/nixpkgs/pull/166335/commits
+            url = "https://github.com/NixOS/nixpkgs/compare/e2d150f6b17175c16b8bfeb452790efb1170bf44..c270defab79e46b4c98039b09ab6209d1a69ffb3.patch";
+            sha256 = "sha256-Bt7IJiGvCuj1XFvQ5ebhDHeXUXBwG17Tw0gxb6Ql5V4=";
+          })
           # (legacyPackages.fetchpatch {
           #   # steam fixes https://github.com/NixOS/nixpkgs/pull/157907/commits
           #   url = "https://github.com/NixOS/nixpkgs/compare/98c65522923ca488a562b0f334c39fb6f051955a.patch";
