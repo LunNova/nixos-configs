@@ -54,6 +54,20 @@ in
   #   };
   # };
 
+  specialisation.amd-only.configuration = {
+    lun.amd-nvidia-laptop.enable = lib.mkForce false;
+    boot.blacklistedKernelModules = [
+      "radeon"
+      "nouveau"
+      "nvidia"
+      "nvidia_drm"
+      "nvidia_uvm"
+      "nvidia_modeset"
+    ];
+    services.xserver.videoDrivers = [ "amdgpu" ];
+    boot.initrd.kernelModules = [ "amdgpu" ];
+  };
+
   boot.plymouth.enable = lib.mkForce false;
 
   hardware.asus.battery.chargeUpto = 70;
