@@ -54,7 +54,7 @@ in
   #   };
   # };
 
-  specialisation.amd-only.configuration = {
+  specialisation.low-power.configuration = {
     lun.amd-nvidia-laptop.enable = lib.mkForce false;
     boot.blacklistedKernelModules = [
       "radeon"
@@ -66,6 +66,22 @@ in
     ];
     services.xserver.videoDrivers = [ "amdgpu" ];
     boot.initrd.kernelModules = [ "amdgpu" ];
+    # Zephyrus G14: without it get 2h battery life idle, with like 6h idle
+    # runs powertop --auto-tune at boot
+    powerManagement.powertop.enable = true;
+    services.udev.extraRules = ''
+      #enable pci port kernel power management
+      SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", ATTR{power/control}=="auto"
+      SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", ATTR{power/control}=="auto"
+      # Remove nVidia devices, when present.
+      ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{remove}="1"
+      #Remove NVIDIA USB xHCI Host Controller Devices, if present
+      # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c0330", ATTR{remove}=="1"
+      # #Remove NVIDIA USB Type-C UCSI devices, if present
+      # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de" , ATTR{class}=="0x0c8000", ATTR{remove}=="1"
+      # #Remove NVIDIA Audio Devices
+      # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{remove}=="1"
+      #'';
   };
 
   boot.plymouth.enable = lib.mkForce false;
@@ -77,11 +93,6 @@ in
   system.stateVersion = "21.05";
   boot.cleanTmpDir = true;
   boot.kernelPackages = lib.mkForce pkgs.linuxPackages_xanmod;
-
-  services.udev.extraRules = lib.optionalString (!config.lun.amd-nvidia-laptop.enable) ''
-    # Remove nVidia devices, when present.
-    # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{remove}="1"
-    #'';
 
 
   systemd.sleep.extraConfig = ''
@@ -128,9 +139,6 @@ in
 
   # Used to set power profiles, should have support in asus-wmi https://asus-linux.org/blog/updates-2021-07-16/
   services.power-profiles-daemon.enable = true;
-  # Zephyrus G14: without it get 2h battery life idle, with like 6h idle
-  # runs powertop --auto-tune at boot
-  powerManagement.powertop.enable = false;
 
   # defaults to 16 on this machine which OOMs some builds
   nix.settings.cores = 8;
