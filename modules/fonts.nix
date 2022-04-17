@@ -2,8 +2,7 @@
   fonts = {
     enableDefaultFonts = true;
 
-    # Use mkForce because we can't turn off the x fonts while x server is enabled
-    fonts = with pkgs; lib.mkForce [
+    fonts = with pkgs; [
       # General fonts
       noto-fonts
       noto-fonts-cjk
