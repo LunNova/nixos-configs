@@ -42,7 +42,6 @@
     , pre-commit-hooks
     , nix-gaming
     , powercord-overlay
-      # , nixpkgs-wayland
     , ...
     }@args:
     let
@@ -51,11 +50,11 @@
 
       pkgsPatches = let legacyPackages = nixpkgs.legacyPackages.${system}; in
         [
-          # c270defab79e46b4c98039b09ab6209d1a69ffb3
+          # 0ff195764c77eee2cf28abde4699ce4c31126dac
           (legacyPackages.fetchpatch {
-            # pycurl build failure https://github.com/NixOS/nixpkgs/pull/166335/commits
-            url = "https://github.com/NixOS/nixpkgs/compare/e2d150f6b17175c16b8bfeb452790efb1170bf44..c270defab79e46b4c98039b09ab6209d1a69ffb3.patch";
-            sha256 = "sha256-Bt7IJiGvCuj1XFvQ5ebhDHeXUXBwG17Tw0gxb6Ql5V4=";
+            # apnsw failure https://github.com/NixOS/nixpkgs/pull/168071/commits
+            url = "https://github.com/NixOS/nixpkgs/compare/0ff195764c77eee2cf28abde4699ce4c31126dac.patch";
+            sha256 = "sha256-nu/PbLMQVisUpRt+hM1sY7vjwzbP4EfnKdpve9YVIk0==";
           })
           # (legacyPackages.fetchpatch {
           #   # steam fixes https://github.com/NixOS/nixpkgs/pull/157907/commits
@@ -67,20 +66,11 @@
         inherit system;
         config.allowUnfree = true;
         overlays = [
-          (final: prev: {
-            # https://github.com/NixOS/nixpkgs/pull/159112
-            discord-canary = let version = "0.0.133"; in
-              prev.discord-canary.overrideAttrs (prev: {
-                inherit version;
-                src = builtins.fetchurl {
-                  url = "https://dl-canary.discordapp.net/apps/linux/${version}/discord-canary-${version}.tar.gz";
-                  sha256 = "sha256:0wx8wkgkzvw9094baa3dni834l0n4p6ih024bj1851sgwwnidb0a";
-                };
-              });
-          })
+          # (final: prev: {
+          #   some-package = ...
+          # })
           self.overlay
           powercord-overlay.overlay
-          # nixpkgs-wayland.overlay
         ];
       };
 
