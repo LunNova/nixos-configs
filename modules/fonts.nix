@@ -25,11 +25,26 @@
       font-awesome_5
       dejavu_fonts
       source-code-pro
+      iosevka
 
       # Emoji
       twitter-color-emoji
       noto-fonts-emoji
       noto-fonts-extra
     ];
+
+    # Lucida -> iosevka as no free Lucida font available and it's used widely
+    fontconfig.localConf = ''
+      <?xml version="1.0"?>
+      <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+      <fontconfig>
+        <match target="pattern">
+          <test name="family" qual="any"><string>Lucida</string></test>
+          <edit name="family" mode="assign">
+            <string>iosevka</string>
+          </edit>
+        </match>
+      </fontconfig>
+    '';
   };
 }
