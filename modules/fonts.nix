@@ -1,14 +1,22 @@
 { pkgs, ... }: {
   fonts = {
-    enableDefaultFonts = false;
+    enableDefaultFonts = true;
 
     # Use mkForce because we can't turn off the x fonts while x server is enabled
     fonts = with pkgs; lib.mkForce [
+      # General fonts
       noto-fonts
       noto-fonts-cjk
-      noto-fonts-emoji
-      noto-fonts-extra
       liberation_ttf
+      carlito # Similar to MS Calibri
+      ttf_bitstream_vera
+
+      # Japanese
+      ipafont
+      kochi-substitute
+
+      # Code/monospace and nsymbol fonts
+      (nerdfonts.override { fonts = [ "Hack" ]; })
       fira-code
       fira-code-symbols
       mplus-outline-fonts.osdnRelease
@@ -16,24 +24,13 @@
       proggyfonts
       font-awesome_4
       font-awesome_5
-      (nerdfonts.override { fonts = [ "Hack" ]; })
-
-      # Defaults from https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/config/fonts/fonts.nix
       dejavu_fonts
-      freefont_ttf
-      gyre-fonts # TrueType substitutes for standard PostScript fonts
-      liberation_ttf
-      unifont
-      noto-fonts-emoji
-    ];
+      source-code-pro
 
-    # You also can't override the lucida font packages
-    # not possible due to https://github.com/NixOS/nixpkgs/issues/41154
-    # xorg = prev.xorg.overrideScope' (self: super:
-    #   {
-    #     fontbhlucidatypewriter100dpi = final.emptyDirectory;
-    #     fontbhlucidatypewriter75dpi = final.emptyDirectory;
-    #   }
-    # );
+      # Emoji
+      twitter-color-emoji
+      noto-fonts-emoji
+      noto-fonts-extra
+    ];
   };
 }
