@@ -1,4 +1,4 @@
-{ config, lib, pkgs, self, ... }:
+{ config, lib, pkgs, pkgs-stable, self, ... }:
 {
   imports = [
     ./discord.nix
@@ -77,7 +77,7 @@
 
   programs.firefox = {
     enable = true;
-    package = pkgs.firefox-bin;
+    package = pkgs-stable.firefox-bin;
   };
 
   programs.vscode = {
