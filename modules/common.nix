@@ -123,6 +123,9 @@
       "net.ipv4.conf.default.send_redirects" = mkDefault false;
     };
 
+    documentation.man.enable = false;
+    documentation.nixos.enable = false;
+
     # SYSTEM PACKAGES
     environment.systemPackages = with pkgs; [
       bash
