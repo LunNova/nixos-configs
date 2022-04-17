@@ -19,7 +19,8 @@
     # Powercord. pcp- and pct- prefix have meaning, cause inclusion as powercord plugin/theme
     powercord = { url = "github:powercord-org/powercord"; flake = false; };
     powercord-overlay = {
-      url = "github:LavaDesu/powercord-overlay";
+      # TODO: drop hash after handles license header change
+      url = "github:LavaDesu/powercord-overlay/70610a69c37a9bedfd498cd8848a052c14d1c12e";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.powercord.follows = "powercord";
     };
