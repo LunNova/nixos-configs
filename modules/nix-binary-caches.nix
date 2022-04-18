@@ -2,8 +2,8 @@
   config.nix.settings = {
     substituters = [
       "https://cache.nixos.org/?priority=10"
-      "https://cache.garnix.io/?priority=9999"
-      "https://nix-community.cachix.org/?priority=20"
+      # "https://cache.garnix.io/?priority=9999"
+      # "https://nix-community.cachix.org/?priority=20"
     ];
     trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
