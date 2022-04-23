@@ -33,7 +33,8 @@
     services.journald.extraConfig = ''
       SystemMaxUse=500M
       MaxFileSec=1day
-      MaxRetentionSec=1month
+      MaxRetentionSec=1week
+      MaxLevelStore=5
     '';
 
     # NIX
