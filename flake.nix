@@ -50,12 +50,6 @@
 
       pkgsPatches = let legacyPackages = nixpkgs.legacyPackages.${system}; in
         [
-          # 0ff195764c77eee2cf28abde4699ce4c31126dac
-          (legacyPackages.fetchpatch {
-            # apnsw failure https://github.com/NixOS/nixpkgs/pull/168071/commits
-            url = "https://github.com/NixOS/nixpkgs/compare/0ff195764c77eee2cf28abde4699ce4c31126dac.patch";
-            sha256 = "sha256-nu/PbLMQVisUpRt+hM1sY7vjwzbP4EfnKdpve9YVIk0==";
-          })
           (legacyPackages.fetchpatch {
             # steam fixes https://github.com/NixOS/nixpkgs/pull/157907/commits
             url = "https://github.com/NixOS/nixpkgs/compare/d536e0a0eb54ea51c676869991fe5a1681cc6302.patch";
