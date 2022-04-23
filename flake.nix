@@ -56,11 +56,11 @@
             url = "https://github.com/NixOS/nixpkgs/compare/0ff195764c77eee2cf28abde4699ce4c31126dac.patch";
             sha256 = "sha256-nu/PbLMQVisUpRt+hM1sY7vjwzbP4EfnKdpve9YVIk0==";
           })
-          # (legacyPackages.fetchpatch {
-          #   # steam fixes https://github.com/NixOS/nixpkgs/pull/157907/commits
-          #   url = "https://github.com/NixOS/nixpkgs/compare/98c65522923ca488a562b0f334c39fb6f051955a.patch";
-          #   sha256 = "sha256-cZ2w3bH9w2GtiAJICy7iLiOE2Rfv789SL/0l2xGcDd8=";
-          # })
+          (legacyPackages.fetchpatch {
+            # steam fixes https://github.com/NixOS/nixpkgs/pull/157907/commits
+            url = "https://github.com/NixOS/nixpkgs/compare/d536e0a0eb54ea51c676869991fe5a1681cc6302.patch";
+            sha256 = "sha256-aKUt0iJp3TX3bzkxyWM/Pt61l9HnsnKGD2tX24H3dAA=";
+          })
         ];
       defaultPkgsConfig = {
         inherit system;
