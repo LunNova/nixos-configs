@@ -52,9 +52,8 @@
     # NETWORKING
     networking = {
       networkmanager.enable = true;
+      # TODO: file bug for iwd network connection secrets issue
       # networkmanager.wifi.backend = "iwd";
-      # TODO: diagnose why we need this on home network
-      resolvconf.dnsExtensionMechanism = false;
     };
     services.avahi = {
       enable = true;
