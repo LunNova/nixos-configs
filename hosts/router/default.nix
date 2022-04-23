@@ -1,6 +1,6 @@
 { config, pkgs, lib, nixos-hardware-modules-path, ... }:
 let
-  name = "hisame";
+  name = "router";
   swap = "/dev/disk/by-partlabel/_swap";
 in
 {
@@ -8,32 +8,19 @@ in
   ];
 
   config = {
+    networking.usePredictableInterfaceNames = false; # TODO: flip after setting everything up
     networking.hostName = "lun-${name}-nixos";
-    sconfig.machineId = "63d3399d2f2f65c96848f11d73082aef";
-    system.stateVersion = "21.11";
+    sconfig.machineId = "62df49c6dd7668e60028ed7c7f8b009d";
+    system.stateVersion = "22.05";
 
     boot.kernelParams = [
-      "mitigations=off"
       "quiet"
       "splash"
     ];
-    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_xanmod;
+    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
 
     boot.initrd.kernelModules = [ "amdgpu" ];
     services.xserver.videoDrivers = [ "amdgpu" ];
-    lun.ml = {
-      enable = true;
-      gpus = [ "amd" ];
-    };
-    hardware.opengl = {
-      extraPackages = [
-        pkgs.libglvnd
-        pkgs.mesa.drivers
-      ];
-      extraPackages32 = [
-        pkgs.pkgsi686Linux.mesa.drivers
-      ];
-    };
 
     hardware.cpu.amd.updateMicrocode = true;
 
@@ -85,7 +72,7 @@ in
         fsType = "tmpfs";
         device = "tmpfs";
         neededForBoot = true;
-        options = [ "mode=1777" "rw" "nosuid" "nodev" "size=32G" ];
+        options = [ "mode=1777" "rw" "nosuid" "nodev" "size=4G" ];
       };
     };
     swapDevices = [{
