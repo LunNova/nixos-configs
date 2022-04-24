@@ -72,10 +72,13 @@
       pkgs-stable = lunLib.mkPkgs args.nixpkgs-stable system [ ] defaultPkgsConfig;
       inherit (args.nixpkgs) lib;
       readModules = path: builtins.map (x: path + "/${x}") (builtins.attrNames (builtins.readDir path));
-      readExportedModules = path: builtins.mapAttrs
-        (key: value: ({ pkgs, ... }@args: import (path + "/${key}") (args // {
-          pkgs = args.pkgs // { lun = localPackagesForPkgs args.pkgs; };
-        })))
+      readExportedModules = path: lib.mapAttrs'
+        (key: value:
+          lib.nameValuePair
+            (lib.removeSuffix ".nix" key)
+            ({ pkgs, ... }@args: import (path + "/${key}") (args // {
+              pkgs = args.pkgs // { lun = localPackagesForPkgs args.pkgs; };
+            })))
         (builtins.readDir path);
       makeHost = pkgs: path: lib.nixosSystem {
         inherit system;
