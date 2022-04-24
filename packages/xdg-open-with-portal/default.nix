@@ -8,22 +8,18 @@ writeShellScriptBin "xdg-open" ''
   # exec > >(tee -i ~/dev/xdg-open-portal-log.txt)
   # exec 2>&1
 
+  set -xeuo pipefail
+
   targetFile=$1
 
   >&2 echo "xdg-open workaround: using org.freedesktop.portal to open $targetFile"
-
-  openFile=OpenFile
-  # https://github.com/flatpak/xdg-desktop-portal/issues/683
-  # if [ -d "$targetFile" ]; then
-  #   openFile=OpenDirectory
-  # fi
 
   if [ -e "$targetFile" ]; then
     exec 3< "$targetFile"
     ${glib}/bin/gdbus call --session \
       --dest org.freedesktop.portal.Desktop \
       --object-path /org/freedesktop/portal/desktop \
-      --method org.freedesktop.portal.OpenURI.$openFile \
+      --method org.freedesktop.portal.OpenURI.OpenFile \
       --timeout 5 \
       "" "3" {}
   else

@@ -72,6 +72,11 @@
       pkgs-stable = lunLib.mkPkgs args.nixpkgs-stable system [ ] defaultPkgsConfig;
       inherit (args.nixpkgs) lib;
       readModules = path: builtins.map (x: path + "/${x}") (builtins.attrNames (builtins.readDir path));
+      readExportedModules = path: builtins.mapAttrs
+        (key: value: ({ pkgs, ... }@args: import (path + "/${key}") (args // {
+          pkgs = args.pkgs // { lun = localPackagesForPkgs args.pkgs; };
+        })))
+        (builtins.readDir path);
       makeHost = pkgs: path: lib.nixosSystem {
         inherit system;
 
@@ -105,12 +110,16 @@
               home-manager.useUserPackages = true;
             };
           }
-        ] ++ (readModules ./modules);
+        ]
+        ++ (builtins.attrValues self.nixosModules)
+        ++ (readModules ./modules);
       };
-      localPackages = import ./packages {
-        inherit system pkgs;
+      localPackagesProto = import ./packages;
+      localPackagesForPkgs = pkgs: localPackagesProto {
+        inherit pkgs;
         flake-args = args;
       };
+      localPackages = localPackagesForPkgs pkgs;
       enableKwinFt = false;
     in
     {
@@ -125,9 +134,6 @@
           lun = localPackages;
           powercord-plugins = lunLib.filterPrefix "pcp-" args;
           powercord-themes = lunLib.filterPrefix "pct-" args;
-          steam = prev.steam.override {
-            extraPkgs = pkgs: [ (pkgs.hiPrio localPackages.xdg-open-with-portal) ];
-          };
           inherit (localPackages) kwinft;
           # gst-plugins-bad pulls in opencv which we don't want
           # TODO: upstream option for this
@@ -148,9 +154,12 @@
           });
         });
 
+      nixosModules = readExportedModules ./modules/exported;
+
       nixosConfigurations = {
         lun-kosame-nixos = makeHost pkgs ./hosts/kosame;
         lun-hisame-nixos = makeHost pkgs ./hosts/hisame;
+        # basicTest = makeHost pkgs-stable {};
       };
 
       assets = import ./assets;

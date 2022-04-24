@@ -1,6 +1,6 @@
-{ system, pkgs, flake-args }:
+{ pkgs, flake-args }:
 let
-  inherit (pkgs) lib;
+  inherit (pkgs) lib system;
   lutris-unwrapped = (pkgs.lutris-unwrapped.override {
     # TODO wine build with wayland and GE patches?
     # wine = pkgs.wineWowPackages.wayland;
@@ -41,7 +41,7 @@ in
   kwinft = pkgs.lib.recurseIntoAttrs (pkgs.callPackage ./kwinft { });
   lutris = pkgs.lutris.override {
     inherit lutris-unwrapped;
-    extraLibraries = pkgs: [ (pkgs.hiPrio xdg-open-with-portal) ];
+    # extraLibraries = pkgs: [ (pkgs.hiPrio xdg-open-with-portal) ];
   };
   spawn = pkgs.callPackage ./spawn { };
   swaysome = pkgs.callPackage ./swaysome { };
