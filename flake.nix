@@ -77,7 +77,7 @@
           lib.nameValuePair
             (lib.removeSuffix ".nix" key)
             ({ pkgs, ... }@args: import (path + "/${key}") (args // {
-              pkgs = args.pkgs // { lun = localPackagesForPkgs args.pkgs; };
+              pkgs = args.pkgs // { lun = args.pkgs.lun or (localPackagesForPkgs args.pkgs); };
             })))
         (builtins.readDir path);
       makeHost = pkgs: path: lib.nixosSystem {
