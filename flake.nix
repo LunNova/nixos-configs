@@ -45,6 +45,18 @@
     , ...
     }@args:
     let
+      lib = pkgs.lib.extend (final: prev:
+        let self = args.nixpkgs; in
+        {
+          nixosSystem = args:
+            import "${pkgs}/nixos/lib/eval-config.nix" (args // {
+              modules = args.modules ++ [{
+                system.nixos.versionSuffix =
+                  ".${final.substring 0 8 (self.lastModifiedDate or self.lastModified or "19700101")}.${self.shortRev or "dirty"}";
+                system.nixos.revision = final.mkIf (self ? rev) self.rev;
+              }];
+            });
+        });
       lunLib = import ./lib { inherit (args) nixpkgs; };
       system = "x86_64-linux";
 
@@ -54,6 +66,11 @@
             # steam fixes https://github.com/NixOS/nixpkgs/pull/157907/commits
             url = "https://github.com/NixOS/nixpkgs/compare/d536e0a0eb54ea51c676869991fe5a1681cc6302.patch";
             sha256 = "sha256-aKUt0iJp3TX3bzkxyWM/Pt61l9HnsnKGD2tX24H3dAA=";
+          })
+          (legacyPackages.fetchpatch {
+            # multi-gpu device node patch https://github.com/NixOS/nixpkgs/pull/170695
+            url = "https://github.com/NixOS/nixpkgs/compare/4d7bc6ccc0167df08cf6ee3ed58928199184c094.patch";
+            sha256 = "sha256-XDfMSKpzM3uGnszeeecQqUIrO6076zf3j7YKoL1DDbo==";
           })
         ];
       defaultPkgsConfig = {
@@ -70,7 +87,6 @@
 
       pkgs = lunLib.mkPkgs args.nixpkgs system pkgsPatches defaultPkgsConfig;
       pkgs-stable = lunLib.mkPkgs args.nixpkgs-stable system [ ] defaultPkgsConfig;
-      inherit (args.nixpkgs) lib;
       readModules = path: builtins.map (x: path + "/${x}") (builtins.attrNames (builtins.readDir path));
       readExportedModules = path: lib.mapAttrs'
         (key: value:
