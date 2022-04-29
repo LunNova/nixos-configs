@@ -24,7 +24,8 @@ let
         name = "nixpkgs-patched";
       });
       mkPkgs = pkgs: system: patches: config:
-        (import (self.patchPackages pkgs system patches) config);
+        let outPath = self.patchPackages pkgs system patches; in
+        (import outPath config) // { outPath = "${outPath}"; };
       filterPrefix = prefix: lib.filterAttrs (name: value: (lib.hasPrefix prefix name));
     };
 in
