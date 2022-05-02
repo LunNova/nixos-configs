@@ -46,6 +46,8 @@ in
       "${nixos-hardware-modules-path}/asus/battery.nix"
     ];
 
+  lun.unifi.enable = true;
+
   # This always crashes so is off but want to debug later
   # specialisation.nvidia-offload.configuration = {
   #   lun.amd-nvidia-laptop = {
