@@ -67,11 +67,6 @@
             url = "https://github.com/NixOS/nixpkgs/compare/d536e0a0eb54ea51c676869991fe5a1681cc6302.patch";
             sha256 = "sha256-aKUt0iJp3TX3bzkxyWM/Pt61l9HnsnKGD2tX24H3dAA=";
           })
-          (legacyPackages.fetchpatch {
-            # multi-gpu device node patch https://github.com/NixOS/nixpkgs/pull/170695
-            url = "https://github.com/NixOS/nixpkgs/compare/4d7bc6ccc0167df08cf6ee3ed58928199184c094.patch";
-            sha256 = "sha256-XDfMSKpzM3uGnszeeecQqUIrO6076zf3j7YKoL1DDbo==";
-          })
         ];
       defaultPkgsConfig = {
         inherit system;
