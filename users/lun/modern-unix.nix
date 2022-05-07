@@ -5,7 +5,6 @@
     bat
     lsd
     delta
-    dust
     duf
     fd
     ripgrep
