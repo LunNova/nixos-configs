@@ -57,7 +57,7 @@
               }];
             });
         });
-      lunLib = import ./lib { inherit (args) nixpkgs; };
+      lunLib = import ./lib { bootstrapLib = args.nixpkgs.lib; };
       system = "x86_64-linux";
 
       pkgsPatches = let legacyPackages = nixpkgs.legacyPackages.${system}; in
@@ -97,23 +97,13 @@
         specialArgs =
           {
             inherit pkgs-stable;
+            flake-args = args;
             lun = args.self;
             nixos-hardware-modules-path = "${args.nixos-hardware}";
           };
 
         modules = [
           { nixpkgs.pkgs = pkgs; }
-          {
-            # pin system nixpkgs to the same version as the flake input
-            # (don't see a way to declaratively set channels but this seems to work fine?)
-            # TODO try https://github.com/tejing1/nixos-config/blob/df7f087c1ec0183422df22398d9b06c523adae84/nixosConfigurations/tejingdesk/registry.nix#L26-L28 approach
-            nix.registry.pkgs.flake = lunLib.relock.nixpkgs-unfree-relocked pkgs args.nixpkgs;
-            nix.registry.nixpkgs.flake = nixpkgs;
-            environment.etc."nix/path/nixpkgs".source = nixpkgs;
-            environment.etc."nix/path/pkgs".source = lunLib.relock.nixpkgs-unfree-relocked pkgs args.nixpkgs;
-            nix.nixPath = [ "/etc/nix/path" ];
-            system.configurationRevision = lib.mkIf (args.self ? rev) args.self.rev; # set configurationRevision if available
-          }
           home-manager.nixosModules.home-manager
           nix-gaming.nixosModules.pipewireLowLatency
           path
@@ -139,7 +129,11 @@
     {
       inherit args;
 
+      inputs = args;
+
       inherit pkgs;
+
+      lib = lunLib;
 
       packages."${system}" = lib.filterAttrs (k: lib.isDerivation) localPackages;
 

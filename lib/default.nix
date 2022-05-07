@@ -1,7 +1,8 @@
-{ nixpkgs, ... }:
+{ bootstrapLib, ... }:
 let
-  inherit (nixpkgs) lib;
-  self = (import ./relock.nix self) //
+  lib = bootstrapLib;
+  self =
+    (import ./mkFlake.nix { inherit self bootstrapLib; }) //
     {
       recursiveMerge =
         let f = attrPath:
