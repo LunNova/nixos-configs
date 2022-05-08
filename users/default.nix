@@ -1,6 +1,22 @@
 # https://github.com/MatthewCroughan/nixcfg/blob/d577d164eadc777b91db423e59b4ae8b26853fc6/users/default.nix
 { config, lib, pkgs, pkgs-stable, ... }:
-let cfg = config.my.home-manager; in
+let
+  cfg = config.my.home-manager;
+
+  # TODO: are these sensible
+  adminGroups = [
+    "wheel" # Enable ‘sudo’ for the user.
+    "plugdev" # openrazer requires this
+    "openrazer"
+    "docker"
+    "video"
+    "audio"
+
+    # printing
+    "scanner"
+    "lp"
+  ];
+in
 {
   options.my.home-manager.enabled-users = with lib; mkOption {
     type = with types; listOf string;
@@ -26,18 +42,20 @@ let cfg = config.my.home-manager; in
         # Change after install
         initialPassword = "nix-placeholder";
         # TODO: are these sensible
-        extraGroups = [
-          "wheel" # Enable ‘sudo’ for the user.
-          "plugdev" # openrazer requires this
-          "openrazer"
-          "docker"
-          "video"
-          "audio"
+        extraGroups = adminGroups;
+      };
+    })
+    (lib.mkIf (builtins.elem "mmk" cfg.enabled-users) {
+      home-manager.users = {
+        lun = ./mmk;
+      };
 
-          # printing
-          "scanner"
-          "lp"
-        ];
+      users.users.mmk = {
+        isNormalUser = true;
+        shell = pkgs.fish;
+        # Change after install
+        initialPassword = "nix-placeholder";
+        extraGroups = adminGroups;
       };
     })
   ];

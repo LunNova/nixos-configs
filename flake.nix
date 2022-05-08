@@ -82,7 +82,7 @@
 
       pkgs = lunLib.mkPkgs args.nixpkgs system pkgsPatches defaultPkgsConfig;
       pkgs-stable = lunLib.mkPkgs args.nixpkgs-stable system [ ] defaultPkgsConfig;
-      readModules = path: builtins.map (x: path + "/${x}") (builtins.attrNames (builtins.readDir path));
+      readModules = path: builtins.map (x: path + "/${x}") (builtins.filter (str: (builtins.match "^[^.]*(\.nix)?$" str) != null) (builtins.attrNames (builtins.readDir path)));
       readExportedModules = path: lib.mapAttrs'
         (key: value:
           lib.nameValuePair
@@ -172,9 +172,8 @@
 
       assets = import ./assets;
 
-      homeConfigurations = {
-        lun =
-          let username = "lun"; in
+      homeConfigurations =
+        let makeUser = username:
           import "${home-manager}/modules" {
             inherit pkgs;
             check = true;
@@ -190,8 +189,11 @@
               home.homeDirectory = "/home/${username}";
               home.username = "${username}";
             };
-          };
-      };
+          }; in
+        {
+          lun = makeUser "lun";
+          mmk = makeUser "mmk";
+        };
 
       checks."${system}" = {
         pre-commit-check = pre-commit-hooks.lib.${system}.run {
