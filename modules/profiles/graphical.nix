@@ -42,6 +42,5 @@
     programs.dconf.enable = true;
 
     sconfig.yubikey = true; # modules/yubikey
-    sconfig.input-remapper = true; # modules/input-remapper
   };
 }
