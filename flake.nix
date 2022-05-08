@@ -167,7 +167,7 @@
       nixosConfigurations = {
         lun-kosame-nixos = makeHost pkgs ./hosts/kosame;
         lun-hisame-nixos = makeHost pkgs ./hosts/hisame;
-        # basicTest = makeHost pkgs-stable {};
+        mmk-raikiri-nixos = makeHost pkgs ./hosts/raikiri;
       };
 
       assets = import ./assets;
