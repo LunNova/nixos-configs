@@ -28,6 +28,7 @@ in
     hardware.cpu.amd.updateMicrocode = true;
 
     users.mutableUsers = false;
+    my.home-manager.enabled-users = [ "lun" "mmk" ];
 
     lun.persistence.enable = true;
     fileSystems = {

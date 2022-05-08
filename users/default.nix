@@ -47,7 +47,7 @@ in
     })
     (lib.mkIf (builtins.elem "mmk" cfg.enabled-users) {
       home-manager.users = {
-        lun = ./mmk;
+        mmk = ./mmk;
       };
 
       users.users.mmk = {
