@@ -10,3 +10,6 @@ Custom built desktop, AMD CPU and GPU.
 
 HP t740 thin client with SFP+ PCIE NIC for 10gbps networking
 
+## raikiri
+
+NZXT desktop with AMD CPU and nvidia GPU, used for ML
