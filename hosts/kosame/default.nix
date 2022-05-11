@@ -94,7 +94,7 @@ in
   sconfig.machineId = "0715dc6a95b3419e8e2465240b7e598b";
   system.stateVersion = "21.05";
   boot.cleanTmpDir = true;
-  boot.kernelPackages = lib.mkForce pkgs.linuxPackages_xanmod;
+  boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
 
 
   systemd.sleep.extraConfig = ''
@@ -135,7 +135,9 @@ in
   boot.kernelParams = [
     "mitigations=off"
     "mem_sleep_default=deep" # S3 by default
+    "initcall_blacklist=acpi_cpufreq_init" # use amd_pstate instead
   ];
+  boot.initrd.kernelModules = [ "amd_pstate" ];
   # Enables S3 by replacing ACPI DSDT table with one which reports it
   boot.initrd.prepend = [ "${./acpi_override}" ];
 
