@@ -23,16 +23,6 @@ let
 in
 {
   inherit powercord xdg-open-with-portal;
-  discord-electron-update = pkgs.callPackage ./discord-electron-update rec {
-    ffmpeg = pkgs.ffmpeg-full;
-    electron = pkgs.electron_15;
-    inherit (pkgs.discord-canary) src;
-    inherit (pkgs.discord-canary) version;
-    inherit (pkgs.discord-canary) meta;
-    pname = "discord-canary";
-    binaryName = "DiscordCanary";
-    desktopName = "Discord Canary";
-  };
   discord-plugged = pkgs.callPackage ./discord-plugged {
     inherit powercord;
     inherit (flake-args) powercord-overlay;
