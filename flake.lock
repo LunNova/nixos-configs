@@ -2,11 +2,11 @@
   "nodes": {
     "flake-utils": {
       "locked": {
-        "lastModified": 1649676176,
-        "narHash": "sha256-OWKJratjt2RW151VUlJPRALb7OU2S5s+f0vLj4o1bHM=",
+        "lastModified": 1652372896,
+        "narHash": "sha256-lURGussfF3mGrFPQT3zgW7+RC0pBhbHzco0C7I+ilow=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "a4b154ebbdc88c8498a5c7b01589addc9e9cb678",
+        "rev": "0d347c56f6f41de822a4f4c7ff5072f3382db121",
         "type": "github"
       },
       "original": {
@@ -105,11 +105,11 @@
     },
     "nixpkgs-stable": {
       "locked": {
-        "lastModified": 1652298859,
-        "narHash": "sha256-hcwRboK+NxMWUJh0fQ3VsocDcAHrYJ95FmPEHlddV0Y=",
+        "lastModified": 1652364845,
+        "narHash": "sha256-1pG2GR+z7IrUVGcMoTsH6nJ+ACMvBplo/Pyw4SXJDIE=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "051448e41537c3463ae776d46115d01afb6c498d",
+        "rev": "ee80943d4d1160f460e3d719222212dbfbc6a193",
         "type": "github"
       },
       "original": {
@@ -138,11 +138,11 @@
     "pcp-theme-toggler": {
       "flake": false,
       "locked": {
-        "lastModified": 1636501799,
-        "narHash": "sha256-wq1x1rNBkcTuATDbR9yLykUmMRGGRPg6fDfPxl4qE2Q=",
+        "lastModified": 1652316667,
+        "narHash": "sha256-zEaHdOsa3WZODXA1L67meQbWh7YB4Tfl7+WKBI2qDd4=",
         "owner": "redstonekasi",
         "repo": "theme-toggler",
-        "rev": "c8063b35ec9d42064d36845950a53cd6e2099458",
+        "rev": "85b8bccb0b6eaf82180113b89f44bdeb44516cb3",
         "type": "github"
       },
       "original": {
