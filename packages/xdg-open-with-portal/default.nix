@@ -23,7 +23,7 @@ writeShellScriptBin "xdg-open" ''
       --method org.freedesktop.portal.OpenURI.OpenFile \
       --timeout 5 \
       "" "9999" {}
-      exec 9999>&-
+      exec 9999>&- || true
   else
     if ! echo "$targetFile" | grep -q '://'; then
       targetFile="https://$targetFile"
