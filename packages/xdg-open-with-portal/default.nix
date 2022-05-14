@@ -12,16 +12,18 @@ writeShellScriptBin "xdg-open" ''
 
   targetFile=$1
 
-  >&2 echo "xdg-open workaround: using org.freedesktop.portal to open $targetFile"
+  # Some programs run xdg-open with no stderr available so || true is needed
+  >&2 echo "xdg-open workaround: using org.freedesktop.portal to open $targetFile" || true
 
   if [ -e "$targetFile" ]; then
-    exec 3< "$targetFile"
+    exec 9999< "$targetFile"
     ${glib}/bin/gdbus call --session \
       --dest org.freedesktop.portal.Desktop \
       --object-path /org/freedesktop/portal/desktop \
       --method org.freedesktop.portal.OpenURI.OpenFile \
       --timeout 5 \
-      "" "3" {}
+      "" "9999" {}
+      exec 9999>&-
   else
     if ! echo "$targetFile" | grep -q '://'; then
       targetFile="https://$targetFile"
