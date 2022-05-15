@@ -138,6 +138,8 @@
       packages."${system}" = lib.filterAttrs (k: lib.isDerivation) localPackages;
 
       overlay = final: prev:
+        let localPackages = localPackagesForPkgs final;
+        in
         {
           lun = localPackages;
           powercord-plugins = lunLib.filterPrefix "pcp-" args;
