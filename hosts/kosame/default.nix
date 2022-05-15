@@ -56,6 +56,21 @@ in
   #   };
   # };
 
+  # Use latest nvidia package always
+  hardware.nvidia.package =
+    let nPkgs = config.boot.kernelPackages.nvidiaPackages;
+    in
+    lib.mkForce (if (lib.versionOlder nPkgs.beta.version nPkgs.stable.version) then nPkgs.stable else nPkgs.beta);
+
+  specialisation.nvidia-open.configuration = {
+    hardware.nvidia.open = lib.mkForce true;
+
+    boot.kernelParams = [
+      "nvidia.NVreg_RmMsg=\":\""
+      "nvidia.NVreg_OpenRmEnableUnsupportedGpus=1"
+    ];
+  };
+
   specialisation.low-power.configuration = {
     lun.amd-nvidia-laptop.enable = lib.mkForce false;
     boot.blacklistedKernelModules = [
