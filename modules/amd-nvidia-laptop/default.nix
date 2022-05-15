@@ -37,45 +37,13 @@ in
   config = lib.mkIf lcfg.enable {
     services.xserver.exportConfiguration = true; # Make it easier to look at current x conf in /etc/X11/
     services.xserver.videoDrivers = [ "nvidia" "amdgpu" ];
-    boot.initrd.kernelModules = [ "amdgpu" "nvidia" "nvidia_drm" "nvidia_modeset" ];
     boot.blacklistedKernelModules = [ "radeon" "nouveau" ];
 
-    # TODO: Remove after https://github.com/NixOS/nixpkgs/pull/153091
-    hardware.opengl = {
-      package = lib.mkForce pkgs.mesa.drivers;
-      package32 = lib.mkForce pkgs.pkgsi686Linux.mesa.drivers;
-      # Optionally add amdvlk - IME mesa works better
-      extraPackages = [
-        pkgs.libglvnd
-        (pkgs.hiPrio config.hardware.nvidia.package.out)
-      ];
-      extraPackages32 = [
-        pkgs.pkgsi686Linux.libglvnd
-        (pkgs.hiPrio config.hardware.nvidia.package.lib32)
-      ];
-    };
-
-    # TODO https://forums.developer.nvidia.com/t/bug-nvidia-v495-29-05-driver-spamming-dbus-enabled-applications-with-invalid-messages/192892/14
-    # apply patch for nvidia powerd issue?
-
     # https://wiki.archlinux.org/title/NVIDIA/Troubleshooting#Xorg_fails_during_boot,_but_otherwise_starts_fine
-    # TODO: no way to make this a glob? should match number of GPUs
-    # TODO: this is deprecated but works and isn't hw specific
+    # TODO: can we depend on all dev-dri-card*.devices showing up instead?
     systemd.services.display-manager.wants = [ "systemd-udev-settle.service" ];
     systemd.services.display-manager.after = [ "systemd-udev-settle.service" ];
     systemd.services.display-manager.serviceConfig.ExecStartPre = [ "/bin/sh -c 'sleep 3'" ];
-    # systemd.services.display-manager.after = [ "dev-dri-card0.device" "dev-dri-card1.device" ];
-    # systemd.services.display-manager.wants = [ "dev-dri-card0.device" "dev-dri-card1.device" ];
-    # services.udev.packages = [
-    #   (pkgs.writeTextFile {
-    #     name = "dri_device_udev";
-    #     text = ''
-    #       ACTION=="add", KERNEL=="card*", SUBSYSTEM=="drm", TAG+="systemd"
-    #     '';
-
-    #     destination = "/etc/udev/rules.d/99-systemd-dri-devices.rules";
-    #   })
-    # ];
 
     services.xserver.displayManager.gdm.wayland = lib.mkForce false;
 
