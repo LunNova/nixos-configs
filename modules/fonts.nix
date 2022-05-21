@@ -9,6 +9,7 @@
       liberation_ttf
       carlito # Similar to MS Calibri
       ttf_bitstream_vera
+      vistafonts # Calibri, Cambria, Candara, Consolas, Constantia, Corbel
 
       # Japanese
       ipafont
