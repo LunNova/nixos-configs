@@ -124,6 +124,11 @@
     documentation.man.enable = false;
     documentation.nixos.enable = false;
 
+    # https://github.com/NixOS/nixpkgs/issues/133063
+    systemd.services.NetworkManager-wait-online = {
+      serviceConfig.ExecStart = [ "" "${pkgs.networkmanager}/bin/nm-online -q -t 5" ];
+    };
+
     # SYSTEM PACKAGES
     environment.systemPackages = with pkgs; [
       bash
