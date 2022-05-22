@@ -40,6 +40,11 @@ in
     users.mutableUsers = false;
 
     lun.persistence.enable = true;
+    lun.persistence.dirs = [
+      "/home"
+      "/var/log"
+      "/nix"
+    ];
     fileSystems = {
       "/" = {
         device = "tmpfs";
@@ -61,25 +66,6 @@ in
         fsType = "ext4";
         neededForBoot = true;
         options = [ "discard" "noatime" ];
-      };
-      "/nix" = {
-        device = "/persist/nix";
-        noCheck = true;
-        fsType = "none";
-        neededForBoot = true;
-        options = [ "bind" ];
-      };
-      "/home" = {
-        device = "/persist/home";
-        noCheck = true;
-        neededForBoot = true;
-        options = [ "bind" ];
-      };
-      "/var/log" = {
-        device = "/persist/var/log";
-        noCheck = true;
-        neededForBoot = true;
-        options = [ "bind" ];
       };
       "/tmp" = {
         fsType = "tmpfs";
