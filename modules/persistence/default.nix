@@ -6,25 +6,25 @@ let
   addCheckDesc = desc: elemType: check: lib.types.addCheck elemType check
     // { description = "${elemType.description} (with check: ${desc})"; };
   isNonEmpty = s: (builtins.match "[ \t\n]*" s) == null;
-  nonEmptyWithoutTrailingSlash = addCheckDesc "non-empty without trailing slash" lib.types.str
-    (s: isNonEmpty s && (builtins.match ".+/" s) == null);
+  absolutePathWithoutTrailingSlash = addCheckDesc "absolute path without trailing slash" lib.types.str
+    (s: isNonEmpty s && (builtins.match "/.+/" s) == null);
 in
 {
   options.lun.persistence = {
     enable = lib.mkEnableOption "Enable persistence module for tmpfs on root";
 
     persistPath = lib.mkOption {
-      type = nonEmptyWithoutTrailingSlash;
+      type = absolutePathWithoutTrailingSlash;
       default = "/persist";
     };
 
     files = lib.mkOption {
-      type = with lib.types; listOf nonEmptyWithoutTrailingSlash;
+      type = with lib.types; listOf absolutePathWithoutTrailingSlash;
       default = [ ];
     };
 
     dirs = lib.mkOption {
-      type = with lib.types; listOf nonEmptyWithoutTrailingSlash;
+      type = with lib.types; listOf absolutePathWithoutTrailingSlash;
       default = [ ];
     };
   };
