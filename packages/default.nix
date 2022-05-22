@@ -8,16 +8,12 @@ let
   }).overrideAttrs (old: {
     propagatedBuildInputs = old.propagatedBuildInputs ++ [ pkgs.wineWowPackages.fonts ];
   });
-  xdg-open-with-portal = pkgs.callPackage ./xdg-open-with-portal { };
   wrapScripts = path:
     let
       scripts = map (lib.removeSuffix ".sh") (builtins.attrNames (builtins.readDir path));
     in
     builtins.listToAttrs (map (x: lib.nameValuePair x (pkgs.writeScriptBin x (builtins.readFile "${path}/${x}.sh"))) scripts);
-  powercord = pkgs.callPackage ./powercord {
-    plugins = { };
-    themes = { };
-  };
+
   lun-scripts = wrapScripts ./lun-scripts;
   lun-scripts-path = pkgs.symlinkJoin { name = "lun-scripts"; paths = lib.attrValues lun-scripts; };
   self = {
@@ -26,7 +22,11 @@ let
       inherit (flake-args) powercord-overlay;
       inherit (pkgs) discord-canary;
     };
-    inherit powercord xdg-open-with-portal;
+    powercord = pkgs.callPackage ./powercord {
+      plugins = { };
+      themes = { };
+    };
+    xdg-open-with-portal = pkgs.callPackage ./xdg-open-with-portal { };
     discord-plugged-lun = self.discord-plugged.override {
       extraElectronArgs = "--ignore-gpu-blocklist --disable-features=UseOzonePlatform --enable-features=VaapiVideoDecoder --use-gl=desktop --enable-gpu-rasterization --enable-zero-copy --disable-smooth-scrolling";
       powercord = pkgs.lun.powercord.override {
