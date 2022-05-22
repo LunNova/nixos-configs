@@ -36,7 +36,7 @@ in
       builtins.map (path: "L+ \"${path}\" - - - - ${persistPath}${path}") escapedFiles;
 
     fileSystems =
-      let pathToFilesystem = name: { inherit name; value = { device = "${persistPath}/${name}"; noCheck = true; neededForBoot = true; options = [ "bind" ]; }; };
+      let pathToFilesystem = name: { inherit name; value = { device = "${persistPath}${name}"; noCheck = true; neededForBoot = true; options = [ "bind" ]; }; };
       in builtins.listToAttrs (builtins.map pathToFilesystem cfg.dirs);
   };
 }
