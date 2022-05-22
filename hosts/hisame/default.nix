@@ -17,7 +17,7 @@ in
       "quiet"
       "splash"
     ];
-    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_xanmod;
+    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_xanmod_latest;
 
     boot.initrd.kernelModules = [ "amdgpu" ];
     services.xserver.videoDrivers = [ "amdgpu" ];
