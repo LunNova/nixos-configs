@@ -4,9 +4,9 @@ permissions:
   contents: read
 on:
   push:
-    branches:
-      - main
-      - dev
+    # branches:
+    #   - main
+    #   - dev
     # Temporarily disabled as garnix seems to work well
     branches-ignore:
       - '**'
