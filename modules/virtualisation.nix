@@ -1,9 +1,16 @@
 { pkgs, ... }:
 {
   config = {
-    virtualisation.docker.enable = true;
+    virtualisation = {
+      podman = {
+        enable = true;
+        dockerCompat = true; # docker alias
+      };
+    };
+
     lun.persistence.dirs = [
       "/var/lib/docker"
+      "/var/lib/containers"
       "/var/lib/libvirt"
     ];
 
