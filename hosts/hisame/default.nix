@@ -39,6 +39,52 @@ in
 
     users.mutableUsers = false;
 
+    lun.home-assistant.enable = true;
+    lun.wg-netns = {
+      enable = true;
+
+      privateKey = "/persist/mullvad/priv.key";
+      peerPublicKey = "ctROwSybsU4cHsnGidKtbGYWRB2R17PFMMAqEHpsSm0=";
+      endpointAddr = "198.54.133.82:51820";
+      ip4 = "10.65.206.162/32";
+      ip6 = "fc00:bbbb:bbbb:bb01::2:cea1/128";
+
+      isolateServices = [ "transmission" ];
+      forwardPorts = [ 9091 ];
+
+      # dns = [ "10.64.0.1" ];
+    };
+
+    services.transmission = let downloadBase = "/persist/transmission"; in
+      {
+        enable = true;
+        # group = "nas";
+
+        settings = {
+          download-dir = "${downloadBase}/default";
+          incomplete-dir = "${downloadBase}/incomplete";
+
+          peer-port = 45982;
+
+          rpc-enabled = true;
+          rpc-port = 9091;
+          rpc-authentication-required = true;
+
+          rpc-username = "lun";
+          rpc-password = "nix-placeholder";
+
+          # Proxied behind nginx.
+          rpc-whitelist-enabled = false;
+          rpc-whitelist = "127.0.0.1";
+
+          verify-threads = 4;
+        };
+      };
+    networking.firewall = {
+      allowedTCPPorts = [ 45982 ];
+      allowedUDPPorts = [ 45982 ];
+    };
+
     lun.persistence.enable = true;
     lun.persistence.dirs = [
       "/home"
