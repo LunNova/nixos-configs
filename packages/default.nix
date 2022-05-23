@@ -18,7 +18,7 @@ let
   lun-scripts-path = pkgs.symlinkJoin { name = "lun-scripts"; paths = lib.attrValues lun-scripts; };
   self = {
     discord-plugged = pkgs.callPackage ./discord-plugged {
-      inherit powercord;
+      inherit (self) powercord;
       inherit (flake-args) powercord-overlay;
       inherit (pkgs) discord-canary;
     };
