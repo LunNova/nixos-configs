@@ -2,9 +2,10 @@
 
 Our initial attempts at using NixOS.
 
-- [Users](users/)
-- [Modules](modules/)
 - [Hosts](hosts/)
+- [Modules](modules/)
+- [Packages](packages/)
+- [Users](users/)
 
 # Fresh install
 
