@@ -92,6 +92,7 @@
     nix.settings.allowed-users = [ "@users" ];
     security = {
       sudo.execWheelOnly = true;
+      doas.enable = true;
     };
     # https://github.com/NixOS/nixpkgs/blob/d6fe32c6b9059a054ca0cda9a2bb99753d1134df/nixos/modules/profiles/hardened.nix#L95
     boot.kernel.sysctl = with lib; {
