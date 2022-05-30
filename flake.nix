@@ -13,6 +13,8 @@
     nix-gaming.url = "github:fufexan/nix-gaming";
     nix-gaming.inputs.nixpkgs.follows = "nixpkgs";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    erosanix.url = "github:emmanuelrosa/erosanix";
+    erosanix.inputs.nixpkgs.follows = "nixpkgs";
 
     minimal-shell.url = "github:LunNova/nix-minimal-shell";
 
@@ -62,11 +64,11 @@
 
       pkgsPatches = let legacyPackages = nixpkgs.legacyPackages.${system}; in
         [
-          (legacyPackages.fetchpatch {
-            # steam fixes https://github.com/NixOS/nixpkgs/pull/157907/commits
-            url = "https://github.com/NixOS/nixpkgs/compare/d536e0a0eb54ea51c676869991fe5a1681cc6302.patch";
-            sha256 = "sha256-aKUt0iJp3TX3bzkxyWM/Pt61l9HnsnKGD2tX24H3dAA=";
-          })
+          # (legacyPackages.fetchpatch {
+          #   # steam fixes https://github.com/NixOS/nixpkgs/pull/157907/commits
+          #   url = "https://github.com/NixOS/nixpkgs/compare/d536e0a0eb54ea51c676869991fe5a1681cc6302.patch";
+          #   sha256 = "sha256-aKUt0iJp3TX3bzkxyWM/Pt61l9HnsnKGD2tX24H3dAA=";
+          # })
           (legacyPackages.fetchpatch {
             # nvidia-open https://github.com/NixOS/nixpkgs/pull/172660/commits
             url = "https://github.com/NixOS/nixpkgs/compare/1c998b94d04e5d45845050b2d32fd21c3428523e.patch";
@@ -115,6 +117,9 @@
           ./users
           {
             config = {
+              home-manager.extraSpecialArgs = {
+                lun = args.self;
+              };
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
             };

@@ -6,6 +6,7 @@
     ./syncthing.nix
     ./xdg-mime-apps.nix
     ./modern-unix.nix
+    ./music.nix
     ./sway
     ./shells/default.nix
     ./on-nixos/default.nix
