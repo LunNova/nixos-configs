@@ -6,9 +6,9 @@
 , makeBinaryWrapper
 , writeShellScript
 }:
-let extractCmd = makeBinaryWrapper.extractCmd or writeShellScript "extract-binary-wrapper-cmd" ''
+let extractCmd = makeBinaryWrapper.extractCmd or (writeShellScript "extract-binary-wrapper-cmd" ''
   strings -dw "$1" | sed -n '/^makeCWrapper/,/^$/ p'
-''; in
+''); in
 symlinkJoin {
   name = "discord-plugged";
   paths = [ discord-canary.out ];
