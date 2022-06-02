@@ -42,6 +42,7 @@ let
     spawn = pkgs.callPackage ./spawn { };
     swaysome = pkgs.callPackage ./swaysome { };
     sworkstyle = pkgs.callPackage ./sworkstyle { };
+    memtest86plus = pkgs.callPackage ./memtest86plus { };
     lun = pkgs.writeShellScriptBin "lun" ''
       exec "${lun-scripts-path}/bin/$1" "''${@:1}"
     '';
