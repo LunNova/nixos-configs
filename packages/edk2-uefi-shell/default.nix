@@ -1,8 +1,13 @@
-{ edk2, ... }:
-(pkgs.edk2.mkDerivation "ShellPkg/ShellPkg.dsc" {
+{ edk2
+, util-linux
+, nasm
+, python3
+, ...
+}:
+(edk2.mkDerivation "ShellPkg/ShellPkg.dsc" {
   pname = "edk2-uefi-shell";
-  inherit (pkgs.edk2) version;
-  nativeBuildInputs = with pkgs; [ util-linux nasm python3 ];
+  inherit (edk2) version;
+  nativeBuildInputs = [ util-linux nasm python3 ];
   noAuditTmpdir = true;
   strictDeps = true;
   dontPatchELF = true;
