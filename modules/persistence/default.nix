@@ -30,6 +30,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    lun.persistence.dirs = [
+      "/nix"
+      "/var/log"
+    ];
+
     systemd.tmpfiles.rules =
       let escapedFiles = builtins.map (lib.escape [ "\"" "\\" ]) cfg.files;
       in
