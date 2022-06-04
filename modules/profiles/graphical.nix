@@ -38,6 +38,7 @@
     hardware.bluetooth.enable = true;
 
     # BLUETOOTH
+    lun.persistence.dirs = [ "/var/lib/bluetooth" ];
     services.blueman.enable = true;
     programs.dconf.enable = true;
 
