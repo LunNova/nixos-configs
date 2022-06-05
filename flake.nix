@@ -71,8 +71,8 @@
           # })
           (legacyPackages.fetchpatch {
             # nvidia-open https://github.com/NixOS/nixpkgs/pull/172660/commits
-            url = "https://github.com/NixOS/nixpkgs/compare/1c998b94d04e5d45845050b2d32fd21c3428523e.patch";
-            sha256 = "sha256-MVue3WujdwReMU/u3MSMjis7dipRhsPi9bhv8PKGtL0=";
+            url = "https://github.com/NixOS/nixpkgs/compare/6959d265b8c9cca53a9f5dafd435afec242d2c62.patch";
+            sha256 = "sha256-s+/NgbfCwHnmtfDT0bvW8r74CoQbSloB1c4rozXE1Wk";
           })
         ];
       defaultPkgsConfig = {
