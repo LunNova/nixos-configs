@@ -26,7 +26,7 @@
       font-awesome_5
       dejavu_fonts
       source-code-pro
-      iosevka
+      iosevka-bin
 
       # Emoji
       twitter-color-emoji
