@@ -7,6 +7,9 @@ let cfg = config.lun.home-assistant; in
   config = lib.mkIf cfg.enable {
     lun.persistence.dirs = [ "/var/lib/home-assistant" ];
 
+    systemd.services.podman.after = [ "NetworkManager-wait-online.service" ];
+    systemd.services.podman.wants = [ "NetworkManager-wait-online.service" ];
+
     virtualisation.oci-containers = {
       backend = "podman";
       containers.homeassistant = {
@@ -16,6 +19,14 @@ let cfg = config.lun.home-assistant; in
         extraOptions = [
           "--network=host"
           "--device=/dev/ttyUSB0:/dev/ttyUSB0"
+        ];
+        # this is a bodge to ensure pyemvue is in the container
+        # but I don't want to have to host my own ha container builds somewhere
+        # and it's good enough for now
+        entrypoint = "/bin/bash";
+        cmd = [
+          "-c"
+          "set -e; sleep 1; /usr/local/bin/pip3 install 'pyemvue==0.15.*'; exec /init"
         ];
       };
       containers.homeassistant-zwave = {
