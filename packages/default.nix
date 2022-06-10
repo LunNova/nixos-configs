@@ -8,11 +8,23 @@ let
   }).overrideAttrs (old: {
     propagatedBuildInputs = old.propagatedBuildInputs ++ [ pkgs.wineWowPackages.fonts ];
   });
+  resholvCfg = {
+    inputs = with pkgs; [ coreutils bash borgbackup ];
+    interpreter = "${pkgs.bash}/bin/bash";
+    execer = [
+      /*
+        This is the same verdict binlore will
+        come up with. It's a no-op just to demo
+        how to fiddle lore via the Nix API.
+      */
+      "cannot:${pkgs.borgbackup}/bin/borg"
+    ];
+  };
   wrapScripts = path:
     let
       scripts = map (lib.removeSuffix ".sh") (builtins.attrNames (builtins.readDir path));
     in
-    builtins.listToAttrs (map (x: lib.nameValuePair x (pkgs.writeScriptBin x (builtins.readFile "${path}/${x}.sh"))) scripts);
+    builtins.listToAttrs (map (x: lib.nameValuePair x (pkgs.resholve.writeScriptBin x resholvCfg (builtins.readFile "${path}/${x}.sh"))) scripts);
 
   lun-scripts = wrapScripts ./lun-scripts;
   lun-scripts-path = pkgs.symlinkJoin { name = "lun-scripts"; paths = lib.attrValues lun-scripts; };
@@ -45,7 +57,7 @@ let
     memtest86plus = pkgs.callPackage ./memtest86plus { };
     edk2-uefi-shell = pkgs.callPackage ./edk2-uefi-shell { };
     lun = pkgs.writeShellScriptBin "lun" ''
-      exec "${lun-scripts-path}/bin/$1" "''${@:1}"
+      exec "${lun-scripts-path}/bin/$1" "''${@:2}"
     '';
   };
 in
