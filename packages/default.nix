@@ -12,11 +12,6 @@ let
     inputs = with pkgs; [ coreutils bash borgbackup ];
     interpreter = "${pkgs.bash}/bin/bash";
     execer = [
-      /*
-        This is the same verdict binlore will
-        come up with. It's a no-op just to demo
-        how to fiddle lore via the Nix API.
-      */
       "cannot:${pkgs.borgbackup}/bin/borg"
     ];
   };
