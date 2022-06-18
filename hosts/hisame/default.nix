@@ -95,6 +95,15 @@ in
       "/var/log"
       "/nix"
     ];
+    users.users.${config.services.borgbackup.repos.uknas.user}.home = "/home/borg";
+    services.borgbackup.repos = {
+      uknas = {
+        authorizedKeys = [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC46P3Z/EfSiZJ7xtvHWJFWDBfRH76F9EeDsqbNdTgtl1UxlmckzpCKJgZuiCq4HBQQS2D6sFHq/iVGT5mdq+SQOLZMns3gxH+wedW+XgSGScK35GV7eJjK2EASYzGWEdC/6fhARBpsMcE1cGmLckTeuRHoVGhTig/rOxXCPTPYMaTTLszPkw2D04qut4WD8IuKJegClerbyW2MV4kZdP/kIVg7gGB+jivTTtQsubgSdjw5xLS9OTK0X11f7LSpn6CqC03etnTJUe62D5j5dBLtFT55KLIDGPr86oeFnKF7/ykVSAlhmCly19eJGpG3TqZZaHrqBBtQ9iRsvgavmGiz uknas"
+        ];
+        path = "/mnt/_nas0/borg/uknas";
+      };
+    };
     fileSystems = {
       "/" = {
         device = "tmpfs";
