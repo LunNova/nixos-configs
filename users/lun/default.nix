@@ -52,6 +52,9 @@
 
   programs.git = {
     enable = true;
+    lfs = {
+      enable = true;
+    };
     userName = "Luna Nova";
     userEmail = "git@lunnova.dev";
     extraConfig = {
