@@ -2,6 +2,7 @@
 let
   name = "hisame";
   swap = "/dev/disk/by-partlabel/_swap";
+  btrfsOpts = [ "rw" "noatime" ];
 in
 {
   imports = [
@@ -119,6 +120,12 @@ in
         device = "tmpfs";
         neededForBoot = true;
         options = [ "mode=1777" "rw" "nosuid" "nodev" "size=32G" ];
+      };
+      "/mnt/_nas0" = {
+        fsType = "btrfs";
+        device = "/dev/disk/by-partlabel/_nas0";
+        neededForBoot = false;
+        options = btrfsOpts;
       };
     };
     swapDevices = [{
