@@ -69,11 +69,6 @@
           #   url = "https://github.com/NixOS/nixpkgs/compare/d536e0a0eb54ea51c676869991fe5a1681cc6302.patch";
           #   sha256 = "sha256-aKUt0iJp3TX3bzkxyWM/Pt61l9HnsnKGD2tX24H3dAA=";
           # })
-          (legacyPackages.fetchpatch {
-            # nvidia-open https://github.com/NixOS/nixpkgs/pull/172660/commits
-            url = "https://github.com/NixOS/nixpkgs/compare/6959d265b8c9cca53a9f5dafd435afec242d2c62.patch";
-            sha256 = "sha256-s+/NgbfCwHnmtfDT0bvW8r74CoQbSloB1c4rozXE1Wk";
-          })
         ];
       defaultPkgsConfig = {
         inherit system;
@@ -185,23 +180,25 @@
       assets = import ./assets;
 
       homeConfigurations =
-        let makeUser = username:
-          import "${home-manager}/modules" {
-            inherit pkgs;
-            check = true;
-            extraSpecialArgs = {
-              inherit pkgs-stable;
-              nixosConfig = null;
-              lun = args.self;
+        let
+          makeUser = username:
+            import "${home-manager}/modules" {
+              inherit pkgs;
+              check = true;
+              extraSpecialArgs = {
+                inherit pkgs-stable;
+                nixosConfig = null;
+                lun = args.self;
+              };
+              configuration = {
+                _module.args.pkgs = lib.mkForce pkgs;
+                _module.args.pkgs_i686 = lib.mkForce { };
+                imports = [ "${./users}/${username}" ];
+                home.homeDirectory = "/home/${username}";
+                home.username = "${username}";
+              };
             };
-            configuration = {
-              _module.args.pkgs = lib.mkForce pkgs;
-              _module.args.pkgs_i686 = lib.mkForce { };
-              imports = [ "${./users}/${username}" ];
-              home.homeDirectory = "/home/${username}";
-              home.username = "${username}";
-            };
-          }; in
+        in
         {
           lun = makeUser "lun";
           mmk = makeUser "mmk";
