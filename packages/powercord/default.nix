@@ -4,12 +4,13 @@
 , plugins ? { }
 , themes ? { }
 }:
-let unwrapped = powercord-unwrapped.overrideAttrs (old: {
-  patches = old.patches ++ [
-    ./disable-back-handling.js.patch
-    # ./force-new-backend.js.patch
-  ];
-});
+let
+  unwrapped = powercord-unwrapped.overrideAttrs (old: {
+    patches = old.patches ++ [
+      ./disable-back-handling.js.patch
+      # ./force-new-backend.js.patch
+    ];
+  });
 in
 stdenvNoCC.mkDerivation {
   name = "powercord";
