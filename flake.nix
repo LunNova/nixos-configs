@@ -77,6 +77,19 @@
           # (final: prev: {
           #   some-package = ...
           # })
+          (final: prev: {
+            flatbuffers = prev.flatbuffers.overrideAttrs (old: {
+              version = "2.0.6";
+              src = final.fetchFromGitHub {
+                owner = "google";
+                repo = "flatbuffers";
+                rev = "v2.0.6";
+                hash = "sha256-0bJ0n/5yzj6lHXLKJzHUS0Bnlmys+X7pY/3LGapVh6k=";
+              };
+              patches = [ ];
+              doCheck = false;
+            });
+          })
           self.overlay
           powercord-overlay.overlay
         ];

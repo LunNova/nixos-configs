@@ -54,6 +54,8 @@ let
     lun = pkgs.writeShellScriptBin "lun" ''
       exec "${lun-scripts-path}/bin/$1" "''${@:2}"
     '';
+    stardust-xr = pkgs.callPackage ./stardust-xr { };
+    stardust-xr-rs = pkgs.callPackage ./stardust-xr-rs { };
   };
 in
 self
