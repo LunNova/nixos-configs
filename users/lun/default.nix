@@ -7,6 +7,7 @@
     ./xdg-mime-apps.nix
     ./modern-unix.nix
     ./music.nix
+    ./cad
     ./sway
     ./shells/default.nix
     ./on-nixos/default.nix
