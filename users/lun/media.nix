@@ -1,6 +1,8 @@
 { pkgs, ... }:
 {
-  home.packages = [
-    pkgs.smplayer
+  home.packages = with pkgs; [
+    smplayer
+    vlc
+    mpv
   ];
 }
