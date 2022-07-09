@@ -6,11 +6,9 @@ core.std.LoadPlugin("@svpflow@libsvpflow2_vs64.so")
 
 clip = video_in
 
-# FIXME: gpu 0 as rocm issues on amd
-
-super_params     = "{scale:{up:0},gpu:0,rc:true}"
+super_params     = "{scale:{up:0},gpu:1,rc:true}"
 analyse_params   = "{block:{w:32},main:{search:{coarse:{type:2,distance:-6,bad:{sad:2000,range:24}},type:2}},refine:[{thsad:250}]}"
-smoothfps_params = "{gpuid:11,gpu_qn:2,rate:{num:100,den:1,abs:true},algo:2,mask:{area:50},scene:{}}" # light:{aspect:2.389,lights:29,border:107,length:187,cell:5}
+smoothfps_params = "{gpu_qn:2,rate:{num:100,den:1,abs:true},algo:2,mask:{area:50},scene:{}}" # light:{aspect:2.389,lights:29,border:107,length:187,cell:5}
 
 src_fps     = container_fps if container_fps>0.1 else 29.97
 demo_mode   = 0
