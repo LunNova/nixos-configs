@@ -54,6 +54,7 @@ let
     lun = pkgs.writeShellScriptBin "lun" ''
       exec "${lun-scripts-path}/bin/$1" "''${@:2}"
     '';
+    svpflow = pkgs.callPackage ./svpflow { };
   };
 in
 self
