@@ -83,7 +83,7 @@
 
   programs.firefox = {
     enable = true;
-    package = pkgs-stable.firefox-bin;
+    package = pkgs.firefox;
   };
 
   programs.vscode = {
