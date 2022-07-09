@@ -29,6 +29,7 @@
     ark
     unar
     p7zip
+    discord
   ];
 
   programs.firefox = {
