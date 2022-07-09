@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let
   cfg = config.lun.ml;
-  virtualisation = config.virtualisation.docker.enable;
+  virtualisation = config.virtualisation.podman.enable or config.virtualisation.docker.enable;
   nvidia = builtins.elem "nvidia" cfg.gpus;
   amd = builtins.elem "amd" cfg.gpus;
 in
@@ -18,6 +18,7 @@ in
   config = lib.mkIf cfg.enable (lib.mkMerge [
     (lib.mkIf (virtualisation && nvidia) {
       virtualisation.docker.enableNvidia = true;
+      virtualisation.podman.enableNvidia = true;
       # https://github.com/NixOS/nixpkgs/issues/127146
       systemd.enableUnifiedCgroupHierarchy = false;
     })
