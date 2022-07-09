@@ -167,6 +167,7 @@
               inherit (prev.plasma5Packages.plasma5) plasma-workspace;
             });
           });
+          # TODO: can we get disman and kdisplay included just with this toggle
         });
 
       nixosModules = readExportedModules ./modules/exported;

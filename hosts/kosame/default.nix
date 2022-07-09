@@ -122,11 +122,7 @@ in
   environment.systemPackages = with pkgs; [
     prime-run
     glxinfo
-  ] ++ (lib.optionals (pkgs.plasma5Packages.plasma5.kwin == pkgs.kwinft.kwin)
-    [
-      pkgs.kwinft.disman
-      pkgs.kwinft.kdisplay
-    ]);
+  ];
 
   lun.amd-nvidia-laptop = {
     enable = true;
