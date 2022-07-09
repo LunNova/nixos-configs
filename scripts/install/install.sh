@@ -4,7 +4,7 @@ set -xeuo pipefail
 HOSTNAME=
 BOOT_PARTITION=/dev/disk/by-partlabel/_esp
 PERSIST_PARTITION=/dev/disk/by-partlabel/"$HOSTNAME"_persist
-FLAKE=github:TransLunarInjection/nixos-configs/dev#$HOSTNAME
+FLAKE=github:LunNova/nixos-configs/dev#$HOSTNAME
 
 mount -t tmpfs none /mnt
 
