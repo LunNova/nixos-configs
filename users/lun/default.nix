@@ -83,7 +83,12 @@
 
   programs.firefox = {
     enable = true;
-    package = pkgs.firefox;
+    package = pkgs.firefox.overrideAttrs (old: {
+      postFixup = ''
+        ${old.postFixup or ""}
+        wrapProgram "$out/bin/firefox" --set GTK_USE_PORTAL 1
+      '';
+    });
   };
 
   programs.vscode = {
