@@ -28,11 +28,15 @@
     hardware.video.hidpi.enable = false;
 
     # LOGGING
+    # FIXME: I want 
+    # MaxLevelStore=5
+    # for old logs but not for logs from current session,
+    # is that possible?
+    # Otherwise if a service fails to start sometimes there are no useful logs
     services.journald.extraConfig = ''
       SystemMaxUse=500M
       MaxFileSec=1day
       MaxRetentionSec=1week
-      MaxLevelStore=5
     '';
 
     # NIX
