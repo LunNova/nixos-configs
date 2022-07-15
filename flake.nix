@@ -216,7 +216,10 @@
               files = "\\.sh$";
               types_or = lib.mkForce [ ];
             };
-            shfmt = { };
+            shfmt = {
+              enable = true;
+              files = "\\.sh$";
+            };
           };
         };
       };
