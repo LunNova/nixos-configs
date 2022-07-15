@@ -5,7 +5,6 @@
     wlr = {
       enable = true;
     };
-    gtkUsePortal = true;
   };
 
   programs.sway = {
