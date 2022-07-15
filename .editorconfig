@@ -10,3 +10,7 @@ charset = utf-8
 # Set default charset
 [*.nix]
 indent_size = 2
+
+# Match shfmt
+[*.sh]
+indent_style = tab

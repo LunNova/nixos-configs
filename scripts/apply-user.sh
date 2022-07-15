@@ -7,5 +7,3 @@ nix build .#homeManagerConfigurations.lun.activationPackage
 ./result/activate
 
 #home-manager switch -f lun-home.nix
-
-

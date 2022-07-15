@@ -4,7 +4,7 @@ id=${1,,}
 name="${id^}"
 
 if [ "$email" = "" ]; then
-    email="git-${name,,}@lunnova.dev"
+	email="git-${name,,}@lunnova.dev"
 fi
 
 export GIT_COMMITTER_NAME="$name"

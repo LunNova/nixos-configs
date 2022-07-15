@@ -4,9 +4,9 @@ set -e
 
 dryrun=
 if [ z"$1" = zdry ]; then
-  dryrun="echo"
+	dryrun="echo"
 else
-  set -x
+	set -x
 fi
 #can do raid1c3 or raid1c4 if using more drives
 type=raid1
@@ -17,11 +17,11 @@ subvolumes="main borg"
 $dryrun sync
 $dryrun udevadm settle
 for drive in $drives; do
-  $dryrun dd if=/dev/zero of="$drive" bs=4096 count=4096
-  $dryrun wipefs -a "$drive"
-  $dryrun parted "$drive" mklabel gpt
-  $dryrun parted -a optimal -- "$drive" mkpart $fsname btrfs 0% 100%
-  $dryrun parted "$drive" set 1 raid on
+	$dryrun dd if=/dev/zero of="$drive" bs=4096 count=4096
+	$dryrun wipefs -a "$drive"
+	$dryrun parted "$drive" mklabel gpt
+	$dryrun parted -a optimal -- "$drive" mkpart $fsname btrfs 0% 100%
+	$dryrun parted "$drive" set 1 raid on
 done
 $dryrun sync
 $dryrun udevadm settle
@@ -36,6 +36,6 @@ $dryrun udevadm settle
 $dryrun mkdir -p /mnt/$fsname
 $dryrun mount "$first" /mnt/$fsname
 for subvolume in $subvolumes; do
-  $dryrun btrfs subvolume create /mnt/$fsname/"$subvolume"
-  $dryrun btrfs property set /mnt/$fsname/"$subvolume" compression zstd
+	$dryrun btrfs subvolume create /mnt/$fsname/"$subvolume"
+	$dryrun btrfs property set /mnt/$fsname/"$subvolume" compression zstd
 done

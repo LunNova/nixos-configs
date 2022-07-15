@@ -13,9 +13,9 @@ rm tmp-system-build
 sudo nix-env -p "$profile" --set "$pathToConfig"
 
 if [[ -v 1 ]]; then
-  sudo "$pathToConfig/specialisation/$1/bin/switch-to-configuration" switch
+	sudo "$pathToConfig/specialisation/$1/bin/switch-to-configuration" switch
 else
-  sudo "$pathToConfig/bin/switch-to-configuration" switch
+	sudo "$pathToConfig/bin/switch-to-configuration" switch
 fi
 sudo "$pathToConfig/bin/switch-to-configuration" boot
 

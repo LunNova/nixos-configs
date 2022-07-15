@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
-if [[ ! -f /etc/NIXOS ]]; then echo "This script is only for nixos systems"; exit 1; fi
-if [[ $(id -u) -ne 0 ]]; then echo "Please run as root"; exit 1; fi
+if [[ ! -f /etc/NIXOS ]]; then
+	echo "This script is only for nixos systems"
+	exit 1
+fi
+if [[ $(id -u) -ne 0 ]]; then
+	echo "Please run as root"
+	exit 1
+fi
 
 set -xeuo pipefail
 
