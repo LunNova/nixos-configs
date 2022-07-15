@@ -136,7 +136,7 @@ in
         fsType = "btrfs";
         device = "/dev/disk/by-partlabel/_nas0";
         neededForBoot = false;
-        options = btrfsOpts;
+        options = btrfsOpts ++ [ "nofail" ];
       };
     };
     swapDevices = [{
