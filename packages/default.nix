@@ -9,7 +9,13 @@ let
     propagatedBuildInputs = old.propagatedBuildInputs ++ [ pkgs.wineWowPackages.fonts ];
   });
   resholvCfg = {
-    inputs = with pkgs; [ coreutils bash borgbackup ];
+    inputs = with pkgs; [
+      coreutils
+      bash
+      borgbackup
+      findutils
+      optipng
+    ];
     interpreter = "${pkgs.bash}/bin/bash";
     execer = [
       "cannot:${pkgs.borgbackup}/bin/borg"
