@@ -48,6 +48,8 @@ in
 
   lun.unifi.enable = true;
 
+  lun.amd-pstate.enable = false;
+
   # This always crashes so is off but want to debug later
   # specialisation.nvidia-offload.configuration = {
   #   lun.amd-nvidia-laptop = {
@@ -146,9 +148,8 @@ in
   boot.kernelParams = [
     "mitigations=off"
     "mem_sleep_default=deep" # S3 by default
-    "initcall_blacklist=acpi_cpufreq_init" # use amd_pstate instead
   ];
-  boot.initrd.kernelModules = [ "amd_pstate" ];
+
   # Enables S3 by replacing ACPI DSDT table with one which reports it
   boot.initrd.prepend = [ "${./acpi_override}" ];
 
