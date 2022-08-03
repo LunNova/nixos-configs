@@ -154,7 +154,8 @@ in
   ];
 
   # Enables S3 by replacing ACPI DSDT table with one which reports it
-  boot.initrd.prepend = [ "${./acpi_override}" ];
+  # boot.initrd.prepend = [ "${./acpi_override}" ];
+  # AMD form tool seems to make this unnecessary, turned off modern standby in AMD PBS
 
   # Used to set power profiles, should have support in asus-wmi https://asus-linux.org/blog/updates-2021-07-16/
   services.power-profiles-daemon.enable = true;
