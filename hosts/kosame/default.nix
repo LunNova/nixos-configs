@@ -46,8 +46,6 @@ in
       "${nixos-hardware-modules-path}/asus/battery.nix"
     ];
 
-  lun.unifi.enable = true;
-
   lun.amd-pstate.enable = false;
 
   # This always crashes so is off but want to debug later
