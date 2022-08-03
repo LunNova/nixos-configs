@@ -76,6 +76,7 @@ in
   specialisation.low-power.configuration = {
     lun.amd-nvidia-laptop.enable = lib.mkForce false;
     boot.blacklistedKernelModules = [
+      "i2c_nvidia_gpu"
       "radeon"
       "nouveau"
       "nvidia"
