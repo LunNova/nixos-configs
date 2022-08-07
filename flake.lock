@@ -157,6 +157,22 @@
         "type": "github"
       }
     },
+    "pcp-hidden": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1659288843,
+        "narHash": "sha256-R3UcOD6pq+nUZ4PaV/FNrwZXh3htsZuAv95nr41LLgk=",
+        "owner": "discord-modifications",
+        "repo": "show-hidden-channels",
+        "rev": "ed1d4d5847617fd3d93650edb2cbe9b9b30b349e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "discord-modifications",
+        "repo": "show-hidden-channels",
+        "type": "github"
+      }
+    },
     "pcp-webhook-tag": {
       "flake": false,
       "locked": {
@@ -176,11 +192,11 @@
     "pct-clearvision": {
       "flake": false,
       "locked": {
-        "lastModified": 1659810511,
-        "narHash": "sha256-xKJxUnIJ+Hd6gSIPjs6DAGJZXbs0OCe33BGyCg7xY/w=",
+        "lastModified": 1659913987,
+        "narHash": "sha256-j/EzEuxLLjlAkjBGYy2scLRepwBmJE4tILFLWwo/BTs=",
         "owner": "ClearVision",
         "repo": "ClearVision-v6",
-        "rev": "94eefbf6476c81f0a9b00fbfb56f42f3ce5f10b0",
+        "rev": "eca7f1709f5c8c2eb5cf5051e16e8bc6f325fce1",
         "type": "github"
       },
       "original": {
@@ -238,11 +254,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1659911868,
-        "narHash": "sha256-Fige8lnuMYL7+cZ0Q/PvoPvLZRWj4UX54vtLz5U+mn0=",
+        "lastModified": 1659914212,
+        "narHash": "sha256-eIBgpGRM1Mr9cythGmP/gUAon2o3H4L4x20gKOpa5j0=",
         "owner": "LunNova",
         "repo": "replugged-nix-flake",
-        "rev": "a926325737d8063aae66f6f99e7c34826bf4f704",
+        "rev": "4fc8de368e93807a2660aaaba7631c2c82240251",
         "type": "github"
       },
       "original": {
@@ -261,6 +277,7 @@
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "nixpkgs-stable": "nixpkgs-stable",
+        "pcp-hidden": "pcp-hidden",
         "pcp-webhook-tag": "pcp-webhook-tag",
         "pct-clearvision": "pct-clearvision",
         "pre-commit-hooks": "pre-commit-hooks",
