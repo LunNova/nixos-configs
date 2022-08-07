@@ -157,54 +157,6 @@
         "type": "github"
       }
     },
-    "pcp-better-status-indicators": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1657618921,
-        "narHash": "sha256-oaqfB2CkLVqQDrwx7hyAYx2EkQFHZomlNZ4VnhUaYoY=",
-        "owner": "GriefMoDz",
-        "repo": "better-status-indicators",
-        "rev": "7aa2d4a923312a8870f843ed092c4e2019fa842c",
-        "type": "github"
-      },
-      "original": {
-        "owner": "GriefMoDz",
-        "repo": "better-status-indicators",
-        "type": "github"
-      }
-    },
-    "pcp-theme-toggler": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1656407466,
-        "narHash": "sha256-bmrpWz6/rl08NQFBRZl0VnvkRWOVCjRZhxoSUyCUN/g=",
-        "owner": "redstonekasi",
-        "repo": "theme-toggler",
-        "rev": "4f2bacff43074f421017d0a37d5afb126459cb90",
-        "type": "github"
-      },
-      "original": {
-        "owner": "redstonekasi",
-        "repo": "theme-toggler",
-        "type": "github"
-      }
-    },
-    "pcp-tweaks": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1627600834,
-        "narHash": "sha256-xSzbP86w5OUy1ZO1iHgv1drbujtlPQAgJmLA3x7UOFc=",
-        "owner": "NurMarvin",
-        "repo": "discord-tweaks",
-        "rev": "bc28b090f9ed706d7f8271aeaa64bdcb886fd0ef",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NurMarvin",
-        "repo": "discord-tweaks",
-        "type": "github"
-      }
-    },
     "pcp-webhook-tag": {
       "flake": false,
       "locked": {
@@ -237,45 +189,6 @@
         "type": "github"
       }
     },
-    "powercord": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1658712501,
-        "narHash": "sha256-oApii3bNoJAmCDtELoo98XfDk4qHqjMRQJcIto2qbso=",
-        "owner": "powercord-org",
-        "repo": "powercord",
-        "rev": "bb30f25898f0ad3cae91fb43cc83b12247056e8e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "powercord-org",
-        "repo": "powercord",
-        "type": "github"
-      }
-    },
-    "powercord-overlay": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "powercord": [
-          "powercord"
-        ]
-      },
-      "locked": {
-        "lastModified": 1658797799,
-        "narHash": "sha256-7ed1Z3VS5pOqyIvH74qBDxeZzKpqgVRd/Q2uy5HuJ5k=",
-        "owner": "LavaDesu",
-        "repo": "powercord-overlay",
-        "rev": "fa79591467732d06723359c2e82230a69d3c47dd",
-        "type": "github"
-      },
-      "original": {
-        "owner": "LavaDesu",
-        "repo": "powercord-overlay",
-        "type": "github"
-      }
-    },
     "pre-commit-hooks": {
       "inputs": {
         "flake-utils": [
@@ -299,6 +212,45 @@
         "type": "github"
       }
     },
+    "replugged": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1659908106,
+        "narHash": "sha256-78C4TJTZw1Y+yYUv2a5yTo+LkECccwr5MtAevbpNgag=",
+        "owner": "replugged-org",
+        "repo": "replugged",
+        "rev": "86ae1cb86b064c7023a7ccf02c3c093d38ece564",
+        "type": "github"
+      },
+      "original": {
+        "owner": "replugged-org",
+        "repo": "replugged",
+        "type": "github"
+      }
+    },
+    "replugged-nix-flake": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "replugged": [
+          "replugged"
+        ]
+      },
+      "locked": {
+        "lastModified": 1659911868,
+        "narHash": "sha256-Fige8lnuMYL7+cZ0Q/PvoPvLZRWj4UX54vtLz5U+mn0=",
+        "owner": "LunNova",
+        "repo": "replugged-nix-flake",
+        "rev": "a926325737d8063aae66f6f99e7c34826bf4f704",
+        "type": "github"
+      },
+      "original": {
+        "owner": "LunNova",
+        "repo": "replugged-nix-flake",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "erosanix": "erosanix",
@@ -309,14 +261,11 @@
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "nixpkgs-stable": "nixpkgs-stable",
-        "pcp-better-status-indicators": "pcp-better-status-indicators",
-        "pcp-theme-toggler": "pcp-theme-toggler",
-        "pcp-tweaks": "pcp-tweaks",
         "pcp-webhook-tag": "pcp-webhook-tag",
         "pct-clearvision": "pct-clearvision",
-        "powercord": "powercord",
-        "powercord-overlay": "powercord-overlay",
-        "pre-commit-hooks": "pre-commit-hooks"
+        "pre-commit-hooks": "pre-commit-hooks",
+        "replugged": "replugged",
+        "replugged-nix-flake": "replugged-nix-flake"
       }
     },
     "utils": {

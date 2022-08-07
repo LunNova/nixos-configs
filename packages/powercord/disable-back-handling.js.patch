@@ -1,9 +1,0 @@
-diff -ur a/ b/
---- a/src/browserWindow.js      2021-09-27 18:51:11.900797800 -0700
-+++ b/src/browserWindow.js      2021-12-17 10:25:44.803464279 -0800
-@@ -64,3 +64,5 @@
-     win.webContents._powercordPreload = originalPreload;
-+    var oldOn = win.on;
-+    win.on = function(event, listener, args) { if (event === 'app-command') return; oldOn.apply(win, [event, listener, args]); };
-     return win;
-   }

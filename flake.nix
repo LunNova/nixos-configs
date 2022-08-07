@@ -19,17 +19,17 @@
     minimal-shell.url = "github:LunNova/nix-minimal-shell";
 
     # Powercord. pcp- and pct- prefix have meaning, cause inclusion as powercord plugin/theme
-    powercord = { url = "github:powercord-org/powercord"; flake = false; };
-    powercord-overlay = {
-      url = "github:LavaDesu/powercord-overlay";
+    replugged = { url = "github:replugged-org/replugged"; flake = false; };
+    replugged-nix-flake = {
+      url = "github:LunNova/replugged-nix-flake";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.powercord.follows = "powercord";
+      inputs.replugged.follows = "replugged";
     };
     # TODO: check for web access loading scripts and patch out
-    pcp-tweaks = { url = "github:NurMarvin/discord-tweaks"; flake = false; };
-    pcp-theme-toggler = { url = "github:redstonekasi/theme-toggler"; flake = false; };
+    # pcp-tweaks = { url = "github:NurMarvin/discord-tweaks"; flake = false; };
+    # pcp-theme-toggler = { url = "github:redstonekasi/theme-toggler"; flake = false; };
     #Doesn't work on electron 15
-    pcp-better-status-indicators = { url = "github:GriefMoDz/better-status-indicators"; flake = false; };
+    # pcp-better-status-indicators = { url = "github:GriefMoDz/better-status-indicators"; flake = false; };
     pcp-webhook-tag = { url = "github:BenSegal855/webhook-tag"; flake = false; };
     # TODO: locked version of this which doesn't hit web
     pct-clearvision = { url = "github:ClearVision/ClearVision-v6"; flake = false; };
@@ -42,7 +42,7 @@
     , home-manager
     , pre-commit-hooks
     , nix-gaming
-    , powercord-overlay
+    , replugged-nix-flake
     , ...
     }@args:
     let
@@ -77,7 +77,7 @@
           #   some-package = ...
           # })
           self.overlay
-          powercord-overlay.overlay
+          replugged-nix-flake.overlay
         ];
       };
 
@@ -113,6 +113,7 @@
             config = {
               home-manager.extraSpecialArgs = {
                 lun = args.self;
+                flake-args = args;
               };
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
@@ -189,6 +190,7 @@
                 inherit pkgs-stable;
                 nixosConfig = null;
                 lun = args.self;
+                flake-args = args;
               };
               configuration = {
                 _module.args.pkgs = lib.mkForce pkgs;

@@ -30,23 +30,7 @@ let
   lun-scripts = wrapScripts ./lun-scripts;
   lun-scripts-path = pkgs.symlinkJoin { name = "lun-scripts"; paths = lib.attrValues lun-scripts; };
   self = {
-    discord-plugged = pkgs.callPackage ./discord-plugged {
-      inherit (self) powercord;
-      inherit (flake-args) powercord-overlay;
-      inherit (pkgs) discord-canary;
-    };
-    powercord = pkgs.callPackage ./powercord {
-      plugins = { };
-      themes = { };
-    };
     xdg-open-with-portal = pkgs.callPackage ./xdg-open-with-portal { };
-    discord-plugged-lun = self.discord-plugged.override {
-      extraElectronArgs = "--ignore-gpu-blocklist --disable-features=UseOzonePlatform --enable-features=VaapiVideoDecoder --use-gl=desktop --enable-gpu-rasterization --enable-zero-copy --disable-smooth-scrolling";
-      powercord = pkgs.lun.powercord.override {
-        plugins = pkgs.powercord-plugins;
-        themes = pkgs.powercord-themes;
-      };
-    };
     kwinft = pkgs.lib.recurseIntoAttrs (pkgs.callPackage ./kwinft { });
     lutris = pkgs.lutris.override {
       inherit lutris-unwrapped;
