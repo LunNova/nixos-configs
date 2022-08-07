@@ -62,14 +62,15 @@ in
     in
     lib.mkForce (if (lib.versionOlder nPkgs.beta.version nPkgs.stable.version) then nPkgs.stable else nPkgs.beta);
 
-  specialisation.nvidia-open.configuration = {
-    hardware.nvidia.open = lib.mkForce true;
+  # TODO 2022-08-07 Marked broken
+  # specialisation.nvidia-open.configuration = {
+  #   hardware.nvidia.open = lib.mkForce true;
 
-    boot.kernelParams = [
-      "nvidia.NVreg_RmMsg=\":\""
-      "nvidia.NVreg_OpenRmEnableUnsupportedGpus=1"
-    ];
-  };
+  #   boot.kernelParams = [
+  #     "nvidia.NVreg_RmMsg=\":\""
+  #     "nvidia.NVreg_OpenRmEnableUnsupportedGpus=1"
+  #   ];
+  # };
 
   specialisation.low-power.configuration = {
     lun.amd-nvidia-laptop.enable = lib.mkForce false;
