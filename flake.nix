@@ -77,7 +77,6 @@
           #   some-package = ...
           # })
           self.overlay
-          replugged-nix-flake.overlay
         ];
       };
 
