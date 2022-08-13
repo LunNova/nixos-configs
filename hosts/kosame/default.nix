@@ -48,6 +48,17 @@ in
 
   lun.amd-pstate.enable = true;
 
+  # TODO: powersaving/laptop module?
+  services.udev.extraRules = ''
+    SUBSYSTEM=="pci", ATTR{power/control}="auto"
+    ACTION=="add", SUBSYSTEM=="usb", TEST=="power/control", ATTR{power/control}="auto"
+    ACTION=="add", SUBSYSTEM=="scsi_host", KERNEL=="host*", ATTR{link_power_management_policy}="med_power_with_dipm"
+    # Enable power save mode for Intel HDA
+    ACTION=="add", SUBSYSTEM=="module", DEVPATH=="/module/snd_hda_intel", \
+    RUN="${pkgs.bash}/bin/bash -c 'cd /sys/module/snd_hda_intel/parameters; \
+    echo 10 > power_save; echo Y > power_save_controller'"
+  '';
+
   # This always crashes so is off but want to debug later
   # specialisation.nvidia-offload.configuration = {
   #   lun.amd-nvidia-laptop = {
@@ -85,9 +96,6 @@ in
     ];
     services.xserver.videoDrivers = [ "amdgpu" ];
     boot.initrd.kernelModules = [ "amdgpu" ];
-    # Zephyrus G14: without it get 2h battery life idle, with like 6h idle
-    # runs powertop --auto-tune at boot
-    powerManagement.powertop.enable = true;
     services.udev.extraRules = ''
       #enable pci port kernel power management
       SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", ATTR{power/control}=="auto"
@@ -150,6 +158,9 @@ in
   boot.kernelParams = [
     "mitigations=off"
     "mem_sleep_default=deep" # S3 by default
+    # TODO: powersaving/laptop module?
+    "nmi_watchdog=0"
+    "nowatchdog"
   ];
 
   # Enables S3 by replacing ACPI DSDT table with one which reports it
