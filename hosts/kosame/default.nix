@@ -46,7 +46,7 @@ in
       "${nixos-hardware-modules-path}/asus/battery.nix"
     ];
 
-  lun.amd-pstate.enable = false;
+  lun.amd-pstate.enable = true;
 
   # This always crashes so is off but want to debug later
   # specialisation.nvidia-offload.configuration = {
