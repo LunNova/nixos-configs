@@ -157,22 +157,6 @@
         "type": "github"
       }
     },
-    "pcp-hidden": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1659288843,
-        "narHash": "sha256-R3UcOD6pq+nUZ4PaV/FNrwZXh3htsZuAv95nr41LLgk=",
-        "owner": "discord-modifications",
-        "repo": "show-hidden-channels",
-        "rev": "ed1d4d5847617fd3d93650edb2cbe9b9b30b349e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "discord-modifications",
-        "repo": "show-hidden-channels",
-        "type": "github"
-      }
-    },
     "pcp-webhook-tag": {
       "flake": false,
       "locked": {
@@ -277,7 +261,6 @@
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "nixpkgs-stable": "nixpkgs-stable",
-        "pcp-hidden": "pcp-hidden",
         "pcp-webhook-tag": "pcp-webhook-tag",
         "pct-clearvision": "pct-clearvision",
         "pre-commit-hooks": "pre-commit-hooks",
