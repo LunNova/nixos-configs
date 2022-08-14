@@ -33,6 +33,7 @@ in
     lun.persistence.dirs = [
       "/nix"
       "/var/log"
+      "/var/tmp"
     ];
 
     systemd.tmpfiles.rules =
