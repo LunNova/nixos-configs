@@ -4,7 +4,7 @@ set -xeuo pipefail
 cd "$(readlink -f "$(dirname "$(readlink -f "$0")")/..")"
 
 echo "Activating ${1:-toplevel}"
-nix build -o tmp-system-build ".#nixosConfigurations.$(hostname).config.system.build.toplevel"
+nix build -o tmp-system-build --keep-going ".#nixosConfigurations.$(hostname).config.system.build.toplevel"
 
 profile="/nix/var/nix/profiles/system"
 pathToConfig="$(readlink -f tmp-system-build)"
