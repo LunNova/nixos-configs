@@ -70,6 +70,7 @@
       init.defaultBranch = "main";
       rebase.autostash = true;
       pull.rebase = true;
+      push.autoSetupRemote = true;
       merge.tool = "vscode";
       diff.tool = "vscode";
       mergeTool = {
