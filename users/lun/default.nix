@@ -69,6 +69,7 @@
       fetch.prune = true;
       init.defaultBranch = "main";
       rebase.autostash = true;
+      rebase.autoSquash = true;
       pull.rebase = true;
       push.autoSetupRemote = true;
       merge.tool = "vscode";
