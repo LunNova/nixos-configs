@@ -31,6 +31,7 @@
     #Doesn't work on electron 15
     # pcp-better-status-indicators = { url = "github:GriefMoDz/better-status-indicators"; flake = false; };
     pcp-webhook-tag = { url = "github:BenSegal855/webhook-tag"; flake = false; };
+    pcp-always-push = { url = "github:Karamu98/AlwaysPushNotifications"; flake = false; };
     # TODO: locked version of this which doesn't hit web
     pct-clearvision = { url = "github:ClearVision/ClearVision-v6"; flake = false; };
     # pcp-hidden = { url = "github:discord-modifications/show-hidden-channels"; flake = false; };

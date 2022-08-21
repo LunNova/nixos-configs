@@ -157,6 +157,22 @@
         "type": "github"
       }
     },
+    "pcp-always-push": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1643135562,
+        "narHash": "sha256-o2MRXCi3L9HTNwG+1CluyaNaKnEB4rpkQyV7Jr+Eq0M=",
+        "owner": "Karamu98",
+        "repo": "AlwaysPushNotifications",
+        "rev": "6fb152edaa5f7d9ce5cc0bbe48d62576e260619b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Karamu98",
+        "repo": "AlwaysPushNotifications",
+        "type": "github"
+      }
+    },
     "pcp-webhook-tag": {
       "flake": false,
       "locked": {
@@ -261,6 +277,7 @@
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "nixpkgs-stable": "nixpkgs-stable",
+        "pcp-always-push": "pcp-always-push",
         "pcp-webhook-tag": "pcp-webhook-tag",
         "pct-clearvision": "pct-clearvision",
         "pre-commit-hooks": "pre-commit-hooks",
