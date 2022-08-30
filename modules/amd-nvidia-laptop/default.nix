@@ -119,19 +119,12 @@ in
           Identifier "Layout[all]"
         ${indent cfg.serverLayoutSection}
         EndSection
-        ${if cfg.useGlamor then ''
-          Section "Module"
-            Load "dri2"
-            Load "glamoregl"
-          EndSection
-        '' else ""}
         # For each supported driver, add a "Device" and "Screen"
         # section.
         ${flip concatMapStrings cfg.drivers (driver: ''
           Section "Device"
             Identifier "Device-${driver.name}[0]"
             Driver "${driver.driverName or driver.name}"
-            ${if cfg.useGlamor then ''Option "AccelMethod" "glamor"'' else ""}
           ${indent cfg.deviceSection}
           ${indent (driver.deviceSection or "")}
           EndSection
