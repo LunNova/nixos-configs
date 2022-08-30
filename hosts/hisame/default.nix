@@ -17,6 +17,8 @@ in
       "mitigations=off"
       "quiet"
       "splash"
+      "amd_iommu=on"
+      "iommu=pt"
     ];
     boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
     lun.amd-mem-encrypt.enable = true;
