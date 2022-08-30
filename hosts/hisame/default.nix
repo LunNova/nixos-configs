@@ -96,6 +96,7 @@ in
       "/home"
       "/var/log"
       "/nix"
+      "/var/lib/transmission"
     ];
     users.users.${config.services.borgbackup.repos.uknas.user}.home = "/home/borg";
     services.borgbackup.repos = {
