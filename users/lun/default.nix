@@ -54,6 +54,7 @@
     p7zip
     pinta # paint.net alternative
     calibre
+    obsidian # note taking
   ];
 
   programs.git = {
