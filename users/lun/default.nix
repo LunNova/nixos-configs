@@ -41,6 +41,10 @@
   home.stateVersion = "21.11";
 
   home.packages = with pkgs; [
+    # Nice to have these on path especially since
+    # can't nix run pkgs#usbutils and get lsusb!
+    usbutils
+    pciutils
     glxinfo
     vulkan-tools
     nixpkgs-fmt
