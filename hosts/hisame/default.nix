@@ -2,7 +2,9 @@
 let
   name = "hisame";
   swap = "/dev/disk/by-partlabel/_swap";
-  btrfsOpts = [ "rw" "noatime" ];
+  btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" ];
+  btrfsHddOpts = btrfsOpts ++ [ ];
+  btrfsSsdOpts = btrfsOpts ++ [ "ssd" "discard=async" ];
 in
 {
   imports = [
@@ -107,6 +109,20 @@ in
         path = "/mnt/_nas0/borg/uknas";
       };
     };
+    specialisation.btrfs-swap.configuration.fileSystems = {
+      "/boot" = lib.mkForce {
+        device = "/dev/disk/by-partlabel/${name}_esp_2";
+        fsType = "vfat";
+        neededForBoot = true;
+        options = [ "discard" "noatime" ];
+      };
+      "/persist" = lib.mkForce {
+        device = "/dev/disk/by-partlabel/${name}_persist_2";
+        fsType = "btrfs";
+        neededForBoot = true;
+        options = btrfsOpts ++ [ "subvol=@persist" "nodev" "nosuid" ];
+      };
+    };
     fileSystems = {
       "/" = {
         device = "tmpfs";
@@ -142,9 +158,10 @@ in
         options = btrfsOpts ++ [ "nofail" ];
       };
     };
-    swapDevices = [{
-      device = swap;
-    }];
-    boot.resumeDevice = swap;
+    swapDevices = lib.mkForce [
+      # Temporarily disable swap while changing drives
+      # { device = swap; }
+    ];
+    #boot.resumeDevice = swap;
   };
 }
