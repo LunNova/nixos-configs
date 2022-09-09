@@ -6,10 +6,12 @@ let
     ''
       if [ -d "${efi.efiSysMountPoint}/EFI" ] && [ -e "${source}" ]; then
         in_package="${source}"
-        in_esp="${efi.efiSysMountPoint}/EFI/tools/${dest_filename}"
+        esp_tool_folder="${efi.efiSysMountPoint}/EFI/tools/"
+        in_esp="''${esp_tool_folder}${dest_filename}"
         >&2 echo "Ensuring ${dest_filename} in EFI System Partition"
         if ! ${pkgs.diffutils}/bin/cmp --silent "$in_package" "$in_esp"; then
           >&2 echo "Copying $in_package -> $in_esp"
+          mkdir -p "$esp_tool_folder"
           cp "$in_package" "$in_esp"
           sync
         fi
