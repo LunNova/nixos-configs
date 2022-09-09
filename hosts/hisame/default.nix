@@ -109,7 +109,16 @@ in
         path = "/mnt/_nas0/borg/uknas";
       };
     };
-    specialisation.btrfs-swap.configuration.fileSystems = {
+    fileSystems = {
+      "/" = {
+        device = "tmpfs";
+        fsType = "tmpfs";
+        options = [
+          "defaults"
+          "size=2G"
+          "mode=755"
+        ];
+      };
       "/boot" = lib.mkForce {
         device = "/dev/disk/by-partlabel/${name}_esp_2";
         fsType = "vfat";
@@ -121,29 +130,6 @@ in
         fsType = "btrfs";
         neededForBoot = true;
         options = btrfsOpts ++ [ "subvol=@persist" "nodev" "nosuid" ];
-      };
-    };
-    fileSystems = {
-      "/" = {
-        device = "tmpfs";
-        fsType = "tmpfs";
-        options = [
-          "defaults"
-          "size=2G"
-          "mode=755"
-        ];
-      };
-      "/boot" = {
-        device = "/dev/disk/by-partlabel/_esp";
-        fsType = "vfat";
-        neededForBoot = true;
-        options = [ "discard" "noatime" ];
-      };
-      "/persist" = {
-        device = "/dev/disk/by-partlabel/${name}_persist";
-        fsType = "ext4";
-        neededForBoot = true;
-        options = [ "discard" "noatime" ];
       };
       "/tmp" = {
         fsType = "tmpfs";
