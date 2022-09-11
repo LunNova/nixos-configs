@@ -13,7 +13,7 @@ in
   config = {
     networking.hostName = "lun-${name}-nixos";
     sconfig.machineId = "63d3399d2f2f65c96848f11d73082aef";
-    system.stateVersion = "21.11";
+    system.stateVersion = "22.05";
 
     boot.kernelParams = [
       "mitigations=off"
