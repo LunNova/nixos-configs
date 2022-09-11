@@ -11,7 +11,6 @@ let cfg = config.lun.home-assistant; in
     systemd.services.podman.wants = [ "NetworkManager-wait-online.service" ];
 
     virtualisation.oci-containers = {
-      backend = "podman";
       containers.homeassistant = {
         volumes = [ "/var/lib/home-assistant/main:/config" ];
         environment.TZ = "Europe/Berlin";

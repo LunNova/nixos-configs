@@ -6,6 +6,7 @@
         enable = true;
         dockerCompat = true; # docker alias
       };
+      oci-containers.backend = "podman";
     };
 
     lun.persistence.dirs = [
