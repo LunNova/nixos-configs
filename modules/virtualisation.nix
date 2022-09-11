@@ -1,6 +1,9 @@
 { pkgs, ... }:
 {
   config = {
+    # Not using NixOS containers currently
+    boot.enableContainers = false;
+
     virtualisation = {
       podman = {
         enable = true;
