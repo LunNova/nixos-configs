@@ -29,6 +29,6 @@
     homepage = "https://github.com/tianocore/tianocore.github.io/wiki/ShellPkg";
     maintainers = with lib.maintainers; [ LunNova ];
   };
-}).overrideAttrs (finalAttrs: previousAttrs: {
+}).overrideAttrs (finalAttrs: _previousAttrs: {
   passthru.efi = "${finalAttrs.finalPackage}/shell.efi";
 })

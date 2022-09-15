@@ -1,8 +1,8 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 {
   config = {
     nixpkgs.overlays = [
-      (self: super: {
+      (_self: super: {
         xdg-utils = super.xdg-utils.overrideAttrs (old: {
           postInstall = (old.postInstall or "") + ''
             

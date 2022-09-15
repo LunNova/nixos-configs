@@ -1,5 +1,4 @@
 { stdenv
-, lib
 , extra-cmake-modules
 , cmake
 , pkgconfig

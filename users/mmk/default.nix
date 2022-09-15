@@ -1,4 +1,4 @@
-{ config, lib, pkgs, pkgs-stable, self, ... }:
+{ pkgs, pkgs-stable, ... }:
 {
   # workaround https://github.com/nix-community/home-manager/issues/2064#issuecomment-887300055
   systemd.user.targets.tray = {

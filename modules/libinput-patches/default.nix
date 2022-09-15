@@ -13,10 +13,10 @@ in
   config = lib.mkMerge [
     (lib.mkIf cfg.double-scroll-speed {
       nixpkgs.overlays = [
-        (self: super: {
-          xorg = super.xorg.overrideScope' (selfB: superB: {
+        (_self: super: {
+          xorg = super.xorg.overrideScope' (_selfB: superB: {
             inherit (super.xorg) xlibsWrapper;
-            xf86inputlibinput = superB.xf86inputlibinput.overrideAttrs (attr: {
+            xf86inputlibinput = superB.xf86inputlibinput.overrideAttrs (_attr: {
               patches = [ ./libinput.patch ./no-accel.patch ];
             });
           });
@@ -25,7 +25,7 @@ in
     })
     (lib.mkIf cfg.accel-default-off {
       nixpkgs.overlays = [
-        (self: super: {
+        (_self: super: {
           runtime-patched.libinput = super.libinput.overrideAttrs (old: {
             patches = (old.patches or [ ]) ++ [ ./libinput-no-accel.patch ];
           });

@@ -2,7 +2,7 @@
 let
   lib = bootstrapLib;
   self =
-    (import ./mkFlake.nix { inherit self bootstrapLib; }) //
+    (import ./mkFlake.nix { inherit bootstrapLib; }) //
     {
       recursiveMerge =
         let
@@ -29,7 +29,7 @@ let
       mkPkgs = pkgs: system: patches: config:
         let outPath = self.patchPackages pkgs system patches; in
         (import outPath config) // { outPath = "${outPath}"; };
-      filterPrefix = prefix: lib.filterAttrs (name: value: (lib.hasPrefix prefix name));
+      filterPrefix = prefix: lib.filterAttrs (name: _value: (lib.hasPrefix prefix name));
     };
 in
 self

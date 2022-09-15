@@ -44,11 +44,10 @@
     , home-manager
     , pre-commit-hooks
     , nix-gaming
-    , replugged-nix-flake
     , ...
     }@args:
     let
-      lib = pkgs.lib.extend (final: prev:
+      lib = pkgs.lib.extend (final: _prev:
         let self = args.nixpkgs; in
         {
           nixosSystem = args:
@@ -63,9 +62,9 @@
       lunLib = import ./lib { bootstrapLib = args.nixpkgs.lib; };
       system = "x86_64-linux";
 
-      pkgsPatches = let legacyPackages = nixpkgs.legacyPackages.${system}; in
+      pkgsPatches =
         [
-          # (legacyPackages.fetchpatch {
+          # (nixpkgs.legacyPackages.${system}.fetchpatch {
           #   # steam fixes https://github.com/NixOS/nixpkgs/pull/157907/commits
           #   url = "https://github.com/NixOS/nixpkgs/compare/d536e0a0eb54ea51c676869991fe5a1681cc6302.patch";
           #   sha256 = "sha256-aKUt0iJp3TX3bzkxyWM/Pt61l9HnsnKGD2tX24H3dAA=";
@@ -86,7 +85,7 @@
       pkgs-stable = lunLib.mkPkgs args.nixpkgs-stable system [ ] defaultPkgsConfig;
       readModules = path: builtins.map (x: path + "/${x}") (builtins.filter (str: (builtins.match "^[^.]*(\.nix)?$" str) != null) (builtins.attrNames (builtins.readDir path)));
       readExportedModules = path: lib.mapAttrs'
-        (key: value:
+        (key: _value:
           lib.nameValuePair
             (lib.removeSuffix ".nix" key)
             ({ pkgs, ... }@args: import (path + "/${key}") (args // {
@@ -141,7 +140,7 @@
 
       lib = lunLib;
 
-      packages."${system}" = lib.filterAttrs (k: lib.isDerivation) localPackages;
+      packages."${system}" = lib.filterAttrs (_k: lib.isDerivation) localPackages;
 
       overlay = final: prev:
         let localPackages = localPackagesForPkgs final;
@@ -162,8 +161,8 @@
           #     });
           # });
         } // (lunLib.setIf enableKwinFt {
-          plasma5Packages = prev.plasma5Packages.overrideScope' (self2: super2: {
-            plasma5 = super2.plasma5.overrideScope' (self1: super1: {
+          plasma5Packages = prev.plasma5Packages.overrideScope' (_self2: super2: {
+            plasma5 = super2.plasma5.overrideScope' (_self1: _super1: {
               inherit (localPackages.kwinft) kwin;
               inherit (prev.plasma5Packages.plasma5) plasma-workspace;
             });

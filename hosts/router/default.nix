@@ -1,4 +1,4 @@
-{ config, pkgs, lib, nixos-hardware-modules-path, ... }:
+{ config, pkgs, lib, ... }:
 let
   name = "router";
   swap = "/dev/disk/by-partlabel/_swap";

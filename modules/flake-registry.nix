@@ -1,8 +1,6 @@
 # Approach originally from https://github.com/tejing1/
 { pkgs, config, lib, flake-args, lun, ... }:
 let
-  inherit (builtins) toFile;
-  inherit (flake-args) self;
   inherit (lib.strings) escapeNixIdentifier;
   inherit (lun.lib) mkFlake;
 in

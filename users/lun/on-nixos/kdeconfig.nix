@@ -1,4 +1,4 @@
-{ config, lib, pkgs, inputs, self, ... }:
+{ lib, pkgs, ... }:
 let
   toValue = v:
     if builtins.isString v then

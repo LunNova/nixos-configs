@@ -1,6 +1,6 @@
 # Originally from @tejing1 https://github.com/tejing1/nixos-config
 # with minor changes to support non-flake inputs and take packages as an arg on use
-{ self, bootstrapLib }:
+{ bootstrapLib }:
 let
   inherit (builtins) mapAttrs concatMap attrValues toJSON listToAttrs;
   inherit (bootstrapLib) nameValuePair mapAttrsToList;

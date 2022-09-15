@@ -84,7 +84,7 @@ in
 
     systemd =
       let
-        patchedServices = lib.genAttrs cfg.isolateServices (svcname: {
+        patchedServices = lib.genAttrs cfg.isolateServices (_svcname: {
           bindsTo = [ "wireguard.service" ];
           after = [ "wireguard.service" ];
           unitConfig.JoinsNamespaceOf = "wireguard-netns.service";

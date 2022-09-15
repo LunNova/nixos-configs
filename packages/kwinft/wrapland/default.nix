@@ -1,5 +1,4 @@
 { stdenv
-, lib
 , cmake
 , doxygen
 , extra-cmake-modules

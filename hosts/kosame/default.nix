@@ -5,7 +5,6 @@
 { config, pkgs, lib, nixos-hardware-modules-path, ... }:
 
 let
-  drmDevices = "/dev/dri/card0";
   # https://github.com/cole-mickens/nixcfg/blob/main/mixins/nvidia.nix
   waylandEnv = {
     WLR_RENDERER = "vulkan";
@@ -152,7 +151,7 @@ in
   #services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
   services.xserver.displayManager.sessionPackages = [
     (pkgs.plasma-workspace.overrideAttrs
-      (old: { passthru.providedSessions = [ "plasmawayland" ]; }))
+      (_old: { passthru.providedSessions = [ "plasmawayland" ]; }))
   ];
 
   boot.kernelParams = [

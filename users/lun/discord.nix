@@ -1,4 +1,4 @@
-{ config, lib, pkgs, flake-args, self, ... }:
+{ lib, pkgs, flake-args, ... }:
 {
   home.packages = [
     (flake-args.replugged-nix-flake.lib.makeDiscordPlugged {

@@ -1,6 +1,6 @@
 { pkgs, flake-args }:
 let
-  inherit (pkgs) lib system;
+  inherit (pkgs) lib;
   lutris-unwrapped = (pkgs.lutris-unwrapped.override {
     # TODO wine build with wayland and GE patches?
     # wine = pkgs.wineWowPackages.wayland;
