@@ -2,7 +2,7 @@
 let
   name = "hisame";
   # TODO: use swap again
-  swap = "/dev/disk/by-partlabel/_swap";
+  swap = "/dev/disk/by-partlabel/hisame_swap";
   btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" "autodefrag" ];
   btrfsHddOpts = btrfsOpts ++ [ ];
   btrfsSsdOpts = btrfsOpts ++ [ "ssd" "discard=async" ];
@@ -152,11 +152,16 @@ in
         neededForBoot = false;
         options = btrfsHddOpts ++ [ "nofail" ];
       };
+      "/mnt/scratch" = {
+        fsType = "btrfs";
+        device = "/dev/disk/by-partlabel/hisame_scratch";
+        neededForBoot = false;
+        options = btrfsSsdOpts ++ [ "nofail" "subvol=@scratch" ];
+      };
     };
     swapDevices = lib.mkForce [
-      # Temporarily disable swap while changing drives
-      # { device = swap; }
+      { device = swap; }
     ];
-    #boot.resumeDevice = swap;
+    boot.resumeDevice = swap;
   };
 }
