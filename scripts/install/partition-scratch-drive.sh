@@ -1,12 +1,15 @@
 #!/usr/bin/env -S nix shell nixpkgs#parted -c bash
 # shellcheck shell=bash
 
+# Partition a scratch drive for swap at the start and a big btrfs for the rest
+
 set -euo pipefail
 
 # Examples, update before use
 prefix="hisame_"
-suffix="_2"
-device=/dev/nvme1n1
+suffix=""
+swap_size="256GiB"
+device=/dev/nvme0n1
 
 lsblk --output "NAME,SIZE,FSTYPE,FSVER,LABEL,PARTLABEL,UUID,FSAVAIL,FSUSE%,MOUNTPOINTS,DISC-MAX" "$device"
 
@@ -21,15 +24,15 @@ sleep 1
 
 parted -s -a optimal -- "$device" \
 	mklabel gpt \
-	mkpart "${prefix}esp${suffix}" fat32 1MiB 1GiB \
+	mkpart "${prefix}swap${suffix}" linux-swap 1MiB "$swap_size" \
 	set 1 esp on \
-	mkpart "${prefix}persist${suffix}" btrfs 1GiB 100%
+	mkpart "${prefix}scratch${suffix}" btrfs "$swap_size" 100%
 
 sync
 sleep 1
 
-mkfs.fat -F 32 "${device}p1" -n _esp
-mkfs.btrfs -f "${device}p2" -R free-space-tree -L _persist
+mkswap /dev/disk/by-partlabel/"${prefix}swap${suffix}" -L _swap
+mkfs.btrfs -f "${device}p2" -R free-space-tree -L _scratch
 
 sync
 sleep 1
@@ -38,7 +41,7 @@ mountdir="$(mktemp -d)"
 
 mount -t btrfs -o defaults,ssd,nosuid,nodev,compress=zstd,noatime "${device}p2" "$mountdir"
 
-btrfs subvolume create "$mountdir"/@persist
+btrfs subvolume create "$mountdir"/@scratch
 btrfs subvolume sync "$mountdir"
 
 sleep 1
