@@ -109,6 +109,14 @@ in
         path = "/mnt/_nas0/borg/uknas";
       };
     };
+    services.beesd.filesystems = {
+      persist = {
+        spec = "PARTLABEL=${name}_persist_2";
+        hashTableSizeMB = 512;
+        verbosity = "crit";
+        extraOptions = [ "--loadavg-target" "2.0" ];
+      };
+    };
     fileSystems = {
       "/" = {
         device = "tmpfs";
