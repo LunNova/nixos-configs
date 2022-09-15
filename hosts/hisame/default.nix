@@ -1,6 +1,7 @@
-{ config, pkgs, lib, nixos-hardware-modules-path, ... }:
+{ config, pkgs, lib, ... }:
 let
   name = "hisame";
+  # TODO: use swap again
   swap = "/dev/disk/by-partlabel/_swap";
   btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" "autodefrag" ];
   btrfsHddOpts = btrfsOpts ++ [ ];
@@ -137,7 +138,7 @@ in
         device = "/dev/disk/by-partlabel/${name}_persist_2";
         fsType = "btrfs";
         neededForBoot = true;
-        options = btrfsOpts ++ [ "subvol=@persist" "nodev" "nosuid" ];
+        options = btrfsSsdOpts ++ [ "subvol=@persist" "nodev" "nosuid" ];
       };
       "/tmp" = {
         fsType = "tmpfs";
@@ -149,7 +150,7 @@ in
         fsType = "btrfs";
         device = "/dev/disk/by-partlabel/_nas0";
         neededForBoot = false;
-        options = btrfsOpts ++ [ "nofail" ];
+        options = btrfsHddOpts ++ [ "nofail" ];
       };
     };
     swapDevices = lib.mkForce [
