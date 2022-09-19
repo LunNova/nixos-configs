@@ -69,6 +69,11 @@
           #   url = "https://github.com/NixOS/nixpkgs/compare/d536e0a0eb54ea51c676869991fe5a1681cc6302.patch";
           #   sha256 = "sha256-aKUt0iJp3TX3bzkxyWM/Pt61l9HnsnKGD2tX24H3dAA=";
           # })
+          (nixpkgs.legacyPackages.${system}.fetchpatch {
+            # input-remapper 1.4.2 -> 1.5.0 https://github.com/NixOS/nixpkgs/pull/191967
+            url = "https://github.com/NixOS/nixpkgs/compare/e3a6a6eab23a68301597f852d8465a435933db14.patch";
+            sha256 = "sha256-XbQDb1Gz83XrUNDrBROK5PvfwPJssQPAJ4inGGqAkak=";
+          })
         ];
       defaultPkgsConfig = {
         inherit system;
