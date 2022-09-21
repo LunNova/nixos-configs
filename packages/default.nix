@@ -20,6 +20,9 @@ let
     execer = [
       "cannot:${pkgs.borgbackup}/bin/borg"
     ];
+    fake = {
+      external = [ "sudo" ];
+    };
   };
   wrapScripts = path:
     let
