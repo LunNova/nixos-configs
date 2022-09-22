@@ -157,6 +157,30 @@
         "type": "github"
       }
     },
+    "oxalica-nil": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": "rust-overlay"
+      },
+      "locked": {
+        "lastModified": 1663757903,
+        "narHash": "sha256-6pcoz2CTi/LPatX0dVlXsYKTacXaKZuHmtYpZAdpNbQ=",
+        "owner": "oxalica",
+        "repo": "nil",
+        "rev": "039ae629ebf98f7a30bd5a5983ba51f6bc52cd6a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "nil",
+        "type": "github"
+      }
+    },
     "pcp-always-push": {
       "flake": false,
       "locked": {
@@ -277,12 +301,38 @@
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "nixpkgs-stable": "nixpkgs-stable",
+        "oxalica-nil": "oxalica-nil",
         "pcp-always-push": "pcp-always-push",
         "pcp-webhook-tag": "pcp-webhook-tag",
         "pct-clearvision": "pct-clearvision",
         "pre-commit-hooks": "pre-commit-hooks",
         "replugged": "replugged",
         "replugged-nix-flake": "replugged-nix-flake"
+      }
+    },
+    "rust-overlay": {
+      "inputs": {
+        "flake-utils": [
+          "oxalica-nil",
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "oxalica-nil",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1663470205,
+        "narHash": "sha256-04OnrzLLWWE73GBpIgNR2NfjPH3MiHpwN1ueMQObsAc=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "2ac8be332f507e521c235caa37cb0b2fc698cbd9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
       }
     },
     "utils": {

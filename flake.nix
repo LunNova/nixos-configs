@@ -15,6 +15,9 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     erosanix.url = "github:emmanuelrosa/erosanix";
     erosanix.inputs.nixpkgs.follows = "nixpkgs";
+    oxalica-nil.url = "github:oxalica/nil";
+    oxalica-nil.inputs.nixpkgs.follows = "nixpkgs";
+    oxalica-nil.inputs.flake-utils.follows = "flake-utils";
 
     minimal-shell.url = "github:LunNova/nix-minimal-shell";
 

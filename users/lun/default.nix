@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, flake-args, ... }:
 {
   imports = [
     ./discord.nix
@@ -48,7 +48,7 @@
     glxinfo
     vulkan-tools
     nixpkgs-fmt
-    rnix-lsp
+    flake-args.oxalica-nil.packages.${pkgs.system}.nil
     ark
     unar
     p7zip
