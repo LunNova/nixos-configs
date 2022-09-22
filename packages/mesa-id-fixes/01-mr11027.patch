@@ -1,0 +1,86 @@
+diff --git a/src/amd/vulkan/radv_debug.c b/src/amd/vulkan/radv_debug.c
+index 4da13f612a799d09cee17b2373c04488ee05a879..45ce0c4f933ac3e38be9ff7171f5564649ea1f07 100644
+--- a/src/amd/vulkan/radv_debug.c
++++ b/src/amd/vulkan/radv_debug.c
+@@ -621,18 +621,15 @@ radv_dump_device_name(struct radv_device *device, FILE *f)
+    char kernel_version[128] = {0};
+    struct utsname uname_data;
+ #endif
+-   const char *chip_name;
+-
+-   chip_name = device->ws->get_chip_name(device->ws);
+ 
+ #ifdef _WIN32
+-   fprintf(f, "Device name: %s (%s / DRM %i.%i.%i)\n\n", chip_name, device->physical_device->name,
++   fprintf(f, "Device name: %s (DRM %i.%i.%i)\n\n", device->physical_device->marketing_name,
+            info->drm_major, info->drm_minor, info->drm_patchlevel);
+ #else
+    if (uname(&uname_data) == 0)
+       snprintf(kernel_version, sizeof(kernel_version), " / %s", uname_data.release);
+ 
+-   fprintf(f, "Device name: %s (%s / DRM %i.%i.%i%s)\n\n", chip_name, device->physical_device->name,
++   fprintf(f, "Device name: %s (DRM %i.%i.%i%s)\n\n", device->physical_device->marketing_name,
+            info->drm_major, info->drm_minor, info->drm_patchlevel, kernel_version);
+ #endif
+ }
+diff --git a/src/amd/vulkan/radv_device.c b/src/amd/vulkan/radv_device.c
+index 752683075f56dc260ad2cb327cfef4ac97f5c0de..d19a41ae345cf0179e0bb4321473d5d548f1e75b 100644
+--- a/src/amd/vulkan/radv_device.c
++++ b/src/amd/vulkan/radv_device.c
+@@ -719,6 +719,10 @@ radv_physical_device_try_create(struct radv_instance *instance, drmDevicePtr drm
+    snprintf(device->name, sizeof(device->name), "AMD RADV %s%s", device->rad_info.name,
+             radv_get_compiler_string(device));
+ 
++   const char *marketing_name = device->ws->get_chip_name(device->ws);
++   snprintf(device->marketing_name, sizeof(device->name), "%s (RADV %s%s)",
++            marketing_name, device->rad_info.name, radv_get_compiler_string(device));
++
+ #ifdef ENABLE_SHADER_CACHE
+    if (radv_device_get_cache_uuid(device, device->cache_uuid)) {
+       result = vk_errorf(instance, VK_ERROR_INITIALIZATION_FAILED, "cannot generate UUID");
+@@ -1939,7 +1943,7 @@ radv_GetPhysicalDeviceProperties(VkPhysicalDevice physicalDevice,
+          },
+    };
+ 
+-   strcpy(pProperties->deviceName, pdevice->name);
++   strcpy(pProperties->deviceName, pdevice->marketing_name);
+    memcpy(pProperties->pipelineCacheUUID, pdevice->cache_uuid, VK_UUID_SIZE);
+ }
+ 
+diff --git a/src/amd/vulkan/radv_private.h b/src/amd/vulkan/radv_private.h
+index 898cb3a6778b7bfb39c64722b8b411e62a9a4b3a..02b4f6f16b817da43598eb7fcc5e5770479300ce 100644
+--- a/src/amd/vulkan/radv_private.h
++++ b/src/amd/vulkan/radv_private.h
+@@ -271,6 +271,7 @@ struct radv_physical_device {
+    struct radeon_winsys *ws;
+    struct radeon_info rad_info;
+    char name[VK_MAX_PHYSICAL_DEVICE_NAME_SIZE];
++   char marketing_name[VK_MAX_PHYSICAL_DEVICE_NAME_SIZE];
+    uint8_t driver_uuid[VK_UUID_SIZE];
+    uint8_t device_uuid[VK_UUID_SIZE];
+    uint8_t cache_uuid[VK_UUID_SIZE];
+diff --git a/src/amd/vulkan/winsys/null/radv_null_winsys.c b/src/amd/vulkan/winsys/null/radv_null_winsys.c
+index 3bb3a3552e409217b3708c264c7a037776f41f70..c7bc1f3bb4c072e4dd611619a4692e333a45955e 100644
+--- a/src/amd/vulkan/winsys/null/radv_null_winsys.c
++++ b/src/amd/vulkan/winsys/null/radv_null_winsys.c
+@@ -155,6 +155,12 @@ radv_null_winsys_query_info(struct radeon_winsys *rws, struct radeon_info *info)
+ 
+ }
+ 
++static const char *
++radv_null_winsys_get_chip_name(struct radeon_winsys *rws)
++{
++   return "Null hardware";
++}
++
+ static void
+ radv_null_winsys_destroy(struct radeon_winsys *rws)
+ {
+@@ -186,6 +192,7 @@ radv_null_winsys_create()
+    ws->base.query_info = radv_null_winsys_query_info;
+    ws->base.get_fd = radv_null_winsys_get_fd;
+    ws->base.get_sync_types = radv_null_winsys_get_sync_types;
++   ws->base.get_chip_name = radv_null_winsys_get_chip_name;
+    radv_null_bo_init_functions(ws);
+    radv_null_cs_init_functions(ws);
+ 

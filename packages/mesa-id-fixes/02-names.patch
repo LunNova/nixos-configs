@@ -1,0 +1,24 @@
+diff --git a/src/amd/vulkan/radv_device.c b/src/amd/vulkan/radv_device.c
+index a06e72f474f..61314fcb161 100644
+--- a/src/amd/vulkan/radv_device.c
++++ b/src/amd/vulkan/radv_device.c
+@@ -810,12 +810,15 @@ radv_physical_device_try_create(struct radv_instance *instance, drmDevicePtr drm
+                           driQueryOptionb(&device->instance->dri_options, "radv_require_etc2");
+ #endif
+ 
+-   snprintf(device->name, sizeof(device->name), "AMD RADV %s%s", device->rad_info.name,
+-            radv_get_compiler_string(device));
++   const char* compiler_string = radv_get_compiler_string(device);
++   snprintf(device->name, sizeof(device->name), "AMD RADV %s%s %u:%u.%u", device->rad_info.name,
++            compiler_string,
++            device->rad_info.pci_bus, device->rad_info.pci_dev, device->rad_info.pci_func);
+ 
+    const char *marketing_name = device->ws->get_chip_name(device->ws);
+-   snprintf(device->marketing_name, sizeof(device->name), "%s (RADV %s%s)",
+-            marketing_name, device->rad_info.name, radv_get_compiler_string(device));
++   snprintf(device->marketing_name, sizeof(device->marketing_name), "%s (RADV %s%s) %u:%u.%u",
++            marketing_name, device->rad_info.name, compiler_string,
++            device->rad_info.pci_bus, device->rad_info.pci_dev, device->rad_info.pci_func);
+ 
+ #ifdef ENABLE_SHADER_CACHE
+    if (radv_device_get_cache_uuid(device, device->cache_uuid)) {

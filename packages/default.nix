@@ -48,6 +48,12 @@ let
       exec "${lun-scripts-path}/bin/$1" "''${@:2}"
     '';
     svpflow = pkgs.callPackage ./svpflow { };
+    mesa = pkgs.mesa.overrideAttrs (old: {
+      patches = (old.patches or [ ]) ++ [
+        ./mesa-id-fixes/01-mr11027.patch
+        ./mesa-id-fixes/02-names.patch
+      ];
+    });
   };
 in
 self
