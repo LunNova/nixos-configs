@@ -35,9 +35,12 @@ in
       gpus = [ "amd" ];
     };
     hardware.opengl = {
+      package = pkgs.lun.mesa.drivers;
       extraPackages = [
         pkgs.libglvnd
-        pkgs.mesa.drivers
+        pkgs.lun.mesa.drivers
+        # Seems to perform worse but may be worth trying if ever run into vulkan issues
+        # pkgs.amdvlk
       ];
       extraPackages32 = [
         pkgs.pkgsi686Linux.mesa.drivers
