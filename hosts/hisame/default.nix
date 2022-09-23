@@ -1,7 +1,6 @@
 { config, pkgs, lib, ... }:
 let
   name = "hisame";
-  # TODO: use swap again
   swap = "/dev/disk/by-partlabel/hisame_swap";
   btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" "autodefrag" ];
   btrfsHddOpts = btrfsOpts ++ [ ];
