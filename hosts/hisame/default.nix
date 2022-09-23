@@ -25,6 +25,7 @@ in
     boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
     lun.amd-mem-encrypt.enable = true;
 
+    lun.amd-pstate.enable = true;
     lun.efi-tools.enable = true;
 
     boot.initrd.kernelModules = [ "amdgpu" ];
