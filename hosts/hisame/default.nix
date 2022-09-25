@@ -19,11 +19,27 @@ in
       "mitigations=off"
       "quiet"
       "splash"
-      "amd_iommu=on"
-      "iommu=pt"
+      # "amd_iommu=on"
+      # "iommu=pt"
+      "amd_iommu=off"
+      "pcie.aspm=force"
+      "amd_pstate.shared_mem=1"
+      "amdgpu.runpm=1"
+      "amdgpu.aspm=1"
+      "amdgpu.dpm=1"
+
+      #"amdgpu.vm_update_mode=3"
+      "amdgpu.gpu_recovery=1"
+      # "amdgpu.mes=1" # doesn't boot
+      #GPU reset method (-1 = auto (default), 0 = legacy, 1 = mode0, 2 = mode1, 3 = mode2, 4 = baco, 5 = pci)
+      #"amdgpu.resetmethod=5"
+
+      # "watchdog didn't stop" message when stopping
+      "nmi_watchdog=0"
+      "nowatchdog"
     ];
     boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
-    lun.amd-mem-encrypt.enable = true;
+    #lun.amd-mem-encrypt.enable = true;
 
     lun.amd-pstate.enable = true;
     lun.efi-tools.enable = true;
