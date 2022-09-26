@@ -15,6 +15,7 @@ in
 
     #nixpkgs=input nixpkgs
     nix.registry.nixpkgs.flake = flake-args.nixpkgs;
+    nix.registry.nixpkgs-stable.flake = flake-args.nixpkgs-stable;
 
     nix.registry.nixos-config.flake = lun;
     #pkgs = pkgs provided to this system
