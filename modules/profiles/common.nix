@@ -12,7 +12,6 @@
       };
     time = {
       timeZone = "America/Los_Angeles";
-      hardwareClockInLocalTime = true;
     };
     services.xserver.layout = "us";
 
