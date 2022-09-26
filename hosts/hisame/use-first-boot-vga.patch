@@ -1,0 +1,17 @@
+diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+index a06e72f474f..61314fcb161 100644
+--- a/drivers/pci/vgaarb.c
++++ b/drivers/pci/vgaarb.c
+@@ -615,11 +615,11 @@
+ 	/*
+ 	 * We always prefer a firmware default device, so if we've already
+ 	 * found one, there's no need to consider vgadev.
+ 	 */
+-	if (boot_vga && boot_vga->is_firmware_default)
++	if (boot_vga)
+		return false;
+ 
+ 	if (vga_is_firmware_default(pdev)) {
+ 		vgadev->is_firmware_default = true;
+ 		return true;
+ 	}

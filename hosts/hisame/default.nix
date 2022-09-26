@@ -17,34 +17,46 @@ in
 
     boot.kernelParams = [
       "mitigations=off"
-      "quiet"
-      "splash"
-      # "amd_iommu=on"
-      # "iommu=pt"
-      "amd_iommu=off"
-      "pcie.aspm=force"
-      "amd_pstate.shared_mem=1"
+
+      # I usually turn on iommu=pt and amd_iommu=force
+      # but had some instability that might be caused by it
+
       "amdgpu.runpm=1"
-      "amdgpu.aspm=1"
       "amdgpu.dpm=1"
+      # "amdgpu.aspm=0"
+      # "amdgpu.bapm=0"
 
       #"amdgpu.vm_update_mode=3"
       "amdgpu.gpu_recovery=1"
-      # "amdgpu.mes=1" # doesn't boot
       #GPU reset method (-1 = auto (default), 0 = legacy, 1 = mode0, 2 = mode1, 3 = mode2, 4 = baco, 5 = pci)
       #"amdgpu.resetmethod=5"
 
       # "watchdog didn't stop" message when stopping
-      "nmi_watchdog=0"
       "nowatchdog"
+      "tsc=nowatchdog"
+
+      # PCIE tinkering
+      # "pcie_ports=native"
+      # "pci=bfsort,assign-busses,realloc,nocrs"
+      # "pcie_aspm=off"
     ];
-    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+    boot.plymouth.enable = lib.mkForce false;
+    boot.kernelPatches = [{
+      name = "idle-fix";
+      patch = ./idle.patch;
+    }];
+
+    # watchdog hardware doesn't work
+    boot.blacklistedKernelModules = [ "sp5100_tco" ];
+
+    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_xanmod_latest;
     #lun.amd-mem-encrypt.enable = true;
 
-    lun.amd-pstate.enable = true;
+    # Modulecan't load without "amd_pstate.shared_mem=1"
+    # lun.amd-pstate.enable = true;
+    lun.power-saving.enable = true;
     lun.efi-tools.enable = true;
 
-    boot.initrd.kernelModules = [ "amdgpu" ];
     services.xserver.videoDrivers = [ "amdgpu" ];
     lun.ml = {
       enable = true;
