@@ -19,7 +19,7 @@
     ];
 
     environment.systemPackages = with pkgs; [
-      virtmanager
+      virt-manager
       virtiofsd
     ];
 

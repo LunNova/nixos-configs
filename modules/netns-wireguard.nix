@@ -17,6 +17,8 @@
 
 let
   cfg = config.lun.wg-netns;
+  ip = "${pkgs.iproute2}/bin/ip";
+  inherit (pkgs) util-linux;
 
   resolvconf = pkgs.writeText "wg-resolv.conf" "nameserver 8.8.8.8";
   nsswitchconf = pkgs.writeText "wg-nsswitch.conf" "hosts: files dns";
@@ -133,12 +135,12 @@ in
               PrivateNetwork = true;
 
               ExecStart = pkgs.writers.writeDash "wireguard-netns-up" ''
-                ${pkgs.iproute}/bin/ip netns add wireguard
-                ${pkgs.utillinux}/bin/umount /var/run/netns/wireguard
-                ${pkgs.utillinux}/bin/mount --bind /proc/self/ns/net /var/run/netns/wireguard
+                ${ip} netns add wireguard
+                ${util-linux}/bin/umount /var/run/netns/wireguard
+                ${util-linux}/bin/mount --bind /proc/self/ns/net /var/run/netns/wireguard
               '';
               ExecStop = pkgs.writers.writeDash "wireguard-netns-down" ''
-                ${pkgs.iproute}/bin/ip netns del wireguard
+                ${ip} netns del wireguard
               '';
             };
           };
@@ -154,21 +156,21 @@ in
               ExecStart = pkgs.writers.writeDash "wireguard-up" ''
                 # Note: creating the iface in the outer netns means that wg will
                 # "remember" the packets need to go through the outer netns.
-                ${pkgs.iproute}/bin/ip link add wireguard type wireguard
+                ${ip} link add wireguard type wireguard
                 ${pkgs.wireguard-tools}/bin/wg set wireguard \
                     private-key '${cfg.privateKey}' \
                     peer '${cfg.peerPublicKey}' \
                     endpoint '${cfg.endpointAddr}' \
                     allowed-ips '0.0.0.0/0,::0/0'
-                ${pkgs.iproute}/bin/ip link set wireguard netns wireguard up
-                ${pkgs.iproute}/bin/ip -n wireguard addr add ${cfg.ip4} dev wireguard
-                ${pkgs.iproute}/bin/ip -n wireguard -6 addr add ${cfg.ip6} dev wireguard
-                ${pkgs.iproute}/bin/ip -n wireguard route add default dev wireguard
-                ${pkgs.iproute}/bin/ip -n wireguard -6 route add default dev wireguard
+                ${ip} link set wireguard netns wireguard up
+                ${ip} -n wireguard addr add ${cfg.ip4} dev wireguard
+                ${ip} -n wireguard -6 addr add ${cfg.ip6} dev wireguard
+                ${ip} -n wireguard route add default dev wireguard
+                ${ip} -n wireguard -6 route add default dev wireguard
               '';
               ExecStop = pkgs.writers.writeDash "wireguard-down" ''
-                ${pkgs.iproute}/bin/ip -n wireguard route del default dev wireguard
-                ${pkgs.iproute}/bin/ip -n wireguard link del wireguard
+                ${ip} -n wireguard route del default dev wireguard
+                ${ip} -n wireguard link del wireguard
               '';
             };
           };
