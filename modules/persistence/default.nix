@@ -39,6 +39,10 @@ in
       "/var/tmp"
     ];
 
+    lun.persistence.files = [
+      "/etc/adjtime"
+    ];
+
     systemd.tmpfiles.rules =
       let escapedFiles = builtins.map (lib.escape [ "\"" "\\" ]) cfg.files;
       in
