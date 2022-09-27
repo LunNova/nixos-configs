@@ -19,20 +19,33 @@ in
       "mitigations=off"
 
       # I usually turn on iommu=pt and amd_iommu=force
+      # for vm performance
       # but had some instability that might be caused by it
 
-      "amdgpu.runpm=1"
-      "amdgpu.dpm=1"
-      # "amdgpu.aspm=0"
-      # "amdgpu.bapm=0"
+      # List amdgpu param docs
+      #   modinfo amdgpu | grep "^parm:"
+      # List amdgpu param current values and undocumented params
+      #   nix shell pkgs#sysfsutils -c systool -vm amdgpu
 
-      #"amdgpu.vm_update_mode=3"
-      "amdgpu.gpu_recovery=1"
-      #GPU reset method (-1 = auto (default), 0 = legacy, 1 = mode0, 2 = mode1, 3 = mode2, 4 = baco, 5 = pci)
-      #"amdgpu.resetmethod=5"
+      # runpm:PX runtime pm (2 = force enable with BAMACO, 1 = force enable with BACO, 0 = disable, -1 = auto) (int)
+      "amdgpu.runpm=2"
+      "amdgpu.dpm=0"
+      "amdgpu.aspm=0"
+      "amdgpu.bapm=0"
 
-      # "watchdog didn't stop" message when stopping
+      # sched_policy:Scheduling policy (0 = HWS (Default), 1 = HWS without over-subscription, 2 = Non-HWS (Used for debugging only) (int)
+      "amdgpu.sched_policy=1" # maybe workaround GPU driver crash with mixed graphics/compute loads
+      "amdgpu.audio=0" # We never use display audio
+      "amdgpu.ppfeaturemask=0xffffffff" # enable all powerplay features
+      "amdgpu.gpu_recovery=2" # advanced TDR mode
+      # reset_method:GPU reset method (-1 = auto (default), 0 = legacy, 1 = mode0, 2 = mode1, 3 = mode2, 4 = baco/bamaco) (int)
+      "amdgpu.reset_method=4"
+
+      # hw hwatchdog doesn't work on this platform
+      "nmi_watchdog=0"
       "nowatchdog"
+
+      # trust tsc, modern AMD platform
       "tsc=nowatchdog"
 
       # PCIE tinkering
