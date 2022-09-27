@@ -30,6 +30,9 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # Don't bother with the lecture or the need to keep state about who's been lectured
+    security.sudo.extraConfig = "Defaults lecture=\"never\"";
+
     lun.persistence.dirs = [
       "/nix"
       "/var/log"
