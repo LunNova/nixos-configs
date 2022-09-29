@@ -29,9 +29,9 @@ in
 
       # runpm:PX runtime pm (2 = force enable with BAMACO, 1 = force enable with BACO, 0 = disable, -1 = auto) (int)
       "amdgpu.runpm=2"
-      "amdgpu.dpm=0"
-      "amdgpu.aspm=0"
-      "amdgpu.bapm=0"
+      # "amdgpu.dpm=0"
+      # "amdgpu.aspm=0"
+      # "amdgpu.bapm=0"
 
       # sched_policy:Scheduling policy (0 = HWS (Default), 1 = HWS without over-subscription, 2 = Non-HWS (Used for debugging only) (int)
       "amdgpu.sched_policy=1" # maybe workaround GPU driver crash with mixed graphics/compute loads
