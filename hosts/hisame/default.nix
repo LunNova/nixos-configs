@@ -59,6 +59,16 @@ in
       patch = ./idle.patch;
     }];
 
+    specialisation.no-ecc.configuration = {
+      boot.kernelPatches = [{
+        name = "amdgpu-no-ecc";
+        patch = ./amdgpu-no-ecc.patch;
+      }];
+      boot.kernelParams = [
+        "amdgpu.ras_enable=0"
+      ];
+    };
+
     # watchdog hardware doesn't work
     boot.blacklistedKernelModules = [ "sp5100_tco" ];
 
