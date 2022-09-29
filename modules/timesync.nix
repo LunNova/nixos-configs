@@ -5,6 +5,8 @@ _:
       enable = true;
       extraConfig = ''
         leapsecmode slew
+        makestep 0.1 5
+        maxchange 86400 1 2
       '';
       servers = [
         "0.pool.ntp.org"
