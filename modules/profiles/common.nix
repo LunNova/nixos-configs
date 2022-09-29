@@ -81,6 +81,7 @@
     boot = {
       initrd.availableKernelModules = [ "nvme" "ahci" "xhci_pci" "usb_storage" "usbhid" "sd_mod" ];
       initrd.kernelModules = [ ];
+      kernelParams = [ "sysrq_always_enabled" ];
       kernelModules = [ "kvm-amd" "kvm-intel" ];
       extraModulePackages = [ ];
     };
