@@ -48,26 +48,32 @@ in
       # trust tsc, modern AMD platform
       "tsc=nowatchdog"
 
+      # TODO: Move into amdgpu-no-ecc module
+      "amdgpu.ras_enable=0"
       # PCIE tinkering
       # "pcie_ports=native"
       # "pci=bfsort,assign-busses,realloc,nocrs"
       # "pcie_aspm=off"
     ];
     boot.plymouth.enable = lib.mkForce false;
-    boot.kernelPatches = [{
-      name = "idle-fix";
-      patch = ./idle.patch;
-    }];
-
-    specialisation.no-ecc.configuration = {
-      boot.kernelPatches = [{
+    boot.kernelPatches = [
+      {
+        name = "idle-fix";
+        patch = ./kernel/idle.patch;
+      }
+      {
+        name = "amdgpu-interrupt";
+        # Shader wave interrupts were getting dropped in event_interrupt_wq_v11
+        # if the PRIV bit was set to 1. This would often lead to a hang. Until
+        # debugger logic is upstreamed, expand comment to stop early return.
+        # https://gitlab.freedesktop.org/agd5f/linux/-/commit/664883ddde67971d59764f2dda855183ecf8bc46
+        patch = ./kernel/amdgpu-interrupt.patch;
+      }
+      {
         name = "amdgpu-no-ecc";
-        patch = ./amdgpu-no-ecc.patch;
-      }];
-      boot.kernelParams = [
-        "amdgpu.ras_enable=0"
-      ];
-    };
+        patch = ./kernel/amdgpu-no-ecc.patch;
+      }
+    ];
 
     # watchdog hardware doesn't work
     boot.blacklistedKernelModules = [ "sp5100_tco" ];
