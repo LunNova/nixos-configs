@@ -18,6 +18,10 @@ in
     boot.kernelParams = [
       "mitigations=off"
 
+      # Potential workaround for high idle mclk?
+      # https://gitlab.freedesktop.org/drm/amd/-/issues/1301#note_629735
+      "video=2560x1440@60"
+      # also https://gitlab.freedesktop.org/drm/amd/-/issues/1403#note_1190209
       # I usually turn on iommu=pt and amd_iommu=force
       # for vm performance
       # but had some instability that might be caused by it
