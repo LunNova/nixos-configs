@@ -48,6 +48,7 @@ in
       # hw hwatchdog doesn't work on this platform
       "nmi_watchdog=0"
       "nowatchdog"
+      "acpi_no_watchdog"
 
       # trust tsc, modern AMD platform
       "tsc=nowatchdog"
