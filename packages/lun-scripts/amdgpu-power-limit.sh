@@ -13,5 +13,9 @@ for card in /sys/class/drm/card[0-9]; do
 	echo "$profile" | sudo tee "$card"/device/pp_power_profile_mode >/dev/null
 done
 
+sleep 1
+
 echo "pp_power_profile_mode: active mode has *"
 cat /sys/class/drm/card0/device/pp_power_profile_mode
+echo "mclks ""$(cat /sys/class/drm/card*/device/pp_dpm_mclk)"
+echo "fclks ""$(cat /sys/class/drm/card*/device/pp_dpm_fclk)"
