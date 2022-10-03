@@ -1,6 +1,7 @@
 { pkgs, flake-args, ... }:
 {
   imports = [
+    ./dev.nix
     ./discord.nix
     ./gaming.nix
     ./syncthing.nix
