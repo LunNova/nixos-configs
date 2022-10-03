@@ -79,10 +79,16 @@ in
         patch = ./kernel/amdgpu-no-ecc.patch;
       }
     ];
+    powerManagement.cpuFreqGovernor = "schedutil";
+    programs.corectrl = {
+      enable = true;
+    };
+    users.users.lun.extraGroups = [ "corectrl" ];
 
     # watchdog hardware doesn't work
     boot.blacklistedKernelModules = [ "sp5100_tco" ];
 
+    # most important change is tickless kernel
     boot.kernelPackages = lib.mkForce pkgs.linuxPackages_xanmod_latest;
     #lun.amd-mem-encrypt.enable = true;
 
