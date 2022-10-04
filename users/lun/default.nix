@@ -56,6 +56,7 @@
     pinta # paint.net alternative
     calibre
     obsidian # note taking
+    microsoft-edge
   ];
 
   programs.git = {
