@@ -8,11 +8,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1664673482,
-        "narHash": "sha256-F4ZGbHXrLIAHF58CGVqx9bn3cCpRbpxYOA8GhNSkans=",
+        "lastModified": 1664915575,
+        "narHash": "sha256-qdGd3BaVv6DHR7rzUZ5tV0BuKwmxax326st+B2PnYPs=",
         "owner": "emmanuelrosa",
         "repo": "erosanix",
-        "rev": "24358bcf78dac3a2dc0641cdc81323abb71820e1",
+        "rev": "6193ef704de24ee98b9ee4902d305cf7c2cc1f62",
         "type": "github"
       },
       "original": {
@@ -143,11 +143,11 @@
     },
     "nixpkgs-stable": {
       "locked": {
-        "lastModified": 1664831710,
-        "narHash": "sha256-RBzKHMVbKuWICAUOz5hLuIWtnP8htLvbWxDcw+zI4pw=",
+        "lastModified": 1664883812,
+        "narHash": "sha256-wqBAcVRBxls2nVaNeQaOy9SRg/bvEUiD26TQDprIg8U=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "574f4f298c3e37ce286c64eee5862bb11f652871",
+        "rev": "fe76645aaf2fac3baaa2813fd0089930689c53b5",
         "type": "github"
       },
       "original": {
@@ -216,11 +216,11 @@
     "pct-clearvision": {
       "flake": false,
       "locked": {
-        "lastModified": 1663825725,
-        "narHash": "sha256-fNx1Gd3jnncgDvomgIpQzMKxA7luCdmka1gQzICUgUE=",
+        "lastModified": 1664887137,
+        "narHash": "sha256-WM2O1fUczJp1vxLr/IT0rhj16nQW/tDWIJkeAkXXUuY=",
         "owner": "ClearVision",
         "repo": "ClearVision-v6",
-        "rev": "5b87258c101bd4431cd5ac61382ac0bd83969d58",
+        "rev": "797c6ff2f543d248f624cd8e3e374f05a99b8a1e",
         "type": "github"
       },
       "original": {
