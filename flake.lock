@@ -278,11 +278,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1665111651,
-        "narHash": "sha256-PBkx/Y852KnOEg9pkrznUUfjcr0E/HyVEOF4yhkxk7A=",
+        "lastModified": 1665112677,
+        "narHash": "sha256-Da6Ti4/k6sQ3klNXgjDgAYaLKJ2zAR8wvjIrWekXMpM=",
         "owner": "LunNova",
         "repo": "replugged-nix-flake",
-        "rev": "7df75ac0b25123636c82f757789fe22da2ba5304",
+        "rev": "9161a1ec4f4a15148258ea5a8457bd1930512b7c",
         "type": "github"
       },
       "original": {
