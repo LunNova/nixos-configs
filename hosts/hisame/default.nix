@@ -67,17 +67,14 @@ in
         patch = ./kernel/idle.patch;
       }
       {
-        name = "amdgpu-interrupt";
-        # Shader wave interrupts were getting dropped in event_interrupt_wq_v11
-        # if the PRIV bit was set to 1. This would often lead to a hang. Until
-        # debugger logic is upstreamed, expand comment to stop early return.
-        # https://gitlab.freedesktop.org/agd5f/linux/-/commit/664883ddde67971d59764f2dda855183ecf8bc46
-        patch = ./kernel/amdgpu-interrupt.patch;
-      }
-      {
         name = "amdgpu-no-ecc";
         patch = ./kernel/amdgpu-no-ecc.patch;
       }
+      {
+        name = "amdgpu_bo_fence_warn.patch";
+        patch = ./kernel/amdgpu_bo_fence_warn.patch;
+      }
+      # add this patch? https://gitlab.freedesktop.org/drm/amd/-/issues/2080
     ];
     powerManagement.cpuFreqGovernor = "schedutil";
     programs.corectrl = {
@@ -87,9 +84,10 @@ in
 
     # watchdog hardware doesn't work
     boot.blacklistedKernelModules = [ "sp5100_tco" ];
+    services.power-profiles-daemon.enable = true;
 
     # most important change is tickless kernel
-    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_xanmod_latest;
+    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
     #lun.amd-mem-encrypt.enable = true;
 
     # Modulecan't load without "amd_pstate.shared_mem=1"

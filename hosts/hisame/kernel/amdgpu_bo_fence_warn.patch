@@ -1,0 +1,11 @@
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+index a06e72f474f..61314fcb161 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+@@ -615,5 +615,6 @@
+ void amdgpu_bo_fence(struct amdgpu_bo *bo, struct dma_fence *fence,
+ 		     bool shared)
+ {
++	WARN_ON(!bo || !fence);
+ 	struct dma_resv *resv = bo->tbo.base.resv;
+ 	int r;
