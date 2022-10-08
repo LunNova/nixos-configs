@@ -16,8 +16,6 @@ in
     system.stateVersion = "22.05";
 
     boot.kernelParams = [
-      "mitigations=off"
-
       # Potential workaround for high idle mclk?
       # https://gitlab.freedesktop.org/drm/amd/-/issues/1301#note_629735
       "video=2560x1440@60"
