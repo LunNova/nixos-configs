@@ -3,6 +3,7 @@
   imports = [
     ./dev.nix
     ./discord.nix
+    ./file-management.nix
     ./gaming.nix
     ./syncthing.nix
     ./xdg-mime-apps.nix
