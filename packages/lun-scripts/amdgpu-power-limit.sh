@@ -6,11 +6,14 @@ profile="${2:-2}"
 target=$((watts * 1000000))
 
 for card in /sys/class/drm/card[0-9]; do
-	old_cap=$(cat "$card"/device/hwmon/hwmon*/power1_cap)
-	echo -e "Card $card \t $old_cap \t -> \t $target"
-	echo "$target" | sudo tee "$card"/device/hwmon/hwmon*/power1_cap >/dev/null
-	echo manual | sudo tee "$card"/device/power_dpm_force_performance_level >/dev/null
-	echo "$profile" | sudo tee "$card"/device/pp_power_profile_mode >/dev/null
+	path=("$card"/device/hwmon/hwmon*/power1_cap)
+	if [ -f "${path[0]}" ]; then
+		old_cap=$(cat "${path[0]}")
+		echo -e "Card $card \t $old_cap \t -> \t $target"
+		echo "$target" | sudo tee "$card"/device/hwmon/hwmon*/power1_cap >/dev/null
+		echo manual | sudo tee "$card"/device/power_dpm_force_performance_level >/dev/null
+		echo "$profile" | sudo tee "$card"/device/pp_power_profile_mode >/dev/null
+	fi
 done
 
 sleep 1
