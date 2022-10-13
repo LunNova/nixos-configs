@@ -133,6 +133,11 @@ in
       ];
     };
 
+    services.plex = {
+      enable = true;
+      openFirewall = true;
+      dataDir = "/persist/plex/";
+    };
     hardware.cpu.amd.updateMicrocode = true;
 
     users.mutableUsers = false;
