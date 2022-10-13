@@ -5,6 +5,9 @@ let
   btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" "autodefrag" ];
   btrfsHddOpts = btrfsOpts ++ [ ];
   btrfsSsdOpts = btrfsOpts ++ [ "ssd" "discard=async" ];
+  waylandEnv = {
+    "KWIN_DRM_DEVICES" = "/dev/dri/card2";
+  };
 in
 {
   imports = [
@@ -18,7 +21,7 @@ in
     boot.kernelParams = [
       # Potential workaround for high idle mclk?
       # https://gitlab.freedesktop.org/drm/amd/-/issues/1301#note_629735
-      "video=2560x1440@60"
+      "video=1280x1024@60"
       # also https://gitlab.freedesktop.org/drm/amd/-/issues/1403#note_1190209
       # I usually turn on iommu=pt and amd_iommu=force
       # for vm performance
@@ -36,7 +39,9 @@ in
       # "amdgpu.bapm=0"
 
       # sched_policy:Scheduling policy (0 = HWS (Default), 1 = HWS without over-subscription, 2 = Non-HWS (Used for debugging only) (int)
-      "amdgpu.sched_policy=1" # maybe workaround GPU driver crash with mixed graphics/compute loads
+      # "amdgpu.sched_policy=2" # maybe workaround GPU driver crash with mixed graphics/compute loads
+      # "amdgpu.vm_update_mode=3" # same, maybe workaround
+      # "amdgpu.mcbp=1"
       "amdgpu.audio=0" # We never use display audio
       "amdgpu.ppfeaturemask=0xffffffff" # enable all powerplay features
       "amdgpu.gpu_recovery=2" # advanced TDR mode
@@ -79,6 +84,8 @@ in
       enable = true;
     };
     users.users.lun.extraGroups = [ "corectrl" ];
+    environment.variables = waylandEnv;
+    environment.sessionVariables = waylandEnv;
 
     # watchdog hardware doesn't work
     boot.blacklistedKernelModules = [ "sp5100_tco" ];
