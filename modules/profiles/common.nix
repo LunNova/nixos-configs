@@ -2,7 +2,6 @@
 {
   config = {
     my.home-manager.enabled-users = [ "lun" ];
-    sconfig.tty12-journal.enable = true;
 
     # LANGUAGE / I18N
     i18n = let locale = "en_US.UTF-8"; in
@@ -21,7 +20,7 @@
       keyMap = "us";
     };
     # Persist console when getty starts
-    systemd.services."getty@".serviceConfig.TTYVTDisallocate = "no";
+    # systemd.services."getty@".serviceConfig.TTYVTDisallocate = "no";
 
     # DISPLAYS
     hardware.video.hidpi.enable = false;
