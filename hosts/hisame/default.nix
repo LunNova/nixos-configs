@@ -19,6 +19,17 @@ in
     system.stateVersion = "22.05";
 
     boot.kernelParams = [
+      # disable ACS for root pcie switches that gpus are under
+      # and gpus
+      # aiming to get pcie p2pdma working
+      "pci=pcie_bus_perf,bfsort,realloc,big_root_window"
+      "pcie_ports=native"
+      "iommu=off"
+      "amd_iommu=off"
+      #"iommu=merge"
+      #"iommu.strict=1"
+      # "amd_iommu=pgtbl_v2"
+
       # Potential workaround for high idle mclk?
       # https://gitlab.freedesktop.org/drm/amd/-/issues/1301#note_629735
       "video=1280x1024@60"
@@ -77,6 +88,10 @@ in
         name = "amdgpu_bo_fence_warn.patch";
         patch = ./kernel/amdgpu_bo_fence_warn.patch;
       }
+      # {
+      #   name = "disable-acs-redir.patch";
+      #   patch = ./kernel/disable-acs-redir.patch;
+      # }
       # add this patch? https://gitlab.freedesktop.org/drm/amd/-/issues/2080
     ];
     powerManagement.cpuFreqGovernor = "schedutil";
@@ -92,7 +107,7 @@ in
     services.power-profiles-daemon.enable = true;
 
     # most important change is tickless kernel
-    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_xanmod_latest;
     #lun.amd-mem-encrypt.enable = true;
 
     # Modulecan't load without "amd_pstate.shared_mem=1"
