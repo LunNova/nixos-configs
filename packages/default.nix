@@ -48,10 +48,10 @@ let
       exec "${lun-scripts-path}/bin/$1" "''${@:2}"
     '';
     svpflow = pkgs.callPackage ./svpflow { };
-    mesa = pkgs.mesa.overrideAttrs (old: {
+    mesa = flake-args.nixpkgs-mesa-pr.legacyPackages.${pkgs.system}.mesa.overrideAttrs (old: {
       patches = (old.patches or [ ]) ++ [
-        ./mesa-id-fixes/01-mr11027.patch
-        ./mesa-id-fixes/02-names.patch
+        #./mesa-id-fixes/01-mr11027.patch
+        # ./mesa-id-fixes/02-names.patch
       ];
     });
   };

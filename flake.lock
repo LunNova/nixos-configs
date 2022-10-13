@@ -127,17 +127,33 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1665496400,
-        "narHash": "sha256-EDlvMqySM4B+/JyPMmcaLU+IeftFCidihnKWGqwyzUA=",
+        "lastModified": 1665672983,
+        "narHash": "sha256-V7Va7CRKmQRy95xSdlga5nV7q3/PusZwNAF/leb5PcU=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "a2bea0763b82fe6d694136687b1c5fc6e56894b6",
+        "rev": "bb2fb1524795f2d720cd13a2eb4d35d3a7a0d888",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-mesa-pr": {
+      "locked": {
+        "lastModified": 1665593158,
+        "narHash": "sha256-lrgvZID/uDU0s5LLeiS+Rt6fr0t5zyPbRSxwJDowkBM=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "20d1cc41c8da2d4241186115ef5653390d63568c",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "a2bea0763b82fe6d694136687b1c5fc6e56894b6",
+        "rev": "20d1cc41c8da2d4241186115ef5653390d63568c",
         "type": "github"
       }
     },
@@ -300,6 +316,7 @@
         "nix-gaming": "nix-gaming",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-mesa-pr": "nixpkgs-mesa-pr",
         "nixpkgs-stable": "nixpkgs-stable",
         "oxalica-nil": "oxalica-nil",
         "pcp-always-push": "pcp-always-push",
