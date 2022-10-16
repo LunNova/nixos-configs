@@ -13,5 +13,7 @@
     gtop
     gping
     procs
+    htop
+    atop
   ];
 }
