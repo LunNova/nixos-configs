@@ -1,6 +1,7 @@
 { pkgs, flake-args, ... }:
 {
   imports = [
+    ./conky.nix
     ./dev.nix
     ./discord.nix
     ./file-management.nix
