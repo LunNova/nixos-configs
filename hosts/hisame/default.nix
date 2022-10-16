@@ -26,6 +26,7 @@ in
       "pcie_ports=native"
       "iommu=off"
       "amd_iommu=off"
+      "amdgpu.lockup_timeout=10000,10000,10000,10000"
       #"iommu=merge"
       #"iommu.strict=1"
       # "amd_iommu=pgtbl_v2"
