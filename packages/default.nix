@@ -15,6 +15,10 @@ let
       borgbackup
       findutils
       optipng
+      vulkan-tools
+      gnugrep
+      curl
+      jq
     ];
     interpreter = "${pkgs.bash}/bin/bash";
     execer = [
@@ -30,9 +34,9 @@ let
     in
     builtins.listToAttrs (map (x: lib.nameValuePair x (pkgs.resholve.writeScriptBin x resholvCfg (builtins.readFile "${path}/${x}.sh"))) scripts);
 
-  lun-scripts = wrapScripts ./lun-scripts;
-  lun-scripts-path = pkgs.symlinkJoin { name = "lun-scripts"; paths = lib.attrValues lun-scripts; };
+  lun-scripts-path = pkgs.symlinkJoin { name = "lun-scripts"; paths = lib.attrValues self.lun-scripts; };
   self = {
+    lun-scripts = wrapScripts ./lun-scripts;
     xdg-open-with-portal = pkgs.callPackage ./xdg-open-with-portal { };
     kwinft = pkgs.lib.recurseIntoAttrs (pkgs.callPackage ./kwinft { });
     lutris = pkgs.lutris.override {
