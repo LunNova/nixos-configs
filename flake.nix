@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/master";
-    nixpkgs-mesa-pr.url = "github:NixOS/nixpkgs/20d1cc41c8da2d4241186115ef5653390d63568c";
+    nixpkgs-mesa-pr.url = "github:NixOS/nixpkgs/cfb5f6d1a583c4062efc53b7e2884cec3bd93395";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/release-22.05";
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
