@@ -90,6 +90,10 @@ in
         patch = ./kernel/amdgpu_bo_fence_warn.patch;
       }
       # {
+      #   name = "amdgpu-force-d3.patch";
+      #   patch = ./kernel/amdgpu-force-d3.patch;
+      # }
+      # {
       #   name = "disable-acs-redir.patch";
       #   patch = ./kernel/disable-acs-redir.patch;
       # }
