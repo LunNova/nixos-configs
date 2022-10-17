@@ -24,6 +24,8 @@ in
       # aiming to get pcie p2pdma working
       "pci=pcie_bus_perf,bfsort,realloc,big_root_window"
       "pcie_ports=native"
+      "pcie_port_pm=force"
+      "pcie_aspm=force"
       "iommu=off"
       "amd_iommu=off"
       "amdgpu.lockup_timeout=10000,10000,10000,10000"
@@ -45,9 +47,11 @@ in
       #   nix shell pkgs#sysfsutils -c systool -vm amdgpu
 
       # runpm:PX runtime pm (2 = force enable with BAMACO, 1 = force enable with BACO, 0 = disable, -1 = auto) (int)
-      "amdgpu.runpm=2"
+      # BAMACO = keeps memory powered up too for faster enter/exit?
+      # "snd_hda_intel.enable=0,0,0"
+      "amdgpu.runpm=1"
       # "amdgpu.dpm=0"
-      # "amdgpu.aspm=0"
+      "amdgpu.aspm=1"
       # "amdgpu.bapm=0"
 
       # sched_policy:Scheduling policy (0 = HWS (Default), 1 = HWS without over-subscription, 2 = Non-HWS (Used for debugging only) (int)
