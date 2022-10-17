@@ -52,11 +52,28 @@ let
       exec "${lun-scripts-path}/bin/$1" "''${@:2}"
     '';
     svpflow = pkgs.callPackage ./svpflow { };
-    mesa = flake-args.nixpkgs-mesa-pr.legacyPackages.${pkgs.system}.mesa.overrideAttrs (old: {
-      patches = (old.patches or [ ]) ++ [
-        #./mesa-id-fixes/01-mr11027.patch
-        # ./mesa-id-fixes/02-names.patch
-      ];
+    mesa = (flake-args.nixpkgs-mesa-pr.legacyPackages.${pkgs.system}.mesa.override {
+      # MESA_LOADER_DRIVER_OVERRIDE=zink
+      galliumDrivers = [ "zink" "iris" "i915" "radeonsi" "swrast" ];
+      vulkanDrivers = [ "amd" "intel" "swrast" ];
+      enableGalliumNine = false;
+      enableOSMesa = true;
+      enableOpenCL = true;
+    }).overrideAttrs (old: {
+      src = pkgs.fetchFromGitLab {
+        domain = "gitlab.freedesktop.org";
+        owner = "lun";
+        repo = "mesa";
+        rev = "19b349a65ea1c9684d07ddddfbb9524774c6f562";
+        sha256 = "sha256-NLuNND5dJnqVocxk7zZrCJs+WxktKeUbZQVrf/nZXaQ=";
+      };
+      mesonFlags = lib.lists.remove "-Dxvmc-libs-path=${placeholder "drivers"}/lib" old.mesonFlags;
+      postInstall = old.postInstall + ''
+        ln -s -t $drivers/lib/ ${pkgs.vulkan-loader}/lib/lib*
+        # echo looking for zink
+        # find $out -iname 'libvulkan*'
+        # exit 1
+      '';
     });
   };
 in
