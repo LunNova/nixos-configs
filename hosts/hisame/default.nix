@@ -110,6 +110,16 @@ in
     users.users.lun.extraGroups = [ "corectrl" ];
     environment.variables = waylandEnv;
     environment.sessionVariables = waylandEnv;
+    services.udev.extraRules = ''
+      ENV{DEVNAME}=="/dev/dri/card2", TAG+="mutter-device-preferred-primary"
+      # Remove AMD GPU Audio devices, if present
+      # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x1002", ATTR{class}=="0x040300", ATTR{remove}="1"
+    '';
+    services.xserver.displayManager.defaultSession = "plasmawayland";
+    services.xserver.displayManager.gdm.enable = true;
+    services.xserver.displayManager.sddm.enable = lib.mkForce false;
+    #services.xserver.displayManager.sddm.settings.General.DisplayServer = "wayland";
+    #services.xserver.displayManager.sddm.settings.Wayland.CompositorCommand = "${pkgs.weston}/bin/weston --drm-device=card2 --shell=fullscreen-shell.so";
 
     # watchdog hardware doesn't work
     boot.blacklistedKernelModules = [ "sp5100_tco" ];
