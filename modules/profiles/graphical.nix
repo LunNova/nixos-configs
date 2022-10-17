@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
   config = {
     # DESKTOP ENV
@@ -8,6 +8,9 @@
     # services.xserver.displayManager.gdm.enable = true;
     # services.xserver.displayManager.gdm.wayland = true;
     # services.xserver.displayManager.gdm.nvidiaWayland = true;
+    environment.systemPackages = [
+      pkgs.libsForQt5.bismuth
+    ];
     services.xserver.desktopManager.plasma5.enable = true;
     services.xserver.desktopManager.plasma5.runUsingSystemd = true;
     # vlc is smaller than gstreamer
