@@ -149,6 +149,14 @@
       lun.lun
     ];
 
+    # systemd
+    systemd.extraConfig = ''
+      DefaultTimeoutStopSec=45s
+    '';
+    systemd.user.extraConfig = ''
+      DefaultTimeoutStopSec=45s
+    '';
+
     # CHECKS
     assertions = [
       {
