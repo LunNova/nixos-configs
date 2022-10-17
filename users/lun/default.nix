@@ -97,7 +97,7 @@
     package = pkgs.firefox.overrideAttrs (old: {
       postFixup = ''
         ${old.postFixup or ""}
-        wrapProgram "$out/bin/firefox" --set GTK_USE_PORTAL 1
+        wrapProgram "$out/bin/firefox" --set GTK_USE_PORTAL 1 --set MOZ_ENABLE_WAYLAND 1
       '';
     });
   };
