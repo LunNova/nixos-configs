@@ -1,0 +1,12 @@
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 16a1663d02d4..18850aa2b79b 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -528,6 +528,7 @@ static int acpi_idle_bm_check(void)
+ 	p = disable_acs_redir_param;
+ 	while (*p) {
+ 		ret = pci_dev_str_match(dev, p, &p);
++       if (ret <= 0) { ret = 1; }
+ 		if (ret < 0) {
+ 			pr_info_once("PCI: Can't parse disable_acs_redir parameter: %s\n",
+ 				     disable_acs_redir_param);
