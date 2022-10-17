@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   config = {
     systemd.user.services.conky = {
@@ -10,7 +10,7 @@
       Service = {
         Type = "simple";
         ExecStart = ''
-          ${pkgs.bash}/bin/bash -c 'export ACTIVE_GPU="$(${pkgs.lun.lun-scripts.active-gpu-path}/bin/active-gpu-path)";exec ${pkgs.conky}/bin/conky'
+          ${pkgs.bash}/bin/bash -c 'export PATH=${lib.makeBinPath [ pkgs.lm_sensors ]}''${PATH:+:}$PATH;export ACTIVE_GPU="$(${pkgs.lun.lun-scripts.active-gpu-path}/bin/active-gpu-path)";exec ${pkgs.conky}/bin/conky'
         '';
       };
     };
