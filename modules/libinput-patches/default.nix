@@ -12,6 +12,11 @@ in
 
   config = lib.mkMerge [
     (lib.mkIf cfg.double-scroll-speed {
+      # For high res scroll wheels, udev rules like this work to increase scroll speed
+      # SUBSYSTEM=="input", ENV{MOUSE_WHEEL_CLICK_ANGLE}=120
+      # SUBSYSTEM=="input", ENV{MOUSE_WHEEL_CLICK_COUNT}=3
+      # There is no generic libinput solution for this :/
+
       nixpkgs.overlays = [
         (_self: super: {
           xorg = super.xorg.overrideScope' (_selfB: superB: {
