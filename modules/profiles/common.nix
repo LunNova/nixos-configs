@@ -125,6 +125,7 @@
       "net.ipv4.conf.default.send_redirects" = mkDefault false;
     };
 
+    documentation.enable = false;
     documentation.man.enable = false;
     documentation.nixos.enable = false;
 
