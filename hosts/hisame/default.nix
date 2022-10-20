@@ -145,7 +145,6 @@ in
     hardware.opengl = {
       package = pkgs.lun.mesa.drivers;
       extraPackages = [
-        pkgs.libglvnd
         pkgs.lun.mesa.drivers
         # Seems to perform worse but may be worth trying if ever run into vulkan issues
         # pkgs.amdvlk
