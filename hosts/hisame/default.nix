@@ -22,7 +22,7 @@ in
       # disable ACS for root pcie switches that gpus are under
       # and gpus
       # aiming to get pcie p2pdma working
-      "pci=pcie_bus_perf,bfsort,realloc,big_root_window"
+      "pci=pcie_bus_perf,bfsort,realloc,big_root_window,ecrc=on"
       "pcie_ports=native"
       "pcie_port_pm=force"
       "pcie_aspm=force"
