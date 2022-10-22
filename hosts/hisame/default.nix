@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, flake-args, ... }:
 let
   name = "hisame";
   swap = "/dev/disk/by-partlabel/hisame_swap";
@@ -129,11 +129,22 @@ in
     services.power-profiles-daemon.enable = true;
 
     # most important change is tickless kernel
-    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_xanmod_latest;
-    #lun.amd-mem-encrypt.enable = true;
+    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
 
-    # Modulecan't load without "amd_pstate.shared_mem=1"
-    # lun.amd-pstate.enable = true;
+    # Example with overridden source for testing 6.1
+    # boot.kernelPackages = let kernel = pkgs.linux_latest.override {
+    #   argsOverride = {
+    #     src = flake-args.linux-kernel-drm-fixes;
+    #     version = "6.1.0-rc-drm-fixes";
+    #     modDirVersion = "6.1.0-rc1";
+    #     ignoreConfigErrors = true;
+    #   };
+    #   configfile = pkgs.linux_latest.configfile.overrideAttrs {
+    #     ignoreConfigErrors = true;
+    #   };
+    # };
+    # in pkgs.linuxPackagesFor kernel;
+
     lun.power-saving.enable = true;
     lun.efi-tools.enable = true;
 
