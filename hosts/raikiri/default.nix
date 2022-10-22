@@ -19,10 +19,10 @@ in
     ];
     boot.kernelPackages = lib.mkForce pkgs.linuxPackages_xanmod;
 
-    services.xserver.videoDrivers = [ "nvidia" ];
+    services.xserver.videoDrivers = [ "amdgpu" ];
     lun.ml = {
       enable = true;
-      gpus = [ "nvidia" ];
+      gpus = [ "amd" ];
     };
 
     hardware.cpu.amd.updateMicrocode = true;
