@@ -279,6 +279,12 @@ in
         neededForBoot = false;
         options = btrfsSsdOpts ++ [ "nofail" "subvol=@scratch" ];
       };
+      "/mnt/bigscratch" = {
+        fsType = "btrfs";
+        device = "/dev/disk/by-partlabel/hisame_bigscratch";
+        neededForBoot = false;
+        options = btrfsSsdOpts ++ [ "nofail" "subvol=@main" ];
+      };
     };
     swapDevices = lib.mkForce [
       { device = swap; }
