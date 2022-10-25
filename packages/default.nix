@@ -25,7 +25,7 @@ let
       "cannot:${pkgs.borgbackup}/bin/borg"
     ];
     fake = {
-      external = [ "sudo" ];
+      external = [ "sudo" "idea-ultimate" ];
     };
   };
   wrapScripts = path:
