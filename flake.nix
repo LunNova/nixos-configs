@@ -20,6 +20,11 @@
     oxalica-nil.inputs.nixpkgs.follows = "nixpkgs";
     oxalica-nil.inputs.flake-utils.follows = "flake-utils";
 
+    linux-kernel-drm-fixes = {
+      url = "gitlab:agd5f/linux/drm-next?host=gitlab.freedesktop.org";
+      flake = false;
+    };
+
     minimal-shell.url = "github:LunNova/nix-minimal-shell";
 
     # Powercord. pcp- and pct- prefix have meaning, cause inclusion as powercord plugin/theme
