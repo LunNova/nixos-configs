@@ -64,15 +64,18 @@ let
         domain = "gitlab.freedesktop.org";
         owner = "lun";
         repo = "mesa";
-        rev = "19b349a65ea1c9684d07ddddfbb9524774c6f562";
+        rev = "7641e3524319dd9272be822b6e70c801496d9d92";
         sha256 = "sha256-NLuNND5dJnqVocxk7zZrCJs+WxktKeUbZQVrf/nZXaQ=";
       };
-      mesonFlags = lib.lists.remove "-Dxvmc-libs-path=${placeholder "drivers"}/lib" old.mesonFlags;
+      mesonFlags = (lib.lists.remove "-Dxvmc-libs-path=${placeholder "drivers"}/lib" old.mesonFlags) ++ [
+        "-D vulkan-layers=device-select,overlay"
+      ];
       postInstall = old.postInstall + ''
         ln -s -t $drivers/lib/ ${pkgs.vulkan-loader}/lib/lib*
-        # echo looking for zink
-        # find $out -iname 'libvulkan*'
-        # exit 1
+        mv -t $drivers/lib $out/lib/libVkLayer*
+        for js in $drivers/share/vulkan/{im,ex}plicit_layer.d/*.json; do
+          substituteInPlace "$js" --replace '"libVkLayer_' '"'"$drivers/lib/libVkLayer_"
+        done
       '';
     });
   };
