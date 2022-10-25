@@ -41,7 +41,7 @@ let
     kwinft = pkgs.lib.recurseIntoAttrs (pkgs.callPackage ./kwinft { });
     lutris = pkgs.lutris.override {
       inherit lutris-unwrapped;
-      # extraLibraries = pkgs: [ (pkgs.hiPrio xdg-open-with-portal) ];
+      extraLibraries = pkgs: [ pkgs.jansson ];
     };
     spawn = pkgs.callPackage ./spawn { };
     swaysome = pkgs.callPackage ./swaysome { };
