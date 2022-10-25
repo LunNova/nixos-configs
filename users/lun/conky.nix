@@ -8,10 +8,11 @@
       };
 
       Service = {
-        Type = "simple";
+        Type = "forking";
         ExecStart = ''
-          ${pkgs.bash}/bin/bash -c 'export PATH=${lib.makeBinPath [ pkgs.lm_sensors ]}''${PATH:+:}$PATH;export ACTIVE_GPU="$(${pkgs.lun.lun-scripts.active-gpu-path}/bin/active-gpu-path)";exec ${pkgs.conky}/bin/conky'
+          ${pkgs.bash}/bin/bash -c 'export PATH=${lib.makeBinPath [ pkgs.lm_sensors ]}''${PATH:+:}$PATH;export ACTIVE_GPU="$(${pkgs.lun.lun-scripts.active-gpu-path}/bin/active-gpu-path)";exec ${pkgs.conky}/bin/conky --daemonize'
         '';
+        OOMPolicy = "kill";
       };
     };
     systemd.user.timers.conky = {
