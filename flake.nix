@@ -78,6 +78,11 @@
           #   url = "https://github.com/NixOS/nixpkgs/compare/d536e0a0eb54ea51c676869991fe5a1681cc6302.patch";
           #   sha256 = "sha256-aKUt0iJp3TX3bzkxyWM/Pt61l9HnsnKGD2tX24H3dAA=";
           # })
+          (nixpkgs.legacyPackages.${system}.fetchpatch {
+            # xdg patch
+            url = "https://github.com/NixOS/nixpkgs/compare/staging..30b5179bf97.patch";
+            sha256 = "sha256-QtTGRdYIHTxHkvrcLLP+iLy3RuDWpkpWV3471kL6u7k=";
+          })
         ];
       defaultPkgsConfig = {
         inherit system;
