@@ -35,7 +35,7 @@ in
 
       # Potential workaround for high idle mclk?
       # https://gitlab.freedesktop.org/drm/amd/-/issues/1301#note_629735
-      "video=1280x1024@60"
+      "video=1024x768@60"
       # also https://gitlab.freedesktop.org/drm/amd/-/issues/1403#note_1190209
       # I usually turn on iommu=pt and amd_iommu=force
       # for vm performance
@@ -81,6 +81,19 @@ in
     ];
     boot.plymouth.enable = lib.mkForce false;
     boot.kernelPatches = [
+      {
+        name = "whoneedstodebuganyway";
+        patch = null;
+        extraStructuredConfig = with lib.kernel; {
+          DRM_FBDEV_EMULATION = lib.mkForce no;
+          FB_VGA16 = lib.mkForce no;
+          FB_UVESA = lib.mkForce no;
+          FB_VESA = lib.mkForce no;
+          FB_EFI = lib.mkForce no;
+          FB_NVIDIA = lib.mkForce no;
+          FB_RADEON = lib.mkForce no;
+        };
+      }
       {
         name = "idle-fix";
         patch = ./kernel/idle.patch;
