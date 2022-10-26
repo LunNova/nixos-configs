@@ -20,6 +20,11 @@
     oxalica-nil.inputs.nixpkgs.follows = "nixpkgs";
     oxalica-nil.inputs.flake-utils.follows = "flake-utils";
 
+    linux-freedesktop-drm-misc-fixes = {
+      url = "github:freedesktop/drm-misc/drm-misc-fixes";
+      flake = false;
+    };
+
     linux-kernel-drm-fixes = {
       url = "gitlab:agd5f/linux/drm-next?host=gitlab.freedesktop.org";
       flake = false;

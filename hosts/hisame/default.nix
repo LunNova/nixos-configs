@@ -106,6 +106,24 @@ in
         name = "amdgpu_bo_fence_warn.patch";
         patch = ./kernel/amdgpu_bo_fence_warn.patch;
       }
+      # Already applied in drm-misc-fixes
+      # {name = "ckonig-_1";patch = ./kernel/ckonig-amdgpu/_1-dont-pipeline.patch;}
+      # {name = "ckonig-_2";patch = ./kernel/ckonig-amdgpu/_2-dont-pipeline.patch;}
+      # Already applied in drm-misc-fixes
+      # Patch series https://lore.kernel.org/all/9514120e-5780-fd49-02ef-9d3f49f7453e@amd.com/
+      # {name = "ckonig-1";patch = ./kernel/ckonig-amdgpu/1.patch;}
+      { name = "ckonig-2"; patch = ./kernel/ckonig-amdgpu/2.patch; }
+      { name = "ckonig-3"; patch = ./kernel/ckonig-amdgpu/3.patch; }
+      { name = "ckonig-4"; patch = ./kernel/ckonig-amdgpu/4.patch; }
+      { name = "ckonig-5"; patch = ./kernel/ckonig-amdgpu/5.patch; }
+      { name = "ckonig-6"; patch = ./kernel/ckonig-amdgpu/6.patch; }
+      { name = "ckonig-7"; patch = ./kernel/ckonig-amdgpu/7.patch; }
+      { name = "ckonig-8"; patch = ./kernel/ckonig-amdgpu/8.patch; }
+      { name = "ckonig-9"; patch = ./kernel/ckonig-amdgpu/9.patch; }
+      { name = "ckonig-10"; patch = ./kernel/ckonig-amdgpu/10.patch; }
+      { name = "ckonig-11"; patch = ./kernel/ckonig-amdgpu/11.patch; }
+      { name = "ckonig-12"; patch = ./kernel/ckonig-amdgpu/12.patch; }
+      { name = "ckonig-13"; patch = ./kernel/ckonig-amdgpu/13.patch; }
       # {
       #   name = "amdgpu-force-d3.patch";
       #   patch = ./kernel/amdgpu-force-d3.patch;
@@ -137,26 +155,35 @@ in
     #services.xserver.displayManager.sddm.settings.General.DisplayServer = "wayland";
     #services.xserver.displayManager.sddm.settings.Wayland.CompositorCommand = "${pkgs.weston}/bin/weston --drm-device=card2 --shell=fullscreen-shell.so";
 
-    # watchdog hardware doesn't work
-    boot.blacklistedKernelModules = [ "sp5100_tco" ];
+
+    # boot.kernelModules = [ "nct6775" "zenpower" ];
+    # Use zenpower rather than k10temp for CPU temperatures.
+    # boot.extraModulePackages = with config.boot.kernelPackages; [ zenpower ];
+    boot.blacklistedKernelModules = [
+      "sp5100_tco" # watchdog hardware doesn't work
+      # "k10temp" # replaced by zenpower
+    ];
     services.power-profiles-daemon.enable = true;
 
     # most important change is tickless kernel
-    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+    # boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
 
     # Example with overridden source for testing 6.1
-    # boot.kernelPackages = let kernel = pkgs.linux_latest.override {
-    #   argsOverride = {
-    #     src = flake-args.linux-kernel-drm-fixes;
-    #     version = "6.1.0-rc-drm-fixes";
-    #     modDirVersion = "6.1.0-rc1";
-    #     ignoreConfigErrors = true;
-    #   };
-    #   configfile = pkgs.linux_latest.configfile.overrideAttrs {
-    #     ignoreConfigErrors = true;
-    #   };
-    # };
-    # in pkgs.linuxPackagesFor kernel;
+    boot.kernelPackages =
+      let
+        kernel = pkgs.linux_latest.override {
+          argsOverride = {
+            src = flake-args.linux-freedesktop-drm-misc-fixes;
+            version = "6.1.0-dmf";
+            modDirVersion = "6.1.0-rc2";
+            ignoreConfigErrors = true;
+          };
+          configfile = pkgs.linux_latest.configfile.overrideAttrs {
+            ignoreConfigErrors = true;
+          };
+        };
+      in
+      pkgs.linuxPackagesFor kernel;
 
     lun.power-saving.enable = true;
     lun.efi-tools.enable = true;

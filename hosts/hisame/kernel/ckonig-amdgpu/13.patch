@@ -1,0 +1,96 @@
+This now matches much better what this is doing.
+
+Signed-off-by: Christian König <christian.koenig@xxxxxxx>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_job.c  |  4 ++--
+ drivers/gpu/drm/scheduler/sched_entity.c |  4 ++--
+ include/drm/gpu_scheduler.h              | 13 ++++++-------
+ 3 files changed, 10 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
+index b8494c3b3b8a..1c4a13693653 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
+@@ -237,7 +237,7 @@ int amdgpu_job_submit_direct(struct amdgpu_job *job, struct amdgpu_ring *ring,
+ }
+ 
+ static struct dma_fence *
+-amdgpu_job_dependency(struct drm_sched_job *sched_job,
++amdgpu_job_prepare_job(struct drm_sched_job *sched_job,
+ 		      struct drm_sched_entity *s_entity)
+ {
+ 	struct amdgpu_ring *ring = to_amdgpu_ring(s_entity->rq->sched);
+@@ -326,7 +326,7 @@ void amdgpu_job_stop_all_jobs_on_sched(struct drm_gpu_scheduler *sched)
+ }
+ 
+ const struct drm_sched_backend_ops amdgpu_sched_ops = {
+-	.dependency = amdgpu_job_dependency,
++	.prepare_job = amdgpu_job_prepare_job,
+ 	.run_job = amdgpu_job_run,
+ 	.timedout_job = amdgpu_job_timedout,
+ 	.free_job = amdgpu_job_free_cb
+diff --git a/drivers/gpu/drm/scheduler/sched_entity.c b/drivers/gpu/drm/scheduler/sched_entity.c
+index 54ac37cd5017..cf68cd1559ec 100644
+--- a/drivers/gpu/drm/scheduler/sched_entity.c
++++ b/drivers/gpu/drm/scheduler/sched_entity.c
+@@ -397,8 +397,8 @@ drm_sched_job_dependency(struct drm_sched_job *job,
+ 	if (!xa_empty(&job->dependencies))
+ 		return xa_erase(&job->dependencies, job->last_dependency++);
+ 
+-	if (job->sched->ops->dependency)
+-		return job->sched->ops->dependency(job, entity);
++	if (job->sched->ops->prepare_job)
++		return job->sched->ops->prepare_job(job, entity);
+ 
+ 	return NULL;
+ }
+diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
+index b1698819ad38..163385e15597 100644
+--- a/include/drm/gpu_scheduler.h
++++ b/include/drm/gpu_scheduler.h
+@@ -1,5 +1,5 @@ struct drm_sched_job {
+ #include <linux/dma-fence.h>
+ #include <linux/completion.h>
+ #include <linux/xarray.h>
+-#include <linux/workqueue.h>
++#include <linux/irq_work.h>
+ 
+diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
+index b1698819ad38..163385e15597 100644
+--- a/include/drm/gpu_scheduler.h
++++ b/include/drm/gpu_scheduler.h
+@@ -306,7 +306,7 @@ struct drm_sched_job {
+ 	 */
+ 	union {
+ 		struct dma_fence_cb		finish_cb;
+-		struct work_struct 		work;
++		struct irq_work			work;
+ 	};
+ 
+ 	uint64_t			id;
+@@ -347,18 +347,17 @@ enum drm_gpu_sched_stat {
+  */
+ struct drm_sched_backend_ops {
+ 	/**
+-	 * @dependency:
++	 * @prepare_job:
+ 	 *
+ 	 * Called when the scheduler is considering scheduling this job next, to
+ 	 * get another struct dma_fence for this job to block on.  Once it
+ 	 * returns NULL, run_job() may be called.
+ 	 *
+-	 * If a driver exclusively uses drm_sched_job_add_dependency() and
+-	 * drm_sched_job_add_implicit_dependencies() this can be ommitted and
+-	 * left as NULL.
++	 * Can be NULL if no additional preparation to the dependencies are
++	 * necessary. Skipped when jobs are killed instead of run.
+ 	 */
+-	struct dma_fence *(*dependency)(struct drm_sched_job *sched_job,
+-					struct drm_sched_entity *s_entity);
++	struct dma_fence *(*prepare_job)(struct drm_sched_job *sched_job,
++					 struct drm_sched_entity *s_entity);
+ 
+ 	/**
+          * @run_job: Called to execute the job once all of the dependencies
+-- 
+2.25.1

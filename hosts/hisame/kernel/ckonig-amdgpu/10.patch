@@ -1,0 +1,179 @@
+Entirely remove the sync obj in the job.
+
+Signed-off-by: Christian König <christian.koenig@xxxxxxx>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c  | 21 ++++++++++-----------
+ drivers/gpu/drm/amd/amdgpu/amdgpu_cs.h  |  2 ++
+ drivers/gpu/drm/amd/amdgpu/amdgpu_job.c |  9 +--------
+ drivers/gpu/drm/amd/amdgpu/amdgpu_job.h |  1 -
+ 4 files changed, 13 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
+index d45b86bcf7fa..0528c2b1db6e 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
+@@ -426,7 +426,7 @@ static int amdgpu_cs_p2_dependencies(struct amdgpu_cs_parser *p,
+ 			dma_fence_put(old);
+ 		}
+ 
+-		r = amdgpu_sync_fence(&p->gang_leader->sync, fence);
++		r = amdgpu_sync_fence(&p->sync, fence);
+ 		dma_fence_put(fence);
+ 		if (r)
+ 			return r;
+@@ -448,7 +448,7 @@ static int amdgpu_syncobj_lookup_and_add(struct amdgpu_cs_parser *p,
+ 		return r;
+ 	}
+ 
+-	r = amdgpu_sync_fence(&p->gang_leader->sync, fence);
++	r = amdgpu_sync_fence(&p->sync, fence);
+ 	if (r)
+ 		goto error;
+ 
+@@ -1108,7 +1108,7 @@ static int amdgpu_cs_vm_handling(struct amdgpu_cs_parser *p)
+ 	if (r)
+ 		return r;
+ 
+-	r = amdgpu_sync_fence(&job->sync, fpriv->prt_va->last_pt_update);
++	r = amdgpu_sync_fence(&p->sync, fpriv->prt_va->last_pt_update);
+ 	if (r)
+ 		return r;
+ 
+@@ -1119,7 +1119,7 @@ static int amdgpu_cs_vm_handling(struct amdgpu_cs_parser *p)
+ 		if (r)
+ 			return r;
+ 
+-		r = amdgpu_sync_fence(&job->sync, bo_va->last_pt_update);
++		r = amdgpu_sync_fence(&p->sync, bo_va->last_pt_update);
+ 		if (r)
+ 			return r;
+ 	}
+@@ -1138,7 +1138,7 @@ static int amdgpu_cs_vm_handling(struct amdgpu_cs_parser *p)
+ 		if (r)
+ 			return r;
+ 
+-		r = amdgpu_sync_fence(&job->sync, bo_va->last_pt_update);
++		r = amdgpu_sync_fence(&p->sync, bo_va->last_pt_update);
+ 		if (r)
+ 			return r;
+ 	}
+@@ -1151,7 +1151,7 @@ static int amdgpu_cs_vm_handling(struct amdgpu_cs_parser *p)
+ 	if (r)
+ 		return r;
+ 
+-	r = amdgpu_sync_fence(&job->sync, vm->last_update);
++	r = amdgpu_sync_fence(&p->sync, vm->last_update);
+ 	if (r)
+ 		return r;
+ 
+@@ -1183,7 +1183,6 @@ static int amdgpu_cs_vm_handling(struct amdgpu_cs_parser *p)
+ static int amdgpu_cs_sync_rings(struct amdgpu_cs_parser *p)
+ {
+ 	struct amdgpu_fpriv *fpriv = p->filp->driver_priv;
+-	struct amdgpu_job *leader = p->gang_leader;
+ 	struct amdgpu_bo_list_entry *e;
+ 	unsigned int i;
+ 	int r;
+@@ -1195,14 +1194,14 @@ static int amdgpu_cs_sync_rings(struct amdgpu_cs_parser *p)
+ 
+ 		sync_mode = amdgpu_bo_explicit_sync(bo) ?
+ 			AMDGPU_SYNC_EXPLICIT : AMDGPU_SYNC_NE_OWNER;
+-		r = amdgpu_sync_resv(p->adev, &leader->sync, resv, sync_mode,
++		r = amdgpu_sync_resv(p->adev, &p->sync, resv, sync_mode,
+ 				     &fpriv->vm);
+ 		if (r)
+ 			return r;
+ 	}
+ 
+-	for (i = 0; i < p->gang_size - 1; ++i) {
+-		r = amdgpu_sync_clone(&leader->sync, &p->jobs[i]->sync);
++	for (i = 0; i < p->gang_size; ++i) {
++		r = amdgpu_sync_push_to_job(&p->sync, p->jobs[i]);
+ 		if (r)
+ 			return r;
+ 	}
+@@ -1248,7 +1247,7 @@ static int amdgpu_cs_submit(struct amdgpu_cs_parser *p,
+ 		struct dma_fence *fence;
+ 
+ 		fence = &p->jobs[i]->base.s_fence->scheduled;
+-		r = amdgpu_sync_fence(&leader->sync, fence);
++		r = drm_sched_job_add_dependency(&leader->base, fence);
+ 		if (r)
+ 			goto error_cleanup;
+ 	}
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.h
+index cbaa19b2b8a3..207e801c24ed 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.h
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.h
+@@ -75,6 +75,8 @@ struct amdgpu_cs_parser {
+ 
+ 	unsigned			num_post_deps;
+ 	struct amdgpu_cs_post_dep	*post_deps;
++
++	struct amdgpu_sync		sync;
+ };
+ 
+ int amdgpu_cs_find_mapping(struct amdgpu_cs_parser *parser,
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
+index ba98d65835b4..b8494c3b3b8a 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
+@@ -106,7 +106,6 @@ int amdgpu_job_alloc(struct amdgpu_device *adev, struct amdgpu_vm *vm,
+ 	(*job)->base.sched = &adev->rings[0]->sched;
+ 	(*job)->vm = vm;
+ 
+-	amdgpu_sync_create(&(*job)->sync);
+ 	amdgpu_sync_create(&(*job)->explicit_sync);
+ 	(*job)->vram_lost_counter = atomic_read(&adev->vram_lost_counter);
+ 	(*job)->vm_pd_addr = AMDGPU_BO_INVALID_OFFSET;
+@@ -174,9 +173,7 @@ static void amdgpu_job_free_cb(struct drm_sched_job *s_job)
+ 
+ 	drm_sched_job_cleanup(s_job);
+ 
+-	amdgpu_sync_free(&job->sync);
+ 	amdgpu_sync_free(&job->explicit_sync);
+-
+ 	dma_fence_put(&job->hw_fence);
+ }
+ 
+@@ -202,7 +199,6 @@ void amdgpu_job_free(struct amdgpu_job *job)
+ 		drm_sched_job_cleanup(&job->base);
+ 
+ 	amdgpu_job_free_resources(job);
+-	amdgpu_sync_free(&job->sync);
+ 	amdgpu_sync_free(&job->explicit_sync);
+ 	if (job->gang_submit != &job->base.s_fence->scheduled)
+ 		dma_fence_put(job->gang_submit);
+@@ -246,10 +242,9 @@ amdgpu_job_dependency(struct drm_sched_job *sched_job,
+ {
+ 	struct amdgpu_ring *ring = to_amdgpu_ring(s_entity->rq->sched);
+ 	struct amdgpu_job *job = to_amdgpu_job(sched_job);
+-	struct dma_fence *fence;
++	struct dma_fence *fence = NULL;
+ 	int r;
+ 
+-	fence = amdgpu_sync_get_fence(&job->sync);
+ 	while (fence == NULL && job->vm && !job->vmid) {
+ 		r = amdgpu_vmid_grab(job->vm, ring, job, &fence);
+ 		if (r)
+@@ -273,8 +268,6 @@ static struct dma_fence *amdgpu_job_run(struct drm_sched_job *sched_job)
+ 	job = to_amdgpu_job(sched_job);
+ 	finished = &job->base.s_fence->finished;
+ 
+-	BUG_ON(amdgpu_sync_peek_fence(&job->sync, NULL));
+-
+ 	trace_amdgpu_sched_run_job(job);
+ 
+ 	/* Skip job if VRAM is lost and never resubmit gangs */
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.h
+index 9c10b9bd0084..6558839fda03 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.h
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.h
+@@ -47,7 +47,6 @@ enum amdgpu_ib_pool_type;
+ struct amdgpu_job {
+ 	struct drm_sched_job    base;
+ 	struct amdgpu_vm	*vm;
+-	struct amdgpu_sync	sync;
+ 	struct amdgpu_sync	explicit_sync;
+ 	struct dma_fence	hw_fence;
+ 	struct dma_fence	*gang_submit;

@@ -74,6 +74,23 @@
         "type": "github"
       }
     },
+    "linux-freedesktop-drm-misc-fixes": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1666696476,
+        "narHash": "sha256-bZOyz4pOMTl46ynU1eMn6XOXjcOFAq75IGvRGBj9224=",
+        "owner": "freedesktop",
+        "repo": "drm-misc",
+        "rev": "b3af84383e7abdc5e63435817bb73a268e7c3637",
+        "type": "github"
+      },
+      "original": {
+        "owner": "freedesktop",
+        "ref": "drm-misc-fixes",
+        "repo": "drm-misc",
+        "type": "github"
+      }
+    },
     "linux-kernel-drm-fixes": {
       "flake": false,
       "locked": {
@@ -331,6 +348,7 @@
         "erosanix": "erosanix",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
+        "linux-freedesktop-drm-misc-fixes": "linux-freedesktop-drm-misc-fixes",
         "linux-kernel-drm-fixes": "linux-kernel-drm-fixes",
         "minimal-shell": "minimal-shell",
         "nix-gaming": "nix-gaming",

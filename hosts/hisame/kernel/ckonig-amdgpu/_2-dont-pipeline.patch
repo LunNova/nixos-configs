@@ -1,0 +1,32 @@
+Make sure that we always have a CPU round trip to let the submission
+code correctly decide if a TLB flush is necessary or not.
+
+Signed-off-by: Christian König <christian.koenig@amd.com>
+CC: stable@vger.kernel.org # 5.19+
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vm_sdma.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm_sdma.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm_sdma.c
+index 2b0669c464f6..69e105fa41f6 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm_sdma.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm_sdma.c
+@@ -116,8 +116,15 @@ static int amdgpu_vm_sdma_commit(struct amdgpu_vm_update_params *p,
+ 				   DMA_RESV_USAGE_BOOKKEEP);
+ 	}
+ 
+-	if (fence && !p->immediate)
++	if (fence && !p->immediate) {
++		/*
++		 * Most hw generations now have a separate queue for page table
++		 * updates, but when the queue is shared with userspace we need
++		 * the extra CPU round trip to correctly flush the TLB.
++		 */
++		set_bit(DRM_SCHED_FENCE_DONT_PIPELINE, &f->flags);
+ 		swap(*fence, f);
++	}
+ 	dma_fence_put(f);
+ 	return 0;
+ 
+-- 
+2.25.1
