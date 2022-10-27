@@ -88,6 +88,11 @@
             url = "https://github.com/NixOS/nixpkgs/compare/staging..30b5179bf97.patch";
             sha256 = "sha256-QtTGRdYIHTxHkvrcLLP+iLy3RuDWpkpWV3471kL6u7k=";
           })
+          (nixpkgs.legacyPackages.${system}.fetchpatch {
+            # antlr runtime build fix https://github.com/NixOS/nixpkgs/pull/198002
+            url = "https://github.com/NixOS/nixpkgs/compare/master..c092f24f9c8e14b44db10d2d901c643332bde5fb.patch";
+            sha256 = "sha256-jU65zIStd6DsgSHGuTSFNr13SkBoGgOAut8DbJQeiPU=";
+          })
         ];
       defaultPkgsConfig = {
         inherit system;
