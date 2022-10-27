@@ -91,25 +91,6 @@
         "type": "github"
       }
     },
-    "linux-kernel-drm-fixes": {
-      "flake": false,
-      "locked": {
-        "host": "gitlab.freedesktop.org",
-        "lastModified": 1666636727,
-        "narHash": "sha256-4y1H+KzfON5p4FToNQGMVanp0A9TmN5NyrfGiOcwcO8=",
-        "owner": "agd5f",
-        "repo": "linux",
-        "rev": "34d84636e5e09521d031863a01f9b9fb22ffa875",
-        "type": "gitlab"
-      },
-      "original": {
-        "host": "gitlab.freedesktop.org",
-        "owner": "agd5f",
-        "ref": "drm-next",
-        "repo": "linux",
-        "type": "gitlab"
-      }
-    },
     "minimal-shell": {
       "locked": {
         "lastModified": 1639587364,
@@ -349,7 +330,6 @@
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "linux-freedesktop-drm-misc-fixes": "linux-freedesktop-drm-misc-fixes",
-        "linux-kernel-drm-fixes": "linux-kernel-drm-fixes",
         "minimal-shell": "minimal-shell",
         "nix-gaming": "nix-gaming",
         "nixos-hardware": "nixos-hardware",
