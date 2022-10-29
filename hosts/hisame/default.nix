@@ -6,7 +6,9 @@ let
   btrfsHddOpts = btrfsOpts ++ [ ];
   btrfsSsdOpts = btrfsOpts ++ [ "ssd" "discard=async" ];
   waylandEnv = {
-    "KWIN_DRM_DEVICES" = "/dev/dri/card2";
+    KMS_DEVICE = "/dev/dri/card2";
+    KWIN_DRM_DEVICES = "/dev/dri/card2";
+    MESA_VK_DEVICE_SELECT_FORCE_DEFAULT_DEVICE = "1";
   };
 in
 {
