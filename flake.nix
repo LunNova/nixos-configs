@@ -79,15 +79,26 @@
           #   sha256 = "sha256-aKUt0iJp3TX3bzkxyWM/Pt61l9HnsnKGD2tX24H3dAA=";
           # })
           (nixpkgs.legacyPackages.${system}.fetchpatch {
-            # xdg patch
-            url = "https://github.com/NixOS/nixpkgs/compare/staging..30b5179bf97.patch";
-            sha256 = "sha256-QtTGRdYIHTxHkvrcLLP+iLy3RuDWpkpWV3471kL6u7k=";
+            #  xdg-utils,nixos/xdg/portal: implement workaround for opening programs from FHS envs or wrappers reliably #197118 
+            url = "https://github.com/NixOS/nixpkgs/compare/staging..856566f3654381a75aade0e2f3d5ceb8b5e9617e.patch";
+            sha256 = "sha256-rUIhVB1RQXkOk+0Hhhui9ZJ/KGMxIzuWn9cZP80QbBE=";
           })
           (nixpkgs.legacyPackages.${system}.fetchpatch {
             # antlr runtime build fix https://github.com/NixOS/nixpkgs/pull/198002
             url = "https://github.com/NixOS/nixpkgs/compare/master..c092f24f9c8e14b44db10d2d901c643332bde5fb.patch";
             sha256 = "sha256-jU65zIStd6DsgSHGuTSFNr13SkBoGgOAut8DbJQeiPU=";
           })
+          (nixpkgs.legacyPackages.${system}.fetchpatch {
+            # kde 5.26.2 https://github.com/NixOS/nixpkgs/pull/198010
+            url = "https://github.com/NixOS/nixpkgs/compare/master..0354ac3bec5f5c3c2752ee9a2f78f83de11b4771.patch";
+            sha256 = "sha256-Cc2O5DRQrHq/QN3s1Tut254spZ9tol01+gGj1wzEw3Q=";
+          })
+          (nixpkgs.legacyPackages.${system}.fetchpatch {
+            # lutris: set unshareIpc and unsharePid to false #198384 
+            url = "https://github.com/NixOS/nixpkgs/compare/master..28244d4c9a1b28875e56f79c09f5dcb9ec01d696.patch";
+            sha256 = "sha256-arokknYHD9ycx38fEX/JQ2gL3UlSNDJt2FkGWlLqqfY=";
+          })
+
         ];
       defaultPkgsConfig = {
         inherit system;
