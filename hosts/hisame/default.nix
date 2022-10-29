@@ -21,50 +21,20 @@ in
     system.stateVersion = "22.05";
 
     boot.kernelParams = [
-      # disable ACS for root pcie switches that gpus are under
-      # and gpus
-      # aiming to get pcie p2pdma working
+      # force fastest transfer size
+      # big_root_window for rebar
+      # ecrc=on to force on if not done by platform
       "pci=pcie_bus_perf,big_root_window,ecrc=on"
-      "pcie_ports=native"
-      "pcie_port_pm=force"
-      "pcie_aspm=force"
-      "iommu=off"
-      "amd_iommu=off"
-      "amdgpu.lockup_timeout=10000,10000,10000,10000"
-      #"iommu=merge"
-      #"iommu.strict=1"
-      # "amd_iommu=pgtbl_v2"
-
+      "pcie_ports=native" # handle everything in linux even if uefi wants to
+      "pcie_port_pm=force" # force pm on even if not wanted by platform
+      "pcie_aspm=force" # force link state
       # Potential workaround for high idle mclk?
       # https://gitlab.freedesktop.org/drm/amd/-/issues/1301#note_629735
-      "video=1024x768@60"
-      # also https://gitlab.freedesktop.org/drm/amd/-/issues/1403#note_1190209
-      # I usually turn on iommu=pt and amd_iommu=force
-      # for vm performance
-      # but had some instability that might be caused by it
-
-      # List amdgpu param docs
-      #   modinfo amdgpu | grep "^parm:"
-      # List amdgpu param current values and undocumented params
-      #   nix shell pkgs#sysfsutils -c systool -vm amdgpu
-
-      # runpm:PX runtime pm (2 = force enable with BAMACO, 1 = force enable with BACO, 0 = disable, -1 = auto) (int)
-      # BAMACO = keeps memory powered up too for faster enter/exit?
-      # "snd_hda_intel.enable=0,0,0"
-      "amdgpu.runpm=1"
-      # "amdgpu.dpm=0"
-      "amdgpu.aspm=1"
-      # "amdgpu.bapm=0"
-
-      # sched_policy:Scheduling policy (0 = HWS (Default), 1 = HWS without over-subscription, 2 = Non-HWS (Used for debugging only) (int)
-      # "amdgpu.sched_policy=2" # maybe workaround GPU driver crash with mixed graphics/compute loads
-      # "amdgpu.vm_update_mode=3" # same, maybe workaround
-      # "amdgpu.mcbp=1"
-      "amdgpu.audio=0" # We never use display audio
-      "amdgpu.ppfeaturemask=0xffffffff" # enable all powerplay features
-      "amdgpu.gpu_recovery=2" # advanced TDR mode
-      # reset_method:GPU reset method (-1 = auto (default), 0 = legacy, 1 = mode0, 2 = mode1, 3 = mode2, 4 = baco/bamaco) (int)
-      "amdgpu.reset_method=4"
+      # or https://gitlab.freedesktop.org/drm/amd/-/issues/1403#note_1190209
+      # video="HDMI-A-1:2560x1440R@110D" - should be the mode for the 110Hz 24" 1440p Lenovo - G24qe-20
+      "video=d"
+      "video=DP-13:2560x1440R@144D"
+      "video=DP-14:3440x1440R@72D"
 
       # hw hwatchdog doesn't work on this platform
       "nmi_watchdog=0"
@@ -73,13 +43,37 @@ in
 
       # trust tsc, modern AMD platform
       "tsc=nowatchdog"
+      # I usually turn on iommu=pt and amd_iommu=force
+      # for vm performance
+      # but had some instability that might be caused by it
+
+      # disable first three intel hda devices
+      "snd_hda_intel.enable=0,0,0"
+
+      # List amdgpu param docs
+      #   modinfo amdgpu | grep "^parm:"
+      # List amdgpu param current values and undocumented params
+      #   nix shell pkgs#sysfsutils -c systool -vm amdgpu
+
+      # 10s timeout for all operations (otherwise compute defaults to 60s)
+      "amdgpu.lockup_timeout=10000,10000,10000,10000"
+      # runpm:PX runtime pm (2 = force enable with BAMACO, 1 = force enable with BACO, 0 = disable, -1 = auto) (int)
+      # BAMACO = keeps memory powered up too for faster enter/exit?
+      "amdgpu.runpm=2"
+      "amdgpu.aspm=1"
+      # "amdgpu.bapm=0"
+
+      # sched_policy:Scheduling policy (0 = HWS (Default), 1 = HWS without over-subscription, 2 = Non-HWS (Used for debugging only) (int)
+      # "amdgpu.sched_policy=2" # maybe workaround GPU driver crash with mixed graphics/compute loads
+      # "amdgpu.vm_update_mode=3" # same, maybe workaround
+      # "amdgpu.mcbp=1"
+      #"amdgpu.ppfeaturemask=0xffffffff" # enable all powerplay features
+      "amdgpu.gpu_recovery=2" # advanced TDR mode
+      # reset_method:GPU reset method (-1 = auto (default), 0 = legacy, 1 = mode0, 2 = mode1, 3 = mode2, 4 = baco/bamaco) (int)
+      "amdgpu.reset_method=4"
 
       # TODO: Move into amdgpu-no-ecc module
       "amdgpu.ras_enable=0"
-      # PCIE tinkering
-      # "pcie_ports=native"
-      # "pci=bfsort,assign-busses,realloc,nocrs"
-      # "pcie_aspm=off"
     ];
     boot.plymouth.enable = lib.mkForce false;
     boot.kernelPatches = [
