@@ -89,19 +89,9 @@
             sha256 = "sha256-jU65zIStd6DsgSHGuTSFNr13SkBoGgOAut8DbJQeiPU=";
           })
           (nixpkgs.legacyPackages.${system}.fetchpatch {
-            # kde 5.26.2 https://github.com/NixOS/nixpkgs/pull/198010
-            url = "https://github.com/NixOS/nixpkgs/compare/master..0354ac3bec5f5c3c2752ee9a2f78f83de11b4771.patch";
-            sha256 = "sha256-Cc2O5DRQrHq/QN3s1Tut254spZ9tol01+gGj1wzEw3Q=";
-          })
-          (nixpkgs.legacyPackages.${system}.fetchpatch {
             # lutris: set unshareIpc and unsharePid to false #198384 
             url = "https://github.com/NixOS/nixpkgs/compare/master..28244d4c9a1b28875e56f79c09f5dcb9ec01d696.patch";
             sha256 = "sha256-arokknYHD9ycx38fEX/JQ2gL3UlSNDJt2FkGWlLqqfY=";
-          })
-          (nixpkgs.legacyPackages.${system}.fetchpatch {
-            # [staging-next] qt5: 5.15.6 -> 5.15.7 #198441
-            url = "https://github.com/NixOS/nixpkgs/compare/staging-next..8fdc1765a963435a6bc73081941519300849980e.patch";
-            sha256 = "sha256-FU5xAXcko0hdMRHbZvCRMmNfrezAu84JmgPLlZEYCvs=";
           })
         ];
       defaultPkgsConfig = {
