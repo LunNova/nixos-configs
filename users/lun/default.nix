@@ -56,6 +56,7 @@
     flake-args.oxalica-nil.packages.${pkgs.system}.nil
     ark
     unar
+    unzip
     p7zip
     pinta # paint.net alternative
     calibre
