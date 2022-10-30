@@ -47,8 +47,8 @@ in
       # for vm performance
       # but had some instability that might be caused by it
 
-      # disable first three intel hda devices
-      "snd_hda_intel.enable=0,0,0"
+      # disable first two intel hda devices
+      "snd_hda_intel.enable=0,0"
 
       # List amdgpu param docs
       #   modinfo amdgpu | grep "^parm:"
