@@ -143,11 +143,11 @@ in
       # }
       # add this patch? https://gitlab.freedesktop.org/drm/amd/-/issues/2080
     ];
-    powerManagement.cpuFreqGovernor = "schedutil";
-    programs.corectrl = {
-      enable = true;
-    };
-    users.users.lun.extraGroups = [ "corectrl" ];
+    lun.amd-pstate.enable = true;
+    lun.amd-pstate.sharedMem = true;
+    boot.kernelModules = [ "cpufreq_conservative" ];
+    powerManagement.cpuFreqGovernor = "conservative";
+
     environment.variables = waylandEnv;
     environment.sessionVariables = waylandEnv;
     services.udev.extraRules = ''
