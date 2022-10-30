@@ -193,14 +193,12 @@ in
     };
     hardware.opengl = {
       package = pkgs.lun.mesa.drivers;
-      extraPackages = [
-        pkgs.lun.mesa.drivers
+      package32 = pkgs.lun.mesa-i686.drivers;
+      extraPackages = lib.mkForce [
         # Seems to perform worse but may be worth trying if ever run into vulkan issues
         # pkgs.amdvlk
       ];
-      extraPackages32 = [
-        pkgs.pkgsi686Linux.mesa.drivers
-      ];
+      extraPackages32 = lib.mkForce [ ];
     };
 
     services.plex = {
