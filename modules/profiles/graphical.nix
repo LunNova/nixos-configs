@@ -16,6 +16,12 @@
     # vlc is smaller than gstreamer
     services.xserver.desktopManager.plasma5.phononBackend = "vlc";
 
+    # XDG
+    xdg.portal = {
+      enable = true;
+      xdgOpenUsePortal = true;
+    };
+
     # GRAPHICS ACCEL
     hardware.opengl = {
       enable = true;
