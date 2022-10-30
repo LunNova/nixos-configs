@@ -144,6 +144,7 @@ in
       # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x1002", ATTR{class}=="0x040300", ATTR{remove}="1"
       # This causes critical thermal fails so don't do it ^ :/
 
+      # make mount work for ntfs devices without specifying -t ntfs3
       SUBSYSTEM=="block", ENV{ID_FS_TYPE}=="ntfs", ENV{ID_FS_TYPE}="ntfs3"
 
       # ensure only card2 gets used as seat master
