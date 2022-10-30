@@ -127,6 +127,7 @@ in
     boot.kernelModules = [ "cpufreq_conservative" ];
     powerManagement.cpuFreqGovernor = "conservative";
 
+    systemd.services.displayManager.environment = waylandEnv;
     environment.variables = waylandEnv;
     environment.sessionVariables = waylandEnv;
     services.udev.extraRules = ''
