@@ -10,6 +10,7 @@ let
     KWIN_DRM_DEVICES = "/dev/dri/card2";
     MESA_VK_DEVICE_SELECT_FORCE_DEFAULT_DEVICE = "1";
   };
+  enableFbDevs = true;
 in
 {
   imports = [
@@ -81,7 +82,7 @@ in
       "amdgpu.ras_enable=0"
     ];
     boot.plymouth.enable = lib.mkForce false;
-    boot.kernelPatches = [
+    boot.kernelPatches = (lib.optionals (!enableFbDevs) [
       {
         name = "whoneedstodebuganyway";
         patch = null;
@@ -95,10 +96,7 @@ in
           FB_RADEON = lib.mkForce no;
         };
       }
-      {
-        name = "idle-fix";
-        patch = ./kernel/idle.patch;
-      }
+    ]) ++ [
       {
         name = "amdgpu-no-ecc";
         patch = ./kernel/amdgpu-no-ecc.patch;
