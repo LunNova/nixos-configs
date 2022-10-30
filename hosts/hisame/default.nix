@@ -134,6 +134,12 @@ in
     services.resolved.llmnr = "true";
     system.nssDatabases.hosts = lib.mkForce [ "mymachines resolve [!UNAVAIL=return] files myhostname" ];
     services.udev.extraRules = ''
+      # make conservative governer snappier to scale up
+      # and ignore niced loads for scaling
+      KERNEL=="cpu", \
+        RUN+="${pkgs.bash}/bin/bash -c '${pkgs.coreutils}/bin/echo 10 > /sys/devices/system/cpu/cpufreq/conservative/freq_step'" \
+        RUN+="${pkgs.bash}/bin/bash -c '${pkgs.coreutils}/bin/echo 1 > /sys/devices/system/cpu/cpufreq/conservative/ignore_nice_load'"
+
       # Remove AMD GPU Audio devices, if present
       # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x1002", ATTR{class}=="0x040300", ATTR{remove}="1"
       # This causes critical thermal fails so don't do it ^ :/
