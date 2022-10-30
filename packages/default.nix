@@ -105,6 +105,17 @@ let
     # inherit (flake-args.nixpkgs-mesa-pr.legacyPackages.${pkgs.system}) mesa;
     mesa = mesaOverride pkgs.mesa;
     mesa-i686 = mesaOverride pkgs.pkgsi686Linux.mesa;
+    xorgserver = pkgs.xorg.xorgserver.overrideAttrs (old: {
+      configureFlags = old.configureFlags ++ [
+        "--enable-config-udev"
+        "--enable-config-udev-kms"
+        "--disable-config-hal"
+      ];
+      patches = old.patches ++ [
+        # Adds KMS_DEVICE env var to restrict which card xorg will use
+        ./xorg/limit-kms-devices.patch
+      ];
+    });
   };
 in
 self

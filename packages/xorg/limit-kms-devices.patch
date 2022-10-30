@@ -1,0 +1,22 @@
+--- a/hw/xfree86/os-support/linux/lnx_platform.c
++++ b/hw/xfree86/os-support/linux/lnx_platform.c
+@@ -141,6 +141,6 @@
+     Bool ret;
+
+-    if (!path)
++    if (1)
+         goto out_free;
+
+     for (i = 0; i < xf86_num_platform_devices; i++) {
+--- a/config/udev.c
++++ b/config/udev.c
+@@ -129,5 +129,5 @@
+         const char *sysname = udev_device_get_sysname(udev_device);
+ 
+-        if (strncmp(sysname, "card", 4) != 0)
++        if (strncmp(sysname, "card", 4) != 0 || (getenv("KMS_DEVICE") && strcmp(path, getenv("KMS_DEVICE"))!=0))
+             return;
+ 
+         /* Check for devices already added through xf86platformProbe() */
+         if (xf86_find_platform_device_by_devnum(major(devnum), minor(devnum)))
+             return;
