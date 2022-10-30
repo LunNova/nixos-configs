@@ -28,13 +28,18 @@ in
       "pcie_ports=native" # handle everything in linux even if uefi wants to
       "pcie_port_pm=force" # force pm on even if not wanted by platform
       "pcie_aspm=force" # force link state
+
       # Potential workaround for high idle mclk?
       # https://gitlab.freedesktop.org/drm/amd/-/issues/1301#note_629735
       # or https://gitlab.freedesktop.org/drm/amd/-/issues/1403#note_1190209
+      # FIXME: investigate these options once monitor arrives
       # video="HDMI-A-1:2560x1440R@110D" - should be the mode for the 110Hz 24" 1440p Lenovo - G24qe-20
-      "video=d"
-      "video=DP-13:2560x1440R@144D"
-      "video=DP-14:3440x1440R@72D"
+      # "video=d"
+      # "video=DP-13:2560x1440R@165D"
+      # #"video=DP-13:2560x1440R@144D"
+      # "video=DP-14:3440x1440R@72"
+      # #"video=DP-14:3440x1440R@70"
+      # "video=DP-14:3440x1440R@60"
 
       # hw hwatchdog doesn't work on this platform
       "nmi_watchdog=0"
