@@ -151,12 +151,8 @@ in
       SUBSYSTEM=="drm", KERNEL=="card[0-1]", TAG-="seat", TAG-="master-of-seat", ENV{ID_FOR_SEAT}="", ENV{ID_PATH}=""
       SUBSYSTEM=="drm", KERNEL=="card2", TAG+="seat", TAG+="master-of-seat", TAG+="mutter-device-preferred-primary"
     '';
-    services.xserver.displayManager.defaultSession = "plasmawayland";
-    services.xserver.displayManager.gdm.enable = true;
-    services.xserver.displayManager.sddm.enable = lib.mkForce false;
-    #services.xserver.displayManager.sddm.settings.General.DisplayServer = "wayland";
-    #services.xserver.displayManager.sddm.settings.Wayland.CompositorCommand = "${pkgs.weston}/bin/weston --drm-device=card2 --shell=fullscreen-shell.so";
 
+    services.xserver.displayManager.xserverBin = lib.mkForce "${pkgs.lun.xorgserver.out}/bin/X";
 
     # boot.kernelModules = [ "nct6775" "zenpower" ];
     # Use zenpower rather than k10temp for CPU temperatures.
