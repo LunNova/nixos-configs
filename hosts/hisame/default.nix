@@ -130,6 +130,9 @@ in
     systemd.services.displayManager.environment = waylandEnv;
     environment.variables = waylandEnv;
     environment.sessionVariables = waylandEnv;
+    services.resolved.enable = true;
+    services.resolved.llmnr = "true";
+    system.nssDatabases.hosts = lib.mkForce [ "mymachines resolve [!UNAVAIL=return] files myhostname" ];
     services.udev.extraRules = ''
       ENV{DEVNAME}=="/dev/dri/card2", TAG+="mutter-device-preferred-primary"
       # Remove AMD GPU Audio devices, if present
