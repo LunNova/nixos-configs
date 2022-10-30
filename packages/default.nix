@@ -83,7 +83,15 @@ let
     kwinft = pkgs.lib.recurseIntoAttrs (pkgs.callPackage ./kwinft { });
     lutris = pkgs.lutris.override {
       inherit lutris-unwrapped;
-      extraLibraries = pkgs: [ pkgs.jansson ];
+      extraLibraries = pkgs: with pkgs; [
+        jansson
+        gnutls
+        openldap
+        libgpg-error
+        libpulseaudio
+        sqlite
+        libusb
+      ];
     };
     spawn = pkgs.callPackage ./spawn { };
     swaysome = pkgs.callPackage ./swaysome { };
