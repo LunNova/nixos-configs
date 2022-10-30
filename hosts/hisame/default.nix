@@ -113,24 +113,6 @@ in
         name = "amdgpu-pm-no-resume";
         patch = ./kernel/amdgpu-pm-no-resume.patch;
       }
-      # Already applied in drm-misc-fixes
-      # {name = "ckonig-_1";patch = ./kernel/ckonig-amdgpu/_1-dont-pipeline.patch;}
-      # {name = "ckonig-_2";patch = ./kernel/ckonig-amdgpu/_2-dont-pipeline.patch;}
-      # Already applied in drm-misc-fixes
-      # Patch series https://lore.kernel.org/all/9514120e-5780-fd49-02ef-9d3f49f7453e@amd.com/
-      # {name = "ckonig-1";patch = ./kernel/ckonig-amdgpu/1.patch;}
-      { name = "ckonig-2"; patch = ./kernel/ckonig-amdgpu/2.patch; }
-      { name = "ckonig-3"; patch = ./kernel/ckonig-amdgpu/3.patch; }
-      { name = "ckonig-4"; patch = ./kernel/ckonig-amdgpu/4.patch; }
-      { name = "ckonig-5"; patch = ./kernel/ckonig-amdgpu/5.patch; }
-      { name = "ckonig-6"; patch = ./kernel/ckonig-amdgpu/6.patch; }
-      { name = "ckonig-7"; patch = ./kernel/ckonig-amdgpu/7.patch; }
-      { name = "ckonig-8"; patch = ./kernel/ckonig-amdgpu/8.patch; }
-      { name = "ckonig-9"; patch = ./kernel/ckonig-amdgpu/9.patch; }
-      { name = "ckonig-10"; patch = ./kernel/ckonig-amdgpu/10.patch; }
-      { name = "ckonig-11"; patch = ./kernel/ckonig-amdgpu/11.patch; }
-      { name = "ckonig-12"; patch = ./kernel/ckonig-amdgpu/12.patch; }
-      { name = "ckonig-13"; patch = ./kernel/ckonig-amdgpu/13.patch; }
       # {
       #   name = "amdgpu-force-d3.patch";
       #   patch = ./kernel/amdgpu-force-d3.patch;
@@ -139,7 +121,6 @@ in
       #   name = "disable-acs-redir.patch";
       #   patch = ./kernel/disable-acs-redir.patch;
       # }
-      # add this patch? https://gitlab.freedesktop.org/drm/amd/-/issues/2080
     ];
     lun.amd-pstate.enable = true;
     lun.amd-pstate.sharedMem = true;
