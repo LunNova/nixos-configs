@@ -102,6 +102,14 @@ in
         name = "amdgpu_bo_fence_warn.patch";
         patch = ./kernel/amdgpu_bo_fence_warn.patch;
       }
+      {
+        name = "log-psp-resume";
+        patch = ./kernel/log-psp-resume.patch;
+      }
+      {
+        name = "amdgpu-pm-no-resume";
+        patch = ./kernel/amdgpu-pm-no-resume.patch;
+      }
       # Already applied in drm-misc-fixes
       # {name = "ckonig-_1";patch = ./kernel/ckonig-amdgpu/_1-dont-pipeline.patch;}
       # {name = "ckonig-_2";patch = ./kernel/ckonig-amdgpu/_2-dont-pipeline.patch;}

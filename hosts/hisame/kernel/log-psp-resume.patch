@@ -1,0 +1,9 @@
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+@@ -528,5 +528,6 @@
+ 	struct psp_context *psp = &adev->psp;
+ 
+	DRM_INFO("PSP is resuming...\n");
++	WARN(1, KERN_ERR "PSP resume!");
+ 
+ 	if (psp->mem_train_ctx.enable_mem_training) {
