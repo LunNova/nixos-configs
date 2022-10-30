@@ -255,6 +255,10 @@ in
       allowedTCPPorts = [ 45982 ];
       allowedUDPPorts = [ 45982 ];
     };
+    # don't have enough ram for 32j/32c to make sense for all builds
+    nix.settings.max-jobs = 5;
+    nix.settings.cores = 16;
+    nix.settings.max-silent-time = 3600;
 
     lun.persistence.enable = true;
     lun.persistence.dirs = [
