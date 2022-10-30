@@ -134,12 +134,15 @@ in
     services.resolved.llmnr = "true";
     system.nssDatabases.hosts = lib.mkForce [ "mymachines resolve [!UNAVAIL=return] files myhostname" ];
     services.udev.extraRules = ''
-      ENV{DEVNAME}=="/dev/dri/card2", TAG+="mutter-device-preferred-primary"
       # Remove AMD GPU Audio devices, if present
       # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x1002", ATTR{class}=="0x040300", ATTR{remove}="1"
       # This causes critical thermal fails so don't do it ^ :/
 
       SUBSYSTEM=="block", ENV{ID_FS_TYPE}=="ntfs", ENV{ID_FS_TYPE}="ntfs3"
+
+      # ensure only card2 gets used as seat master
+      SUBSYSTEM=="drm", KERNEL=="card[0-1]", TAG-="seat", TAG-="master-of-seat", ENV{ID_FOR_SEAT}="", ENV{ID_PATH}=""
+      SUBSYSTEM=="drm", KERNEL=="card2", TAG+="seat", TAG+="master-of-seat", TAG+="mutter-device-preferred-primary"
     '';
     services.xserver.displayManager.defaultSession = "plasmawayland";
     services.xserver.displayManager.gdm.enable = true;
