@@ -98,7 +98,11 @@
             url = "https://github.com/NixOS/nixpkgs/compare/master..28244d4c9a1b28875e56f79c09f5dcb9ec01d696.patch";
             sha256 = "sha256-arokknYHD9ycx38fEX/JQ2gL3UlSNDJt2FkGWlLqqfY=";
           })
-
+          (nixpkgs.legacyPackages.${system}.fetchpatch {
+            # [staging-next] qt5: 5.15.6 -> 5.15.7 #198441
+            url = "https://github.com/NixOS/nixpkgs/compare/staging-next..8fdc1765a963435a6bc73081941519300849980e.patch";
+            sha256 = "sha256-FU5xAXcko0hdMRHbZvCRMmNfrezAu84JmgPLlZEYCvs=";
+          })
         ];
       defaultPkgsConfig = {
         inherit system;
