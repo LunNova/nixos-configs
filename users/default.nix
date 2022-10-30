@@ -9,7 +9,6 @@ let
     "plugdev" # openrazer requires this
     "openrazer"
     "docker"
-    "video"
     "audio"
 
     # printing
