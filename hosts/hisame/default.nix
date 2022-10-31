@@ -132,7 +132,7 @@ in
     environment.sessionVariables = waylandEnv;
     services.resolved.enable = true;
     services.resolved.llmnr = "true";
-    system.nssDatabases.hosts = lib.mkForce [ "mymachines resolve [!UNAVAIL=return] files myhostname" ];
+    #system.nssDatabases.hosts = lib.mkForce [ "mymachines resolve [!UNAVAIL=return] files myhostname" ];
     services.udev.extraRules = ''
       # make conservative governer snappier to scale up
       # and ignore niced loads for scaling

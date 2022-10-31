@@ -1,9 +1,0 @@
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -350,4 +350,4 @@ bool amdgpu_device_supports_px(struct drm_device *dev)
- 	if ((adev->flags & AMD_IS_PX) && !amdgpu_is_atpx_hybrid())
- 		return true;
--	return false;
-+	return true;
- }
