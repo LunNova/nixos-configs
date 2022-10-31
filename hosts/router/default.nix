@@ -7,6 +7,7 @@ let
   name = "router";
   wanInterface = "enp2s0f0";
   lanInterface = "enp1s0f1";
+  lanBridge = "br0";
   debugInterface = "enp1s0f2";
   lanV4Subnet = "10.5.5";
   lanV4Self = "${lanV4Subnet}.1";
@@ -75,6 +76,19 @@ in
     };
     services.resolved.enable = false;
     systemd.network = {
+      netdevs = {
+        bridge = {
+          netdevConfig = {
+            Name = lanBridge;
+            Kind = "bridge";
+          };
+          extraConfig = ''
+            [Bridge]
+            DefaultPVID=none
+            VLANFiltering=yes
+          '';
+        };
+      };
       networks = {
         "wan" = {
           name = wanInterface;
@@ -107,6 +121,7 @@ in
             { addressConfig.Address = "${lanV4Self}/24"; }
           ];
           networkConfig = {
+            Bridge = lanBridge;
             DHCP = "no";
             Description = "LAN interface";
             # the client shouldn't be allowed to send us RAs, that would be weird.
@@ -206,13 +221,13 @@ in
     services.miniupnpd = {
       enable = true;
       externalInterface = wanInterface;
-      internalIPs = [ lanInterface ];
+      internalIPs = [ lanBridge ];
       natpmp = true;
       upnp = true;
     };
     services.avahi = lib.mkForce {
       enable = true;
-      interfaces = [ lanInterface ];
+      interfaces = [ lanBridge ];
       ipv4 = true;
       ipv6 = true;
       reflector = true;
