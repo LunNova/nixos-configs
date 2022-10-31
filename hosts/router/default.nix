@@ -61,6 +61,10 @@ in
       '';
       firewall = {
         enable = true;
+        logRefusedConnections = true;
+        logRefusedPackets = true;
+        logRefusedUnicastsOnly = false;
+        rejectPackets = true;
         trustedInterfaces = [ lanBridge debugInterface "lo" ];
         allowedUDPPorts = [ ];
         allowedTCPPorts = [ ];
@@ -102,7 +106,6 @@ in
             DHCP = "yes";
             Description = "ISP interface";
             IPv6AcceptRA = true;
-            ConfigureWithoutCarrier = "yes";
           };
           linkConfig = {
             RequiredForOnline = "routable";
