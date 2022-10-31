@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -xeuo pipefail
-IFS="$(printf "\n")"
+IFS=$'\n'
 
 # edit these fields
 NAME=router

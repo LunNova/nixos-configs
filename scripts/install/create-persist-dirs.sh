@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -xeuo pipefail
-IFS="$(printf "\n")"
+IFS=$'\n'
 
 for dir in $(nix eval --raw ".#nixosConfigurations.$(hostname).config.lun.persistence.dirs_for_shell_script"); do
 	mkdir "$dir"
