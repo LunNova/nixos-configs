@@ -101,6 +101,7 @@ in
             DHCP = "yes";
             Description = "ISP interface";
             IPv6AcceptRA = true;
+            ConfigureWithoutCarrier = "yes";
           };
           linkConfig = {
             RequiredForOnline = "routable";
@@ -117,6 +118,7 @@ in
           networkConfig = {
             DHCP = "yes";
             IPv6AcceptRA = true;
+            ConfigureWithoutCarrier = "yes";
           };
         };
         "lan" = {
@@ -138,6 +140,7 @@ in
             # the client shouldn't be allowed to send us RAs, that would be weird.
             IPv6AcceptRA = false;
             IPv6SendRA = true;
+            ConfigureWithoutCarrier = "yes";
 
             # Just delegate prefixes from the DHCPv6 PD pool.
             # If you also want to distribute a local ULA prefix you want to
