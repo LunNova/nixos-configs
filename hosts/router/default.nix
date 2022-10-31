@@ -18,6 +18,18 @@ let
   netFqdn = "home.moonstruck.dev";
   lanULA = "fd79:fc8d:af3a:ad8b::";
   selfULA = "${lanULA}1";
+  nameservers = [
+    # quad9
+    "9.9.9.9"
+    "149.112.112.112"
+    "2620:fe::fe"
+    "2620:fe::9"
+    # cloudflare
+    "1.1.1.1"
+    "1.0.0.1"
+    "2606:4700:4700::1111"
+    "2606:4700:4700::1001"
+  ];
   # cloudVPNInterface = "wg0-cloud";
   # swapsVPNInterface = "wg1-swaps";
   # vpnInterfaces = [ ];
@@ -39,6 +51,7 @@ in
     # lib.mkForce is important here, want to make sure service modules
     # don't open ports to the outside world
     networking = lib.mkForce {
+      inherit nameservers;
       hostName = "${name}-nixos";
       domain = netFqdn;
       useDHCP = false;
@@ -47,19 +60,6 @@ in
         externalInterface = wanInterface;
         internalInterfaces = [ lanBridge ];
       };
-      nameservers = [
-        # quad9
-        "9.9.9.9"
-        "149.112.112.112"
-        "2620:fe::fe"
-        "2620:fe::9"
-        # cloudflare
-        "1.1.1.1"
-        "1.0.0.1"
-        # google
-        "8.8.8.8"
-        "8.8.4.4"
-      ];
       useNetworkd = true;
       networkmanager.enable = false;
       extraHosts = ''
@@ -190,6 +190,9 @@ in
     systemd.services.avahi.wants = [ "network-online.target" ];
     systemd.services.miniupnpd.wants = [ "network-online.target" ];
     systemd.services.lldpd.wants = [ "network-online.target" ];
+    # TODO: consider
+    # unbound?
+    # https://old.reddit.com/r/NixOS/comments/innzkw/pihole_style_adblock_with_nix_and_unbound/g48o0qb/
     # dnsmasq handles dhcp and dns
     services.dnsmasq = {
       enable = true;
@@ -198,9 +201,12 @@ in
         domain-needed
         bogus-priv
         no-resolv
+        stop-dns-rebind
         # upstream name servers
-        server=9.9.9.9
-        server=1.1.1.1
+        server=${builtins.concatStringsSep ''
+        
+        server='' nameservers}
+        cache-size=10000
         # local domains
         expand-hosts
         domain=${netFqdn}
