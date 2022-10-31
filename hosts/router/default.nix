@@ -147,7 +147,8 @@ in
         # local domains
         expand-hosts
         domain=${config.networking.domain}
-        local=${config.networking.domain}
+        local=/${config.networking.domain}/
+        local=/local/
         # Interfaces to serve on
         # can repeat this line for multiple interfaces
         interface=${lanInterface}
