@@ -173,6 +173,10 @@ in
         };
       };
     };
+    systemd.targets.network-online.wants = [ "systemd-networkd-wait-online.service" ];
+    systemd.targets.network-online.requires = [ "systemd-networkd-wait-online.service" ];
+    systemd.services.dnsmasq.wants = [ "network-online.target" ];
+    systemd.services.dnsmasq.requires = [ "network-online.target" ];
     # dnsmasq handles dhcp and dns
     services.dnsmasq = {
       enable = true;
