@@ -206,7 +206,7 @@ in
     services.miniupnpd = {
       enable = true;
       externalInterface = wanInterface;
-      internalIPs = [ lanV4Self selfULA ];
+      internalIPs = [ lanInterface ];
       natpmp = true;
       upnp = true;
     };
