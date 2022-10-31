@@ -27,9 +27,19 @@ in
       type = with lib.types; listOf absolutePathWithoutTrailingSlash;
       default = [ ];
     };
+
+    # Intended for use with
+    # nix eval --raw .#nixosConfigurations.(hostname).config.lun.persistence.dirs_for_shell_script
+    # to iterate over dirs that need created in /persist
+    dirs_for_shell_script = lib.mkOption {
+      type = with lib.types; str;
+      default = "";
+    };
   };
 
   config = lib.mkIf cfg.enable {
+    lun.persistence.dirs_for_shell_script = builtins.concatStringsSep "\n" cfg.dirs;
+
     # Don't bother with the lecture or the need to keep state about who's been lectured
     security.sudo.extraConfig = "Defaults lecture=\"never\"";
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -xeuo pipefail
+IFS="$(printf "\n")"
 
 # edit these fields
 NAME=router
@@ -14,9 +15,15 @@ mount -t tmpfs none /mnt
 mkdir -p /mnt/{boot,persist}
 
 mount $BOOT_PARTITION /mnt/boot
-mount "$PERSIST_PARTITION" /mnt/persist
+mount "$PERSIST_PARTITION" -o defaults,ssd,nosuid,nodev,compress=zstd,noatime,subvol=@persist /mnt/persist
 
-mkdir -p /mnt/{boot,persist,home,nix,var/log} /mnt/persist/{home,nix,var/log}
+mkdir -p /mnt/{boot,persist,home,nix,var/log} /mnt/persist/{home,nix,var/log,etc/ssh,root}
+
+for dir in $(nix eval --raw "$FLAKE#nixosConfigurations.$HOSTNAME.config.lun.persistence.dirs_for_shell_script"); do
+	mkdir "/mnt$dir"
+	mkdir "/mnt/persist$dir"
+	mount -o bind "/mnt/persist$dir" "/mnt$dir"
+done
 
 mount -o bind /mnt/persist/nix /mnt/nix
 mount -o bind /mnt/persist/home /mnt/home
