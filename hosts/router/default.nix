@@ -7,7 +7,8 @@ let
   name = "router";
   wanInterface = "enp1s0f1"; # f1/f0 = top two ports
   lanInterface = "enp1s0f2"; # f2/f3 = bottom two ports
-  lanBridge = "br0";
+  useLanBridge = false;
+  lanBridge = if useLanBridge then "br0" else lanInterface;
   debugInterface = "enp2s0f0"; # onboard port (should be eno1 but platform firmware is missing info)
   lanV4Subnet = "10.5.5";
   lanV4Self = "${lanV4Subnet}.1";
@@ -41,6 +42,11 @@ in
       hostName = "${name}-nixos";
       domain = netFqdn;
       useDHCP = false;
+      nat = {
+        enable = true;
+        externalInterface = wanInterface;
+        internalInterfaces = [ lanBridge ];
+      };
       nameservers = [
         # quad9
         "9.9.9.9"
@@ -87,19 +93,6 @@ in
     services.resolved.enable = false;
     systemd.network = {
       wait-online.anyInterface = true;
-      netdevs = {
-        bridge = {
-          netdevConfig = {
-            Name = lanBridge;
-            Kind = "bridge";
-          };
-          extraConfig = ''
-            [Bridge]
-            DefaultPVID=none
-            VLANFiltering=yes
-          '';
-        };
-      };
       networks = {
         "wan" = {
           name = wanInterface;
@@ -124,13 +117,6 @@ in
             DHCP = "yes";
             IPv6AcceptRA = true;
             ConfigureWithoutCarrier = "yes";
-          };
-        };
-        "lan" = {
-          name = lanInterface;
-          networkConfig = {
-            DHCP = "no";
-            Bridge = lanBridge;
           };
         };
         "lanBridge" = {
@@ -175,8 +161,30 @@ in
             }
           ];
         };
+      } // (lib.optionalAttrs useLanBridge {
+        "lan" = {
+          name = lanInterface;
+          networkConfig = {
+            DHCP = "no";
+            Bridge = lanBridge;
+          };
+        };
+      });
+    } // (lib.optionalAttrs useLanBridge {
+      netdevs = {
+        bridge = {
+          netdevConfig = {
+            Name = lanBridge;
+            Kind = "bridge";
+          };
+          extraConfig = ''
+            [Bridge]
+            DefaultPVID=none
+            VLANFiltering=yes
+          '';
+        };
       };
-    };
+    });
     systemd.targets.network-online.wants = [ "systemd-networkd-wait-online.service" ];
     systemd.services.dnsmasq.wants = [ "network-online.target" ];
     systemd.services.avahi.wants = [ "network-online.target" ];
