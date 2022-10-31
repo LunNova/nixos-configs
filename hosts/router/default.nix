@@ -61,7 +61,7 @@ in
       '';
       firewall = {
         enable = true;
-        trustedInterfaces = [ lanBridge debugInterface ];
+        trustedInterfaces = [ lanBridge debugInterface "lo" ];
         allowedUDPPorts = [ ];
         allowedTCPPorts = [ ];
         allowedUDPPortRanges = [ ];
@@ -192,6 +192,7 @@ in
         # can repeat this line for multiple interfaces
         interface=${lanBridge}
         interface=127.0.0.1
+        interface=::1
         # subnet IP blocks to use DHCP on, repeat line for multiple
         dhcp-range=${lanV4Subnet}.50,${lanV4Subnet}.254,24h
         # static IP example
