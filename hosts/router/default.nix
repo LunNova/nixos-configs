@@ -116,12 +116,18 @@ in
         };
         "lan" = {
           name = lanInterface;
+          networkConfig = {
+            DHCP = "no";
+            Bridge = lanBridge;
+          };
+        };
+        "lanBridge" = {
+          name = lanBridge;
           addresses = [
             { addressConfig.Address = "${selfULA}/64"; }
             { addressConfig.Address = "${lanV4Self}/24"; }
           ];
           networkConfig = {
-            Bridge = lanBridge;
             DHCP = "no";
             Description = "LAN interface";
             # the client shouldn't be allowed to send us RAs, that would be weird.
