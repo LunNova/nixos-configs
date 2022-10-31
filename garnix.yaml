@@ -1,0 +1,4 @@
+builds: # optional
+  exclude:
+    # builds are massive due to custom kernel
+    - nixosConfigurations.lun-hisame-*
