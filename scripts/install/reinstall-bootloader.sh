@@ -1,4 +1,4 @@
-#!/usr/bin/env -S nix shell nixpkgs#parted -c bash
+#!/usr/bin/env -S nix --extra-experimental-features "nix-command flakes" shell nixpkgs#parted -c bash
 # shellcheck shell=bash
 set -euo pipefail
 
