@@ -207,7 +207,6 @@ in
         dhcp-authoritative
         dhcp-range=${lanV4Subnet}.50,${lanV4Subnet}.254,24h
         dhcp-option=option:router,${lanV4Self}
-        dhcp-leasefile=/persist/dnsmasq/dnsmasq.leases
         # static IP example
         # dhcp-host=00:0d:b9:5e:22:91,$ {private_subnet}.1
       '';
@@ -268,7 +267,7 @@ in
       addr = "0.0.0.0"; # FIXME: one interface only?
       dataDir = "/var/lib/grafana";
     };
-    lun.persistence.dirs = [ "/var/lib/grafana" "/var/tmp" "/tmp" ];
+    lun.persistence.dirs = [ "/var/lib/dnsmasq" "/var/lib/grafana" "/var/tmp" "/tmp" ];
 
     services.lldpd.enable = true;
 
