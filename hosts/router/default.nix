@@ -13,6 +13,7 @@ let
   fullHostName = "${config.networking.hostName}.${config.networking.domain}";
   btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" "autodefrag" ];
   btrfsSsdOpts = btrfsOpts ++ [ "ssd" "discard=async" ];
+  netFqdn = "home.moonstruck.dev";
   # cloudVPNInterface = "wg0-cloud";
   # swapsVPNInterface = "wg1-swaps";
   # vpnInterfaces = [ ];
@@ -34,7 +35,7 @@ in
     # don't open ports to the outside world
     networking = lib.mkForce {
       hostName = "${name}-nixos";
-      domain = "home.moonstruck.dev";
+      domain = netFqdn;
       useDHCP = false;
       nameservers = [
         # quad9
@@ -148,9 +149,9 @@ in
         server=1.1.1.1
         # local domains
         expand-hosts
-        domain=${config.networking.domain}
-        local=/${config.networking.domain}/
-        local=/local/
+        domain=${netFqdn}
+        local=/${netFqdn}/
+        # local=/local/
         # Interfaces to serve on
         # can repeat this line for multiple interfaces
         interface=${lanInterface}
