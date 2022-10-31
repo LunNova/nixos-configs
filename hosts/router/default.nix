@@ -101,14 +101,14 @@ in
             DHCPPrefixDelegation = "yes";
           };
           # finally "act as router" (according to systemd.network(5))
-          ipv6PrefixDelegationConfig = {
-            RouterLifetimeSec = 300; # required as otherwise no RA's are being emitted
+          # ipv6PrefixDelegationConfig = {
+          #   RouterLifetimeSec = 300; # required as otherwise no RA's are being emitted
 
-            # In a production environment you should consider setting these as well:
-            EmitDNS = true;
-            EmitDomains = true;
-            DNS = "fe80::1"; # or whatever "well known" IP your router will have on the inside.
-          };
+          #   # In a production environment you should consider setting these as well:
+          #   EmitDNS = true;
+          #   EmitDomains = true;
+          #   DNS = "fe80::1"; # or whatever "well known" IP your router will have on the inside.
+          # };
 
           # Add ULA prefix
           ipv6Prefixes = [
@@ -175,7 +175,7 @@ in
             monitor = false; # see the remark below
           }
           {
-            name = "lan0";
+            name = lanInterface;
             advertise = true;
             prefix = [
               { prefix = "::/64"; }
