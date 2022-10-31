@@ -6,7 +6,8 @@
 let
   name = "router";
   lanInterface = "eno1";
-  wanInterface = "enp2s0f0";
+  wanInterface = "enp2s0f1";
+  debugInterface = "enp2s0f2";
   lanV4Subnet = "10.5.5";
   lanV4Self = "${lanV4Subnet}.1";
   fullHostName = "${config.networking.hostName}.${config.networking.domain}";
@@ -54,7 +55,7 @@ in
       '';
       firewall = {
         enable = true;
-        trustedInterfaces = [ lanInterface ];
+        trustedInterfaces = [ lanInterface debugInterface ];
       };
       # not sure whether to use a bridge
       # bridges."${lanBridge}" = {
@@ -73,6 +74,7 @@ in
         "wan" = {
           name = wanInterface;
           networkConfig = {
+            DHCP = "yes";
             Description = "ISP interface";
             IPv6AcceptRA = true;
           };
@@ -84,6 +86,13 @@ in
           };
           ipv6PrefixDelegationConfig = {
             Managed = true;
+          };
+        };
+        "dbg" = {
+          name = debugInterface;
+          networkConfig = {
+            DHCP = "yes";
+            IPv6AcceptRA = true;
           };
         };
         "lan" = {
@@ -161,6 +170,8 @@ in
       # On WAN, allow IPv6 autoconfiguration and tempory address use.
       "net.ipv6.conf.${wanInterface}.accept_ra" = 2;
       "net.ipv6.conf.${wanInterface}.autoconf" = 1;
+      "net.ipv6.conf.${debugInterface}.accept_ra" = 2;
+      "net.ipv6.conf.${debugInterface}.autoconf" = 1;
     };
     services.corerad = {
       enable = true;
