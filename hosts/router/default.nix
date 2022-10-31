@@ -14,6 +14,7 @@ let
   btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" "autodefrag" ];
   btrfsSsdOpts = btrfsOpts ++ [ "ssd" "discard=async" ];
   netFqdn = "home.moonstruck.dev";
+  lanULA = "fd79:fc8d:af3a:ad8b::";
   # cloudVPNInterface = "wg0-cloud";
   # swapsVPNInterface = "wg1-swaps";
   # vpnInterfaces = [ ];
@@ -127,7 +128,7 @@ in
           ipv6Prefixes = [
             {
               ipv6PrefixConfig = {
-                Prefix = "fd79:fc8d:af3a:ad8b::/64";
+                Prefix = "${lanULA}/64";
                 AddressAutoconfiguration = true;
                 PreferredLifetimeSec = 1800;
                 ValidLifetimeSec = 1800;
@@ -187,14 +188,11 @@ in
         };
         interfaces = [
           {
-            name = "ppp0";
-            monitor = false; # see the remark below
-          }
-          {
             name = lanInterface;
             advertise = true;
             prefix = [
               { prefix = "::/64"; }
+              { prefix = "${lanULA}::/64"; }
             ];
           }
         ];
@@ -207,8 +205,6 @@ in
       natpmp = true;
       upnp = true;
     };
-    systemd.services.miniupnpd.serviceConfig.ExecStart = lib.mkForce
-      "${pkgs.miniupnpd}/bin/miniupnpd -i ${wanInterface} -l ${lanInterface} -N";
     services.avahi = lib.mkForce {
       enable = true;
       interfaces = [ lanInterface ];
