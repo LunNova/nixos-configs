@@ -17,6 +17,9 @@
     # vlc is smaller than gstreamer
     services.xserver.desktopManager.plasma5.phononBackend = "vlc";
 
+    # PRINT
+    lun.print.enable = true;
+
     # XDG
     xdg.portal = {
       enable = true;
