@@ -199,11 +199,15 @@ in
         # local=/local/
         # Interfaces to serve on
         # can repeat this line for multiple interfaces
-        interface=${lanBridge}
-        interface=127.0.0.1
-        interface=::1
+        #interface=${lanBridge}
+        #interface=127.0.0.1
+        #interface=::1
+        listen-address=::1,127.0.0.1,${lanV4Self}
         # subnet IP blocks to use DHCP on, repeat line for multiple
+        dhcp-authoritative
         dhcp-range=${lanV4Subnet}.50,${lanV4Subnet}.254,24h
+        dhcp-option=option:router,${lanV4Self}
+        dhcp-leasefile=/persist/dnsmasq/dnsmasq.leases
         # static IP example
         # dhcp-host=00:0d:b9:5e:22:91,$ {private_subnet}.1
       '';
