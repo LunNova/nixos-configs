@@ -128,16 +128,18 @@
           nix-gaming.nixosModules.pipewireLowLatency
           path
           ./users
-          {
-            config = {
-              home-manager.extraSpecialArgs = {
-                lun = args.self;
-                flake-args = args;
+          ({ config, ... }:
+            {
+              config = {
+                home-manager.extraSpecialArgs = {
+                  lun = args.self;
+                  flake-args = args;
+                  lun-profiles = config.lun.profiles;
+                };
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
               };
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-            };
-          }
+            })
         ]
         ++ (builtins.attrValues self.nixosModules)
         ++ (readModules ./modules);
@@ -209,6 +211,9 @@
               extraSpecialArgs = {
                 inherit pkgs-stable;
                 nixosConfig = null;
+                lun-profiles = {
+                  graphical = true;
+                };
                 lun = args.self;
                 flake-args = args;
               };

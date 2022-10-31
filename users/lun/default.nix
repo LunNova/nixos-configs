@@ -1,20 +1,11 @@
-{ pkgs, flake-args, ... }:
+{ lib, pkgs, flake-args, lun-profiles, ... }:
 {
   imports = [
-    ./conky.nix
-    ./dev.nix
-    ./discord.nix
-    ./file-management.nix
-    ./gaming.nix
-    ./syncthing.nix
-    ./xdg-mime-apps.nix
     ./modern-unix.nix
-    ./music.nix
-    ./media
-    ./cad
-    ./sway
-    ./shells/default.nix
-    ./on-nixos/default.nix
+    ./shells
+    ./on-nixos
+  ] ++ lib.optionals lun-profiles.graphical [
+    ./gui
   ];
 
   # workaround https://github.com/nix-community/home-manager/issues/2064#issuecomment-887300055
@@ -50,18 +41,12 @@
     # can't nix run pkgs#usbutils and get lsusb!
     usbutils
     pciutils
-    glxinfo
-    vulkan-tools
     nixpkgs-fmt
     flake-args.oxalica-nil.packages.${pkgs.system}.nil
     ark
     unar
     unzip
     p7zip
-    pinta # paint.net alternative
-    calibre
-    obsidian # note taking
-    microsoft-edge
   ];
 
   programs.git = {
@@ -93,20 +78,6 @@
       difftool.vscode.cmd = "code --wait --new-window --diff $LOCAL $REMOTE";
       include.path = "./local";
     };
-  };
-
-  programs.firefox = {
-    enable = true;
-    package = pkgs.firefox.overrideAttrs (old: {
-      postFixup = ''
-        ${old.postFixup or ""}
-        wrapProgram "$out/bin/firefox" --set GTK_USE_PORTAL 1 --set MOZ_ENABLE_WAYLAND 1
-      '';
-    });
-  };
-
-  programs.vscode = {
-    enable = true;
   };
 
   programs.nix-index.enable = true;
