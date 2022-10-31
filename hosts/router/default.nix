@@ -61,6 +61,7 @@ in
       '';
       firewall = {
         enable = true;
+        logReversePathDrops = true;
         logRefusedConnections = true;
         logRefusedPackets = true;
         logRefusedUnicastsOnly = false;
