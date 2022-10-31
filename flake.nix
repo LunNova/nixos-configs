@@ -84,11 +84,6 @@
             sha256 = "sha256-rUIhVB1RQXkOk+0Hhhui9ZJ/KGMxIzuWn9cZP80QbBE=";
           })
           (nixpkgs.legacyPackages.${system}.fetchpatch {
-            # antlr runtime build fix https://github.com/NixOS/nixpkgs/pull/198002
-            url = "https://github.com/NixOS/nixpkgs/compare/master..c092f24f9c8e14b44db10d2d901c643332bde5fb.patch";
-            sha256 = "sha256-jU65zIStd6DsgSHGuTSFNr13SkBoGgOAut8DbJQeiPU=";
-          })
-          (nixpkgs.legacyPackages.${system}.fetchpatch {
             # lutris: set unshareIpc and unsharePid to false #198384 
             url = "https://github.com/NixOS/nixpkgs/compare/master..28244d4c9a1b28875e56f79c09f5dcb9ec01d696.patch";
             sha256 = "sha256-arokknYHD9ycx38fEX/JQ2gL3UlSNDJt2FkGWlLqqfY=";
