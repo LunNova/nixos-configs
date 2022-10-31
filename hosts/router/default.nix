@@ -206,6 +206,8 @@ in
       natpmp = true;
       upnp = true;
     };
+    systemd.services.miniupnpd.serviceConfig.ExecStart = lib.mkForce
+      "${pkgs.miniupnpd}/bin/miniupnpd -i ${wanInterface} -l ${lanInterface} -N";
     services.avahi = lib.mkForce {
       enable = true;
       interfaces = [ lanInterface ];
