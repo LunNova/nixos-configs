@@ -18,6 +18,7 @@ let
   # swapsVPNInterface = "wg1-swaps";
   # vpnInterfaces = [ ];
   #lanBridge = "br0.lan";
+  swap = "/dev/disk/by-partlabel/${name}_swap";
 in
 {
   imports = [
@@ -259,6 +260,9 @@ in
         neededForBoot = true;
       };
     };
-    swapDevices = [ ];
+    swapDevices = lib.mkForce [
+      { device = swap; }
+    ];
+    boot.resumeDevice = swap;
   };
 }
