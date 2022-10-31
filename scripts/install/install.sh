@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 set -xeuo pipefail
 
-HOSTNAME=
-BOOT_PARTITION=/dev/disk/by-partlabel/_esp
-PERSIST_PARTITION=/dev/disk/by-partlabel/"$HOSTNAME"_persist
+# edit these fields
+NAME=router
+HOSTNAME="$NAME-nixos"
+
+BOOT_PARTITION=/dev/disk/by-partlabel/"$NAME"_esp
+PERSIST_PARTITION=/dev/disk/by-partlabel/"$NAME"_persist
 FLAKE=github:LunNova/nixos-configs/dev#$HOSTNAME
 
 mount -t tmpfs none /mnt
