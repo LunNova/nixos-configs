@@ -1,6 +1,8 @@
 { config, pkgs, lib, ... }:
 {
-  config = {
+  options.lun.profiles.common = (lib.mkEnableOption "Enable common profile") // { default = true; };
+
+  config = lib.mkIf config.lun.profiles.common {
     my.home-manager.enabled-users = [ "lun" ];
 
     # LANGUAGE / I18N

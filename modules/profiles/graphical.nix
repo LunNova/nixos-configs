@@ -1,6 +1,7 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
-  config = {
+  options.lun.profiles.graphical = (lib.mkEnableOption "Enable graphical profile") // { default = true; };
+  config = lib.mkIf config.lun.profiles.graphical {
     # DESKTOP ENV
     # Enable the X11 windowing system.
     services.xserver.enable = true;

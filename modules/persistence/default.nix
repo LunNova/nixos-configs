@@ -37,6 +37,8 @@ in
       "/nix"
       "/var/log"
       "/var/tmp"
+      "/root" # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=962987 >:(
+      "/home"
     ];
 
     lun.persistence.files = [
