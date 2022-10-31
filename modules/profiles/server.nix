@@ -6,5 +6,6 @@
     hardware.opengl = lib.mkForce {
       enable = false;
     };
+    boot.plymouth.enable = lib.mkForce false;
   };
 }
