@@ -55,6 +55,7 @@ in
         "8.8.4.4"
       ];
       useNetworkd = true;
+      networkmanager.enable = false;
       extraHosts = ''
         ${lanV4Self} ${fullHostName}
       '';
