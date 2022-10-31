@@ -15,6 +15,7 @@ let
   btrfsSsdOpts = btrfsOpts ++ [ "ssd" "discard=async" ];
   netFqdn = "home.moonstruck.dev";
   lanULA = "fd79:fc8d:af3a:ad8b::";
+  selfULA = "${lanULA}1";
   # cloudVPNInterface = "wg0-cloud";
   # swapsVPNInterface = "wg1-swaps";
   # vpnInterfaces = [ ];
@@ -101,6 +102,10 @@ in
         };
         "lan" = {
           name = lanInterface;
+          addresses = [
+            { addressConfig.Address = "${selfULA}/64"; }
+            { addressConfig.Address = "${lanV4Self}/24"; }
+          ];
           networkConfig = {
             DHCP = "no";
             Description = "LAN interface";
@@ -201,7 +206,7 @@ in
     services.miniupnpd = {
       enable = true;
       externalInterface = wanInterface;
-      internalIPs = [ lanInterface ];
+      internalIPs = [ lanV4Self selfULA ];
       natpmp = true;
       upnp = true;
     };
