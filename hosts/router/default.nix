@@ -115,7 +115,6 @@ in
             {
               ipv6PrefixConfig = {
                 Prefix = "fd79:fc8d:af3a:ad8b::/64";
-                Assign = true;
                 AddressAutoconfiguration = true;
                 PreferredLifetimeSec = 1800;
                 ValidLifetimeSec = 1800;
