@@ -20,9 +20,8 @@ mount "$PERSIST_PARTITION" -o defaults,ssd,nosuid,nodev,compress=zstd,noatime,su
 mkdir -p /mnt/{boot,persist,home,nix,var/log} /mnt/persist/{home,nix,var/log,etc/ssh,root}
 
 for dir in $(nix eval --raw "$FLAKE#nixosConfigurations.$HOSTNAME.config.lun.persistence.dirs_for_shell_script"); do
-	mkdir "/mnt$dir"
-	mkdir "/mnt/persist$dir"
-	mount -o bind "/mnt/persist$dir" "/mnt$dir"
+	mkdir -p "/mnt$dir" "/mnt/persist$dir"
+	mount -o bind "/mnt/persist$dir" "/mnt$dir" || true
 done
 
 mount -o bind /mnt/persist/nix /mnt/nix
