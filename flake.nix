@@ -197,6 +197,7 @@
       nixosModules = readExportedModules ./modules/exported;
 
       nixosConfigurations = {
+        router-nixos = makeHost pkgs ./hosts/router;
         lun-kosame-nixos = makeHost pkgs ./hosts/kosame;
         lun-hisame-nixos = makeHost pkgs ./hosts/hisame;
         mmk-raikiri-nixos = makeHost pkgs ./hosts/raikiri;
