@@ -17,6 +17,9 @@
     # vlc is smaller than gstreamer
     services.xserver.desktopManager.plasma5.phononBackend = "vlc";
 
+    # oom kill faster for more responsiveness
+    services.earlyoom.enable = true;
+
     # PRINT
     lun.print.enable = true;
 

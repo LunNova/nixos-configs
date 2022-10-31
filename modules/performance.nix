@@ -11,8 +11,5 @@
       "vm.dirty_background_bytes" = 1024 * 1024 * 32;
       "net.core.default_qdisc" = "fq_codel";
     };
-
-    # TODO: check for alternatives
-    services.earlyoom.enable = true;
   };
 }
