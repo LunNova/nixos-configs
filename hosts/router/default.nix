@@ -227,14 +227,14 @@ in
         options = [ "defaults" "size=2G" "mode=755" ];
       };
       "/boot" = {
-        device = "/dev/disk/by-partlabel/_esp";
+        device = "/dev/disk/by-partlabel/${name}_esp";
         fsType = "vfat";
         neededForBoot = true;
         options = [ "discard" "noatime" ];
       };
       "/persist" = {
         device = "/dev/disk/by-partlabel/${name}_persist";
-        fsType = "ext4";
+        fsType = "btrfs";
         neededForBoot = true;
         options = btrfsSsdOpts ++ [ "subvol=@persist" "nodev" "nosuid" ];
       };
