@@ -81,6 +81,7 @@ in
     };
     services.resolved.enable = false;
     systemd.network = {
+      wait-online.anyInterface = true;
       netdevs = {
         bridge = {
           netdevConfig = {
