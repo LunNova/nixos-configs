@@ -149,14 +149,14 @@ in
             DHCPPrefixDelegation = "yes";
           };
           # finally "act as router" (according to systemd.network(5))
-          # ipv6PrefixDelegationConfig = {
-          #   RouterLifetimeSec = 300; # required as otherwise no RA's are being emitted
+          ipv6PrefixDelegationConfig = {
+            RouterLifetimeSec = 300; # required as otherwise no RA's are being emitted
 
-          #   # In a production environment you should consider setting these as well:
-          #   EmitDNS = true;
-          #   EmitDomains = true;
-          #   DNS = "fe80::1"; # or whatever "well known" IP your router will have on the inside.
-          # };
+            # In a production environment you should consider setting these as well:
+            EmitDNS = true;
+            EmitDomains = true;
+            DNS = "fe80::1"; # or whatever "well known" IP your router will have on the inside.
+          };
 
           # Add ULA prefix
           ipv6Prefixes = [
@@ -215,25 +215,25 @@ in
       "net.ipv6.conf.${debugInterface}.accept_ra" = 2;
       "net.ipv6.conf.${debugInterface}.autoconf" = 1;
     };
-    services.corerad = {
-      enable = true;
-      settings = {
-        debug = {
-          address = "localhost:9430";
-          prometheus = true; # enable prometheus metrics
-        };
-        interfaces = [
-          {
-            name = lanInterface;
-            advertise = true;
-            prefix = [
-              { prefix = "::/64"; }
-              { prefix = "${lanULA}::/64"; }
-            ];
-          }
-        ];
-      };
-    };
+    # services.corerad = {
+    #   enable = true;
+    #   settings = {
+    #     debug = {
+    #       address = "localhost:9430";
+    #       prometheus = true; # enable prometheus metrics
+    #     };
+    #     interfaces = [
+    #       {
+    #         name = lanInterface;
+    #         advertise = true;
+    #         prefix = [
+    #           { prefix = "::/64"; }
+    #           { prefix = "${lanULA}::/64"; }
+    #         ];
+    #       }
+    #     ];
+    #   };
+    # };
     services.miniupnpd = {
       enable = true;
       externalInterface = wanInterface;
