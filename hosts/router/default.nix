@@ -5,9 +5,9 @@
 # also https://github.com/skogsbrus/os/blob/406df9a6e38a805fdae8e683fe43b5a6c320b2ec/sys/router.nix https://skogsbrus.xyz/blog/2022/06/12/router/
 let
   name = "router";
-  lanInterface = "eno1";
-  wanInterface = "enp2s0f1";
-  debugInterface = "enp2s0f2";
+  wanInterface = "enp2s0f0";
+  lanInterface = "enp1s0f1";
+  debugInterface = "enp1s0f2";
   lanV4Subnet = "10.5.5";
   lanV4Self = "${lanV4Subnet}.1";
   fullHostName = "${config.networking.hostName}.${config.networking.domain}";
