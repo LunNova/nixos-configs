@@ -176,7 +176,8 @@ in
         # local=/local/
         # Interfaces to serve on
         # can repeat this line for multiple interfaces
-        interface=${lanInterface}
+        interface=${lanBridge}
+        interface=127.0.0.1
         # subnet IP blocks to use DHCP on, repeat line for multiple
         dhcp-range=${lanV4Subnet}.50,${lanV4Subnet}.254,24h
         # static IP example
