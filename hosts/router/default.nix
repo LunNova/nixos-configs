@@ -61,7 +61,11 @@ in
       '';
       firewall = {
         enable = true;
-        trustedInterfaces = [ lanInterface debugInterface ];
+        trustedInterfaces = [ lanBridge debugInterface ];
+        allowedUDPPorts = [ ];
+        allowedTCPPorts = [ ];
+        allowedUDPPortRanges = [ ];
+        allowedTCPPortRanges = [ ];
       };
       # not sure whether to use a bridge
       # bridges."${lanBridge}" = {
