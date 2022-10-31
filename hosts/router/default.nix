@@ -69,6 +69,7 @@ in
       gaming = false;
       graphical = false;
     };
+    services.resolved.enable = false;
     systemd.network = {
       networks = {
         "wan" = {
@@ -98,6 +99,7 @@ in
         "lan" = {
           name = lanInterface;
           networkConfig = {
+            DHCP = "no";
             Description = "LAN interface";
             # the client shouldn't be allowed to send us RAs, that would be weird.
             IPv6AcceptRA = false;
