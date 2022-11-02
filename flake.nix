@@ -86,11 +86,6 @@
             url = "https://github.com/NixOS/nixpkgs/compare/staging..856566f3654381a75aade0e2f3d5ceb8b5e9617e.patch";
             sha256 = "sha256-rUIhVB1RQXkOk+0Hhhui9ZJ/KGMxIzuWn9cZP80QbBE=";
           })
-          (nixpkgs.legacyPackages.${system}.fetchpatch {
-            # lutris: set unshareIpc and unsharePid to false #198384 
-            url = "https://github.com/NixOS/nixpkgs/compare/master..28244d4c9a1b28875e56f79c09f5dcb9ec01d696.patch";
-            sha256 = "sha256-arokknYHD9ycx38fEX/JQ2gL3UlSNDJt2FkGWlLqqfY=";
-          })
         ];
       defaultPkgsConfig = {
         inherit system;
