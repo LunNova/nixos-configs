@@ -19,6 +19,9 @@
     oxalica-nil.url = "github:oxalica/nil";
     oxalica-nil.inputs.nixpkgs.follows = "nixpkgs";
     oxalica-nil.inputs.flake-utils.follows = "flake-utils";
+    thoth-reminder-bot.url = "github:mmk150/reminder_bot";
+    thoth-reminder-bot.inputs.nixpkgs.follows = "nixpkgs";
+    thoth-reminder-bot.inputs.flake-utils.follows = "flake-utils";
 
     linux-freedesktop-drm-misc-fixes = {
       url = "github:freedesktop/drm-misc/drm-misc-fixes";

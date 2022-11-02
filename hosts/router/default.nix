@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, flake-args, ... }:
 
 # borrowed some stuff from https://github.com/georgewhewell/nixos-host/blob/master/profiles/router.nix
 # also begyn.be https://francis.begyn.be/blog/ipv6-nixos-router
@@ -282,7 +282,7 @@ in
       addr = "0.0.0.0"; # FIXME: one interface only?
       dataDir = "/var/lib/grafana";
     };
-    lun.persistence.dirs = [ "/var/lib/dnsmasq" "/var/lib/grafana" "/var/tmp" "/tmp" ];
+    lun.persistence.dirs = [ "/var/lib/dnsmasq" "/var/lib/grafana" "/var/tmp" "/tmp" "/persist/thoth/ftmp" ];
 
     services.lldpd.enable = true;
 
@@ -295,6 +295,43 @@ in
     hardware.cpu.amd.updateMicrocode = true;
 
     users.mutableUsers = false;
+
+    systemd.targets.getty.wants = [ "journal@tty12.service" ];
+
+    systemd.services."thoth-ftmp" =
+      let
+        thothPython = pkgs.python3.withPackages (_: [
+          flake-args.thoth-reminder-bot.packages.${pkgs.system}.thoth
+        ]);
+        thothWorkingDirectory = "/persist/thoth/ftmp/";
+        thothEnv = "${thothWorkingDirectory}secrets.env";
+      in
+      {
+        enable = true;
+        description = "Thoth reminder bot for FTMP.";
+        wants = [
+          "network-online.target"
+        ];
+        unitConfig = {
+          ConditionPathExists = thothEnv;
+          StartLimitBurst = 5;
+          StartLimitIntervalSec = 30;
+        };
+        serviceConfig = {
+          EnvironmentFile = thothEnv;
+          ExecStart = ''
+            ${thothPython}/bin/python -c 'import os, thoth.main; os.chdir("${thothWorkingDirectory}"); thoth.main.start()'
+          '';
+          Type = "exec";
+          RestartSec = 30;
+          TemporaryFileSystem = "/persist/";
+          BindPaths = thothWorkingDirectory;
+          PrivateTmp = true;
+          Restart = "always";
+          ProtectSystem = true;
+          ProtectHome = true;
+        };
+      };
 
     lun.persistence.enable = true;
     fileSystems = {

@@ -37,6 +37,22 @@
         "type": "github"
       }
     },
+    "flake-compat_2": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1650374568,
+        "narHash": "sha256-Z+s0J8/r907g149rllvwhb4pKi8Wam5ij0st8PwAh+E=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "b4a34015c698c7793d592d66adbab377907a2be8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "locked": {
         "lastModified": 1667077288,
@@ -342,7 +358,8 @@
         "pct-clearvision": "pct-clearvision",
         "pre-commit-hooks": "pre-commit-hooks",
         "replugged": "replugged",
-        "replugged-nix-flake": "replugged-nix-flake"
+        "replugged-nix-flake": "replugged-nix-flake",
+        "thoth-reminder-bot": "thoth-reminder-bot"
       }
     },
     "rust-overlay": {
@@ -367,6 +384,30 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "thoth-reminder-bot": {
+      "inputs": {
+        "flake-compat": "flake-compat_2",
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1666924549,
+        "narHash": "sha256-GEw4LYrqtZUXnxMoTZARY/6qfcoyxkI/lmYcOgnlZCc=",
+        "owner": "mmk150",
+        "repo": "reminder_bot",
+        "rev": "7b63c3198e8121059411de898c4f660324471390",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mmk150",
+        "repo": "reminder_bot",
         "type": "github"
       }
     },
