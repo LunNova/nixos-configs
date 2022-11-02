@@ -309,6 +309,7 @@ in
       {
         enable = true;
         description = "Thoth reminder bot for FTMP.";
+        wantedBy = [ "multi-user.target" ];
         wants = [
           "network-online.target"
         ];
