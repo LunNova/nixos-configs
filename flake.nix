@@ -169,6 +169,7 @@
           powercord-plugins = lunLib.filterPrefix "pcp-" args;
           powercord-themes = lunLib.filterPrefix "pct-" args;
           inherit (localPackages) kwinft;
+          nix-gaming = args.nix-gaming.packages.${final.system};
           # gst-plugins-bad pulls in opencv which we don't want
           # TODO: upstream option for this
           # gst_all_1 = (prev.gst_all_1 // {
