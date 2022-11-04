@@ -22,6 +22,9 @@
     thoth-reminder-bot.url = "github:mmk150/reminder_bot";
     thoth-reminder-bot.inputs.nixpkgs.follows = "nixpkgs";
     thoth-reminder-bot.inputs.flake-utils.follows = "flake-utils";
+    nixpkgs-review-checks.url = "github:SuperSandro2000/nixpkgs-review-checks";
+    nixpkgs-review-checks.inputs.nixpkgs.follows = "nixpkgs";
+    nixpkgs-review-checks.inputs.flake-utils.follows = "flake-utils";
 
     linux-freedesktop-drm-misc-fixes = {
       url = "github:freedesktop/drm-misc/drm-misc-fixes";
