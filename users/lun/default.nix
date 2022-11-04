@@ -43,6 +43,7 @@
     pciutils
     nixpkgs-fmt
     flake-args.oxalica-nil.packages.${pkgs.system}.nil
+    flake-args.nixpkgs-review-checks.packages.${pkgs.system}.nixpkgs-review-checks
     ark
     unar
     unzip
