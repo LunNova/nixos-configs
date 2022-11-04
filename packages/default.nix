@@ -19,9 +19,15 @@ let
       gnugrep
       curl
       jq
+      bubblewrap
+      slirp4netns
     ];
     interpreter = "${pkgs.bash}/bin/bash";
     execer = [
+      # See https://github.com/abathur/resholve/issues/77
+      # These are sometimes a lie because there's no support for can: + how to interpret the args
+      "cannot:${pkgs.bubblewrap}/bin/bwrap" # can:
+      "cannot:${pkgs.slirp4netns}/bin/slirp4netns" # can:
       "cannot:${pkgs.borgbackup}/bin/borg"
     ];
     fake = {
