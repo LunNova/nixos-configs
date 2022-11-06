@@ -45,16 +45,6 @@ let
   mesaOverride =
     mesaPkg: (mesaPkg.overrideAttrs (old: {
       patches = old.patches ++ [ ./mesa/mr-19101-device-select.patch ];
-      mesonFlags = old.mesonFlags ++ [
-        "-D vulkan-layers=device-select,overlay"
-      ];
-      postInstall = old.postInstall + ''
-        ln -s -t $drivers/lib/ ${pkgs.vulkan-loader}/lib/lib*
-        mv -t $drivers/lib $out/lib/libVkLayer*
-        for js in $drivers/share/vulkan/{im,ex}plicit_layer.d/*.json; do
-          substituteInPlace "$js" --replace '"libVkLayer_' '"'"$drivers/lib/libVkLayer_"
-        done
-      '';
     }));
   mesaOverride23WithZink = mesaPkg: (mesaPkg.override {
     # MESA_LOADER_DRIVER_OVERRIDE=zink
@@ -64,6 +54,7 @@ let
     enableOSMesa = true;
     enableOpenCL = true;
   }).overrideAttrs (old: {
+    patches = old.patches ++ [ ./mesa/mr-19101-device-select.patch ];
     version = "23.0.0-dev";
     src = pkgs.fetchFromGitLab {
       domain = "gitlab.freedesktop.org";
@@ -72,16 +63,7 @@ let
       rev = "7641e3524319dd9272be822b6e70c801496d9d92";
       sha256 = "sha256-NLuNND5dJnqVocxk7zZrCJs+WxktKeUbZQVrf/nZXaQ=";
     };
-    mesonFlags = (lib.lists.remove "-Dxvmc-libs-path=${placeholder "drivers"}/lib" old.mesonFlags) ++ [
-      "-D vulkan-layers=device-select,overlay"
-    ];
-    postInstall = old.postInstall + ''
-      ln -s -t $drivers/lib/ ${pkgs.vulkan-loader}/lib/lib*
-      mv -t $drivers/lib $out/lib/libVkLayer*
-      for js in $drivers/share/vulkan/{im,ex}plicit_layer.d/*.json; do
-        substituteInPlace "$js" --replace '"libVkLayer_' '"'"$drivers/lib/libVkLayer_"
-      done
-    '';
+    mesonFlags = lib.lists.remove "-Dxvmc-libs-path=${placeholder "drivers"}/lib" old.mesonFlags;
   });
   self = {
     lun-scripts = wrapScripts ./lun-scripts;
