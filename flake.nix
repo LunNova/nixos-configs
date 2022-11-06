@@ -25,6 +25,8 @@
     nixpkgs-review-checks.url = "github:SuperSandro2000/nixpkgs-review-checks";
     nixpkgs-review-checks.inputs.nixpkgs.follows = "nixpkgs";
     nixpkgs-review-checks.inputs.flake-utils.follows = "flake-utils";
+    deploy-rs.url = "github:serokell/deploy-rs";
+    deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
 
     linux-freedesktop-drm-misc-fixes = {
       url = "github:freedesktop/drm-misc/drm-misc-fixes";
@@ -233,24 +235,40 @@
           mmk = makeUser "mmk";
         };
 
-      checks."${system}" = {
-        pre-commit-check = pre-commit-hooks.lib.${system}.run {
-          src = ./.;
-          hooks = {
-            statix.enable = true;
-            nixpkgs-fmt.enable = true;
-            shellcheck = {
-              enable = true;
-              files = "\\.sh$";
-              types_or = lib.mkForce [ ];
-            };
-            shfmt = {
-              enable = true;
-              files = "\\.sh$";
-            };
-          };
+      deploy.nodes.router = {
+        hostname = "router-nixos";
+        profiles.system = {
+          user = "lun";
+          path = args.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.router-nixos;
         };
       };
+
+      checks = lunLib.recursiveMerge [
+        {
+          "${system}" = {
+            pre-commit-check = pre-commit-hooks.lib.${system}.run {
+              src = ./.;
+              hooks = {
+                statix.enable = true;
+                nixpkgs-fmt.enable = true;
+                shellcheck = {
+                  enable = true;
+                  files = "\\.sh$";
+                  types_or = lib.mkForce [ ];
+                };
+                shfmt = {
+                  enable = true;
+                  files = "\\.sh$";
+                };
+              };
+            };
+          };
+        }
+        (builtins.mapAttrs
+          (system: deployLib: deployLib.deployChecks self.deploy)
+          args.deploy-rs.lib)
+      ];
+
       slowChecks.${system} = rec {
         all-packages = pkgs.symlinkJoin {
           name = "lun self.packages ${system}";
