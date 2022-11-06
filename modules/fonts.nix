@@ -1,15 +1,21 @@
-{ pkgs, ... }: {
+{ pkgs, lib, ... }:
+# Using a much more minimal set of system fonts now because
+# battle.net seems to break if there are lots of fonts
+let lotsOfFonts = false;
+in
+{
   fonts = {
     enableDefaultFonts = true;
 
     fonts = with pkgs; [
+      vistafonts # Calibri, Cambria, Candara, Consolas, Constantia, Corbel
+      twitter-color-emoji # Decent set of emoji
+    ] ++ lib.optionals lotsOfFonts [
       # General fonts
       noto-fonts
       noto-fonts-cjk
       liberation_ttf
-      carlito # Similar to MS Calibri
       ttf_bitstream_vera
-      vistafonts # Calibri, Cambria, Candara, Consolas, Constantia, Corbel
 
       # Japanese
       ipafont
@@ -29,13 +35,12 @@
       iosevka-bin
 
       # Emoji
-      twitter-color-emoji
       noto-fonts-emoji
       noto-fonts-extra
     ];
 
-    # Lucida -> iosevka as no free Lucida font available and it's used widely
-    fontconfig.localConf = ''
+    # # Lucida -> iosevka as no free Lucida font available and it's used widely
+    fontconfig.localConf = lib.mkIf lotsOfFonts ''
       <?xml version="1.0"?>
       <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
       <fontconfig>
