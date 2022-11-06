@@ -44,6 +44,7 @@
     nix = {
       package = pkgs.nixUnstable;
       daemonCPUSchedPolicy = "idle";
+      trustedUsers = [ "@wheel" ];
       extraOptions = lib.mkMerge [
         "experimental-features = nix-command flakes"
         "warn-dirty = false"
