@@ -91,6 +91,7 @@ let
     '';
     svpflow = pkgs.callPackage ./svpflow { };
     # inherit (flake-args.nixpkgs-mesa-pr.legacyPackages.${pkgs.system}) mesa;
+    wowup = pkgs.callPackage ./wowup { };
     mesa = mesaOverride pkgs.mesa;
     mesa-i686 = mesaOverride pkgs.pkgsi686Linux.mesa;
     xorgserver = pkgs.xorg.xorgserver.overrideAttrs (old: {
