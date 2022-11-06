@@ -236,9 +236,9 @@
         };
 
       deploy.nodes.router = {
-        hostname = "router-nixos";
+        hostname = "10.5.5.1"; # "router-nixos";
         profiles.system = {
-          user = "lun";
+          sshUser = "lun";
           path = args.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.router-nixos;
         };
       };

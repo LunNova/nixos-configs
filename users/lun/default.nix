@@ -48,6 +48,7 @@
     unar
     unzip
     p7zip
+    flake-args.deploy-rs.packages.${pkgs.system}.default
   ];
 
   programs.git = {
