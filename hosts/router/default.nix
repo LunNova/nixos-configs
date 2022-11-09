@@ -90,6 +90,7 @@ in
       gaming = false;
       graphical = false;
     };
+    security.sudo.wheelNeedsPassword = false;
     services.resolved.enable = false;
     systemd.network = {
       wait-online.anyInterface = true;
