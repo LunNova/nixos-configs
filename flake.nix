@@ -239,6 +239,7 @@
         hostname = "10.5.5.1"; # "router-nixos";
         profiles.system = {
           sshUser = "lun";
+          user = "root";
           path = args.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.router-nixos;
         };
       };
