@@ -93,6 +93,17 @@ in
     services.resolved.enable = false;
     systemd.network = {
       wait-online.anyInterface = true;
+      links."99-default.link.d/offload.conf" = {
+        linkConfig = {
+          ReceiveChecksumOffload = false;
+          TransmitChecksumOffload = false;
+          TCPSegmentationOffload = false;
+          TCP6SegmentationOffload = false;
+          GenericSegmentationOffload = false;
+          GenericReceiveOffload = false;
+          LargeReceiveOffload = false;
+        };
+      };
       networks = {
         "wan" = {
           name = wanInterface;
