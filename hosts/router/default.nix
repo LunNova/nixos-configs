@@ -241,6 +241,7 @@ in
     boot.kernel.sysctl = {
       "net.ipv4.conf.all.forwarding" = true;
       "net.ipv6.conf.all.forwarding" = true;
+      "net.ipv4.tcp_ecn" = 1;
 
       # source: https://github.com/mdlayher/homelab/blob/master/nixos/routnerr-2/configuration.nix#L52
       # By default, not automatically configure any IPv6 addresses.
