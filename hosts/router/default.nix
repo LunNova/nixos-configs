@@ -233,6 +233,7 @@ in
         dhcp-authoritative
         dhcp-range=${lanV4Subnet}.50,${lanV4Subnet}.254,24h
         dhcp-option=option:router,${lanV4Self}
+        dhcp-option=option:mtu,1500
         # static IP example
         # dhcp-host=00:0d:b9:5e:22:91,$ {private_subnet}.1
       '';
