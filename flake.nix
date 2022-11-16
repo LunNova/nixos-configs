@@ -121,7 +121,6 @@
           {
             inherit pkgs-stable;
             flake-args = args;
-            lun = args.self;
             nixos-hardware-modules-path = "${args.nixos-hardware}";
           };
 
@@ -135,7 +134,7 @@
             {
               config = {
                 home-manager.extraSpecialArgs = {
-                  lun = args.self;
+                  inherit pkgs-stable;
                   flake-args = args;
                   lun-profiles = config.lun.profiles;
                 };
@@ -218,7 +217,6 @@
                 lun-profiles = {
                   graphical = true;
                 };
-                lun = args.self;
                 flake-args = args;
               };
               configuration = {

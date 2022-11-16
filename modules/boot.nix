@@ -1,4 +1,4 @@
-{ lun, pkgs, lib, ... }:
+{ flake-args, pkgs, lib, ... }:
 {
   config = {
     boot = {
@@ -13,7 +13,7 @@
 
       plymouth = {
         enable = true;
-        logo = lun.assets.images.crescent_moon_100x100;
+        logo = flake-args.self.assets.images.crescent_moon_100x100;
       };
     };
   };
