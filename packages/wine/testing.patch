@@ -1,0 +1,83 @@
+diff --git a/dlls/ntdll/unix/process.c b/dlls/ntdll/unix/process.c
+index 503ef93d966..1e5a517ba92 100644
+--- a/dlls/ntdll/unix/process.c
++++ b/dlls/ntdll/unix/process.c
+@@ -1257,8 +1257,8 @@ NTSTATUS WINAPI NtQueryInformationProcess( HANDLE handle, PROCESSINFOCLASS class
+         break;
+ 
+     case ProcessDebugPort:
+-        len = sizeof(DWORD_PTR);
+-        if (size == len)
++        len = sizeof(DWORD);
++        if (size >= len)
+         {
+             if (!info) ret = STATUS_ACCESS_VIOLATION;
+             else
+@@ -1274,12 +1274,12 @@ NTSTATUS WINAPI NtQueryInformationProcess( HANDLE handle, PROCESSINFOCLASS class
+                 SERVER_END_REQ;
+                 if (ret == STATUS_SUCCESS)
+                 {
+-                    *(DWORD_PTR *)info = ~0ul;
++                    *(DWORD *)info = ~0ul;
+                     NtClose( debug );
+                 }
+                 else if (ret == STATUS_PORT_NOT_SET)
+                 {
+-                    *(DWORD_PTR *)info = 0;
++                    *(DWORD *)info = 0;
+                     ret = STATUS_SUCCESS;
+                 }
+             }
+diff --git a/dlls/ntdll/unix/registry.c b/dlls/ntdll/unix/registry.c
+index 797e32a5bf1..f258e28e730 100644
+--- a/dlls/ntdll/unix/registry.c
++++ b/dlls/ntdll/unix/registry.c
+@@ -137,10 +137,16 @@ NTSTATUS WINAPI NtOpenKeyEx( HANDLE *key, ACCESS_MASK access, const OBJECT_ATTRI
+     ULONG attributes;
+ 
+     *key = 0;
+-    if (attr->Length != sizeof(*attr)) return STATUS_INVALID_PARAMETER;
+-    if (attr->ObjectName->Length & 1) return STATUS_OBJECT_NAME_INVALID;
++    if (attr->Length != sizeof(*attr)) {
++        FIXME( "wrong attr length %d expected %d (%p %x %p %x %p)\n", attr->Length, sizeof(*attr), key, access, attr, options);
++        return STATUS_INVALID_PARAMETER;
++    }
++    if (attr->ObjectName->Length & 1) {
++        FIXME( "wrong attr ObjectName length %d is not even (%p %x %p %x %p)\n", attr->ObjectName->Length, key, access, attr, options);
++        return STATUS_OBJECT_NAME_INVALID;
++    }
+ 
+-    TRACE( "(%p,%s,%x,%p)\n", attr->RootDirectory, debugstr_us(attr->ObjectName), access, key );
++    FIXME( "(%p,%s,%x,%p)\n", attr->RootDirectory, debugstr_us(attr->ObjectName), access, key );
+ 
+     if (options & ~REG_OPTION_OPEN_LINK) FIXME( "options %x not implemented\n", options );
+ 
+@@ -156,6 +162,7 @@ NTSTATUS WINAPI NtOpenKeyEx( HANDLE *key, ACCESS_MASK access, const OBJECT_ATTRI
+         *key = wine_server_ptr_handle( reply->hkey );
+     }
+     SERVER_END_REQ;
++    FIXME("<- ret %d\n", ret);
+     TRACE("<- %p\n", *key);
+     return ret;
+ }
+@@ -485,7 +492,7 @@ NTSTATUS WINAPI NtQueryValueKey( HANDLE handle, const UNICODE_STRING *name,
+     UCHAR *data_ptr;
+     unsigned int fixed_size, min_size;
+ 
+-    TRACE( "(%p,%s,%d,%p,%d)\n", handle, debugstr_us(name), info_class, info, length );
++    FIXME( "(%p,%s,%d,%p,%d)\n", handle, debugstr_us(name), info_class, info, length );
+ 
+     if (name->Length > MAX_VALUE_LENGTH) return STATUS_OBJECT_NAME_NOT_FOUND;
+ 
+diff --git a/dlls/wow64/syscall.c b/dlls/wow64/syscall.c
+index 86c5b61157e..9244dce3f4a 100644
+--- a/dlls/wow64/syscall.c
++++ b/dlls/wow64/syscall.c
+@@ -456,6 +456,7 @@ static void init_syscall_table( HMODULE module, ULONG idx, const SYSTEM_SERVICE_
+                 {
+                     thunks[start_pos + table_pos] = (syscall_thunk)orig_table->ServiceTable[wrap_pos++];
+                     max_pos = max( table_pos, max_pos );
++                    FIXME( "!!! assigned syscall id %04lx for %s\n", id, name );
+                 }
+                 else ERR( "invalid syscall id %04lx for %s\n", id, name );
+             }

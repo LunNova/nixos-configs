@@ -31,7 +31,7 @@ let
       "cannot:${pkgs.borgbackup}/bin/borg"
     ];
     fake = {
-      external = [ "sudo" "idea-ultimate" ];
+      external = [ "sudo" "idea-ultimate" "wine" ];
     };
   };
   wrapScripts = path:
@@ -103,6 +103,11 @@ let
       patches = old.patches ++ [
         # Adds KMS_DEVICE env var to restrict which card xorg will use
         ./xorg/limit-kms-devices.patch
+      ];
+    });
+    wine = flake-args.nix-gaming.packages.${pkgs.system}.wine-ge.overrideAttrs (old: {
+      patches = old.patches ++ [
+        ./wine/testing.patch
       ];
     });
   };
