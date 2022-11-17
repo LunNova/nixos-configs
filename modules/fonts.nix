@@ -5,9 +5,14 @@ let lotsOfFonts = false;
 in
 {
   fonts = {
-    enableDefaultFonts = true;
+    enableDefaultFonts = false;
 
-    fonts = with pkgs; [
+    fonts = lib.mkForce (with pkgs; [
+      dejavu_fonts
+      freefont_ttf
+      gyre-fonts # TrueType substitutes for standard PostScript fonts
+      liberation_ttf
+      unifont
       vistafonts # Calibri, Cambria, Candara, Consolas, Constantia, Corbel
       twitter-color-emoji # Decent set of emoji
     ] ++ lib.optionals lotsOfFonts [
@@ -37,7 +42,7 @@ in
       # Emoji
       noto-fonts-emoji
       noto-fonts-extra
-    ];
+    ]);
 
     # # Lucida -> iosevka as no free Lucida font available and it's used widely
     fontconfig.localConf = lib.mkIf lotsOfFonts ''
