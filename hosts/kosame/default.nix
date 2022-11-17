@@ -47,6 +47,7 @@ in
 
   lun.amd-pstate.enable = true;
   lun.power-saving.enable = true;
+  lun.power-saving.usb = true;
 
   # This always crashes so is off but want to debug later
   # specialisation.nvidia-offload.configuration = {
