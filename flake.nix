@@ -64,18 +64,15 @@
     , ...
     }@args:
     let
-      lib = pkgs.lib.extend (final: _prev:
-        let self = args.nixpkgs; in
-        {
-          nixosSystem = args:
-            import "${pkgs}/nixos/lib/eval-config.nix" (args // {
-              modules = args.modules ++ [{
-                system.nixos.versionSuffix =
-                  ".${final.substring 0 8 (self.lastModifiedDate or self.lastModified or "19700101")}.${self.shortRev or "dirty"}";
-                system.nixos.revision = final.mkIf (self ? rev) self.rev;
-              }];
-            });
-        });
+      lib = pkgs.lib.extend (final: _prev: {
+        nixosSystem = args:
+          import "${pkgs}/nixos/lib/eval-config.nix" (args // {
+            modules = args.modules ++ [{
+              system.nixos.versionSuffix = "";
+              system.nixos.revision = "";
+            }];
+          });
+      });
       lunLib = import ./lib { bootstrapLib = args.nixpkgs.lib; };
       system = "x86_64-linux";
 
