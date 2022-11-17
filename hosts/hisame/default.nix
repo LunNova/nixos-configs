@@ -5,11 +5,6 @@ let
   btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" "autodefrag" ];
   btrfsHddOpts = btrfsOpts ++ [ ];
   btrfsSsdOpts = btrfsOpts ++ [ "ssd" "discard=async" ];
-  waylandEnv = {
-    KMS_DEVICE = "/dev/dri/card2";
-    KWIN_DRM_DEVICES = "/dev/dri/card2";
-    MESA_VK_DEVICE_SELECT_FORCE_DEFAULT_DEVICE = "1";
-  };
   enableFbDevs = true;
 in
 {
@@ -80,6 +75,10 @@ in
 
       # TODO: Move into amdgpu-no-ecc module
       "amdgpu.ras_enable=0"
+      "video=d"
+      "video=DP-4:2560x1440@100"
+      "video=DP-5:3440x1440@144"
+      "video=DP-6:2560x1440@100"
     ];
     boot.plymouth.enable = lib.mkForce false;
     boot.kernelPatches = (lib.optionals (!enableFbDevs) [
@@ -122,17 +121,32 @@ in
       #   patch = ./kernel/disable-acs-redir.patch;
       # }
     ];
+    lun.gpu-select.card = "card0";
+    specialisation.carddefault.configuration = {
+      lun.gpu-select.card = lib.mkForce null;
+    };
+    specialisation.card1.configuration = {
+      lun.gpu-select.card = lib.mkForce "card1";
+    };
+    specialisation.card2.configuration = {
+      lun.gpu-select.card = lib.mkForce "card2";
+    };
     lun.amd-pstate.enable = true;
     lun.amd-pstate.sharedMem = true;
     boot.kernelModules = [ "cpufreq_conservative" ];
     powerManagement.cpuFreqGovernor = "conservative";
 
-    systemd.services.displayManager.environment = waylandEnv;
-    environment.variables = waylandEnv;
-    environment.sessionVariables = waylandEnv;
-    services.resolved.enable = true;
-    services.resolved.llmnr = "true";
-    #system.nssDatabases.hosts = lib.mkForce [ "mymachines resolve [!UNAVAIL=return] files myhostname" ];
+    services.resolved = {
+      enable = true;
+      llmnr = "true";
+      dnssec = "false";
+      fallbackDns = [
+        "1.1.1.1"
+        "8.8.8.8"
+      ];
+    };
+    services.nscd.enableNsncd = true;
+
     services.udev.extraRules = ''
       # make conservative governer snappier to scale up
       # and ignore niced loads for scaling
@@ -146,13 +160,7 @@ in
 
       # make mount work for ntfs devices without specifying -t ntfs3
       SUBSYSTEM=="block", ENV{ID_FS_TYPE}=="ntfs", ENV{ID_FS_TYPE}="ntfs3"
-
-      # ensure only card2 gets used as seat master
-      SUBSYSTEM=="drm", KERNEL=="card[0-1]", TAG-="seat", TAG-="master-of-seat", ENV{ID_FOR_SEAT}="", ENV{ID_PATH}=""
-      SUBSYSTEM=="drm", KERNEL=="card2", TAG+="seat", TAG+="master-of-seat", TAG+="mutter-device-preferred-primary"
     '';
-
-    services.xserver.displayManager.xserverBin = lib.mkForce "${pkgs.lun.xorgserver.out}/bin/X";
 
     # boot.kernelModules = [ "nct6775" "zenpower" ];
     # Use zenpower rather than k10temp for CPU temperatures.
@@ -266,6 +274,7 @@ in
       "/var/log"
       "/nix"
       "/var/lib/transmission"
+      "/var/lib/sddm"
     ];
     users.users.${config.services.borgbackup.repos.uknas.user}.home = "/home/borg";
     services.borgbackup.repos = {
