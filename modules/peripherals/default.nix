@@ -24,5 +24,7 @@
 
     services.udev.packages = [ pkgs.vial ];
     environment.systemPackages = [ pkgs.vial ];
+
+    hardware.xone.enable = true;
   };
 }
