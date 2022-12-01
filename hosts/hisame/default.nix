@@ -114,6 +114,10 @@ in
         patch = ./kernel/amdgpu-pm-no-resume.patch;
       }
       # {
+      #   name = "arc-multigpu-buffer-length";
+      #   patch = ./kernel/arc-multigpu-buffer-length.patch;
+      # }
+      # {
       #   name = "amdgpu-force-d3.patch";
       #   patch = ./kernel/amdgpu-force-d3.patch;
       # }
@@ -205,7 +209,18 @@ in
     lun.power-saving.enable = true;
     lun.efi-tools.enable = true;
 
-    services.xserver.videoDrivers = [ "amdgpu" ];
+    services.xserver.videoDrivers = [ "modesetting" ];
+    services.xserver.drivers = lib.mkIf (config.lun.gpu-select.card != null) (lib.mkForce [{
+      name = "modesetting";
+      display = true;
+      deviceSection = ''
+        Option "kmsdev" "/dev/dri/${config.lun.gpu-select.card}"
+      '';
+    }]);
+    lun.gpu-select.enable = true;
+    # lun.nvidia-gpu-standalone.enable = true; # enable nvidia gpu kernel modules and opengl/vulkan support only, no x stuff changes
+    lun.nvidia-gpu-standalone.delayXWorkaround = true; # enable nvidia gpu kernel modules and opengl/vulkan support only, no x stuff changes
+    hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
     lun.ml = {
       enable = true;
       gpus = [ "amd" ];
@@ -213,11 +228,6 @@ in
     hardware.opengl = {
       package = pkgs.lun.mesa.drivers;
       package32 = pkgs.lun.mesa-i686.drivers;
-      extraPackages = lib.mkForce [
-        # Seems to perform worse but may be worth trying if ever run into vulkan issues
-        # pkgs.amdvlk
-      ];
-      extraPackages32 = lib.mkForce [ ];
     };
 
     services.plex = {
