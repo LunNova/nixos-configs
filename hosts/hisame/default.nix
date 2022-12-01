@@ -75,10 +75,11 @@ in
 
       # TODO: Move into amdgpu-no-ecc module
       "amdgpu.ras_enable=0"
-      "video=d"
-      "video=DP-4:2560x1440@100"
-      "video=DP-5:3440x1440@144"
-      "video=DP-6:2560x1440@100"
+
+      "video=2560x1440@100"
+
+      # allow intel arc gpu to be used
+      "i915.force_probe=*"
     ];
     boot.plymouth.enable = lib.mkForce false;
     boot.kernelPatches = (lib.optionals (!enableFbDevs) [
@@ -125,6 +126,9 @@ in
     specialisation.carddefault.configuration = {
       lun.gpu-select.card = lib.mkForce null;
     };
+    specialisation.card0.configuration = {
+      lun.gpu-select.card = lib.mkForce "card0";
+    };
     specialisation.card1.configuration = {
       lun.gpu-select.card = lib.mkForce "card1";
     };
@@ -166,6 +170,8 @@ in
     # Use zenpower rather than k10temp for CPU temperatures.
     # boot.extraModulePackages = with config.boot.kernelPackages; [ zenpower ];
     boot.blacklistedKernelModules = [
+      "nouveau"
+      "radeon"
       "sp5100_tco" # watchdog hardware doesn't work
       # "k10temp" # replaced by zenpower
     ];
@@ -179,9 +185,14 @@ in
       let
         kernel = pkgs.linux_latest.override {
           argsOverride = {
-            src = flake-args.linux-freedesktop-drm-misc-fixes;
-            version = "6.1.0-dmf";
-            modDirVersion = "6.1.0-rc2";
+            #src = flake-args.linux-freedesktop-drm-misc-fixes;
+            src = flake-args.linux-rc;
+            # src = pkgs.fetchzip {
+            #   url = "https://github.com/torvalds/linux/archive/refs/tags/v6.1-rc6.tar.gz";
+            #   hash = "sha256-FbXvv2fV/2JA81DRtglQXf0pL1SON5o3bx2hrHv/Dug=";
+            # };
+            version = "6.1.0-rc6";
+            modDirVersion = "6.1.0-rc6";
             ignoreConfigErrors = true;
           };
           configfile = pkgs.linux_latest.configfile.overrideAttrs {
