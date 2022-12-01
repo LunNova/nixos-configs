@@ -1,0 +1,50 @@
+diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_client_modeset.c
+index bbc535cc50dd..ccedd8076915 100644
+--- a/drivers/gpu/drm/drm_client_modeset.c
++++ b/drivers/gpu/drm/drm_client_modeset.c
+@@ -26,6 +26,9 @@
+ #include "drm_crtc_internal.h"
+ #include "drm_internal.h"
+ 
++static struct drm_display_mode *
++drm_connector_has_fastest_mode(struct drm_connector *connector, int width, int height);
++
+ #define DRM_CLIENT_MAX_CLONED_CONNECTORS	8
+ 
+ struct drm_client_offset {
+@@ -148,6 +151,7 @@ static struct drm_display_mode *
+ drm_connector_has_preferred_mode(struct drm_connector *connector, int width, int height)
+ {
+ 	struct drm_display_mode *mode;
++	return drm_connector_has_fastest_mode(connector, width, height);
+ 
+ 	list_for_each_entry(mode, &connector->modes, head) {
+ 		if (mode->hdisplay > width ||
+@@ -159,6 +163,27 @@ drm_connector_has_preferred_mode(struct drm_connector *connector, int width, int
+ 	return NULL;
+ }
+ 
++static struct drm_display_mode *
++drm_connector_has_fastest_mode(struct drm_connector *connector, int width, int height)
++{
++	struct drm_display_mode *mode = NULL;
++	struct drm_display_mode *best = NULL;
++	int best_clock = 0;
++
++	list_for_each_entry(mode, &connector->modes, head) {
++		if (mode->flags & DRM_MODE_FLAG_INTERLACE)
++			continue;
++
++		int vref = drm_mode_vrefresh(mode);
++		if (vref > best_clock) {
++			best_clock = vref;
++			best = mode;
++		}
++	}
++
++	return mode;
++}
++
+ static struct drm_display_mode *drm_connector_pick_cmdline_mode(struct drm_connector *connector)
+ {
+ 	struct drm_cmdline_mode *cmdline_mode;

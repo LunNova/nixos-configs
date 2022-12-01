@@ -1,0 +1,37 @@
+https://gitlab.freedesktop.org/drm/intel/-/issues/7306
+diff --git a/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c b/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c
+index a0d52c0082ed..5af188789a31 100644
+--- a/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c
+@@ -29,9 +29,11 @@ static struct sg_table *i915_gem_map_dma_buf(struct dma_buf_attachment *attachme
+                                             enum dma_data_direction dir)
+ {
+        struct drm_i915_gem_object *obj = dma_buf_to_obj(attachment->dmabuf);
++       struct sgt_iter iter;
++       struct scatterlist *dst;
+        struct sg_table *st;
+-       struct scatterlist *src, *dst;
+-       int ret, i;
++       struct page *page;
++       int ret;
+ 
+        /* Copy sg so that we make an independent mapping */
+        st = kmalloc(sizeof(struct sg_table), GFP_KERNEL);
+@@ -40,16 +42,14 @@ static struct sg_table *i915_gem_map_dma_buf(struct dma_buf_attachment *attachme
+                goto err;
+        }
+ 
+-       ret = sg_alloc_table(st, obj->mm.pages->nents, GFP_KERNEL);
++       ret = sg_alloc_table(st, obj->base.size >> PAGE_SHIFT, GFP_KERNEL);g
+        if (ret)
+                goto err_free;
+ 
+-       src = obj->mm.pages->sgl;
+        dst = st->sgl;
+-       for (i = 0; i < obj->mm.pages->nents; i++) {
+-               sg_set_page(dst, sg_page(src), src->length, 0);
++       for_each_sgt_page(page, iter, obj->mm.pages) {
++               sg_set_page(dst, page, PAGE_SIZE, 0);
+                dst = sg_next(dst);
+-               src = sg_next(src);
+        }
