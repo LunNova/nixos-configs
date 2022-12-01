@@ -32,6 +32,16 @@
       url = "github:freedesktop/drm-misc/drm-misc-fixes";
       flake = false;
     };
+    linux-freedesktop-drm-tip = {
+      # hash as master hangs amdgpu
+      url = "github:freedesktop/drm-tip/601ffaf144034fa3b695c085e38692e1beedcbcf";
+      flake = false;
+    };
+    linux-rc = {
+      # hash as master hangs amdgpu
+      url = "github:gregkh/linux/v6.1-rc6";
+      flake = false;
+    };
 
     minimal-shell.url = "github:LunNova/nix-minimal-shell";
 
