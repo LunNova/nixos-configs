@@ -7,7 +7,7 @@
     ".config/fish/functions/fish_greeting.fish".text = ''
       function fish_greeting;end
     '';
-
+    ".config/fish/functions/up-or-search.fish".source = ./functions/up-or-search.fish;
     ".config/fish/functions/fish_prompt.fish".source = ./fish_prompt.fish;
     ".config/fish/functions/fish_right_prompt.fish".text = ''
       function fish_right_prompt
@@ -37,6 +37,12 @@
     # global fish config
     ".config/fish/conf.d/lun.fish".text = ''
       set -gx EDITOR vim
+      history --save
+      history --merge
+      function history_exit_handler --on-event fish_exit
+        history --save
+        history --merge
+      end
     '';
 
     ".config/fish/conf.d/colors.fish".text = ''
