@@ -1,0 +1,15 @@
+diff --git a/pkgs/applications/misc/lutris/fhsenv.nix b/pkgs/applications/misc/lutris/fhsenv.nix
+index 278d2c363bd..4d0a1f0e994 100644
+--- a/pkgs/applications/misc/lutris/fhsenv.nix
++++ b/pkgs/applications/misc/lutris/fhsenv.nix
+@@ -126,6 +126,10 @@ in buildFHSUserEnv {
+     ln -sf ${lutris-unwrapped}/share/icons $out/share
+   '';
+ 
++  profile = ''
++    export XDG_DATA_DIRS=$XDG_DATA_DIRS''${XDG_DATA_DIRS:+:}/run/opengl-driver/share:/run/opengl-driver-32/share
++  '';
++
+   meta = {
+     inherit (lutris-unwrapped.meta)
+       homepage

@@ -98,6 +98,8 @@
             url = "https://github.com/NixOS/nixpkgs/compare/staging..856566f3654381a75aade0e2f3d5ceb8b5e9617e.patch";
             sha256 = "sha256-rUIhVB1RQXkOk+0Hhhui9ZJ/KGMxIzuWn9cZP80QbBE=";
           })
+          ./nixpkgs-patches/lutris-xdg-data-dirs.patch
+          ./nixpkgs-patches/201119-tailscale-routing.patch
         ];
       defaultPkgsConfig = {
         inherit system;
@@ -190,6 +192,24 @@
           #     (prev: {
           #       mesonFlags = prev.mesonFlags ++ [ "-Dopencv=disabled" ];
           #     });
+          # });
+          # FIXME: kwin tearing patch results in no display
+          # plasma5Packages = prev.plasma5Packages.overrideScope' (_self2: super2: {
+          #   plasma5 = super2.plasma5.overrideScope' (_self1: super1: {
+          #     inherit (prev.plasma5Packages.plasma5) plasma-workspace;
+          #     kwin = super1.kwin.overrideAttrs (old: {
+          #       # src = pkgs.fetchFromGitLab {
+          #       #   domain = "invent.kde.org";
+          #       #   owner = "plasma";
+          #       #   repo = "kwin";
+          #       #   rev = "f7648611573a893dc0f4a8d3ad7ed80e1ff82749";
+          #       #   sha256 = "sha256-OkLi3nU1iBuELffC4I97TvsFkws3ihTHNeo2gVbQfN8=";
+          #       # };
+          #       patches = (old.patches or []) ++ [
+          #         ./packages/kwin/927-tearing.patch
+          #        ];
+          #     });
+          #   });
           # });
         } // (lunLib.setIf enableKwinFt {
           plasma5Packages = prev.plasma5Packages.overrideScope' (_self2: super2: {

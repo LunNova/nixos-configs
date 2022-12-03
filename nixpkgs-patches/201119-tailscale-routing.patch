@@ -1,0 +1,67 @@
+From 371c0b56293c66b3496cdcdeac09d06dff00d61e Mon Sep 17 00:00:00 2001
+From: Michael Hoang <enzime@users.noreply.github.com>
+Date: Mon, 14 Nov 2022 13:23:43 +1100
+Subject: [PATCH] nixos/tailscale: Add `useRoutingFeatures` option
+
+---
+ .../modules/services/networking/tailscale.nix | 29 ++++++++++++++-----
+ 1 file changed, 21 insertions(+), 8 deletions(-)
+
+diff --git a/nixos/modules/services/networking/tailscale.nix b/nixos/modules/services/networking/tailscale.nix
+index 26997dd96013c6..7a5d6213b6f0cf 100644
+--- a/nixos/modules/services/networking/tailscale.nix
++++ b/nixos/modules/services/networking/tailscale.nix
+@@ -4,10 +4,7 @@ with lib;
+ 
+ let
+   cfg = config.services.tailscale;
+-  firewallOn = config.networking.firewall.enable;
+-  rpfMode = config.networking.firewall.checkReversePath;
+   isNetworkd = config.networking.useNetworkd;
+-  rpfIsStrict = rpfMode == true || rpfMode == "strict";
+ in {
+   meta.maintainers = with maintainers; [ danderson mbaillie twitchyliquid64 ];
+ 
+@@ -38,14 +35,23 @@ in {
+       defaultText = literalExpression "pkgs.tailscale";
+       description = lib.mdDoc "The package to use for tailscale";
+     };
++
++    useRoutingFeatures = mkOption {
++      type = types.enum [ "none" "client" "server" "both" ];
++      default = "none";
++      example = "server";
++      description = lib.mdDoc ''
++        Enables settings required for Tailscale's routing features like subnet routers and exit nodes.
++
++        To use these these features, you will still need to call `sudo tailscale up` with the relevant flags like `--advertise-exit-node` and `--exit-node`.
++
++        When set to `client` or `both`, reverse path filtering will be set to loose instead of strict.
++        When set to `server` or `both`, IP forwarding will be enabled.
++      '';
++    };
+   };
+ 
+   config = mkIf cfg.enable {
+-    warnings = optional (firewallOn && rpfIsStrict) ''
+-      Strict reverse path filtering breaks Tailscale exit node use and some subnet routing setups. Consider setting:
+-
+-        networking.firewall.checkReversePath = "loose";
+-    '';
+     environment.systemPackages = [ cfg.package ]; # for the CLI
+     systemd.packages = [ cfg.package ];
+     systemd.services.tailscaled = {
+@@ -75,6 +81,13 @@ in {
+       stopIfChanged = false;
+     };
+ 
++    boot.kernel.sysctl = mkIf (cfg.useRoutingFeatures == "server" || cfg.useRoutingFeatures == "both") {
++      "net.ipv4.ip_forward" = true;
++      "net.ipv6.conf.all.forwarding" = true;
++    };
++
++    networking.firewall.checkReversePath = mkIf (cfg.useRoutingFeatures == "client" || cfg.useRoutingFeatures == "both") "loose";
++
+     networking.dhcpcd.denyInterfaces = [ cfg.interfaceName ];
+ 
+     systemd.network.networks."50-tailscale" = mkIf isNetworkd {
