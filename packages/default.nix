@@ -128,10 +128,55 @@ let
         ./xorg/prefer-highest-refresh-mode.patch
       ];
     });
-    wine = flake-args.nix-gaming.packages.${pkgs.system}.wine-ge.overrideAttrs (old: {
+    wine = (flake-args.nix-gaming.packages.${pkgs.system}.wine-ge.overrideAttrs (old: {
+      dontStrip = true;
+      debug = true;
       patches = old.patches ++ [
         ./wine/testing.patch
       ];
+    })).override {
+      supportFlags = {
+        gettextSupport = true;
+        fontconfigSupport = true;
+        alsaSupport = true;
+        openglSupport = true;
+        vulkanSupport = true;
+        tlsSupport = true;
+        cupsSupport = true;
+        dbusSupport = true;
+        cairoSupport = true;
+        cursesSupport = true;
+        saneSupport = true;
+        pulseaudioSupport = true;
+        udevSupport = true;
+        xineramaSupport = true;
+        sdlSupport = true;
+        mingwSupport = true;
+        gtkSupport = false;
+        gstreamerSupport = false;
+        openalSupport = false;
+        openclSupport = false;
+        odbcSupport = false;
+        netapiSupport = false;
+        vaSupport = false;
+        pcapSupport = false;
+        v4lSupport = false;
+        gphoto2Support = false;
+        krb5Support = false;
+        ldapSupport = false;
+        vkd3dSupport = false;
+        embedInstallers = false;
+        waylandSupport = false;
+        usbSupport = true;
+      };
+    };
+    libdrm = pkgs.libdrm.overrideAttrs (old: {
+      version = "2.4.114";
+      src = pkgs.fetchurl {
+        url = "https://dri.freedesktop.org/libdrm/libdrm-2.4.114.tar.xz";
+        sha256 = "sha256-MEnPhDpH0S5e7vvDvjSW14L6CfQjRr8Lfe/j0eWY0CY=";
+      };
+      patches = (old.patches or [ ]) ++ [ ./mesa/libdrm-stat-workaround.patch ];
     });
   };
 in
