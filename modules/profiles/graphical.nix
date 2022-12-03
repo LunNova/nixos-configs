@@ -57,6 +57,6 @@
     services.blueman.enable = true;
     programs.dconf.enable = true;
 
-    sconfig.yubikey = true; # modules/yubikey
+    sconfig.yubikey = false; # modules/yubikey # FIXME pam error
   };
 }
