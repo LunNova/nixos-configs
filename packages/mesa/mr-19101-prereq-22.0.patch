@@ -1,0 +1,94 @@
+From a71b92fff824675df8076b62df54acc36ffeb26a Mon Sep 17 00:00:00 2001
+From: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+Date: Wed, 29 Jun 2022 10:30:58 +0200
+Subject: [PATCH] vulkan/device_select: print the dri_prime warning only if
+ needed
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The next commit will allow a different DRI_PRIME syntax, so move
+this printf in the right if block.
+
+Reviewed-by: Marek OlÅ¡Ã¡k <marek.olsak@amd.com>
+Part-of: <https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/17298>
+---
+ .../device-select-layer/device_select_layer.c       | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/src/vulkan/device-select-layer/device_select_layer.c b/src/vulkan/device-select-layer/device_select_layer.c
+index 77952cc494aa..5746b925972d 100644
+--- a/src/vulkan/device-select-layer/device_select_layer.c
++++ b/src/vulkan/device-select-layer/device_select_layer.c
+@@ -427,10 +427,6 @@ static uint32_t get_default_device(const struct instance_info *info,
+    if (dri_prime && !strcmp(dri_prime, "1"))
+       dri_prime_is_one = true;
+ 
+-   if (dri_prime && !dri_prime_is_one && !info->has_vulkan11 && !info->has_pci_bus) {
+-      fprintf(stderr, "device-select: cannot correctly use DRI_PRIME tag\n");
+-   }
+-
+    struct device_pci_info *pci_infos = (struct device_pci_info *)calloc(physical_device_count, sizeof(struct device_pci_info));
+    if (!pci_infos)
+      return 0;
+@@ -441,8 +437,13 @@ static uint32_t get_default_device(const struct instance_info *info,
+ 
+    if (selection)
+       default_idx = device_select_find_explicit_default(pci_infos, physical_device_count, selection);
+-   if (default_idx == -1 && info->has_vulkan11 && info->has_pci_bus && dri_prime && !dri_prime_is_one)
+-      default_idx = device_select_find_dri_prime_tag_default(pci_infos, physical_device_count, dri_prime);
++
++   if (default_idx == -1 && dri_prime && !dri_prime_is_one) {
++      if (!info->has_vulkan11 && !info->has_pci_bus)
++         fprintf(stderr, "device-select: cannot correctly use DRI_PRIME tag\n");
++      else
++         default_idx = device_select_find_dri_prime_tag_default(pci_infos, physical_device_count, dri_prime);
++   }
+    if (default_idx == -1 && info->has_wayland)
+       default_idx = device_select_find_wayland_pci_default(pci_infos, physical_device_count);
+    if (default_idx == -1 && info->has_xcb)
+-- 
+GitLab
+From 903e99150f37cc33594a0770ebf1f61f557d2d3c Mon Sep 17 00:00:00 2001
+From: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+Date: Wed, 29 Jun 2022 10:33:59 +0200
+Subject: [PATCH] vulkan/device_select: allow DRI_PRIME=vendor_id:device_id
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+To match the GL side.
+
+Reviewed-by: Marek OlÅ¡Ã¡k <marek.olsak@amd.com>
+Part-of: <https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/17298>
+---
+ .../device-select-layer/device_select_layer.c      | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/src/vulkan/device-select-layer/device_select_layer.c b/src/vulkan/device-select-layer/device_select_layer.c
+index 5746b925972d..70fb091c51c4 100644
+--- a/src/vulkan/device-select-layer/device_select_layer.c
++++ b/src/vulkan/device-select-layer/device_select_layer.c
+@@ -439,10 +439,16 @@ static uint32_t get_default_device(const struct instance_info *info,
+       default_idx = device_select_find_explicit_default(pci_infos, physical_device_count, selection);
+ 
+    if (default_idx == -1 && dri_prime && !dri_prime_is_one) {
+-      if (!info->has_vulkan11 && !info->has_pci_bus)
+-         fprintf(stderr, "device-select: cannot correctly use DRI_PRIME tag\n");
+-      else
+-         default_idx = device_select_find_dri_prime_tag_default(pci_infos, physical_device_count, dri_prime);
++      /* Try DRI_PRIME=vendor_id:device_id */
++      default_idx = device_select_find_explicit_default(pci_infos, physical_device_count, dri_prime);
++
++      if (default_idx == -1) {
++         /* Try DRI_PRIME=pci-xxxx_yy_zz_w */
++         if (!info->has_vulkan11 && !info->has_pci_bus)
++            fprintf(stderr, "device-select: cannot correctly use DRI_PRIME tag\n");
++         else
++            default_idx = device_select_find_dri_prime_tag_default(pci_infos, physical_device_count, dri_prime);
++      }
+    }
+    if (default_idx == -1 && info->has_wayland)
+       default_idx = device_select_find_wayland_pci_default(pci_infos, physical_device_count);
+-- 
+GitLab

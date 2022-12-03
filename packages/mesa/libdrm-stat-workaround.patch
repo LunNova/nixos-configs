@@ -1,0 +1,82 @@
+diff --git a/xf86drm.c b/xf86drm.c
+index 0faa5972..344e1bc5 100644
+--- a/xf86drm.c
++++ b/xf86drm.c
+@@ -3283,16 +3283,16 @@ static bool drmNodeIsDRM(int maj, int min)
+ 
+ drm_public int drmGetNodeTypeFromFd(int fd)
+ {
+-    struct stat sbuf;
++    struct statx sbuf;
+     int maj, min, type;
+ 
+-    if (fstat(fd, &sbuf))
++    if (statx(fd, "", AT_EMPTY_PATH | AT_STATX_DONT_SYNC, STATX_MODE, &sbuf))
+         return -1;
+ 
+-    maj = major(sbuf.st_rdev);
+-    min = minor(sbuf.st_rdev);
++    maj = sbuf.stx_rdev_major;
++    min = sbuf.stx_rdev_minor;
+ 
+-    if (!drmNodeIsDRM(maj, min) || !S_ISCHR(sbuf.st_mode)) {
++    if (!drmNodeIsDRM(maj, min) || !S_ISCHR(sbuf.stx_mode)) {
+         errno = EINVAL;
+         return -1;
+     }
+@@ -4409,7 +4409,7 @@ process_device(drmDevicePtr *device, const char *d_name,
+                int req_subsystem_type,
+                bool fetch_deviceinfo, uint32_t flags)
+ {
+-    struct stat sbuf;
++    struct statx sbuf;
+     char node[PATH_MAX + 1];
+     int node_type, subsystem_type;
+     unsigned int maj, min;
+@@ -4419,13 +4419,13 @@ process_device(drmDevicePtr *device, const char *d_name,
+         return -1;
+ 
+     snprintf(node, PATH_MAX, "%s/%s", DRM_DIR_NAME, d_name);
+-    if (stat(node, &sbuf))
++    if (statx(0, node, AT_STATX_DONT_SYNC, STATX_MODE | STATX_INO, &sbuf))
+         return -1;
+ 
+-    maj = major(sbuf.st_rdev);
+-    min = minor(sbuf.st_rdev);
++    maj = sbuf.stx_rdev_major;
++    min = sbuf.stx_rdev_minor;
+ 
+-    if (!drmNodeIsDRM(maj, min) || !S_ISCHR(sbuf.st_mode))
++    if (!drmNodeIsDRM(maj, min) || !S_ISCHR(sbuf.stx_mode))
+         return -1;
+ 
+     subsystem_type = drmParseSubsystemType(maj, min);
+@@ -4561,6 +4561,10 @@ drm_public int drmGetDeviceFromDevId(dev_t find_rdev, uint32_t flags, drmDeviceP
+ 
+     return 0;
+ #else
++    struct statx sbuf;
++    char node[PATH_MAX + 1];
++    int node_type;
++    unsigned int nmaj, nmin;
+     drmDevicePtr local_devices[MAX_DRM_NODES];
+     drmDevicePtr d;
+     DIR *sysdir;
+@@ -4591,6 +4595,17 @@ drm_public int drmGetDeviceFromDevId(dev_t find_rdev, uint32_t flags, drmDeviceP
+ 
+     i = 0;
+     while ((dent = readdir(sysdir))) {
++        node_type = drmGetNodeType(dent->d_name);
++        if (node_type < 0)
++            return -1;
++
++        snprintf(node, PATH_MAX, "%s/%s", DRM_DIR_NAME, dent->d_name);
++        if (statx(0, node, AT_STATX_DONT_SYNC, STATX_MODE, &sbuf))
++            continue;
++
++        if (maj != sbuf.stx_rdev_major || min != sbuf.stx_rdev_minor)
++            continue;
++
+         ret = process_device(&d, dent->d_name, subsystem_type, true, flags);
+         if (ret)
+             continue;

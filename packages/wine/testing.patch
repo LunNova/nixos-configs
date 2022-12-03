@@ -39,16 +39,16 @@ index 797e32a5bf1..f258e28e730 100644
 -    if (attr->Length != sizeof(*attr)) return STATUS_INVALID_PARAMETER;
 -    if (attr->ObjectName->Length & 1) return STATUS_OBJECT_NAME_INVALID;
 +    if (attr->Length != sizeof(*attr)) {
-+        FIXME( "wrong attr length %d expected %d (%p %x %p %x %p)\n", attr->Length, sizeof(*attr), key, access, attr, options);
++        WARN( "wrong attr length %d expected %d (%p %x %p %x %p)\n", attr->Length, sizeof(*attr), key, access, attr, options);
 +        return STATUS_INVALID_PARAMETER;
 +    }
 +    if (attr->ObjectName->Length & 1) {
-+        FIXME( "wrong attr ObjectName length %d is not even (%p %x %p %x %p)\n", attr->ObjectName->Length, key, access, attr, options);
++        WARN( "wrong attr ObjectName length %d is not even (%p %x %p %x %p)\n", attr->ObjectName->Length, key, access, attr, options);
 +        return STATUS_OBJECT_NAME_INVALID;
 +    }
  
 -    TRACE( "(%p,%s,%x,%p)\n", attr->RootDirectory, debugstr_us(attr->ObjectName), access, key );
-+    FIXME( "(%p,%s,%x,%p)\n", attr->RootDirectory, debugstr_us(attr->ObjectName), access, key );
++    TRACE( "(%p,%s,%x,%p)\n", attr->RootDirectory, debugstr_us(attr->ObjectName), access, key );
  
      if (options & ~REG_OPTION_OPEN_LINK) FIXME( "options %x not implemented\n", options );
  
@@ -56,7 +56,7 @@ index 797e32a5bf1..f258e28e730 100644
          *key = wine_server_ptr_handle( reply->hkey );
      }
      SERVER_END_REQ;
-+    FIXME("<- ret %d\n", ret);
++    TRACE("<- ret %d\n", ret);
      TRACE("<- %p\n", *key);
      return ret;
  }
@@ -65,10 +65,58 @@ index 797e32a5bf1..f258e28e730 100644
      unsigned int fixed_size, min_size;
  
 -    TRACE( "(%p,%s,%d,%p,%d)\n", handle, debugstr_us(name), info_class, info, length );
-+    FIXME( "(%p,%s,%d,%p,%d)\n", handle, debugstr_us(name), info_class, info, length );
++    TRACE( "(%p,%s,%d,%p,%d)\n", handle, debugstr_us(name), info_class, info, length );
  
      if (name->Length > MAX_VALUE_LENGTH) return STATUS_OBJECT_NAME_NOT_FOUND;
  
+diff --git a/dlls/winevulkan/loader.c b/dlls/winevulkan/loader.c
+index cddcd0360ac..cd0b6e7f100 100644
+--- a/dlls/winevulkan/loader.c
++++ b/dlls/winevulkan/loader.c
+@@ -157,6 +157,8 @@ PFN_vkVoidFunction WINAPI vkGetDeviceProcAddr(VkDevice device, const char *name)
+     if (!device || !name)
+         return NULL;
+ 
++    ERR("calling vkGetDeviceProcAddr for %s\n", debugstr_a(name));
++
+     /* Per the spec, we are only supposed to return device functions as in functions
+      * for which the first parameter is vkDevice or a child of vkDevice like a
+      * vkCommandBuffer or vkQueue.
+diff --git a/dlls/winevulkan/vulkan.c b/dlls/winevulkan/vulkan.c
+index 4f949d0b42d..19ec8f591b0 100644
+--- a/dlls/winevulkan/vulkan.c
++++ b/dlls/winevulkan/vulkan.c
+@@ -674,6 +674,8 @@ VkResult wine_vkCreateDevice(VkPhysicalDevice phys_dev_handle, const VkDeviceCre
+     unsigned int i;
+     VkResult res;
+ 
++    ERR("Calling wine_vkCreateDevice\n");
++
+     if (allocator)
+         FIXME("Support for allocation callbacks not implemented yet\n");
+ 
+diff --git a/dlls/winex11.drv/vulkan.c b/dlls/winex11.drv/vulkan.c
+index 101504a7887..f60bc90ee88 100644
+--- a/dlls/winex11.drv/vulkan.c
++++ b/dlls/winex11.drv/vulkan.c
+@@ -482,7 +482,7 @@ static void *X11DRV_vkGetDeviceProcAddr(VkDevice device, const char *name)
+ {
+     void *proc_addr;
+ 
+-    TRACE("%p, %s\n", device, debugstr_a(name));
++    ERR("X11DRV_vkGetDeviceProcAddr %p, %s\n", device, debugstr_a(name));
+ 
+     if (!pvkGetDeviceProcAddr(device, wine_vk_native_fn_name(name)))
+         return NULL;
+@@ -497,7 +497,7 @@ static void *X11DRV_vkGetInstanceProcAddr(VkInstance instance, const char *name)
+ {
+     void *proc_addr;
+ 
+-    TRACE("%p, %s\n", instance, debugstr_a(name));
++    ERR("X11DRV_vkGetInstanceProcAddr %p, %s\n", instance, debugstr_a(name));
+ 
+     if (!pvkGetInstanceProcAddr(instance, wine_vk_native_fn_name(name)))
+         return NULL;
 diff --git a/dlls/wow64/syscall.c b/dlls/wow64/syscall.c
 index 86c5b61157e..9244dce3f4a 100644
 --- a/dlls/wow64/syscall.c
