@@ -1,0 +1,168 @@
+From 356e94ce8371a8e46dfe46d98e088df60c2c9a07 Mon Sep 17 00:00:00 2001
+From: Xaver Hugl <xaver.hugl@gmail.com>
+Date: Tue, 13 Sep 2022 14:30:03 +0200
+Subject: [PATCH 2/3] backends/drm: use tearing presentation where possible and
+ appropriate
+
+---
+ src/backends/drm/drm_gpu.cpp             | 10 ++++++++++
+ src/backends/drm/drm_gpu.h               |  2 ++
+ src/backends/drm/drm_output.cpp          |  1 +
+ src/backends/drm/drm_pipeline_legacy.cpp |  6 +++++-
+ src/core/renderloop.cpp                  | 19 +++++++++++++++----
+ src/core/renderloop_p.h                  |  3 +++
+ 6 files changed, 36 insertions(+), 5 deletions(-)
+
+diff --git a/src/backends/drm/drm_gpu.cpp b/src/backends/drm/drm_gpu.cpp
+index c7062bd7fa..7927ecda0b 100644
+--- a/src/backends/drm/drm_gpu.cpp
++++ b/src/backends/drm/drm_gpu.cpp
+@@ -83,6 +83,11 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
+     connect(m_socketNotifier.get(), &QSocketNotifier::activated, this, &DrmGpu::dispatchEvents);
+ 
+     initDrmResources();
++
++    if (m_atomicModeSetting == false) {
++        // only supported with legacy
++        m_asyncPageflipSupported = drmGetCap(fd, DRM_CAP_ASYNC_PAGE_FLIP, &capability) == 0 && capability == 1;
++    }
+ 
+     m_leaseDevice = new KWaylandServer::DrmLeaseDeviceV1Interface(waylandServer()->display(), [this] {
+         char *path = drmGetDeviceNameFromFd2(m_fd);
+@@ -664,6 +669,11 @@ bool DrmGpu::addFB2ModifiersSupported() const
+     return m_addFB2ModifiersSupported;
+ }
+ 
++bool DrmGpu::asyncPageflipSupported() const
++{
++    return m_asyncPageflipSupported;
++}
++
+ bool DrmGpu::isNVidia() const
+ {
+     return m_isNVidia;
+diff --git a/src/backends/drm/drm_gpu.h b/src/backends/drm/drm_gpu.h
+index 6111e96a4c..7850764394 100644
+--- a/src/backends/drm/drm_gpu.h
++++ b/src/backends/drm/drm_gpu.h
+@@ -72,6 +72,7 @@ public:
+ 
+     bool atomicModeSetting() const;
+     bool addFB2ModifiersSupported() const;
++    bool asyncPageflipSupported() const;
+     bool isNVidia() const;
+     gbm_device *gbmDevice() const;
+     EGLDisplay eglDisplay() const;
+@@ -129,6 +130,7 @@ private:
+     bool m_addFB2ModifiersSupported = false;
+     bool m_isNVidia;
+     bool m_isVirtualMachine;
++    bool m_asyncPageflipSupported;
+     bool m_isRemoved = false;
+     clockid_t m_presentationClock;
+     gbm_device *m_gbmDevice;
+diff --git a/src/backends/drm/drm_output.cpp b/src/backends/drm/drm_output.cpp
+index 67cb22536c..4366db32cd 100644
+--- a/src/backends/drm/drm_output.cpp
++++ b/src/backends/drm/drm_output.cpp
+@@ -44,6 +44,7 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline)
+     , m_pipeline(pipeline)
+     , m_connector(pipeline->connector())
+ {
++    RenderLoopPrivate::get(m_renderLoop.get())->canDoTearing = gpu()->asyncPageflipSupported();
+     m_pipeline->setOutput(this);
+     const auto conn = m_pipeline->connector();
+     m_renderLoop->setRefreshRate(m_pipeline->mode()->refreshRate());
+diff --git a/src/backends/drm/drm_pipeline_legacy.cpp b/src/backends/drm/drm_pipeline_legacy.cpp
+index 26018f11ad..0d3a0177e6 100644
+--- a/src/backends/drm/drm_pipeline_legacy.cpp
++++ b/src/backends/drm/drm_pipeline_legacy.cpp
+@@ -30,7 +30,11 @@ DrmPipeline::Error DrmPipeline::presentLegacy()
+         }
+     }
+     const auto buffer = m_pending.layer->currentBuffer();
+-    if (drmModePageFlip(gpu()->fd(), m_pending.crtc->id(), buffer->framebufferId(), DRM_MODE_PAGE_FLIP_EVENT, gpu()) != 0) {
++    uint32_t flags = DRM_MODE_PAGE_FLIP_EVENT;
++    if (m_pending.syncMode == RenderLoopPrivate::SyncMode::Async) {
++        flags |= DRM_MODE_PAGE_FLIP_ASYNC;
++    }
++    if (drmModePageFlip(gpu()->fd(), m_pending.crtc->id(), buffer->framebufferId(), flags, gpu()) != 0) {
+         qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno);
+         return errnoToError();
+     }
+diff --git a/src/core/renderloop.cpp b/src/core/renderloop.cpp
+index d858d0c54e..75ce3096b8 100644
+--- a/src/core/renderloop.cpp
++++ b/src/core/renderloop.cpp
+@@ -7,7 +7,9 @@
+ #include "renderloop.h"
+ #include "renderloop_p.h"
+ #include "surfaceitem.h"
++#include "surfaceitem_wayland.h"
+ #include "utils/common.h"
++#include "wayland/surface_interface.h"
+ 
+ namespace KWin
+ {
+@@ -34,13 +36,14 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q)
+ 
+ void RenderLoopPrivate::scheduleRepaint()
+ {
+-    if (kwinApp()->isTerminating() || compositeTimer.isActive()) {
++    allowTearing = canDoTearing;
++    if (kwinApp()->isTerminating() || (compositeTimer.isActive() && !allowTearing)) {
+         return;
+     }
+     if (vrrPolicy == RenderLoop::VrrPolicy::Always || (vrrPolicy == RenderLoop::VrrPolicy::Automatic && fullscreenItem != nullptr)) {
+         presentMode = SyncMode::Adaptive;
+     } else {
+-        presentMode = SyncMode::Fixed;
++        presentMode = allowTearing ? SyncMode::Async : SyncMode::Fixed;
+     }
+     const std::chrono::nanoseconds vblankInterval(1'000'000'000'000ull / refreshRate);
+     const std::chrono::nanoseconds currentTime(std::chrono::steady_clock::now().time_since_epoch());
+@@ -93,8 +95,12 @@ void RenderLoopPrivate::scheduleRepaint()
+         nextRenderTimestamp = currentTime;
+     }
+ 
+-    const std::chrono::nanoseconds waitInterval = nextRenderTimestamp - currentTime;
+-    compositeTimer.start(std::chrono::duration_cast<std::chrono::milliseconds>(waitInterval));
++    if (presentMode == SyncMode::Async) {
++        compositeTimer.start(0);
++    } else {
++        const std::chrono::nanoseconds waitInterval = nextRenderTimestamp - currentTime;
++        compositeTimer.start(std::chrono::duration_cast<std::chrono::milliseconds>(waitInterval));
++    }
+ }
+ 
+ void RenderLoopPrivate::delayScheduleRepaint()
+@@ -256,6 +262,7 @@ std::chrono::nanoseconds RenderLoop::nextPresentationTimestamp() const
+ void RenderLoop::setFullscreenSurface(Item *surfaceItem)
+ {
+     d->fullscreenItem = surfaceItem;
++    d->allowTearing = d->canDoTearing;
+ }
+ 
+ RenderLoop::VrrPolicy RenderLoop::vrrPolicy() const
+diff --git a/src/core/renderloop_p.h b/src/core/renderloop_p.h
+index ed7c091815..9c9533a2e3 100644
+--- a/src/core/renderloop_p.h
++++ b/src/core/renderloop_p.h
+@@ -45,12 +45,15 @@ public:
+     RenderLoop::VrrPolicy vrrPolicy = RenderLoop::VrrPolicy::Never;
+     std::optional<LatencyPolicy> latencyPolicy;
+     Item *fullscreenItem = nullptr;
++    bool allowTearing = false;
+ 
+     enum class SyncMode {
+         Fixed,
+         Adaptive,
++        Async
+     };
+     SyncMode presentMode = SyncMode::Fixed;
++    bool canDoTearing = false;
+ };
+ 
+ } // namespace KWin
+-- 
+GitLab
