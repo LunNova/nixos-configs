@@ -25,6 +25,8 @@
     services.udev.packages = [ pkgs.vial ];
     environment.systemPackages = [ pkgs.vial ];
 
-    hardware.xone.enable = true;
+    # FIXME: xone doesn't work with wireless, seems unmaintained?
+    # find something better or patch it
+    # hardware.xone.enable = true;
   };
 }
