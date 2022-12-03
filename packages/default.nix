@@ -44,8 +44,29 @@ let
   lun-scripts-path = pkgs.symlinkJoin { name = "lun-scripts"; paths = lib.attrValues self.lun-scripts; };
   # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/19101.patch
   mesaOverride =
-    mesaPkg: (mesaPkg.overrideAttrs (old: {
-      patches = old.patches ++ [ ./mesa/mr-19101-device-select.patch ];
+    mesaPkg: ((mesaPkg.override {
+      # libdrm = (if mesaPkg == pkgs.pkgsi686Linux.mesa then pkgs.pkgsi686Linux else pkgs).libdrm.overrideAttrs (old: {
+      #   patches = (old.patches or [ ]) ++ [ ./mesa/libdrm-stat-workaround.patch ];
+      # });
+      galliumDrivers = [ "iris" "i915" "radeonsi" ];
+      vulkanDrivers = [ "amd" "intel" ];
+      enableGalliumNine = false;
+      enableOSMesa = false;
+      enableOpenCL = false;
+    }).overrideAttrs (old: {
+      # version = "23.0.0-dev";
+      # src = pkgs.fetchFromGitLab {
+      #   domain = "gitlab.freedesktop.org";
+      #   owner = "mesa";
+      #   repo = "mesa";
+      #   rev = "321dc93276408300eefc89b5e38676582599585a";
+      #   hash = "sha256-LRlF+bImSPO07AOeZKErVUNeKfHQ26oRCjQFumozT5E=";
+      # };
+      # mesonFlags = lib.lists.remove "-Dxvmc-libs-path=${placeholder "drivers"}/lib" old.mesonFlags;
+      patches = (old.patches or [ ]) ++ [
+        ./mesa/mr-19101-prereq-22.0.patch # if < 23
+        ./mesa/mr-19101-device-select.patch
+      ];
     }));
   mesaOverride23WithZink = mesaPkg: (mesaPkg.override {
     # MESA_LOADER_DRIVER_OVERRIDE=zink
