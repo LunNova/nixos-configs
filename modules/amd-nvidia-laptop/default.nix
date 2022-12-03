@@ -42,7 +42,6 @@ in
     # https://wiki.archlinux.org/title/NVIDIA/Troubleshooting#Xorg_fails_during_boot,_but_otherwise_starts_fine
     # TODO: can we depend on all dev-dri-card*.devices showing up instead?
     systemd.services.display-manager.wants = [ "systemd-udev-settle.service" ];
-    systemd.services.display-manager.after = [ "systemd-udev-settle.service" ];
     systemd.services.display-manager.serviceConfig.ExecStartPre = [ "/bin/sh -c 'sleep 3'" ];
 
     services.xserver.displayManager.gdm.wayland = lib.mkForce false;
