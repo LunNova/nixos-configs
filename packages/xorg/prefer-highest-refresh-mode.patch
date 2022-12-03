@@ -1,0 +1,85 @@
+diff --git a/hw/xfree86/drivers/modesetting/drmmode_display.c b/hw/xfree86/drivers/modesetting/drmmode_display.c
+index 65e8e6335..08c02b86c 100644
+--- a/hw/xfree86/drivers/modesetting/drmmode_display.c
++++ b/hw/xfree86/drivers/modesetting/drmmode_display.c
+@@ -2636,7 +2636,37 @@ has_panel_fitter(xf86OutputPtr output)
+ 
+     return (idx > -1);
+ }
++static void
++xf86DDCSetPreferredRefresh(int scrnIndex, DisplayModePtr modes,
++                           float target_refresh)
++{
++    DisplayModePtr mode, best = modes;
++
++    for (mode = modes; mode; mode = mode->next) {
++        mode->type &= ~M_T_PREFERRED;
+ 
++        if (mode == best)
++            continue;
++
++        if (mode->HDisplay * mode->VDisplay > best->HDisplay * best->VDisplay) {
++            best = mode;
++            continue;
++        }
++        if (mode->HDisplay * mode->VDisplay == best->HDisplay * best->VDisplay) {
++            double mode_refresh = xf86ModeVRefresh(mode);
++            double best_refresh = xf86ModeVRefresh(best);
++            double mode_dist = fabs(mode_refresh - target_refresh);
++            double best_dist = fabs(best_refresh - target_refresh);
++
++            if (mode_dist < best_dist) {
++                best = mode;
++                continue;
++            }
++        }
++    }
++    if (best)
++        best->type |= M_T_PREFERRED;
++}
+ static DisplayModePtr
+ drmmode_output_add_gtf_modes(xf86OutputPtr output, DisplayModePtr Modes)
+ {
+@@ -2652,6 +2682,7 @@ drmmode_output_add_gtf_modes(xf86OutputPtr output, DisplayModePtr Modes)
+         return Modes;
+ 
+     for (m = Modes; m; m = m->next) {
++        m->type = m->type & ~M_T_PREFERRED;
+         if (m->type & M_T_PREFERRED)
+             preferred = m;
+         max_x = max(max_x, m->HDisplay);
+@@ -2677,7 +2708,10 @@ drmmode_output_add_gtf_modes(xf86OutputPtr output, DisplayModePtr Modes)
+ 
+     xf86PruneInvalidModes(output->scrn, &m, FALSE);
+ 
+-    return xf86ModesAdd(Modes, m);
++    m = xf86ModesAdd(Modes, m);
++    if (m)
++        xf86DDCSetPreferredRefresh(output->scrn, m, 1000);
++    return m;
+ }
+ 
+ static DisplayModePtr
+diff --git a/hw/xfree86/modes/xf86EdidModes.c b/hw/xfree86/modes/xf86EdidModes.c
+index 1ac573867..1cb82be70 100644
+--- a/hw/xfree86/modes/xf86EdidModes.c
++++ b/hw/xfree86/modes/xf86EdidModes.c
+@@ -1069,6 +1069,8 @@ xf86DDCGetModes(int scrnIndex, xf86MonPtr DDC)
+         preferred = TRUE;
+     if (quirks & (DDC_QUIRK_PREFER_LARGE_60 | DDC_QUIRK_PREFER_LARGE_75))
+         preferred = FALSE;
++    // lun patch: prefer highest refresh always
++    preferred = FALSE;
+ 
+     rb = xf86MonitorSupportsReducedBlanking(DDC);
+ 
+@@ -1102,6 +1104,9 @@ xf86DDCGetModes(int scrnIndex, xf86MonPtr DDC)
+     if (quirks & DDC_QUIRK_PREFER_LARGE_75)
+         xf86DDCSetPreferredRefresh(scrnIndex, Modes, 75);
+ 
++    // lun patch: prefer highest refresh always
++    xf86DDCSetPreferredRefresh(scrnIndex, Modes, 1000);
++
+     Modes = xf86PruneDuplicateModes(Modes);
+ 
+     return Modes;

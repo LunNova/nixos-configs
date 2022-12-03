@@ -14,7 +14,7 @@
          const char *sysname = udev_device_get_sysname(udev_device);
  
 -        if (strncmp(sysname, "card", 4) != 0)
-+        if (strncmp(sysname, "card", 4) != 0 || (getenv("KMS_DEVICE") && strcmp(path, getenv("KMS_DEVICE"))!=0))
++        if (strncmp(sysname, "card", 4) != 0 || (getenv("KMSDEVICE") && strcmp(path, getenv("KMSDEVICE"))!=0))
              return;
  
          /* Check for devices already added through xf86platformProbe() */

@@ -125,6 +125,7 @@ let
       patches = old.patches ++ [
         # Adds KMS_DEVICE env var to restrict which card xorg will use
         ./xorg/limit-kms-devices.patch
+        ./xorg/prefer-highest-refresh-mode.patch
       ];
     });
     wine = flake-args.nix-gaming.packages.${pkgs.system}.wine-ge.overrideAttrs (old: {
