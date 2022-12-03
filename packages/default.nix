@@ -6,6 +6,7 @@ let
     # wine = pkgs.wineWowPackages.wayland;
     wine = pkgs.emptyDirectory; # don't use system wine with lutris
   }).overrideAttrs (old: {
+    patches = (old.patches or [ ]) ++ [ ./lutris/more-vulkan-search-paths.patch ];
     propagatedBuildInputs = old.propagatedBuildInputs ++ [ pkgs.wineWowPackages.fonts ];
   });
   resholvCfg = {
