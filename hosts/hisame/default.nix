@@ -217,7 +217,7 @@ in
     lun.nvidia-gpu-standalone.delayXWorkaround = true; # enable nvidia gpu kernel modules and opengl/vulkan support only, no x stuff changes
     hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
     lun.ml = {
-      enable = true;
+      enable = false; # FIXME: rocm https://github.com/NixOS/nixpkgs/issues/203949
       gpus = [ "amd" ];
     };
     hardware.opengl = {
