@@ -189,14 +189,9 @@ in
       let
         kernel = pkgs.linux_latest.override {
           argsOverride = {
-            #src = flake-args.linux-freedesktop-drm-misc-fixes;
             src = flake-args.linux-rc;
-            # src = pkgs.fetchzip {
-            #   url = "https://github.com/torvalds/linux/archive/refs/tags/v6.1-rc6.tar.gz";
-            #   hash = "sha256-FbXvv2fV/2JA81DRtglQXf0pL1SON5o3bx2hrHv/Dug=";
-            # };
-            version = "6.1.0-rc6";
-            modDirVersion = "6.1.0-rc6";
+            version = "6.1.0-rc7";
+            modDirVersion = "6.1.0-rc7";
             ignoreConfigErrors = true;
           };
           configfile = pkgs.linux_latest.configfile.overrideAttrs {

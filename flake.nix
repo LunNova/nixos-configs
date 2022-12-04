@@ -39,7 +39,7 @@
     };
     linux-rc = {
       # hash as master hangs amdgpu
-      url = "github:gregkh/linux/v6.1-rc6";
+      url = "github:gregkh/linux/v6.1-rc7";
       flake = false;
     };
 
