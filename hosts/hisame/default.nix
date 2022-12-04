@@ -130,6 +130,7 @@ in
       #   patch = ./kernel/disable-acs-redir.patch;
       # }
     ];
+    services.hardware.bolt.enable = true;
     lun.gpu-select.card = "card0";
     specialisation.carddefault.configuration = {
       lun.gpu-select.card = lib.mkForce null;
