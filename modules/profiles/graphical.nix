@@ -10,6 +10,7 @@
     # services.xserver.displayManager.gdm.wayland = true;
     # services.xserver.displayManager.gdm.nvidiaWayland = true;
     environment.systemPackages = [
+      pkgs.sddm-kcm # KDE settings panel for sddm
       pkgs.libsForQt5.bismuth
     ];
     services.xserver.desktopManager.plasma5.enable = true;
