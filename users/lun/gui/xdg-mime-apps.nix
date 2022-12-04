@@ -24,6 +24,7 @@ let
   };
 in
 {
+  xdg.configFile."mimeapps.list".force = true; # too many apps replace this link when opened to add their own definitions
   xdg.mime.enable = true;
   xdg.mimeApps.enable = true;
   xdg.mimeApps.associations.added = associations;
