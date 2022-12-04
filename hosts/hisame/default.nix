@@ -24,6 +24,10 @@ in
       "pcie_ports=native" # handle everything in linux even if uefi wants to
       "pcie_port_pm=force" # force pm on even if not wanted by platform
       "pcie_aspm=force" # force link state
+      # FIXME: turn back on once arc multigpu doesn't fall over
+      # workaround for https://gitlab.freedesktop.org/drm/intel/-/issues/7306
+      "iommo=off"
+      "amd_iommu=off"
 
       # Potential workaround for high idle mclk?
       # https://gitlab.freedesktop.org/drm/amd/-/issues/1301#note_629735
