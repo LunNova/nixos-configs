@@ -93,11 +93,6 @@
           #   url = "https://github.com/NixOS/nixpkgs/compare/d536e0a0eb54ea51c676869991fe5a1681cc6302.patch";
           #   sha256 = "sha256-aKUt0iJp3TX3bzkxyWM/Pt61l9HnsnKGD2tX24H3dAA=";
           # })
-          (nixpkgs.legacyPackages.${system}.fetchpatch {
-            #  xdg-utils,nixos/xdg/portal: implement workaround for opening programs from FHS envs or wrappers reliably #197118 
-            url = "https://github.com/NixOS/nixpkgs/compare/staging..856566f3654381a75aade0e2f3d5ceb8b5e9617e.patch";
-            sha256 = "sha256-rUIhVB1RQXkOk+0Hhhui9ZJ/KGMxIzuWn9cZP80QbBE=";
-          })
           ./nixpkgs-patches/lutris-xdg-data-dirs.patch
           ./nixpkgs-patches/201119-tailscale-routing.patch
         ];
