@@ -146,8 +146,7 @@ in
     };
     lun.amd-pstate.enable = true;
     lun.amd-pstate.sharedMem = true;
-    boot.kernelModules = [ "cpufreq_conservative" ];
-    powerManagement.cpuFreqGovernor = "conservative";
+    powerManagement.cpuFreqGovernor = "schedutil";
 
     services.resolved = {
       enable = true;
@@ -161,12 +160,6 @@ in
     services.nscd.enableNsncd = true;
 
     services.udev.extraRules = ''
-      # make conservative governer snappier to scale up
-      # and ignore niced loads for scaling
-      KERNEL=="cpu", \
-        RUN+="${pkgs.bash}/bin/bash -c '${pkgs.coreutils}/bin/echo 10 > /sys/devices/system/cpu/cpufreq/conservative/freq_step'" \
-        RUN+="${pkgs.bash}/bin/bash -c '${pkgs.coreutils}/bin/echo 1 > /sys/devices/system/cpu/cpufreq/conservative/ignore_nice_load'"
-
       # Remove AMD GPU Audio devices, if present
       # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x1002", ATTR{class}=="0x040300", ATTR{remove}="1"
       # This causes critical thermal fails so don't do it ^ :/
