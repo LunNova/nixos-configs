@@ -524,11 +524,11 @@
     "replugged": {
       "flake": false,
       "locked": {
-        "lastModified": 1670825678,
-        "narHash": "sha256-3qxvrY3VYldbyIjqpqtb1wAs+Vhgk37z8q2raRzpa5w=",
+        "lastModified": 1664511204,
+        "narHash": "sha256-wgVInLJd97vsndfSVLRvJzOl4e1yZCXYsFpp0ITZvzQ=",
         "owner": "replugged-org",
         "repo": "replugged",
-        "rev": "b25c6c9cba9eca1d1244b983d8493920bb1c067c",
+        "rev": "e984d8fdae3a3585e6ca7dc7fa8aed3725062b31",
         "type": "github"
       },
       "original": {
@@ -542,9 +542,7 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "replugged": [
-          "replugged"
-        ]
+        "replugged": "replugged"
       },
       "locked": {
         "lastModified": 1669681358,
@@ -581,7 +579,6 @@
         "pcp-webhook-tag": "pcp-webhook-tag",
         "pct-clearvision": "pct-clearvision",
         "pre-commit-hooks": "pre-commit-hooks",
-        "replugged": "replugged",
         "replugged-nix-flake": "replugged-nix-flake",
         "thoth-reminder-bot": "thoth-reminder-bot"
       }

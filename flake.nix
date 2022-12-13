@@ -39,18 +39,16 @@
     };
     linux-rc = {
       # hash as master hangs amdgpu
-      url = "github:gregkh/linux/v6.1-rc7";
+      url = "github:gregkh/linux/v6.1-rc8";
       flake = false;
     };
 
     minimal-shell.url = "github:LunNova/nix-minimal-shell";
 
     # Powercord. pcp- and pct- prefix have meaning, cause inclusion as powercord plugin/theme
-    replugged = { url = "github:replugged-org/replugged"; flake = false; };
     replugged-nix-flake = {
       url = "github:LunNova/replugged-nix-flake";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.replugged.follows = "replugged";
     };
     # TODO: check for web access loading scripts and patch out
     # pcp-tweaks = { url = "github:NurMarvin/discord-tweaks"; flake = false; };
