@@ -218,16 +218,16 @@
     "linux-rc": {
       "flake": false,
       "locked": {
-        "lastModified": 1670194092,
-        "narHash": "sha256-KSAotMNO3u+Y02txyCG7ax4YLt87Wwon6o2G8pMVZZY=",
-        "owner": "gregkh",
+        "lastModified": 1670796918,
+        "narHash": "sha256-7HBzP6P/7KLCfKas4TRFfCutG0azFzV+IpQABtDMHnk=",
+        "owner": "torvalds",
         "repo": "linux",
-        "rev": "76dcd734eca23168cb008912c0f69ff408905235",
+        "rev": "830b3c68c1fb1e9176028d02ef86f3cf76aa2476",
         "type": "github"
       },
       "original": {
-        "owner": "gregkh",
-        "ref": "v6.1-rc8",
+        "owner": "torvalds",
+        "ref": "v6.1",
         "repo": "linux",
         "type": "github"
       }
