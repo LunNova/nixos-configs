@@ -6,8 +6,14 @@ let
     # wine = pkgs.wineWowPackages.wayland;
     wine = pkgs.emptyDirectory; # don't use system wine with lutris
   }).overrideAttrs (old: {
+    src = pkgs.fetchFromGitHub {
+      owner = "lutris";
+      repo = "lutris";
+      rev = "e6efe2366df2c487455e0f8c429aa3dda9689ba9";
+      hash = "sha256-YVm2EFWLZ7jQ2mx6VQdFX1DGAHs+mndsl2Y4JLH3Ebk=";
+    };
     patches = (old.patches or [ ]) ++ [ ./lutris/more-vulkan-search-paths.patch ];
-    propagatedBuildInputs = old.propagatedBuildInputs ++ [ pkgs.wineWowPackages.fonts ];
+    propagatedBuildInputs = old.propagatedBuildInputs ++ [ pkgs.wineWowPackages.fonts pkgs.python3Packages.pypresence ];
   });
   resholvCfg = {
     inputs = with pkgs; [
