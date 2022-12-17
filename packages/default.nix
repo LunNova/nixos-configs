@@ -26,17 +26,19 @@ let
       gnugrep
       curl
       jq
+    ] ++ (lib.optionals pkgs.stdenv.isLinux (with pkgs; [
       bubblewrap
       slirp4netns
-    ];
+    ]));
     interpreter = "${pkgs.bash}/bin/bash";
     execer = [
       # See https://github.com/abathur/resholve/issues/77
+      "cannot:${pkgs.borgbackup}/bin/borg"
+    ] ++ (lib.optionals pkgs.stdenv.isLinux [
       # These are sometimes a lie because there's no support for can: + how to interpret the args
       "cannot:${pkgs.bubblewrap}/bin/bwrap" # can:
       "cannot:${pkgs.slirp4netns}/bin/slirp4netns" # can:
-      "cannot:${pkgs.borgbackup}/bin/borg"
-    ];
+    ]);
     fake = {
       external = [ "sudo" "idea-ultimate" "wine" "nix" ];
     };
@@ -97,31 +99,16 @@ let
     lun-scripts = wrapScripts ./lun-scripts;
     xdg-open-with-portal = pkgs.callPackage ./xdg-open-with-portal { };
     kwinft = pkgs.lib.recurseIntoAttrs (pkgs.callPackage ./kwinft { });
-    lutris = pkgs.lutris.override {
-      inherit lutris-unwrapped;
-      extraLibraries = pkgs: with pkgs; [
-        jansson
-        gnutls
-        openldap
-        libgpg-error
-        libpulseaudio
-        sqlite
-        libusb
-      ];
-    };
     spawn = pkgs.callPackage ./spawn { };
     swaysome = pkgs.callPackage ./swaysome { };
     sworkstyle = pkgs.callPackage ./sworkstyle { };
-    memtest86plus = pkgs.callPackage ./memtest86plus { };
     edk2-uefi-shell = pkgs.callPackage ./edk2-uefi-shell { };
     lun = pkgs.writeShellScriptBin "lun" ''
       exec "${lun-scripts-path}/bin/$1" "''${@:2}"
     '';
     svpflow = pkgs.callPackage ./svpflow { };
     # inherit (flake-args.nixpkgs-mesa-pr.legacyPackages.${pkgs.system}) mesa;
-    wowup = pkgs.callPackage ./wowup { };
     mesa = mesaOverride pkgs.mesa;
-    mesa-i686 = mesaOverride pkgs.pkgsi686Linux.mesa;
     xorgserver = pkgs.xorg.xorgserver.overrideAttrs (old: {
       configureFlags = old.configureFlags ++ [
         "--enable-config-udev"
@@ -134,6 +121,26 @@ let
         ./xorg/prefer-highest-refresh-mode.patch
       ];
     });
+  } //
+  # These packages are x86_64-linux
+  # This is mostly due to depending on pkgs.pkgsi686Linux to evaluate
+  (lib.optionalAttrs (pkgs.system == "x86_64-linux") {
+    # FIXME: this is upstreamed?
+    wowup = pkgs.callPackage ./wowup { };
+    memtest86plus = pkgs.callPackage ./memtest86plus { };
+    lutris = pkgs.lutris.override {
+      inherit lutris-unwrapped;
+      extraLibraries = pkgs: with pkgs; [
+        jansson
+        gnutls
+        openldap
+        libgpg-error
+        libpulseaudio
+        sqlite
+        libusb
+      ];
+    };
+    mesa-i686 = mesaOverride pkgs.pkgsi686Linux.mesa;
     wine = (flake-args.nix-gaming.packages.${pkgs.system}.wine-ge.overrideAttrs (old: {
       dontStrip = true;
       debug = true;
@@ -176,14 +183,6 @@ let
         usbSupport = true;
       };
     };
-    libdrm = pkgs.libdrm.overrideAttrs (old: {
-      version = "2.4.114";
-      src = pkgs.fetchurl {
-        url = "https://dri.freedesktop.org/libdrm/libdrm-2.4.114.tar.xz";
-        sha256 = "sha256-MEnPhDpH0S5e7vvDvjSW14L6CfQjRr8Lfe/j0eWY0CY=";
-      };
-      patches = (old.patches or [ ]) ++ [ ./mesa/libdrm-stat-workaround.patch ];
-    });
-  };
+  });
 in
 self
