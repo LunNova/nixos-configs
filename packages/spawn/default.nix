@@ -2,9 +2,10 @@
 , coreutils
 , systemd
 , util-linux
+, lib
 }:
 # Spawn a process inside systemd user scope
-writeShellApplication {
+(writeShellApplication {
   name = "spawn";
 
   runtimeInputs = [ coreutils systemd util-linux ];
@@ -18,4 +19,4 @@ writeShellApplication {
     uuid="$(uuidgen)"
     exec systemd-run --user --scope --unit "run-$name-$uuid" "''${cmd[@]}"
   '';
-}
+}) // { meta.platforms = lib.platforms.linux; }
