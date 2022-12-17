@@ -62,6 +62,14 @@ let
       enableOSMesa = false;
       enableOpenCL = false;
     }).overrideAttrs (old: {
+      version = "22.3.1";
+      src = pkgs.fetchFromGitLab {
+        domain = "gitlab.freedesktop.org";
+        owner = "mesa";
+        repo = "mesa";
+        rev = "mesa-22.3.1";
+        hash = "sha256-oDJLgVqPEhxmUBsKxwadT+UAv/BwMA+eCEaBwnUwwEU=";
+      };
       # version = "23.0.0-dev";
       # src = pkgs.fetchFromGitLab {
       #   domain = "gitlab.freedesktop.org";
@@ -70,10 +78,10 @@ let
       #   rev = "321dc93276408300eefc89b5e38676582599585a";
       #   hash = "sha256-LRlF+bImSPO07AOeZKErVUNeKfHQ26oRCjQFumozT5E=";
       # };
-      # mesonFlags = lib.lists.remove "-Dxvmc-libs-path=${placeholder "drivers"}/lib" old.mesonFlags;
+      mesonFlags = lib.lists.remove "-Dxvmc-libs-path=${placeholder "drivers"}/lib" old.mesonFlags;
       patches = (old.patches or [ ]) ++ [
-        ./mesa/mr-19101-prereq-22.0.patch # if < 23
-        ./mesa/mr-19101-device-select.patch
+        # ./mesa/mr-19101-prereq-22.0.patch # if < 23
+        # ./mesa/mr-19101-device-select.patch
       ];
     }));
   mesaOverride23WithZink = mesaPkg: (mesaPkg.override {
