@@ -182,10 +182,11 @@ in
     boot.kernelPackages =
       let
         kernel = pkgs.linux_latest.override {
+          # stdenv = pkgs.llvmPackages_latest.stdenv; #FIXME: https://github.com/llvm/llvm-project/issues/41896
           argsOverride = {
             src = flake-args.linux-rc;
-            version = "6.1.0-rc7";
-            modDirVersion = "6.1.0-rc7";
+            version = "6.1.0";
+            modDirVersion = "6.1.0";
             ignoreConfigErrors = true;
           };
           configfile = pkgs.linux_latest.configfile.overrideAttrs {
