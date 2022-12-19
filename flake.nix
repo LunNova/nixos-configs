@@ -252,6 +252,7 @@
                     # TODO handle buildInputs in minimal-shell
                     shellHooks = perSystemSelf.checks.pre-commit-check.shellHook;
                   };
+                  formatter = perSystemSelf.pkgs.nixpkgs-fmt;
 
                   homeConfigurations =
                     let
