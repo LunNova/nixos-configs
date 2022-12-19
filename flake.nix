@@ -94,7 +94,6 @@
               pkgsPatches = [
                 # add .patch to a github PR URL to get a patch quickly
                 ./nixpkgs-patches/lutris-xdg-data-dirs.patch
-                ./nixpkgs-patches/201119-tailscale-routing.patch
               ];
               defaultPkgsConfig = {
                 config.allowUnfree = true;
