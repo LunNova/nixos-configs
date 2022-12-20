@@ -68,7 +68,6 @@ let
     legacyPackages = flakeArgs.self.localPackagesForPkgs perSystemSelf.pkgs;
     packages = lib.filterAttrs (_k: pkg: lib.isDerivation pkg && !((pkg.meta or { }).broken or false) && (!(pkg ? meta && pkg.meta ? platforms) || builtins.elem system pkg.meta.platforms)) perSystemSelf.legacyPackages;
     devShell = flakeArgs.minimal-shell.lib.minimal-shell {
-      inherit system;
       inherit (perSystemSelf) pkgs;
       shellHooks = perSystemSelf.checks.pre-commit-check.shellHook;
       shellPackages = [ perSystemSelf.pkgs.nixpkgs-fmt ];
