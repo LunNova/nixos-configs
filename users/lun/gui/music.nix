@@ -1,6 +1,6 @@
-{ pkgs, flake-args, ... }:
+{ pkgs, flakeArgs, ... }:
 {
   home.packages = [
-    flake-args.erosanix.packages.${pkgs.system}.foobar2000
+    flakeArgs.erosanix.packages.${pkgs.system}.foobar2000
   ];
 }

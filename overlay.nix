@@ -1,16 +1,16 @@
-{ flake-args }:
+{ flakeArgs }:
 final: prev:
 let
-  inherit (flake-args) self;
+  inherit (flakeArgs) self;
   localPackages = self.localPackagesForPkgs final;
   enableKwinFt = false;
 in
 {
   lun = localPackages;
-  powercord-plugins = self.lib.filterPrefix "pcp-" flake-args;
-  powercord-themes = self.lib.filterPrefix "pct-" flake-args;
+  powercord-plugins = self.lib.filterPrefix "pcp-" flakeArgs;
+  powercord-themes = self.lib.filterPrefix "pct-" flakeArgs;
   inherit (localPackages) kwinft;
-  nix-gaming = flake-args.nix-gaming.packages.${final.system};
+  nix-gaming = flakeArgs.nix-gaming.packages.${final.system};
   # gst-plugins-bad pulls in opencv which we don't want
   # TODO: upstream option for this
   # gst_all_1 = (prev.gst_all_1 // {

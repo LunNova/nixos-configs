@@ -1,4 +1,4 @@
-{ pkgs, flake-args }:
+{ pkgs, flakeArgs }:
 let
   inherit (pkgs) lib;
   lutris-unwrapped = (pkgs.lutris-unwrapped.override {
@@ -115,7 +115,7 @@ let
       exec "${lun-scripts-path}/bin/$1" "''${@:2}"
     '';
     svpflow = pkgs.callPackage ./svpflow { };
-    # inherit (flake-args.nixpkgs-mesa-pr.legacyPackages.${pkgs.system}) mesa;
+    # inherit (flakeArgs.nixpkgs-mesa-pr.legacyPackages.${pkgs.system}) mesa;
     mesa = mesaOverride pkgs.mesa;
     xorgserver = pkgs.xorg.xorgserver.overrideAttrs (old: {
       configureFlags = old.configureFlags ++ [
@@ -149,7 +149,7 @@ let
       ];
     };
     mesa-i686 = mesaOverride pkgs.pkgsi686Linux.mesa;
-    wine = (flake-args.nix-gaming.packages.${pkgs.system}.wine-ge.overrideAttrs (old: {
+    wine = (flakeArgs.nix-gaming.packages.${pkgs.system}.wine-ge.overrideAttrs (old: {
       dontStrip = true;
       debug = true;
       patches = old.patches ++ [

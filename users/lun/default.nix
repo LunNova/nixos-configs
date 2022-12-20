@@ -1,4 +1,4 @@
-{ lib, pkgs, flake-args, lun-profiles, ... }:
+{ lib, pkgs, flakeArgs, lun-profiles, ... }:
 {
   imports = [
     ./modern-unix.nix
@@ -42,13 +42,13 @@
     usbutils
     pciutils
     nixpkgs-fmt
-    flake-args.oxalica-nil.packages.${pkgs.system}.nil
-    flake-args.nixpkgs-review-checks.packages.${pkgs.system}.nixpkgs-review-checks
+    flakeArgs.oxalica-nil.packages.${pkgs.system}.nil
+    flakeArgs.nixpkgs-review-checks.packages.${pkgs.system}.nixpkgs-review-checks
     ark
     unar
     unzip
     p7zip
-    flake-args.deploy-rs.packages.${pkgs.system}.default
+    flakeArgs.deploy-rs.packages.${pkgs.system}.default
   ];
 
   programs.git = {

@@ -1,4 +1,4 @@
-{ config, pkgs, lib, flake-args, ... }:
+{ config, pkgs, lib, flakeArgs, ... }:
 
 # borrowed some stuff from https://github.com/georgewhewell/nixos-host/blob/master/profiles/router.nix
 # also begyn.be https://francis.begyn.be/blog/ipv6-nixos-router
@@ -315,7 +315,7 @@ in
     systemd.services."thoth-ftmp" =
       let
         thothPython = pkgs.python3.withPackages (_: [
-          flake-args.thoth-reminder-bot.packages.${pkgs.system}.thoth
+          flakeArgs.thoth-reminder-bot.packages.${pkgs.system}.thoth
         ]);
         thothWorkingDirectory = "/persist/thoth/ftmp/";
         thothEnv = "${thothWorkingDirectory}secrets.env";

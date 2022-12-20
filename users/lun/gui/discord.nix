@@ -1,7 +1,7 @@
-{ lib, pkgs, flake-args, ... }:
+{ lib, pkgs, flakeArgs, ... }:
 {
   home.packages = [
-    (flake-args.replugged-nix-flake.lib.makeDiscordPlugged {
+    (flakeArgs.replugged-nix-flake.lib.makeDiscordPlugged {
       inherit pkgs;
       withOpenAsar = true;
       themes = pkgs.powercord-themes;

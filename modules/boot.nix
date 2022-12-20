@@ -1,4 +1,4 @@
-{ flake-args, pkgs, lib, ... }:
+{ flakeArgs, pkgs, lib, ... }:
 {
   config = {
     boot = {
@@ -13,7 +13,7 @@
 
       plymouth = {
         enable = true;
-        logo = flake-args.self.assets.images.crescent_moon_100x100;
+        logo = flakeArgs.self.assets.images.crescent_moon_100x100;
       };
     };
   };

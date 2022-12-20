@@ -1,4 +1,4 @@
-{ config, pkgs, lib, flake-args, ... }:
+{ config, pkgs, lib, flakeArgs, ... }:
 let
   name = "hisame";
   swap = "/dev/disk/by-partlabel/hisame_swap";
@@ -184,7 +184,7 @@ in
         kernel = pkgs.linux_latest.override {
           # stdenv = pkgs.llvmPackages_latest.stdenv; #FIXME: https://github.com/llvm/llvm-project/issues/41896
           argsOverride = {
-            src = flake-args.linux-rc;
+            src = flakeArgs.linux-rc;
             version = "6.1.0";
             modDirVersion = "6.1.0";
             ignoreConfigErrors = true;

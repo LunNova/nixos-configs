@@ -1,4 +1,4 @@
-{ flake-args }:
+{ flakeArgs }:
 system:
 let
   pkgsPatches = [
@@ -11,7 +11,7 @@ let
       # (final: prev: {
       #   some-package = ...
       # })
-      flake-args.self.overlay
+      flakeArgs.self.overlay
     ];
   };
   readModules = path: builtins.map (x: path + "/${x}") (builtins.filter (str: (builtins.match "^[^.]*(\.nix)?$" str) != null) (builtins.attrNames (builtins.readDir path)));
@@ -21,11 +21,11 @@ let
     # eventually will get rid of this IFD
     # once there's patches support for flake inputs
     # https://github.com/NixOS/nix/pull/6530
-    pkgs = flake-args.self.lib.mkPkgs flake-args.nixpkgs system (if system == "x86_64-linux" then pkgsPatches else [ ]) (defaultPkgsConfig // { inherit system; });
-    pkgs-stable = flake-args.self.lib.mkPkgs flake-args.nixpkgs-stable system [ ] (defaultPkgsConfig // { inherit system; });
-    nixpkgsLib = flake-args.nixpkgs.lib.extend (final: _prev: {
+    pkgs = flakeArgs.self.lib.mkPkgs flakeArgs.nixpkgs system (if system == "x86_64-linux" then pkgsPatches else [ ]) (defaultPkgsConfig // { inherit system; });
+    pkgs-stable = flakeArgs.self.lib.mkPkgs flakeArgs.nixpkgs-stable system [ ] (defaultPkgsConfig // { inherit system; });
+    nixpkgsLib = flakeArgs.nixpkgs.lib.extend (final: _prev: {
       nixosSystem = args:
-        import "${flake-args.nixpkgs}/nixos/lib/eval-config.nix" (args // {
+        import "${flakeArgs.nixpkgs}/nixos/lib/eval-config.nix" (args // {
           modules = args.modules ++ [{
             system.nixos.versionSuffix = "";
             system.nixos.revision = "";
@@ -38,22 +38,22 @@ let
 
       specialArgs =
         {
-          inherit flake-args;
+          inherit flakeArgs;
           inherit (perSystemSelf) pkgs-stable;
-          nixos-hardware-modules-path = "${flake-args.nixos-hardware}";
+          nixos-hardware-modules-path = "${flakeArgs.nixos-hardware}";
         };
 
       modules = [
         { nixpkgs.pkgs = perSystemSelf.pkgs; }
-        flake-args.home-manager.nixosModules.home-manager
-        flake-args.nix-gaming.nixosModules.pipewireLowLatency
+        flakeArgs.home-manager.nixosModules.home-manager
+        flakeArgs.nix-gaming.nixosModules.pipewireLowLatency
         path
         ./users
         ({ config, ... }:
           {
             config = {
               home-manager.extraSpecialArgs = {
-                inherit flake-args;
+                inherit flakeArgs;
                 inherit (perSystemSelf) pkgs-stable;
                 lun-profiles = config.lun.profiles;
               };
@@ -62,12 +62,12 @@ let
             };
           })
       ]
-      ++ (builtins.attrValues flake-args.self.nixosModules)
+      ++ (builtins.attrValues flakeArgs.self.nixosModules)
       ++ (readModules ./modules);
     };
-    legacyPackages = flake-args.self.localPackagesForPkgs perSystemSelf.pkgs;
+    legacyPackages = flakeArgs.self.localPackagesForPkgs perSystemSelf.pkgs;
     packages = lib.filterAttrs (_k: pkg: lib.isDerivation pkg && !((pkg.meta or { }).broken or false) && (!(pkg ? meta && pkg.meta ? platforms) || builtins.elem system pkg.meta.platforms)) perSystemSelf.legacyPackages;
-    devShell = flake-args.minimal-shell.lib.minimal-shell {
+    devShell = flakeArgs.minimal-shell.lib.minimal-shell {
       inherit system;
       inherit (perSystemSelf) pkgs;
       passthru = {
@@ -81,11 +81,11 @@ let
     homeConfigurations =
       let
         makeUser = username:
-          import "${flake-args.home-manager}/modules" {
+          import "${flakeArgs.home-manager}/modules" {
             inherit (perSystemSelf) pkgs;
             check = true;
             extraSpecialArgs = {
-              inherit flake-args;
+              inherit flakeArgs;
               inherit (perSystemSelf) pkgs-stable;
               nixosConfig = null;
               lun-profiles = {
@@ -112,7 +112,7 @@ let
       };
       all-systems = perSystemSelf.pkgs.symlinkJoin {
         name = "lun nixosConfigurations for system ${system}";
-        paths = lib.filter (x: x.system == system) (map (cfg: flake-args.self.nixosConfigurations.${cfg}.config.system.build.toplevel) (builtins.attrNames flake-args.self.nixosConfigurations));
+        paths = lib.filter (x: x.system == system) (map (cfg: flakeArgs.self.nixosConfigurations.${cfg}.config.system.build.toplevel) (builtins.attrNames flakeArgs.self.nixosConfigurations));
       };
       all-users = perSystemSelf.pkgs.symlinkJoin {
         name = "lun homeConfigurations for system ${system}";
@@ -124,7 +124,7 @@ let
       };
     };
     checks = {
-      pre-commit-check = flake-args.pre-commit-hooks.lib.${system}.run {
+      pre-commit-check = flakeArgs.pre-commit-hooks.lib.${system}.run {
         src = ./.;
         hooks = {
           statix.enable = true;
@@ -140,7 +140,7 @@ let
           };
         };
       };
-    } // flake-args.deploy-rs.lib.${system}.deployChecks flake-args.self.deploy;
+    } // flakeArgs.deploy-rs.lib.${system}.deployChecks flakeArgs.self.deploy;
   };
 in
 perSystemSelf
