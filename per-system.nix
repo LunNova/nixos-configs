@@ -70,11 +70,8 @@ let
     devShell = flakeArgs.minimal-shell.lib.minimal-shell {
       inherit system;
       inherit (perSystemSelf) pkgs;
-      passthru = {
-        nativeBuildInputs = [ perSystemSelf.pkgs.nixpkgs-fmt ];
-      };
-      # TODO handle buildInputs in minimal-shell
       shellHooks = perSystemSelf.checks.pre-commit-check.shellHook;
+      shellPackages = [ perSystemSelf.pkgs.nixpkgs-fmt ];
     };
     formatter = perSystemSelf.pkgs.nixpkgs-fmt;
 
