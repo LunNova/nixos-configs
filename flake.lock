@@ -234,11 +234,11 @@
     },
     "minimal-shell": {
       "locked": {
-        "lastModified": 1639587364,
-        "narHash": "sha256-wSoH84Xy7kipuHEOx1xZ29HhWB7/qBwJs7MHdsOeg2I=",
+        "lastModified": 1671501816,
+        "narHash": "sha256-n30oEqbzMOC3BYMGkjFlFBTmKneKKtugy5OfhzSIy+w=",
         "owner": "LunNova",
         "repo": "nix-minimal-shell",
-        "rev": "fee8e6005bda62dbe20cc1b4c45a22bca4cd813f",
+        "rev": "b90fa623b0172597338dd5f4f71bb9bcb51bd7c5",
         "type": "github"
       },
       "original": {
