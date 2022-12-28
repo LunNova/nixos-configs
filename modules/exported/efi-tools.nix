@@ -32,7 +32,7 @@ in
   config = lib.mkIf cfg.enable {
     lun.efi-tools.tools = {
       memtest86 = lib.mkDefault pkgs.lun.memtest86plus.efi;
-      shell = lib.mkDefault pkgs.lun.edk2-uefi-shell.efi;
+      shell = lib.mkDefault pkgs.edk2-uefi-shell.efi;
     };
     system.activationScripts.copy-efi-tools = lib.concatStringsSep "\n" (lib.mapAttrsToList (name: value: copyTool value (name + ".efi")) cfg.tools);
   };

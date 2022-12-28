@@ -110,7 +110,6 @@ let
     spawn = pkgs.callPackage ./spawn { };
     swaysome = pkgs.callPackage ./swaysome { };
     sworkstyle = pkgs.callPackage ./sworkstyle { };
-    edk2-uefi-shell = pkgs.callPackage ./edk2-uefi-shell { };
     lun = pkgs.writeShellScriptBin "lun" ''
       exec "${lun-scripts-path}/bin/$1" "''${@:2}"
     '';
