@@ -44,12 +44,14 @@
     nix = {
       package = pkgs.nixUnstable;
       daemonCPUSchedPolicy = "idle";
-      trustedUsers = [ "@wheel" ];
       extraOptions = lib.mkMerge [
         "experimental-features = nix-command flakes"
         "warn-dirty = false"
       ];
-      settings.auto-optimise-store = true;
+      settings = {
+        auto-optimise-store = true;
+        trusted-users = [ "@wheel" ];
+      };
     };
 
     # NETWORKING
