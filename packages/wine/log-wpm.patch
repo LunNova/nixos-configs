@@ -1,0 +1,13 @@
+diff --git a/dlls/ntdll/unix/virtual.c b/dlls/ntdll/unix/virtual.c
+index 5dd482c0dbb..995902457d7 100644
+--- a/dlls/ntdll/unix/virtual.c
++++ b/dlls/ntdll/unix/virtual.c
+@@ -5030,6 +5030,8 @@ NTSTATUS WINAPI NtWriteVirtualMemory( HANDLE process, void *addr, const void *bu
+ {
+     NTSTATUS status;
+ 
++    FIXME("NtWriteVirtualMemory WriteProcessMemory %p %p\n", process, addr);
++
+     if (virtual_check_buffer_for_read( buffer, size ))
+     {
+         SERVER_START_REQ( write_process_memory )

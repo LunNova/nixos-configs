@@ -154,6 +154,7 @@ let
       debug = true;
       patches = old.patches ++ [
         ./wine/testing.patch
+        ./wine/log-wpm.patch
       ];
     })).override {
       supportFlags = {
