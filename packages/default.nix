@@ -134,7 +134,6 @@ let
   (lib.optionalAttrs (pkgs.system == "x86_64-linux") {
     # FIXME: this is upstreamed?
     wowup = pkgs.callPackage ./wowup { };
-    memtest86plus = pkgs.callPackage ./memtest86plus { };
     lutris = pkgs.lutris.override {
       inherit lutris-unwrapped;
       extraLibraries = pkgs: with pkgs; [
