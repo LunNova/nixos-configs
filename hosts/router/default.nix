@@ -292,8 +292,12 @@ in
     # https://xeiaso.net/blog/prometheus-grafana-loki-nixos-2020-11-20
     services.grafana = {
       enable = true;
-      port = 8888;
-      addr = "0.0.0.0"; # FIXME: one interface only?
+      settings = {
+        server = {
+          http_addr = "0.0.0.0"; # FIXME: one interface only?
+          http_port = 8888;
+        };
+      };
       dataDir = "/var/lib/grafana";
     };
     lun.persistence.dirs = [ "/var/lib/dnsmasq" "/var/lib/grafana" "/var/tmp" "/tmp" "/persist/thoth/ftmp" ];
