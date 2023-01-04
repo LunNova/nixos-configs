@@ -1,0 +1,39 @@
+diff --git a/dlls/ntdll/exception.c b/dlls/ntdll/exception.c
+index c3714e8369b..cf6589746d9 100644
+--- a/dlls/ntdll/exception.c
++++ b/dlls/ntdll/exception.c
+@@ -351,7 +351,7 @@ BOOLEAN CDECL RtlAddFunctionTable( RUNTIME_FUNCTION *table, DWORD count, ULONG_P
+ {
+     struct dynamic_unwind_entry *entry;
+ 
+-    TRACE( "%p %u %lx\n", table, count, addr );
++    FIXME( "RtlAddFunctionTable %p %u %lx\n", table, count, addr );
+ 
+     /* NOTE: Windows doesn't check if table is aligned or a NULL pointer */
+ 
+@@ -383,7 +383,7 @@ BOOLEAN CDECL RtlInstallFunctionTableCallback( ULONG_PTR table, ULONG_PTR base,
+ {
+     struct dynamic_unwind_entry *entry;
+ 
+-    TRACE( "%lx %lx %d %p %p %s\n", table, base, length, callback, context, wine_dbgstr_w(dll) );
++    FIXME( "RtlInstallFunctionTableCallback %lx %lx %d %p %p %s\n", table, base, length, callback, context, wine_dbgstr_w(dll) );
+ 
+     /* NOTE: Windows doesn't check if the provided callback is a NULL pointer */
+ 
+@@ -419,7 +419,7 @@ DWORD WINAPI RtlAddGrowableFunctionTable( void **table, RUNTIME_FUNCTION *functi
+ {
+     struct dynamic_unwind_entry *entry;
+ 
+-    TRACE( "%p, %p, %u, %u, %lx, %lx\n", table, functions, count, max_count, base, end );
++    FIXME( "RtlAddGrowableFunctionTable %p, %p, %u, %u, %lx, %lx\n", table, functions, count, max_count, base, end );
+ 
+     entry = RtlAllocateHeap( GetProcessHeap(), 0, sizeof(*entry) );
+     if (!entry)
+@@ -451,6 +451,7 @@ void WINAPI RtlGrowFunctionTable( void *table, DWORD count )
+     struct dynamic_unwind_entry *entry;
+ 
+     TRACE( "%p, %u\n", table, count );
++    FIXME( "RtlGrowFunctionTable %p, %u\n", table, count );
+ 
+     RtlEnterCriticalSection( &dynamic_unwind_section );
+     LIST_FOR_EACH_ENTRY( entry, &dynamic_unwind_list, struct dynamic_unwind_entry, entry )
