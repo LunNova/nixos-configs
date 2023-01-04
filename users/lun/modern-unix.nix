@@ -15,5 +15,6 @@
     procs
     htop
     atop
+    linuxPackages_latest.perf
   ];
 }
