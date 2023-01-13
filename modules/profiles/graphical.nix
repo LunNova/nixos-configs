@@ -11,7 +11,7 @@
     # services.xserver.displayManager.gdm.nvidiaWayland = true;
     environment.systemPackages = [
       pkgs.sddm-kcm # KDE settings panel for sddm
-      pkgs.libsForQt5.bismuth
+      pkgs.libsForQt5.bismuth # KDE tiling plugin
     ];
     services.xserver.desktopManager.plasma5.enable = true;
     services.xserver.desktopManager.plasma5.runUsingSystemd = true;
