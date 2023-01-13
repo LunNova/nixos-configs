@@ -144,9 +144,10 @@ in
     specialisation.card2.configuration = {
       lun.gpu-select.card = lib.mkForce "card2";
     };
-    lun.amd-pstate.enable = true;
-    lun.amd-pstate.sharedMem = true;
-    powerManagement.cpuFreqGovernor = "schedutil";
+    # lun.amd-pstate.enable = true;
+    # lun.amd-pstate.sharedMem = true;
+    # powerManagement.cpuFreqGovernor = "schedutil";
+    lun.conservative-governor.enable = true;
 
     services.resolved = {
       enable = true;
