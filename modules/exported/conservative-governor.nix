@@ -9,7 +9,7 @@ in
   config = lib.mkIf cfg.enable
     {
       boot.kernelModules = [ "cpufreq_conservative" ];
-      powerManagement.cpuFreqGovernor = "schedutil";
+      powerManagement.cpuFreqGovernor = "conservative";
 
       services.udev.extraRules = ''
         # make conservative governer snappier to scale up
