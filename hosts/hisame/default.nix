@@ -232,14 +232,16 @@ in
     users.mutableUsers = false;
 
     lun.home-assistant.enable = true;
+    # debugging: sudo ip -all netns exec wg show
+    # if 0b received probably need to refresh info below
     lun.wg-netns = {
       enable = true;
 
       privateKey = "/persist/mullvad/priv.key";
-      peerPublicKey = "ctROwSybsU4cHsnGidKtbGYWRB2R17PFMMAqEHpsSm0=";
-      endpointAddr = "198.54.133.82:51820";
-      ip4 = "10.65.206.162/32";
-      ip6 = "fc00:bbbb:bbbb:bb01::2:cea1/128";
+      peerPublicKey = "c3OgLZw8kh5k3lqACXIiShPGr8xcIfdrUs+qRW9zmk4=";
+      endpointAddr = "174.127.113.11:51820";
+      ip4 = "10.64.165.53/32";
+      ip6 = "fc00:bbbb:bbbb:bb01::1:a534/128";
 
       isolateServices = [ "transmission" ];
       forwardPorts = [ 9091 ];
