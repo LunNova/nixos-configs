@@ -78,6 +78,12 @@
       kbdInteractiveAuthentication = false;
       extraConfig = "UsePAM no";
       banner = "This computer system may not be used for any purpose.\nBe gay, do crime.\n";
+      # RSA might be broken, make sure we use ed25519 keys
+      # https://www.schneier.com/blog/archives/2023/01/breaking-rsa-with-a-quantum-computer.html
+      hostKeys = [{
+        path = "/etc/ssh/ssh_host_ed25519_key";
+        type = "ed25519";
+      }];
     };
     lun.persistence.dirs = [ "/etc/ssh" ];
 
