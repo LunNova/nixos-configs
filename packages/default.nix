@@ -81,7 +81,7 @@ let
       mesonFlags = lib.lists.remove "-Dxvmc-libs-path=${placeholder "drivers"}/lib" old.mesonFlags;
       patches = (old.patches or [ ]) ++ [
         # ./mesa/mr-19101-prereq-22.0.patch # if < 23
-        # ./mesa/mr-19101-device-select.patch
+        ./mesa/mr-19101-device-select.patch
       ];
     }));
   mesaOverride23WithZink = mesaPkg: (mesaPkg.override {

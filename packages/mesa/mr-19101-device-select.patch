@@ -1,20 +1,13 @@
-From 85145410cc643038d75adb522f3da0a32c952722 Mon Sep 17 00:00:00 2001
-From: Luna Nova <git@lunnova.dev>
-Date: Sun, 16 Oct 2022 16:10:47 -0700
-Subject: [PATCH 1/4] device_select_layer: fix inverted strcmp in
- device_select_find_dri_prime_tag_default (v1)
-
-Closes: https://gitlab.freedesktop.org/mesa/mesa/-/issues/7498
-Fixes: 9bc5b2d169d ("vulkan: add initial device selection layer. (v6.1)")
----
- src/vulkan/device-select-layer/device_select_layer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
 diff --git a/src/vulkan/device-select-layer/device_select_layer.c b/src/vulkan/device-select-layer/device_select_layer.c
-index 5a8bbe68ed80..b259595110e3 100644
+index 6278f17b279..229d9e5d448 100644
 --- a/src/vulkan/device-select-layer/device_select_layer.c
 +++ b/src/vulkan/device-select-layer/device_select_layer.c
-@@ -297,7 +297,7 @@ static int device_select_find_dri_prime_tag_default(struct device_pci_info *pci_
+@@ -42,3 +42,4 @@
+ #include "util/simple_mtx.h"
++#include "util/u_debug.h"
+ 
+ struct instance_info {
+@@ -289,7 +290,7 @@ static int device_select_find_dri_prime_tag_default(struct device_pci_info *pci_
                     pci_infos[i].bus_info.bus,
                     pci_infos[i].bus_info.dev,
                     pci_infos[i].bus_info.func) >= 0) {
@@ -23,37 +16,19 @@ index 5a8bbe68ed80..b259595110e3 100644
              default_idx = i;
        }
        free(tag);
--- 
-GitLab
-
-
-From 3f7d5d0df6ffa02acbdfe95cf0b6538c91250c76 Mon Sep 17 00:00:00 2001
-From: Luna Nova <git@lunnova.dev>
-Date: Sun, 16 Oct 2022 16:28:03 -0700
-Subject: [PATCH 2/4] device_select_layer: add MESA_VK_DEVICE_SELECT_DEBUG
- which logs why default selection was made
-
----
- .../device-select-layer/device_select_layer.c | 37 ++++++++++++++++---
- 1 file changed, 32 insertions(+), 5 deletions(-)
-
-diff --git a/src/vulkan/device-select-layer/device_select_layer.c b/src/vulkan/device-select-layer/device_select_layer.c
-index b259595110e3..673cca0b611c 100644
---- a/src/vulkan/device-select-layer/device_select_layer.c
-+++ b/src/vulkan/device-select-layer/device_select_layer.c
-@@ -415,6 +415,11 @@ static int find_non_cpu_skip(struct device_pci_info *pci_infos,
+@@ -407,6 +408,11 @@ static int find_non_cpu_skip(struct device_pci_info *pci_infos,
     return -1;
  }
  
 +static bool should_debug_device_selection() {
-+   const char *debug = getenv("MESA_VK_DEVICE_SELECT_DEBUG");
-+   return debug && strcmp(debug, "1") == 0;
++   return debug_get_bool_option("MESA_VK_DEVICE_SELECT_DEBUG", false) ||
++   debug_get_bool_option("DRI_PRIME_DEBUG", false);
 +}
 +
  static uint32_t get_default_device(const struct instance_info *info,
                                     const char *selection,
                                     uint32_t physical_device_count,
-@@ -422,6 +427,7 @@ static uint32_t get_default_device(const struct instance_info *info,
+@@ -414,6 +420,7 @@ static uint32_t get_default_device(const struct instance_info *info,
  {
     int default_idx = -1;
     const char *dri_prime = getenv("DRI_PRIME");
@@ -61,7 +36,7 @@ index b259595110e3..673cca0b611c 100644
     bool dri_prime_is_one = false;
     int cpu_count = 0;
     if (dri_prime && !strcmp(dri_prime, "1"))
-@@ -441,6 +447,8 @@ static uint32_t get_default_device(const struct instance_info *info,
+@@ -433,6 +440,8 @@ static uint32_t get_default_device(const struct instance_info *info,
     if (default_idx == -1 && dri_prime && !dri_prime_is_one) {
        /* Try DRI_PRIME=vendor_id:device_id */
        default_idx = device_select_find_explicit_default(pci_infos, physical_device_count, dri_prime);
@@ -70,7 +45,7 @@ index b259595110e3..673cca0b611c 100644
  
        if (default_idx == -1) {
           /* Try DRI_PRIME=pci-xxxx_yy_zz_w */
-@@ -448,24 +456,43 @@ static uint32_t get_default_device(const struct instance_info *info,
+@@ -440,24 +449,53 @@ static uint32_t get_default_device(const struct instance_info *info,
              fprintf(stderr, "device-select: cannot correctly use DRI_PRIME tag\n");
           else
              default_idx = device_select_find_dri_prime_tag_default(pci_infos, physical_device_count, dri_prime);
@@ -105,87 +80,27 @@ index b259595110e3..673cca0b611c 100644
 +      if (debug && default_idx != -1)
 +         fprintf(stderr, "device-select: device_select_find_non_cpu selected %i\n", default_idx);
 +   }
++   /* If no GPU has been selected so far, select the first non-CPU device. If none are available,
++   * pick the first CPU device.
++   */
++   if (default_idx == -1) {
++      default_idx = device_select_find_non_cpu(pci_infos, physical_device_count);
++      if (default_idx != -1) {
++         if (debug)
++            fprintf(stderr, "device-select: device_select_find_non_cpu selected %i\n", default_idx);
++      } else if (cpu_count) {
++         default_idx = 0;
++      }
++   }
     /* DRI_PRIME=1 handling - pick any other device than default. */
--   if (default_idx != -1 && dri_prime_is_one && physical_device_count > (cpu_count + 1)) {
--      if (default_idx == 0 || default_idx == 1)
 +   if (dri_prime_is_one && debug)
 +      fprintf(stderr, "device-select: DRI_PRIME=1, default_idx so far: %i\n", default_idx);
-+   if (dri_prime_is_one && physical_device_count > (cpu_count + 1)) {
-+      if (default_idx == 0 || default_idx == 1) {
-          default_idx = find_non_cpu_skip(pci_infos, physical_device_count, default_idx);
-+         if (debug && default_idx != -1)
-+            fprintf(stderr, "device-select: find_non_cpu_skip selected %i\n", default_idx);
-+      }
-    }
-    free(pci_infos);
-    return default_idx == -1 ? 0 : default_idx;
--- 
-GitLab
-
-
-From ab62b157526d036b9d22e5cb59f90c75bc08d252 Mon Sep 17 00:00:00 2001
-From: Luna Nova <git@lunnova.dev>
-Date: Sun, 16 Oct 2022 16:28:26 -0700
-Subject: [PATCH 3/4] device_select_layer: set default_idx to 0 before
- dri_prime check
-
-Fixes: afa1fba198f ("vulkan/device_select: don't pick a cpu driver as the default")
----
- src/vulkan/device-select-layer/device_select_layer.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/src/vulkan/device-select-layer/device_select_layer.c b/src/vulkan/device-select-layer/device_select_layer.c
-index 673cca0b611c..734394f5fe9d 100644
---- a/src/vulkan/device-select-layer/device_select_layer.c
-+++ b/src/vulkan/device-select-layer/device_select_layer.c
-@@ -484,6 +484,10 @@ static uint32_t get_default_device(const struct instance_info *info,
-       if (debug && default_idx != -1)
-          fprintf(stderr, "device-select: device_select_find_non_cpu selected %i\n", default_idx);
-    }
-+   /* Set before doing DRI_PRIME check so even if no default is known we will still pick
-+     a different GPU when it's set */
-+   if (default_idx == -1)
-+      default_idx = 0;
-    /* DRI_PRIME=1 handling - pick any other device than default. */
-    if (dri_prime_is_one && debug)
-       fprintf(stderr, "device-select: DRI_PRIME=1, default_idx so far: %i\n", default_idx);
--- 
-GitLab
-
-
-From 7641e3524319dd9272be822b6e70c801496d9d92 Mon Sep 17 00:00:00 2001
-From: Luna Nova <git@lunnova.dev>
-Date: Sun, 16 Oct 2022 16:41:52 -0700
-Subject: [PATCH 4/4] device_select_layer: apply DRI_PRIME even if default
- device is > 1 to match opengl behavior
-
-This fixes DRI_PRIME=1 doing nothing if the GPU order is [dGPU, dGPU,
-iGPU, cpu] (or more GPUs than that) and the iGPU is the default GPU.
-
-Fixes: afa1fba198f ("vulkan/device_select: don't pick a cpu driver as the default")
----
- src/vulkan/device-select-layer/device_select_layer.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/src/vulkan/device-select-layer/device_select_layer.c b/src/vulkan/device-select-layer/device_select_layer.c
-index 734394f5fe9d..da65b5307692 100644
---- a/src/vulkan/device-select-layer/device_select_layer.c
-+++ b/src/vulkan/device-select-layer/device_select_layer.c
-@@ -492,11 +492,9 @@ static uint32_t get_default_device(const struct instance_info *info,
-    if (dri_prime_is_one && debug)
-       fprintf(stderr, "device-select: DRI_PRIME=1, default_idx so far: %i\n", default_idx);
-    if (dri_prime_is_one && physical_device_count > (cpu_count + 1)) {
--      if (default_idx == 0 || default_idx == 1) {
+    if (default_idx != -1 && dri_prime_is_one && physical_device_count > (cpu_count + 1)) {
+-      if (default_idx == 0 || default_idx == 1)
 -         default_idx = find_non_cpu_skip(pci_infos, physical_device_count, default_idx);
--         if (debug && default_idx != -1)
--            fprintf(stderr, "device-select: find_non_cpu_skip selected %i\n", default_idx);
--      }
 +      default_idx = find_non_cpu_skip(pci_infos, physical_device_count, default_idx);
 +      if (debug && default_idx != -1)
 +         fprintf(stderr, "device-select: find_non_cpu_skip selected %i\n", default_idx);
     }
     free(pci_infos);
     return default_idx == -1 ? 0 : default_idx;
--- 
-GitLab
-
