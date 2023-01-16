@@ -149,6 +149,7 @@ in
     # lun.amd-pstate.sharedMem = true;
     # powerManagement.cpuFreqGovernor = "schedutil";
     lun.conservative-governor.enable = true;
+    lun.tablet.enable = true;
 
     services.resolved = {
       enable = true;
