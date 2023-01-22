@@ -27,6 +27,8 @@
     nixpkgs-review-checks.inputs.flake-utils.follows = "flake-utils";
     deploy-rs.url = "github:serokell/deploy-rs";
     deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
+    openxr-nix-flake.url = "github:LunNova/openxr-nix-flake";
+    openxr-nix-flake.inputs.nixpkgs.follows = "nixpkgs";
 
     linux-freedesktop-drm-misc-fixes = {
       url = "github:freedesktop/drm-misc/drm-misc-fixes";
