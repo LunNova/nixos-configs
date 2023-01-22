@@ -72,6 +72,7 @@
       pull.rebase = true;
       push.autoSetupRemote = true;
       merge.tool = "vscode";
+      merge.conflictStyle = "diff3";
       diff.tool = "vscode";
       mergeTool = {
         keepBackup = false;
