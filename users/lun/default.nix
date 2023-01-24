@@ -1,6 +1,7 @@
 { lib, pkgs, flakeArgs, lun-profiles, ... }:
 {
   imports = [
+    ./doom-emacs
     ./modern-unix.nix
     ./shells
     ./on-nixos
