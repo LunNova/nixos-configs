@@ -12,6 +12,7 @@ let
       #   some-package = ...
       # })
       flakeArgs.self.overlay
+      flakeArgs.emacs-overlay.overlay
     ];
   };
   readModules = path: builtins.map (x: path + "/${x}") (builtins.filter (str: (builtins.match "^[^.]*(\.nix)?$" str) != null) (builtins.attrNames (builtins.readDir path)));
