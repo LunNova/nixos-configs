@@ -14,7 +14,8 @@ in
       liberation_ttf
       unifont
       vistafonts # Calibri, Cambria, Candara, Consolas, Constantia, Corbel
-      # FIXME: afdko build fail twitter-color-emoji # Decent set of emoji
+      fira-code # use in emacs
+      twitter-color-emoji # Decent set of emoji
     ] ++ lib.optionals lotsOfFonts [
       # General fonts
       noto-fonts
