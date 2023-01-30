@@ -11,6 +11,7 @@
     ./gaming.nix
     ./music.nix
     ./syncthing.nix
+    ./vr-gaming.nix
     ./xdg-mime-apps.nix
   ];
 

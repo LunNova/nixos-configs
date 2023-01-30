@@ -6,6 +6,5 @@
     lun.lutris
     pkgs.lun.wine
     # TODO: try bottles instead of lutris
-    yt-dlp # required for neos video player
   ];
 }
