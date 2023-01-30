@@ -268,40 +268,6 @@
         "type": "github"
       }
     },
-    "linux-freedesktop-drm-misc-fixes": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1670916705,
-        "narHash": "sha256-cHKvQybpLTZ61d3m2um+17kiOjsSooqXJfmNoU1qhak=",
-        "owner": "freedesktop",
-        "repo": "drm-misc",
-        "rev": "f728a5ea27c92133893590e731ce10f6561ced87",
-        "type": "github"
-      },
-      "original": {
-        "owner": "freedesktop",
-        "ref": "drm-misc-fixes",
-        "repo": "drm-misc",
-        "type": "github"
-      }
-    },
-    "linux-freedesktop-drm-tip": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1669159006,
-        "narHash": "sha256-39ddAJoH+Tc+ksK05L65qXxd+PJAeP+8GRgWAn6sGt8=",
-        "owner": "freedesktop",
-        "repo": "drm-tip",
-        "rev": "601ffaf144034fa3b695c085e38692e1beedcbcf",
-        "type": "github"
-      },
-      "original": {
-        "owner": "freedesktop",
-        "repo": "drm-tip",
-        "rev": "601ffaf144034fa3b695c085e38692e1beedcbcf",
-        "type": "github"
-      }
-    },
     "linux-rc": {
       "flake": false,
       "locked": {
@@ -746,8 +712,6 @@
         "erosanix": "erosanix",
         "flake-utils": "flake-utils_2",
         "home-manager": "home-manager",
-        "linux-freedesktop-drm-misc-fixes": "linux-freedesktop-drm-misc-fixes",
-        "linux-freedesktop-drm-tip": "linux-freedesktop-drm-tip",
         "linux-rc": "linux-rc",
         "minimal-shell": "minimal-shell",
         "nix-gaming": "nix-gaming",

@@ -31,15 +31,6 @@
     openxr-nix-flake.inputs.nixpkgs.follows = "nixpkgs";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 
-    linux-freedesktop-drm-misc-fixes = {
-      url = "github:freedesktop/drm-misc/drm-misc-fixes";
-      flake = false;
-    };
-    linux-freedesktop-drm-tip = {
-      # hash as master hangs amdgpu
-      url = "github:freedesktop/drm-tip/601ffaf144034fa3b695c085e38692e1beedcbcf";
-      flake = false;
-    };
     linux-rc = {
       # hash as master hangs amdgpu
       url = "github:torvalds/linux/v6.1";
