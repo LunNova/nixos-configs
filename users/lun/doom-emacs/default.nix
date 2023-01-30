@@ -10,7 +10,7 @@
 
   home.activation.ensureDoomEmacs = ''
     if [ ! -d "${config.xdg.configHome}/emacs" ]; then
-      git clone --depth=1 --single-branch "https://github.com/doomemacs/doomemacs" "${config.xdg.configHome}/emacs"
+      git clone --depth=1 --single-branch "https://github.com/doomemacs/doomemacs" "${config.xdg.configHome}/emacs" || true
 
       # FIXME:
       # need to manually run doom install maybe that's fine
