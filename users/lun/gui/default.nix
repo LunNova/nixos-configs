@@ -4,7 +4,7 @@
     ./media
     ./cad
     ./sway
-    ./conky.nix
+    # ./conky.nix # TODO: perf issues
     ./dev.nix
     ./discord.nix
     ./file-management.nix
