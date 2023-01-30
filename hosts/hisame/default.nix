@@ -54,7 +54,7 @@ in
       # but had some instability that might be caused by it
 
       # disable first two intel hda devices
-      "snd_hda_intel.enable=0,0"
+      # "snd_hda_intel.enable=0,0" # need this for index headset so can't turn off!
 
       # List amdgpu param docs
       #   modinfo amdgpu | grep "^parm:"
