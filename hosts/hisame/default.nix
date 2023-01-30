@@ -86,6 +86,7 @@ in
       # allow intel arc gpu to be used
       "i915.force_probe=*"
     ];
+
     boot.plymouth.enable = lib.mkForce false;
     boot.kernelPatches = (lib.optionals (!enableFbDevs) [
       {
@@ -132,19 +133,19 @@ in
       # }
     ];
     services.hardware.bolt.enable = true;
-    lun.gpu-select.card = "card0";
-    specialisation.carddefault.configuration = {
-      lun.gpu-select.card = lib.mkForce null;
-    };
-    specialisation.card0.configuration = {
-      lun.gpu-select.card = lib.mkForce "card0";
-    };
-    specialisation.card1.configuration = {
-      lun.gpu-select.card = lib.mkForce "card1";
-    };
-    specialisation.card2.configuration = {
-      lun.gpu-select.card = lib.mkForce "card2";
-    };
+    # lun.gpu-select.card = "card0";
+    # specialisation.carddefault.configuration = {
+    #   lun.gpu-select.card = lib.mkForce null;
+    # };
+    # specialisation.card0.configuration = {
+    #   lun.gpu-select.card = lib.mkForce "card0";
+    # };
+    # specialisation.card1.configuration = {
+    #   lun.gpu-select.card = lib.mkForce "card1";
+    # };
+    # specialisation.card2.configuration = {
+    #   lun.gpu-select.card = lib.mkForce "card2";
+    # };
     # lun.amd-pstate.enable = true;
     # lun.amd-pstate.sharedMem = true;
     # powerManagement.cpuFreqGovernor = "schedutil";
@@ -210,7 +211,7 @@ in
         Option "kmsdev" "/dev/dri/${config.lun.gpu-select.card}"
       '';
     }]);
-    lun.gpu-select.enable = true;
+    # lun.gpu-select.enable = true;
     # lun.nvidia-gpu-standalone.enable = true; # enable nvidia gpu kernel modules and opengl/vulkan support only, no x stuff changes
     lun.nvidia-gpu-standalone.delayXWorkaround = true; # enable nvidia gpu kernel modules and opengl/vulkan support only, no x stuff changes
     hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
