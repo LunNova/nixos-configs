@@ -224,16 +224,10 @@ in
       package32 = pkgs.lun.mesa-i686.drivers;
     };
 
-    services.plex = {
-      enable = true;
-      openFirewall = true;
-      dataDir = "/persist/plex/";
-    };
     hardware.cpu.amd.updateMicrocode = true;
 
     users.mutableUsers = false;
 
-    lun.home-assistant.enable = true;
     # debugging: sudo ip -all netns exec wg show
     # if 0b received probably need to refresh info below
     lun.wg-netns = {
@@ -343,12 +337,6 @@ in
         device = "tmpfs";
         neededForBoot = true;
         options = [ "mode=1777" "rw" "nosuid" "nodev" "size=32G" ];
-      };
-      "/mnt/_nas0" = {
-        fsType = "btrfs";
-        device = "/dev/disk/by-partlabel/_nas0";
-        neededForBoot = false;
-        options = btrfsHddOpts ++ [ "nofail" ];
       };
       "/mnt/scratch" = {
         fsType = "btrfs";
