@@ -388,6 +388,39 @@
         "type": "github"
       }
     },
+    "nixpkgs-ancient": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1522825351,
+        "narHash": "sha256-jtxfSXmc07z8U3l0+TuUCSHcd8BgkapvUzjUN7fwZEI=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "120b013e0c082d58a5712cde0a7371ae8b25a601",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "18.03",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-cura-testing": {
+      "locked": {
+        "lastModified": 1665894801,
+        "narHash": "sha256-iF52gpIeZtEPL6nMDyCiy4JbR2RiEBmH4pQsiIDmSc4=",
+        "owner": "LunNova",
+        "repo": "nixpkgs",
+        "rev": "bd7de0e7c17a16885fbe25ffb7c266fffb65dfb9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "LunNova",
+        "repo": "nixpkgs",
+        "rev": "bd7de0e7c17a16885fbe25ffb7c266fffb65dfb9",
+        "type": "github"
+      }
+    },
     "nixpkgs-hammering": {
       "inputs": {
         "flake-compat": "flake-compat_3",
@@ -414,19 +447,19 @@
         "type": "github"
       }
     },
-    "nixpkgs-mesa-pr": {
+    "nixpkgs-mesa": {
       "locked": {
-        "lastModified": 1666376629,
-        "narHash": "sha256-nrJ/PS4bF3p4UPlhWbhwgzmTJKqrZO9XK52IMZnsaFA=",
+        "lastModified": 1675080082,
+        "narHash": "sha256-e1KAbWcP8Z74xv6dszWGvmQ3qvYV0Ft1JLeAdhPJ1lg=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "837bdeb0251fe30e85ebbd66db20ffb6c66083e3",
+        "rev": "1a06f52c217f490c7aae2160a9dcec217b7d2e46",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
+        "ref": "staging-next",
         "repo": "nixpkgs",
-        "rev": "837bdeb0251fe30e85ebbd66db20ffb6c66083e3",
         "type": "github"
       }
     },
@@ -717,7 +750,9 @@
         "nix-gaming": "nix-gaming",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_2",
-        "nixpkgs-mesa-pr": "nixpkgs-mesa-pr",
+        "nixpkgs-ancient": "nixpkgs-ancient",
+        "nixpkgs-cura-testing": "nixpkgs-cura-testing",
+        "nixpkgs-mesa": "nixpkgs-mesa",
         "nixpkgs-review-checks": "nixpkgs-review-checks",
         "nixpkgs-stable": "nixpkgs-stable",
         "openxr-nix-flake": "openxr-nix-flake",

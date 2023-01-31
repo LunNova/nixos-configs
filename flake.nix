@@ -3,8 +3,13 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
-    nixpkgs-mesa-pr.url = "github:NixOS/nixpkgs/837bdeb0251fe30e85ebbd66db20ffb6c66083e3";
+    nixpkgs-mesa.url = "github:NixOS/nixpkgs/staging-next";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/release-22.05";
+    nixpkgs-cura-testing.url = "github:LunNova/nixpkgs/bd7de0e7c17a16885fbe25ffb7c266fffb65dfb9";
+    nixpkgs-ancient = {
+      url = "github:NixOS/nixpkgs/18.03";
+      flake = false;
+    };
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
