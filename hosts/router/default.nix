@@ -15,6 +15,7 @@ let
   fullHostName = "${config.networking.hostName}.${config.networking.domain}";
   btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" "autodefrag" ];
   btrfsSsdOpts = btrfsOpts ++ [ "ssd" "discard=async" ];
+  btrfsHddOpts = btrfsOpts ++ [ ];
   netFqdn = "home.moonstruck.dev";
   lanULA = "fd79:fc8d:af3a:ad8b::";
   selfULA = "${lanULA}1";
@@ -303,6 +304,17 @@ in
     lun.persistence.dirs = [ "/var/lib/dnsmasq" "/var/lib/grafana" "/var/tmp" "/tmp" "/persist/thoth/ftmp" ];
 
     services.lldpd.enable = true;
+    lun.home-assistant.enable = true;
+    services.plex = {
+      enable = true;
+      openFirewall = true;
+      dataDir = "/persist/plex/";
+    };
+
+    # spin down hdds
+    powerManagement.powerUpCommands = with pkgs;''
+      ${bash}/bin/bash -c '${hdparm}/bin/hdparm -S 9 -B 127 $(${utillinux}/bin/lsblk -dnp -o name,rota |${gnugrep}/bin/grep \'.*\\s1\'|${coreutils}/bin/cut -d \' \' -f 1)'
+    '';
 
     boot.kernelModules = [ "tcp_bbr" ];
     boot.kernel.sysctl = {
@@ -339,7 +351,7 @@ in
         serviceConfig = {
           EnvironmentFile = thothEnv;
           ExecStart = ''
-            ${thothPython}/bin/python -c 'import os, thoth.main; os.chdir("${thothWorkingDirectory}"); thoth.main.start()'
+            ${pkgs.bash}/bin/bash -c "cd ${thothWorkingDirectory}; ${thothPython}/bin/python -c 'import thoth.main; thoth.main.start()'"
           '';
           Type = "exec";
           RestartSec = 30;
@@ -373,6 +385,12 @@ in
       };
       "/nix" = {
         neededForBoot = true;
+      };
+      "/mnt/_nas0" = {
+        fsType = "btrfs";
+        device = "/dev/disk/by-partlabel/_nas0";
+        neededForBoot = false;
+        options = btrfsHddOpts ++ [ "nofail" ];
       };
     };
     swapDevices = lib.mkForce [
