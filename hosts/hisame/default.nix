@@ -179,26 +179,27 @@ in
     ];
     services.power-profiles-daemon.enable = true;
 
-    # most important change is tickless kernel
-    # boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+    # use mainline kernel because we're on very recent hardware
+    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
 
     # Example with overridden source for testing 6.1
-    boot.kernelPackages =
-      let
-        kernel = pkgs.linux_latest.override {
-          # stdenv = pkgs.llvmPackages_latest.stdenv; #FIXME: https://github.com/llvm/llvm-project/issues/41896
-          argsOverride = {
-            src = flakeArgs.linux-rc;
-            version = "6.1.0";
-            modDirVersion = "6.1.0";
-            ignoreConfigErrors = true;
-          };
-          configfile = pkgs.linux_latest.configfile.overrideAttrs {
-            ignoreConfigErrors = true;
-          };
-        };
-      in
-      pkgs.linuxPackagesFor kernel;
+    # boot.kernelPackages =
+    #   let
+    #     kernel = pkgs.linux_latest.override {
+    #       # stdenv = pkgs.llvmPackages_latest.stdenv; #FIXME: https://github.com/llvm/llvm-project/issues/41896
+    #       argsOverride = {
+    #         src = flakeArgs.linux-rc;
+    #         version = "6.1.0";
+    #         modDirVersion = "6.1.0";
+    #         ignoreConfigErrors = true;
+    #       };
+    #       configfile = pkgs.linux_latest.configfile.overrideAttrs {
+    #         ignoreConfigErrors = true;
+    #       };
+    #     };
+    #   in
+    #   pkgs.linuxPackagesFor kernel;
+
 
     lun.power-saving.enable = true;
     lun.efi-tools.enable = true;
