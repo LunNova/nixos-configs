@@ -50,6 +50,7 @@
     unzip
     p7zip
     flakeArgs.deploy-rs.packages.${pkgs.system}.default
+    git-filter-repo
   ];
 
   programs.git = {
