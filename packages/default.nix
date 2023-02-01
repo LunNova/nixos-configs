@@ -115,7 +115,7 @@ let
     '';
     svpflow = pkgs.callPackage ./svpflow { };
     # inherit (flakeArgs.nixpkgs-mesa-pr.legacyPackages.${pkgs.system}) mesa;
-    mesa = mesaOverride pkgs.mesa;
+    inherit (flakeArgs.nixpkgs-mesa.legacyPackages.${pkgs.system}) mesa; # mesaOverride pkgs.mesa;
     xorgserver = pkgs.xorg.xorgserver.overrideAttrs (old: {
       configureFlags = old.configureFlags ++ [
         "--enable-config-udev"
@@ -146,7 +146,7 @@ let
         libusb
       ];
     };
-    mesa-i686 = mesaOverride pkgs.pkgsi686Linux.mesa;
+    mesa-i686 = flakeArgs.nixpkgs-mesa.legacyPackages.${pkgs.system}.pkgsi686Linux.mesa; # mesaOverride pkgs.pkgsi686Linux.mesa;
     wine = (flakeArgs.nix-gaming.packages.${pkgs.system}.wine-ge.overrideAttrs (old: {
       dontStrip = true;
       debug = true;
