@@ -133,3 +133,10 @@
   (map! :localleader
         :map (magit-mode-map)
         :desc "Magit pretty graph" "p" (cmd! (magit-pg-repo (magit-toplevel)))))
+(use-package sticky-shell
+  :ensure t ; install
+  ;; add your customization here
+  :init
+  ;; (setq! sticky-shell-get-prompt 'sticky-shell-latest-prompt)
+  (sticky-shell-global-mode)
+  )

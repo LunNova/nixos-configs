@@ -85,3 +85,8 @@
   :recipe (:host github
            :repo "martinbaillie/evil-motion-trainer"
            :files ("evil-motion-trainer.el")))
+
+(package! sticky-shell
+  :recipe (:host github
+           :repo "andyjda/sticky-shell"
+           :files ("sticky-shell.el")))
