@@ -301,6 +301,5 @@ function fish_prompt
         (__theme_print_prompt_char)\
     )
 
-    echo "$line1"
-    echo "$line2 "
+    echo "$line1 $line2 "
 end
