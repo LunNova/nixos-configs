@@ -138,5 +138,5 @@
   ;; add your customization here
   :init
   ;; (setq! sticky-shell-get-prompt 'sticky-shell-latest-prompt)
-  (sticky-shell-global-mode)
+  ;; (sticky-shell-global-mode)
   )
