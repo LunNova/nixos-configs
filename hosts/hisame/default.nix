@@ -204,15 +204,15 @@ in
     lun.power-saving.enable = true;
     lun.efi-tools.enable = true;
 
-    services.xserver.videoDrivers = [ "modesetting" ];
-    services.xserver.drivers = lib.mkIf (config.lun.gpu-select.card != null) (lib.mkForce [{
-      name = "modesetting";
-      display = true;
-      deviceSection = ''
-        Option "kmsdev" "/dev/dri/${config.lun.gpu-select.card}"
-      '';
-    }]);
-    # lun.gpu-select.enable = true;
+    services.xserver.videoDrivers = [ "amdgpu" ];
+    # services.xserver.drivers = lib.mkIf (config.lun.gpu-select.card != null) (lib.mkForce [{
+    #   name = "modesetting";
+    #   display = true;
+    #   deviceSection = ''
+    #     Option "kmsdev" "/dev/dri/${config.lun.gpu-select.card}"
+    #   '';
+    # }]);
+    lun.gpu-select.enable = true;
     # lun.nvidia-gpu-standalone.enable = true; # enable nvidia gpu kernel modules and opengl/vulkan support only, no x stuff changes
     lun.nvidia-gpu-standalone.delayXWorkaround = true; # enable nvidia gpu kernel modules and opengl/vulkan support only, no x stuff changes
     hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
