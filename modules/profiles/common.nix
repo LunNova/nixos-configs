@@ -70,20 +70,21 @@
     # SSH
     services.openssh = {
       enable = true;
-      permitRootLogin = "no";
-      # TODO: ssh-keygen -A at boot so these get generated while still using startWhenNeeded?
-      # Maybe should always pregen when setting up a new system because will be using agenix later so this is irrelevant
-      startWhenNeeded = true;
-      passwordAuthentication = false;
-      kbdInteractiveAuthentication = false;
-      extraConfig = "UsePAM no";
       banner = "This computer system may not be used for any purpose.\nBe gay, do crime.\n";
+      startWhenNeeded = true;
       # RSA might be broken, make sure we use ed25519 keys
       # https://www.schneier.com/blog/archives/2023/01/breaking-rsa-with-a-quantum-computer.html
       hostKeys = [{
         path = "/etc/ssh/ssh_host_ed25519_key";
         type = "ed25519";
       }];
+      settings = {
+        PermitRootLogin = "no";
+        # TODO: ssh-keygen -A at boot so these get generated while still using startWhenNeeded?
+        # Maybe should always pregen when setting up a new system because will be using agenix later so this is irrelevant
+        PasswordAuthentication = false;
+        KbdInteractiveAuthentication = false;
+      };
     };
     lun.persistence.dirs = [ "/etc/ssh" ];
 
