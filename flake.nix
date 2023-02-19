@@ -36,12 +36,6 @@
     openxr-nix-flake.inputs.nixpkgs.follows = "nixpkgs";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 
-    linux-rc = {
-      # hash as master hangs amdgpu
-      url = "github:torvalds/linux/v6.1";
-      flake = false;
-    };
-
     minimal-shell.url = "github:LunNova/nix-minimal-shell";
 
     # Powercord. pcp- and pct- prefix have meaning, cause inclusion as powercord plugin/theme
