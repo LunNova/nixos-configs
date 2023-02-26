@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, lun-profiles, ... }:
 {
   imports = [
     ./media
@@ -8,11 +8,12 @@
     ./dev.nix
     ./discord.nix
     ./file-management.nix
-    ./gaming.nix
     ./music.nix
     ./syncthing.nix
     ./vr-gaming.nix
     ./xdg-mime-apps.nix
+  ] ++ lib.optionals lun-profiles.gaming [
+    ./gaming.nix
   ];
 
   config = {

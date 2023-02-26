@@ -151,6 +151,10 @@ in
     # powerManagement.cpuFreqGovernor = "schedutil";
     lun.conservative-governor.enable = true;
     lun.tablet.enable = true;
+    lun.profiles = {
+      gaming = true;
+    };
+
 
     services.resolved = {
       enable = true;

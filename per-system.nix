@@ -88,6 +88,7 @@ let
               nixosConfig = null;
               lun-profiles = {
                 graphical = true;
+                wine = false;
               };
             };
             configuration = {
