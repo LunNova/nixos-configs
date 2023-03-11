@@ -133,6 +133,13 @@
   (map! :localleader
         :map (magit-mode-map)
         :desc "Magit pretty graph" "p" (cmd! (magit-pg-repo (magit-toplevel)))))
+
+(map!
+  :map 'global-map
+  "<mouse-6>" #'(lambda () (interactive) (scroll-right 3))
+  "<mouse-7>" #'(lambda () (interactive) (scroll-left 3))
+  )
+
 (use-package sticky-shell
   :ensure t ; install
   ;; add your customization here
