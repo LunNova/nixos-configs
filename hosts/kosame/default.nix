@@ -105,7 +105,7 @@ in
 
   boot.plymouth.enable = lib.mkForce false;
 
-  hardware.asus.battery.chargeUpto = 66;
+  hardware.asus.battery.chargeUpto = 90;
 
   networking.hostName = "lun-kosame-nixos";
   sconfig.machineId = "0715dc6a95b3419e8e2465240b7e598b";
