@@ -22,7 +22,7 @@
     services.earlyoom.enable = true;
 
     # PRINT
-    lun.print.enable = true;
+    # lun.print.enable = true; # FIXME: cups never works right with long uptime / after nixos-rebuild ?
 
     # XDG
     xdg.portal = {
