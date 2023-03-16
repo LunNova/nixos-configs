@@ -5,7 +5,6 @@
       nix-output-monitor
       jetbrains.clion
       jetbrains.idea-ultimate
-      jetbrains.pycharm-professional
       glxinfo
       vulkan-tools
     ];
