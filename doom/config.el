@@ -47,6 +47,9 @@
 
 (setq doom-font (font-spec :family "Fira Code" :size 10))
 
+;; allow undoing changes while staying in insert mode and making many changes
+(setq evil-want-fine-undo t)
+
 ;; try to make projectile always open when in project
 ;;(setq projectile-switch-project-action 'treemacs)
 (after! treemacs (treemacs-follow-mode))
