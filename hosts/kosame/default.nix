@@ -159,6 +159,12 @@ in
 
   # Used to set power profiles, should have support in asus-wmi https://asus-linux.org/blog/updates-2021-07-16/
   services.power-profiles-daemon.enable = true;
+  # services.tlp.enable = true;
+
+  lun.profiles = {
+    gaming = true;
+  };
+
 
   # defaults to 16 on this machine which OOMs some builds
   nix.settings.cores = 8;

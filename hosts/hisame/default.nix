@@ -153,6 +153,7 @@ in
     lun.tablet.enable = true;
     lun.profiles = {
       gaming = true;
+      wineGaming = true;
     };
 
 
