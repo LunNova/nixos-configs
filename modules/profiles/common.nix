@@ -173,7 +173,7 @@
     # CHECKS
     assertions = [
       {
-        assertion = config.hardware.cpu.amd.updateMicrocode || config.hardware.cpu.intel.updateMicrocode;
+        assertion = config.hardware.cpu.amd.updateMicrocode || config.hardware.cpu.intel.updateMicrocode || pkgs.system != "x86_64-linux";
         message = "updateMicrocode should be set for intel or amd";
       }
     ];

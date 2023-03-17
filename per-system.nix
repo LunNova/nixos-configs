@@ -67,6 +67,14 @@ let
       ++ (builtins.attrValues flakeArgs.self.nixosModules)
       ++ (readModules ./modules);
     };
+    nixosIso = hardware: lib.nixosSystem {
+      inherit (perSystemSelf.pkgs) system;
+      modules = [
+        { nixpkgs.pkgs = perSystemSelf.pkgs; }
+        hardware
+        "${perSystemSelf.pkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+      ];
+    };
     legacyPackages = flakeArgs.self.localPackagesForPkgs perSystemSelf.pkgs;
     packages = lib.filterAttrs (_k: pkg: lib.isDerivation pkg && !((pkg.meta or { }).broken or false) && (!(pkg ? meta && pkg.meta ? platforms) || builtins.elem system pkg.meta.platforms)) perSystemSelf.legacyPackages;
     devShell = flakeArgs.minimal-shell.lib.minimal-shell {
