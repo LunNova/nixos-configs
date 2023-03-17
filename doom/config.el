@@ -150,3 +150,5 @@
   ;; (setq! sticky-shell-get-prompt 'sticky-shell-latest-prompt)
   ;; (sticky-shell-global-mode)
   )
+
+(global-goto-address-mode 1)
