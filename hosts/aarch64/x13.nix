@@ -5,9 +5,11 @@ let
       version = "6.2.0";
       modDirVersion = "6.2.0-rc6";
 
-      src = pkgs.fetchurl {
-        url = "https://github.com/jhovold/linux/archive/refs/heads/wip/sc8280xp-v6.2-rc6.tar.gz";
-        sha256 = "sha256-nBxe/bWQ9IzqmDsGb2Q73jthFD69LUFKarwmYp2hviM=";
+      src = pkgs.fetchFromGitHub {
+        owner = "jhovold";
+        repo = "linux";
+        rev = "wip/sc8280xp-v6.2-rc6";
+        hash = "sha256-pHE4GouF33caUu2bIzl+PgZqDs6wM60WjguGYvJGGew=";
       };
       kernelPatches = [ ];
 
