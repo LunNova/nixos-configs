@@ -164,8 +164,8 @@ in
   lun.profiles = {
     gaming = true;
   };
-
-
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" "i686-linux" ];
+  # nix.settings.extra-platforms = "aarch64-linux";
   # defaults to 16 on this machine which OOMs some builds
   nix.settings.cores = 8;
 }
