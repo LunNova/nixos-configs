@@ -298,6 +298,22 @@
         "type": "github"
       }
     },
+    "mobile-nixos": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1679263190,
+        "narHash": "sha256-Spbtah1ZATHDqYCWblkQiCXSFacUQC9mzUxiZ8Ise9A=",
+        "owner": "NixOS",
+        "repo": "mobile-nixos",
+        "rev": "a79ae2e6e8947878ea07842bbca951f60842c132",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "mobile-nixos",
+        "type": "github"
+      }
+    },
     "naersk": {
       "inputs": {
         "nixpkgs": [
@@ -729,6 +745,7 @@
         "flake-utils": "flake-utils_2",
         "home-manager": "home-manager",
         "minimal-shell": "minimal-shell",
+        "mobile-nixos": "mobile-nixos",
         "nix-gaming": "nix-gaming",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_2",

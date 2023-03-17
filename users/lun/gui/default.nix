@@ -12,7 +12,7 @@
     ./syncthing.nix
     ./vr-gaming.nix
     ./xdg-mime-apps.nix
-  ] ++ lib.optionals lun-profiles.gaming [
+  ] ++ lib.optionals (lun-profiles.gaming or false) [
     ./gaming.nix
   ];
 

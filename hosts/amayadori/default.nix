@@ -27,22 +27,24 @@ in
     [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./x13.nix
     ];
 
-  lun.power-saving.enable = true;
-  lun.power-saving.usb = true;
+  lun.power-saving.enable = false;
+  lun.power-saving.usb = false;
+  lun.persistence.enable = true;
+  lun.conservative-governor.enable = true;
 
   boot.plymouth.enable = lib.mkForce false;
 
-  networking.hostName = "lun-aarch64-nixos";
-  sconfig.machineId = "1f3c8ec5230e763537ec8ef5836f334";
+  networking.hostName = "lun-amayadori-nixos";
+  sconfig.machineId = "1f3c8ec5230e763537ec8ef5836f334a";
   system.stateVersion = "23.05";
   boot.cleanTmpDir = true;
-  boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
 
   systemd.sleep.extraConfig = ''
     AllowHibernation=yes
-    AllowSuspend=yes
+    AllowSuspend=no
     AllowSuspendThenHibernate=no
     AllowHybridSleep=no
   '';
@@ -50,19 +52,15 @@ in
   environment.variables = waylandEnv;
   environment.sessionVariables = waylandEnv;
 
-  services.xserver.displayManager.sessionPackages = [
-    (pkgs.plasma-workspace.overrideAttrs
-      (_old: { passthru.providedSessions = [ "plasmawayland" ]; }))
-  ];
-
   boot.kernelParams = [
-    "mem_sleep_default=deep" # S3 by default
-    "nmi_watchdog=0"
-    "nowatchdog"
+    #    "mem_sleep_default=deep" # S3 by default
+    #    "nmi_watchdog=0"
+    #    "nowatchdog"
   ];
 
   # Used to set power profiles, should have support in asus-wmi https://asus-linux.org/blog/updates-2021-07-16/
   services.power-profiles-daemon.enable = true;
+  powerManagement.powertop.enable = true;
   # services.tlp.enable = true;
 
   # defaults to 16 on this machine which OOMs some builds

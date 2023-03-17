@@ -41,6 +41,7 @@ let
         {
           inherit flakeArgs;
           inherit (perSystemSelf) pkgs-stable;
+          nixpkgs-modules-path = "perSystemSelf.pkgs";
           nixos-hardware-modules-path = "${flakeArgs.nixos-hardware}";
         };
 
@@ -68,10 +69,13 @@ let
     };
     nixosIso = hardware: lib.nixosSystem {
       inherit (perSystemSelf.pkgs) system;
+      specialArgs = {
+        nixpkgs-modules-path = "${perSystemSelf.pkgs}";
+      };
       modules = [
         { nixpkgs.pkgs = perSystemSelf.pkgs; }
         hardware
-        "${perSystemSelf.pkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+        ./nixos-minimal-installer.nix
       ];
     };
     legacyPackages = flakeArgs.self.localPackagesForPkgs perSystemSelf.pkgs;

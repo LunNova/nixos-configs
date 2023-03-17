@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, nixosConfig ? null, ... }:
 {
   imports = [
     ./fish.nix
@@ -8,4 +8,6 @@
   home.packages = [
     pkgs.direnv
   ];
+
+  targets.genericLinux.enable = lib.mkIf (nixosConfig == null) true;
 }

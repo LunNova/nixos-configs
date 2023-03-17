@@ -35,6 +35,10 @@
     openxr-nix-flake.url = "github:LunNova/openxr-nix-flake";
     openxr-nix-flake.inputs.nixpkgs.follows = "nixpkgs";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
+    mobile-nixos = {
+      url = "github:NixOS/mobile-nixos";
+      flake = false;
+    };
 
     minimal-shell.url = "github:LunNova/nix-minimal-shell";
 
@@ -91,7 +95,7 @@
           router-nixos = linux64.makeHost ./hosts/router;
           lun-kosame-nixos = linux64.makeHost ./hosts/kosame;
           lun-hisame-nixos = linux64.makeHost ./hosts/hisame;
-          lun-aarch-testing = linuxaarch64.makeHost ./hosts/aarch64;
+          lun-amayadori-nixos = linuxaarch64.makeHost ./hosts/amayadori;
           mmk-raikiri-nixos = linux64.makeHost ./hosts/raikiri;
           iso-x13 = linuxaarch64.nixosIso ./hosts/aarch64/x13.nix;
         };
