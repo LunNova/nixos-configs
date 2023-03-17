@@ -4,7 +4,6 @@ let
   pkgsPatches = [
     # add .patch to a github PR URL to get a patch quickly
     ./nixpkgs-patches/lutris-xdg-data-dirs.patch
-    ./nixpkgs-patches/xdg-open-test.patch
   ];
   defaultPkgsConfig = {
     config.allowUnfree = true;
