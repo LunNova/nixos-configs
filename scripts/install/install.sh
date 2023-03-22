@@ -3,12 +3,12 @@ set -xeuo pipefail
 IFS=$'\n'
 
 # edit these fields
-NAME=router
-HOSTNAME="$NAME-nixos"
+NAME=amayadori
+HOSTNAME="lun-$NAME-nixos"
 
-BOOT_PARTITION=/dev/disk/by-partlabel/"$NAME"_esp
-PERSIST_PARTITION=/dev/disk/by-partlabel/"$NAME"_persist
-FLAKE=github:LunNova/nixos-configs/dev#$HOSTNAME
+BOOT_PARTITION=/dev/disk/by-partlabel/'EFI\x20system\x20partition'
+PERSIST_PARTITION=/dev/disk/by-label/"$NAME"_persist
+FLAKE=.#$HOSTNAME
 
 mount -t tmpfs none /mnt
 
@@ -19,7 +19,7 @@ mount "$PERSIST_PARTITION" -o defaults,ssd,nosuid,nodev,compress=zstd,noatime,su
 
 mkdir -p /mnt/{boot,persist,home,nix,var/log} /mnt/persist/{home,nix,var/log,etc/ssh,root}
 
-for dir in $(nix eval --raw "$FLAKE#nixosConfigurations.$HOSTNAME.config.lun.persistence.dirs_for_shell_script"); do
+for dir in $(nix eval --raw ".#nixosConfigurations.$HOSTNAME.config.lun.persistence.dirs_for_shell_script"); do
 	mkdir -p "/mnt$dir" "/mnt/persist$dir"
 	mount -o bind "/mnt/persist$dir" "/mnt$dir" || true
 done
@@ -29,6 +29,6 @@ mount -o bind /mnt/persist/home /mnt/home
 mount -o bind /mnt/persist/var/log /mnt/var/log
 
 # Install nixos:
-nix-shell -p git nixFlakes --run "nixos-install --impure --no-root-passwd --root /mnt --flake $FLAKE"
+nix-shell -p utillinux git nixFlakes nixos-install-tools --run "nixos-install --cores 8 --impure --no-root-passwd --root /mnt --flake $FLAKE"
 # Install refind efi boot manager
-nix-shell -p efibootmgr refind --run "refind-install --root /mnt"
+# nix-shell -p efibootmgr refind --run "refind-install --root /mnt"
