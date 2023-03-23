@@ -1,5 +1,6 @@
 { config, options, flakeArgs, lib, pkgs, ... }:
 let
+  useGrub = true;
   linux_x13s_pkg = { buildLinux, ... } @ args:
     buildLinux (args // rec {
       version = "6.3.0";
@@ -157,20 +158,11 @@ in
     # https://dumpstack.io/1675806876_thinkpad_x13s_nixos.html
     boot = {
       loader.efi = {
-        canTouchEfiVariables = lib.mkForce true;
+        canTouchEfiVariables = lib.mkForce false;
         efiSysMountPoint = "/boot";
       };
-      loader.grub.enable = true;
-      loader.grub.device = "nodev";
-      loader.grub.version = 2;
-      loader.grub.efiSupport = true;
-      loader.systemd-boot.enable = lib.mkForce false;
 
       supportedFilesystems = lib.mkForce [ "ext4" "btrfs" "cifs" "f2fs" "jfs" "ntfs" "reiserfs" "vfat" "xfs" ];
-      #loader.systemd-boot.enable = true;
-      #loader.systemd-boot.extraFiles = {
-      #  "x13s.dtb" = dtb;
-      #};
       consoleLogLevel = 9;
       kernelPackages = lib.mkForce linuxPackages_x13s;
       kernelParams = [
@@ -179,7 +171,8 @@ in
         "pd_ignore_unused"
         "arm64.nopauth"
         "cma=128M"
-        #"dtb=x13s.dtb"
+      ] ++ lib.optionals (!useGrub) [
+        "dtb=x13s.dtb"
       ];
       kernelPatches = [
         {
@@ -222,7 +215,18 @@ in
           "nvme"
         ];
       };
-    };
+    } // (if useGrub then {
+      loader.grub.enable = true;
+      loader.grub.device = "nodev";
+      loader.grub.version = 2;
+      loader.grub.efiSupport = true;
+      loader.systemd-boot.enable = lib.mkForce false;
+    } else {
+      loader.systemd-boot.enable = true;
+      loader.systemd-boot.extraFiles = {
+        "x13s.dtb" = dtb;
+      };
+    });
 
     #    isoImage.contents = [
     #      {
