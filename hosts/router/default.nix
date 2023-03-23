@@ -39,6 +39,7 @@ let
 in
 {
   imports = [
+    ./samba.nix
   ];
 
   config = {
