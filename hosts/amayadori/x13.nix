@@ -125,6 +125,44 @@ in
     environment.systemPackages = [ qrtr qmic rmtfs pd-mapper uncompressed-fw ];
     environment.pathsToLink = [ "share/uncompressed-firmware" ];
 
+    hardware.opengl.package = ((pkgs.mesa.override {
+      galliumDrivers = [ "swrast" "freedreno" "zink" ];
+      vulkanDrivers = [ "swrast" "freedreno" ];
+      enableGalliumNine = false;
+      enableOSMesa = false;
+      enableOpenCL = false;
+    }).overrideAttrs (old: {
+      version = "22.3.1-unstable";
+      src = pkgs.fetchFromGitLab {
+        domain = "gitlab.freedesktop.org";
+        owner = "mesa";
+        repo = "mesa";
+        rev = "772cacff32b2ed22799a1dbaeac6857824400f53";
+        hash = "sha256-wiZXS2AmpQNn5Nl/Ai88z9leSAM70OUJCT0d0Rnd6RI=";
+      };
+      buildInputs = old.buildInputs ++ [
+        pkgs.libunwind
+        pkgs.lm_sensors
+      ];
+      mesonFlags = old.mesonFlags ++ [
+        "-Dgallium-vdpau=false"
+        "-Dgallium-va=false"
+        "-Dandroid-libbacktrace=disabled"
+      ];
+      postPatch = old.postPatch + ''
+
+        echo "option(
+  'disk-cache-key',
+  type : 'string',
+  value : ${"''"},
+  description : 'Mesa cache key.'
+)" >> meson_options.txt 
+      '';
+      patches = [
+        ./mesa.patch
+      ];
+    })).drivers;
+
     systemd.services = {
       # rmtfs = {
       #   wantedBy = [ "multi-user.target" ];

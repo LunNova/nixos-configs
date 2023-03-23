@@ -1,0 +1,560 @@
+From 60bc7c0e22109287774aa6cdec0213e57d62920d Mon Sep 17 00:00:00 2001
+From: Rob Clark <robdclark@chromium.org>
+Date: Sun, 22 Jan 2023 10:57:30 -0800
+Subject: [PATCH 1/3] freedreno: Specify GMEM tile alignment per GPU
+
+They differ presumably based on # of CCU/SP and DDR bus topology.
+
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Part-of: <https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/21573>
+---
+ src/freedreno/common/freedreno_devices.py     | 38 +++++++++++--------
+ .../drivers/freedreno/freedreno_gmem.c        |  2 +-
+ 2 files changed, 23 insertions(+), 17 deletions(-)
+
+diff --git a/src/freedreno/common/freedreno_devices.py b/src/freedreno/common/freedreno_devices.py
+index e9fd3b5c9c31..4dd66c6a19c0 100644
+--- a/src/freedreno/common/freedreno_devices.py
++++ b/src/freedreno/common/freedreno_devices.py
+@@ -108,19 +108,17 @@ class A6xxGPUInfo(GPUInfo):
+        into distinct sub-generations.  The template parameter avoids
+        duplication of parameters that are unique to the sub-generation.
+     """
+-    def __init__(self, template, num_sp_cores, num_ccu, magic_regs):
++    def __init__(self, template, num_ccu, tile_align_w, tile_align_h, magic_regs):
+         super().__init__(gmem_align_w = 16, gmem_align_h = 4,
+-                         tile_align_w = 32, tile_align_h = 32,
++                         tile_align_w = tile_align_w,
++                         tile_align_h = tile_align_h,
+                          tile_max_w   = 1024, # max_bitfield_val(5, 0, 5)
+                          tile_max_h   = max_bitfield_val(14, 8, 4),
+                          num_vsc_pipes = 32)
+-        assert(num_sp_cores == num_ccu)
+ 
+-        self.num_sp_cores = num_sp_cores
+-
+-        # 96 tile alignment seems correlated to 3 CCU
+-        if num_ccu == 3:
+-            self.tile_align_w = 96
++        # The # of SP cores seems to always match # of CCU
++        self.num_sp_cores = num_ccu
++        self.num_ccu = num_ccu
+ 
+         self.a6xx = Struct()
+         self.a6xx.magic = Struct()
+@@ -273,8 +271,9 @@ add_gpus([
+         GPUId(619),
+     ], A6xxGPUInfo(
+         a6xx_gen1,
+-        num_sp_cores = 1,
+         num_ccu = 1,
++        tile_align_w = 32,
++        tile_align_h = 16,
+         magic_regs = dict(
+             PC_POWER_CNTL = 0,
+             TPL1_DBG_ECO_CNTL = 0x00108000,
+@@ -296,8 +295,9 @@ add_gpus([
+         GPUId(620),
+     ], A6xxGPUInfo(
+         a6xx_gen1,
+-        num_sp_cores = 1,
+         num_ccu = 1,
++        tile_align_w = 32,
++        tile_align_h = 16,
+         magic_regs = dict(
+             PC_POWER_CNTL = 0,
+             TPL1_DBG_ECO_CNTL = 0x01008000,
+@@ -319,8 +319,9 @@ add_gpus([
+         GPUId(630),
+     ], A6xxGPUInfo(
+         a6xx_gen1,
+-        num_sp_cores = 2,
+         num_ccu = 2,
++        tile_align_w = 32,
++        tile_align_h = 16,
+         magic_regs = dict(
+             PC_POWER_CNTL = 1,
+             TPL1_DBG_ECO_CNTL = 0x00108000,
+@@ -342,8 +343,9 @@ add_gpus([
+         GPUId(640),
+     ], A6xxGPUInfo(
+         a6xx_gen2,
+-        num_sp_cores = 2,
+         num_ccu = 2,
++        tile_align_w = 32,
++        tile_align_h = 16,
+         magic_regs = dict(
+             PC_POWER_CNTL = 1,
+             TPL1_DBG_ECO_CNTL = 0x00008000,
+@@ -365,8 +367,9 @@ add_gpus([
+         GPUId(680),
+     ], A6xxGPUInfo(
+         a6xx_gen2,
+-        num_sp_cores = 4,
+         num_ccu = 4,
++        tile_align_w = 64,
++        tile_align_h = 32,
+         magic_regs = dict(
+             PC_POWER_CNTL = 3,
+             TPL1_DBG_ECO_CNTL = 0x00108000,
+@@ -388,8 +391,9 @@ add_gpus([
+         GPUId(650),
+     ], A6xxGPUInfo(
+         a6xx_gen3,
+-        num_sp_cores = 3,
+         num_ccu = 3,
++        tile_align_w = 96,
++        tile_align_h = 48,
+         magic_regs = dict(
+             PC_POWER_CNTL = 2,
+             # this seems to be a chicken bit that fixes cubic filtering:
+@@ -416,8 +420,9 @@ add_gpus([
+         GPUId(chip_id=0xffff06030500, name="Adreno 7c+ Gen 3"),
+     ], A6xxGPUInfo(
+         a6xx_gen4,
+-        num_sp_cores = 2,
+         num_ccu = 2,
++        tile_align_w = 32,
++        tile_align_h = 16,
+         magic_regs = dict(
+             PC_POWER_CNTL = 1,
+             TPL1_DBG_ECO_CNTL = 0x05008000,
+@@ -439,8 +444,9 @@ add_gpus([
+         GPUId(660),
+     ], A6xxGPUInfo(
+         a6xx_gen4,
+-        num_sp_cores = 3,
+         num_ccu = 3,
++        tile_align_w = 96,
++        tile_align_h = 16,
+         magic_regs = dict(
+             PC_POWER_CNTL = 2,
+             TPL1_DBG_ECO_CNTL = 0x05008000,
+diff --git a/src/gallium/drivers/freedreno/freedreno_gmem.c b/src/gallium/drivers/freedreno/freedreno_gmem.c
+index f0f7dc5f6890..20b169869a1f 100644
+--- a/src/gallium/drivers/freedreno/freedreno_gmem.c
++++ b/src/gallium/drivers/freedreno/freedreno_gmem.c
+@@ -549,7 +549,7 @@ gmem_key_init(struct fd_batch *batch, bool assume_zs, bool no_scis_opt)
+        */
+       key->gmem_page_align = 8;
+    } else if (is_a6xx(screen)) {
+-      key->gmem_page_align = (screen->info->tile_align_w == 96) ? 3 : 1;
++      key->gmem_page_align = screen->info->num_ccu;
+    } else {
+       // TODO re-check this across gens.. maybe it should only
+       // be a single page in some cases:
+-- 
+GitLab
+
+
+From b012a4a9cd71bd20293038f0137af51d4a5624f9 Mon Sep 17 00:00:00 2001
+From: Rob Clark <robdclark@chromium.org>
+Date: Fri, 24 Feb 2023 14:41:14 -0800
+Subject: [PATCH 2/3] freedreno+tu: Big GMEM support
+
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Part-of: <https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/21573>
+---
+ src/freedreno/.gitlab-ci/reference/crash.log  |  2 +-
+ .../.gitlab-ci/reference/crash_prefetch.log   |  8 +++----
+ ...exed.indirect_draw_count.triangle_list.log |  8 +++----
+ .../.gitlab-ci/reference/fd-clouds.log        |  8 +++----
+ .../.gitlab-ci/reference/prefetch-test.log    |  4 ++--
+ src/freedreno/registers/adreno/a6xx.xml       | 12 ++++++----
+ src/freedreno/vulkan/tu_cmd_buffer.c          | 24 +++++++++++++------
+ .../drivers/freedreno/a6xx/fd6_blitter.cc     |  3 +--
+ .../drivers/freedreno/a6xx/fd6_draw.cc        |  2 +-
+ .../drivers/freedreno/a6xx/fd6_emit.cc        | 15 ++++++++++++
+ src/gallium/drivers/freedreno/a6xx/fd6_emit.h |  1 +
+ .../drivers/freedreno/a6xx/fd6_gmem.cc        | 12 +++-------
+ 12 files changed, 60 insertions(+), 39 deletions(-)
+
+diff --git a/src/freedreno/.gitlab-ci/reference/crash.log b/src/freedreno/.gitlab-ci/reference/crash.log
+index 2558a4dd2903..fecc90316975 100644
+--- a/src/freedreno/.gitlab-ci/reference/crash.log
++++ b/src/freedreno/.gitlab-ci/reference/crash.log
+@@ -1529,7 +1529,7 @@ registers:
+ 	00000000	0xa630: 00000000
+ 	00100000	RB_DBG_ECO_CNTL: 0x100000
+ 	00000001	RB_ADDR_MODE_CNTL: ADDR_64B
+-	00000000	RB_CCU_CNTL: { COLOR_OFFSET = 0 | DEPTH_OFFSET = 0 }
++	00000000	RB_CCU_CNTL: { DEPTH_OFFSET_HI = 0 | COLOR_OFFSET_HI = 0 | DEPTH_OFFSET = 0 | COLOR_OFFSET = 0 }
+ 	00000004	RB_NC_MODE_CNTL: { LOWER_BIT = 2 | UPPER_BIT = 0 }
+ 	00000000	RB_PERFCTR_RB_SEL[0]+0: 00000000
+ 	00000000	RB_PERFCTR_RB_SEL[0x1]+0: 00000000
+diff --git a/src/freedreno/.gitlab-ci/reference/crash_prefetch.log b/src/freedreno/.gitlab-ci/reference/crash_prefetch.log
+index c6c755602d75..99c8712607d2 100644
+--- a/src/freedreno/.gitlab-ci/reference/crash_prefetch.log
++++ b/src/freedreno/.gitlab-ci/reference/crash_prefetch.log
+@@ -1744,7 +1744,7 @@ registers:
+ 	00000000	0xa630: 00000000
+ 	00100000	RB_DBG_ECO_CNTL: 0x100000
+ 	00000001	RB_ADDR_MODE_CNTL: ADDR_64B
+-	08000000	RB_CCU_CNTL: { COLOR_OFFSET = 0x10000 | DEPTH_OFFSET = 0 }
++	08000000	RB_CCU_CNTL: { DEPTH_OFFSET_HI = 0 | COLOR_OFFSET_HI = 0 | DEPTH_OFFSET = 0 | COLOR_OFFSET = 0x10000 }
+ 	00000002	RB_NC_MODE_CNTL: { LOWER_BIT = 1 | UPPER_BIT = 0 }
+ 	00000000	RB_PERFCTR_RB_SEL[0]+0: 00000000
+ 	00000000	RB_PERFCTR_RB_SEL[0x1]+0: 00000000
+@@ -2022,7 +2022,7 @@ got cmdszdw=83
+  +	00000000			RB_2D_SRC_SOLID_C3: 0
+ !+	00000001			RB_UNKNOWN_8E01: 0x1
+ !+	00100000			RB_DBG_ECO_CNTL: 0x100000
+-!+	08000000			RB_CCU_CNTL: { COLOR_OFFSET = 0x10000 | DEPTH_OFFSET = 0 }
++!+	08000000			RB_CCU_CNTL: { DEPTH_OFFSET_HI = 0 | COLOR_OFFSET_HI = 0 | DEPTH_OFFSET = 0 | COLOR_OFFSET = 0x10000 }
+  +	00000000			VPC_UNKNOWN_9210: 0
+  +	00000000			VPC_UNKNOWN_9211: 0
+  +	00000000			VPC_POINT_COORD_INVERT: { 0 }
+@@ -2332,7 +2332,7 @@ got cmdszdw=83
+  +	00000000				RB_UNKNOWN_88F0: 0
+  +	00000001				RB_UNKNOWN_8E01: 0x1
+  +	00100000				RB_DBG_ECO_CNTL: 0x100000
+- +	08000000				RB_CCU_CNTL: { COLOR_OFFSET = 0x10000 | DEPTH_OFFSET = 0 }
++ +	08000000				RB_CCU_CNTL: { DEPTH_OFFSET_HI = 0 | COLOR_OFFSET_HI = 0 | DEPTH_OFFSET = 0 | COLOR_OFFSET = 0x10000 }
+  +	00000000				VPC_UNKNOWN_9210: 0
+  +	00000000				VPC_UNKNOWN_9211: 0
+  +	00000000				VPC_POINT_COORD_INVERT: { 0 }
+@@ -5212,7 +5212,7 @@ ESTIMATED CRASH LOCATION!
+ !+	00000000			RB_2D_DST_PITCH: 0
+  +	00000001			RB_UNKNOWN_8E01: 0x1
+  +	00100000			RB_DBG_ECO_CNTL: 0x100000
+- +	08000000			RB_CCU_CNTL: { COLOR_OFFSET = 0x10000 | DEPTH_OFFSET = 0 }
++ +	08000000			RB_CCU_CNTL: { DEPTH_OFFSET_HI = 0 | COLOR_OFFSET_HI = 0 | DEPTH_OFFSET = 0 | COLOR_OFFSET = 0x10000 }
+  +	00000000			VPC_UNKNOWN_9210: 0
+  +	00000000			VPC_UNKNOWN_9211: 0
+  +	00000000			VPC_POINT_COORD_INVERT: { 0 }
+diff --git a/src/freedreno/.gitlab-ci/reference/dEQP-VK.draw.indirect_draw.indexed.indirect_draw_count.triangle_list.log b/src/freedreno/.gitlab-ci/reference/dEQP-VK.draw.indirect_draw.indexed.indirect_draw_count.triangle_list.log
+index b32d17d479fb..5b2cec8dee8e 100644
+--- a/src/freedreno/.gitlab-ci/reference/dEQP-VK.draw.indirect_draw.indexed.indirect_draw_count.triangle_list.log
++++ b/src/freedreno/.gitlab-ci/reference/dEQP-VK.draw.indirect_draw.indexed.indirect_draw_count.triangle_list.log
+@@ -12,7 +12,7 @@ cmdstream[0]: 265 dwords
+ 		opcode: CP_WAIT_FOR_IDLE (26) (1 dwords)
+ 0000000001058010:		0000: 70268000
+ 		write RB_CCU_CNTL (8e07)
+-			RB_CCU_CNTL: { COLOR_OFFSET = 0x20000 | DEPTH_OFFSET = 0 }
++			RB_CCU_CNTL: { DEPTH_OFFSET_HI = 0 | COLOR_OFFSET_HI = 0 | DEPTH_OFFSET = 0 | COLOR_OFFSET = 0x20000 }
+ 0000000001058014:		0000: 408e0701 10000000
+ 		write RB_DBG_ECO_CNTL (8e04)
+ 			RB_DBG_ECO_CNTL: 0x100000
+@@ -310,7 +310,7 @@ cmdstream[0]: 265 dwords
+ !+	000000ff		RB_2D_SRC_SOLID_C3: 0xff
+  +	00000000		RB_UNKNOWN_8E01: 0
+ !+	00100000		RB_DBG_ECO_CNTL: 0x100000
+-!+	10000000		RB_CCU_CNTL: { COLOR_OFFSET = 0x20000 | DEPTH_OFFSET = 0 }
++!+	10000000		RB_CCU_CNTL: { DEPTH_OFFSET_HI = 0 | COLOR_OFFSET_HI = 0 | DEPTH_OFFSET = 0 | COLOR_OFFSET = 0x20000 }
+  +	00000000		VPC_UNKNOWN_9107: { 0 }
+  +	00000000		VPC_UNKNOWN_9210: 0
+  +	00000000		VPC_UNKNOWN_9211: 0
+@@ -384,7 +384,7 @@ cmdstream[0]: 265 dwords
+ 		opcode: CP_WAIT_FOR_IDLE (26) (1 dwords)
+ 000000000105832c:		0000: 70268000
+ 		write RB_CCU_CNTL (8e07)
+-			RB_CCU_CNTL: { COLOR_OFFSET = 0xf8000 | DEPTH_OFFSET = 0 | GMEM }
++			RB_CCU_CNTL: { DEPTH_OFFSET_HI = 0 | COLOR_OFFSET_HI = 0 | DEPTH_OFFSET = 0 | GMEM | COLOR_OFFSET = 0xf8000 }
+ 0000000001058330:		0000: 408e0701 7c400000
+ 		write VPC_SO_DISABLE (9306)
+ 			VPC_SO_DISABLE: { 0 }
+@@ -485,7 +485,7 @@ cmdstream[0]: 265 dwords
+ !+	01012000			RB_BLIT_FLAG_DST: 0x1012000
+ !+	00004001			RB_BLIT_FLAG_DST_PITCH: { PITCH = 64 | ARRAY_PITCH = 1024 }
+ !+	00000003			RB_BLIT_INFO: { UNK0 | GMEM | CLEAR_MASK = 0 | LAST = 0 | BUFFER_ID = 0 }
+-!+	7c400000			RB_CCU_CNTL: { COLOR_OFFSET = 0xf8000 | DEPTH_OFFSET = 0 | GMEM }
++!+	7c400000			RB_CCU_CNTL: { DEPTH_OFFSET_HI = 0 | COLOR_OFFSET_HI = 0 | DEPTH_OFFSET = 0 | GMEM | COLOR_OFFSET = 0xf8000 }
+ !+	00000000			VPC_SO_DISABLE: { 0 }
+  +	00000000			SP_TP_WINDOW_OFFSET: { X = 0 | Y = 0 }
+  +	00000000			SP_WINDOW_OFFSET: { X = 0 | Y = 0 }
+diff --git a/src/freedreno/.gitlab-ci/reference/fd-clouds.log b/src/freedreno/.gitlab-ci/reference/fd-clouds.log
+index bada0c341546..cf9609904e42 100644
+--- a/src/freedreno/.gitlab-ci/reference/fd-clouds.log
++++ b/src/freedreno/.gitlab-ci/reference/fd-clouds.log
+@@ -245,7 +245,7 @@ cmdstream[0]: 1023 dwords
+ 		opcode: CP_WAIT_FOR_IDLE (26) (1 dwords)
+ 0000000001d91278:		0000: 70268000
+ 		write RB_CCU_CNTL (8e07)
+-			RB_CCU_CNTL: { COLOR_OFFSET = 0xf8000 | DEPTH_OFFSET = 0 | GMEM | CONCURRENT_RESOLVE }
++			RB_CCU_CNTL: { CONCURRENT_RESOLVE | DEPTH_OFFSET_HI = 0 | COLOR_OFFSET_HI = 0 | DEPTH_OFFSET = 0 | GMEM | COLOR_OFFSET = 0xf8000 }
+ 0000000001d9127c:		0000: 408e0701 7c400004
+ 		write RB_DEPTH_BUFFER_INFO (8872)
+ 			RB_DEPTH_BUFFER_INFO: { DEPTH_FORMAT = DEPTH6_NONE }
+@@ -1007,7 +1007,7 @@ cmdstream[0]: 1023 dwords
+  +	00000000			RB_MRT_FLAG_BUFFER[0].PITCH: { PITCH = 0 | ARRAY_PITCH = 0 }
+ !+	00000001			RB_UNKNOWN_8E01: 0x1
+  +	00000000			RB_DBG_ECO_CNTL: 0
+-!+	7c400004			RB_CCU_CNTL: { COLOR_OFFSET = 0xf8000 | DEPTH_OFFSET = 0 | GMEM | CONCURRENT_RESOLVE }
++!+	7c400004			RB_CCU_CNTL: { CONCURRENT_RESOLVE | DEPTH_OFFSET_HI = 0 | COLOR_OFFSET_HI = 0 | DEPTH_OFFSET = 0 | GMEM | COLOR_OFFSET = 0xf8000 }
+ !+	00ffff00			VPC_VS_CLIP_CNTL: { CLIP_MASK = 0 | CLIP_DIST_03_LOC = 255 | CLIP_DIST_47_LOC = 255 }
+ !+	0000ffff			VPC_VS_LAYER_CNTL: { LAYERLOC = 255 | VIEWLOC = 255 }
+  +	00000000			VPC_UNKNOWN_9107: { 0 }
+@@ -1498,7 +1498,7 @@ cmdstream[0]: 1023 dwords
+ 		opcode: CP_WAIT_FOR_IDLE (26) (1 dwords)
+ 0000000001d91938:		0000: 70268000
+ 		write RB_CCU_CNTL (8e07)
+-			RB_CCU_CNTL: { COLOR_OFFSET = 0xf8000 | DEPTH_OFFSET = 0 | GMEM | CONCURRENT_RESOLVE }
++			RB_CCU_CNTL: { CONCURRENT_RESOLVE | DEPTH_OFFSET_HI = 0 | COLOR_OFFSET_HI = 0 | DEPTH_OFFSET = 0 | GMEM | COLOR_OFFSET = 0xf8000 }
+ 0000000001d9193c:		0000: 408e0701 7c400004
+ 		write VPC_SO_DISABLE (9306)
+ 			VPC_SO_DISABLE: { DISABLE }
+@@ -1678,7 +1678,7 @@ cmdstream[0]: 1023 dwords
+  +	00000000			RB_BLIT_CLEAR_COLOR_DW2: 0
+  +	00000000			RB_BLIT_CLEAR_COLOR_DW3: 0
+ !+	000000f2			RB_BLIT_INFO: { GMEM | CLEAR_MASK = 0xf | LAST = 0 | BUFFER_ID = 0 }
+- +	7c400004			RB_CCU_CNTL: { COLOR_OFFSET = 0xf8000 | DEPTH_OFFSET = 0 | GMEM | CONCURRENT_RESOLVE }
++ +	7c400004			RB_CCU_CNTL: { CONCURRENT_RESOLVE | DEPTH_OFFSET_HI = 0 | COLOR_OFFSET_HI = 0 | DEPTH_OFFSET = 0 | GMEM | COLOR_OFFSET = 0xf8000 }
+ !+	00000001			VPC_SO_DISABLE: { DISABLE }
+  +	00000001			PC_POWER_CNTL: 0x1
+ !+	00000000			VFD_MODE_CNTL: { RENDER_MODE = RENDERING_PASS }
+diff --git a/src/freedreno/.gitlab-ci/reference/prefetch-test.log b/src/freedreno/.gitlab-ci/reference/prefetch-test.log
+index 15b175824713..5b29f740d399 100644
+--- a/src/freedreno/.gitlab-ci/reference/prefetch-test.log
++++ b/src/freedreno/.gitlab-ci/reference/prefetch-test.log
+@@ -2323,7 +2323,7 @@ registers:
+ 	00000000	0xa630: 00000000
+ 	00000000	RB_DBG_ECO_CNTL: 0
+ 	00000001	RB_ADDR_MODE_CNTL: ADDR_64B
+-	08000000	RB_CCU_CNTL: { COLOR_OFFSET = 0x10000 | DEPTH_OFFSET = 0 }
++	08000000	RB_CCU_CNTL: { DEPTH_OFFSET_HI = 0 | COLOR_OFFSET_HI = 0 | DEPTH_OFFSET = 0 | COLOR_OFFSET = 0x10000 }
+ 	00000002	RB_NC_MODE_CNTL: { LOWER_BIT = 1 | UPPER_BIT = 0 }
+ 	00000000	RB_PERFCTR_RB_SEL[0]+0: 00000000
+ 	00000000	RB_PERFCTR_RB_SEL[0x1]+0: 00000000
+@@ -3108,7 +3108,7 @@ got cmdszdw=438
+ !+	00004001				RB_MRT_FLAG_BUFFER[0].PITCH: { PITCH = 64 | ARRAY_PITCH = 1024 }
+ !+	10000ad30				RB_SAMPLE_COUNT_ADDR: 0x10000ad30
+ !+	00000000				RB_DBG_ECO_CNTL: 0
+-!+	08000000				RB_CCU_CNTL: { COLOR_OFFSET = 0x10000 | DEPTH_OFFSET = 0 }
++!+	08000000				RB_CCU_CNTL: { DEPTH_OFFSET_HI = 0 | COLOR_OFFSET_HI = 0 | DEPTH_OFFSET = 0 | COLOR_OFFSET = 0x10000 }
+ !+	00ffff00				VPC_VS_CLIP_CNTL: { CLIP_MASK = 0 | CLIP_DIST_03_LOC = 255 | CLIP_DIST_47_LOC = 255 }
+ !+	0000ffff				VPC_VS_LAYER_CNTL: { LAYERLOC = 255 | VIEWLOC = 255 }
+  +	00000000				VPC_UNKNOWN_9107: { 0 }
+diff --git a/src/freedreno/registers/adreno/a6xx.xml b/src/freedreno/registers/adreno/a6xx.xml
+index f9cfd61d2f0f..d8bcd6914b69 100644
+--- a/src/freedreno/registers/adreno/a6xx.xml
++++ b/src/freedreno/registers/adreno/a6xx.xml
+@@ -2493,6 +2493,13 @@ to upconvert to 32b float internally?
+ 	<reg32 offset="0x8e05" name="RB_ADDR_MODE_CNTL" pos="0" type="a5xx_address_mode"/>
+ 	<!-- 0x8e06 invalid -->
+ 	<reg32 offset="0x8e07" name="RB_CCU_CNTL">
++		<!-- concurrent resolves are apparently a 2-bit enum on a650+ -->
++		<bitfield name="CONCURRENT_RESOLVE" pos="2" type="boolean"/>
++		<bitfield name="DEPTH_OFFSET_HI" pos="7" type="hex"/>
++		<bitfield name="COLOR_OFFSET_HI" pos="9" type="hex"/>
++		<!-- GMEM offset of CCU depth cache -->
++		<bitfield name="DEPTH_OFFSET" low="12" high="20" shr="12" type="hex"/>
++		<bitfield name="GMEM" pos="22" type="boolean"/> <!-- set for GMEM path -->
+ 		<!-- GMEM offset of CCU color cache
+ 			for GMEM rendering, we set it to GMEM size minus the minimum
+ 			CCU color cache size. CCU color cache will be needed in some
+@@ -2500,11 +2507,6 @@ to upconvert to 32b float internally?
+ 			of GMEM for color cache.
+ 		-->
+ 		<bitfield name="COLOR_OFFSET" low="23" high="31" shr="12" type="hex"/>
+-		<!-- GMEM offset of CCU depth cache -->
+-		<bitfield name="DEPTH_OFFSET" low="12" high="20" shr="12" type="hex"/>
+-		<bitfield name="GMEM" pos="22" type="boolean"/> <!-- set for GMEM path -->
+-		<!-- concurrent resolves are apparently a 2-bit enum on a650+ -->
+-		<bitfield name="CONCURRENT_RESOLVE" pos="2" type="boolean"/>
+ 		<!--TODO: valid mask 0xfffffc1f -->
+ 	</reg32>
+ 	<reg32 offset="0x8e08" name="RB_NC_MODE_CNTL">
+diff --git a/src/freedreno/vulkan/tu_cmd_buffer.c b/src/freedreno/vulkan/tu_cmd_buffer.c
+index 31ba2a5e604e..d4731ed1b8a4 100644
+--- a/src/freedreno/vulkan/tu_cmd_buffer.c
++++ b/src/freedreno/vulkan/tu_cmd_buffer.c
+@@ -199,6 +199,18 @@ tu_emit_cache_flush_renderpass(struct tu_cmd_buffer *cmd_buffer)
+                     &cmd_buffer->state.renderpass_cache);
+ }
+ 
++static struct fd_reg_pair
++rb_ccu_cntl(uint32_t color_offset, bool gmem)
++{
++   uint32_t color_offset_hi = color_offset >> 21;
++   color_offset &= 0x1fffff;
++   return A6XX_RB_CCU_CNTL(
++         .color_offset = color_offset,
++         .color_offset_hi = color_offset_hi,
++         .gmem = gmem,
++   );
++}
++
+ /* Cache flushes for things that use the color/depth read/write path (i.e.
+  * blits and draws). This deals with changing CCU state as well as the usual
+  * cache flushing.
+@@ -242,11 +254,10 @@ tu_emit_cache_flush_ccu(struct tu_cmd_buffer *cmd_buffer,
+    if (ccu_state != cmd_buffer->state.ccu_state) {
+       struct tu_physical_device *phys_dev = cmd_buffer->device->physical_device;
+       tu_cs_emit_regs(cs,
+-                      A6XX_RB_CCU_CNTL(.color_offset =
+-                                          ccu_state == TU_CMD_CCU_GMEM ?
+-                                          phys_dev->ccu_offset_gmem :
+-                                          phys_dev->ccu_offset_bypass,
+-                                       .gmem = ccu_state == TU_CMD_CCU_GMEM));
++                      rb_ccu_cntl(ccu_state == TU_CMD_CCU_GMEM ?
++                                  phys_dev->ccu_offset_gmem :
++                                  phys_dev->ccu_offset_bypass,
++                                  ccu_state == TU_CMD_CCU_GMEM));
+       cmd_buffer->state.ccu_state = ccu_state;
+    }
+ }
+@@ -946,8 +957,7 @@ tu6_init_hw(struct tu_cmd_buffer *cmd, struct tu_cs *cs)
+    cmd->state.cache.pending_flush_bits &=
+       ~(TU_CMD_FLAG_WAIT_FOR_IDLE | TU_CMD_FLAG_CACHE_INVALIDATE);
+ 
+-   tu_cs_emit_regs(cs,
+-                   A6XX_RB_CCU_CNTL(.color_offset = phys_dev->ccu_offset_bypass));
++   tu_cs_emit_regs(cs, rb_ccu_cntl(phys_dev->ccu_offset_bypass, false));
+    cmd->state.ccu_state = TU_CMD_CCU_SYSMEM;
+    tu_cs_emit_write_reg(cs, REG_A6XX_RB_DBG_ECO_CNTL,
+                         phys_dev->info->a6xx.magic.RB_DBG_ECO_CNTL);
+diff --git a/src/gallium/drivers/freedreno/a6xx/fd6_blitter.cc b/src/gallium/drivers/freedreno/a6xx/fd6_blitter.cc
+index 58b8bed79101..71ce3451327d 100644
+--- a/src/gallium/drivers/freedreno/a6xx/fd6_blitter.cc
++++ b/src/gallium/drivers/freedreno/a6xx/fd6_blitter.cc
+@@ -259,8 +259,7 @@ emit_setup(struct fd_batch *batch)
+ 
+    /* normal BLIT_OP_SCALE operation needs bypass RB_CCU_CNTL */
+    OUT_WFI5(ring);
+-   OUT_PKT4(ring, REG_A6XX_RB_CCU_CNTL, 1);
+-   OUT_RING(ring, A6XX_RB_CCU_CNTL_COLOR_OFFSET(screen->ccu_offset_bypass));
++   fd6_emit_ccu_cntl(ring, screen, false);
+ }
+ 
+ static void
+diff --git a/src/gallium/drivers/freedreno/a6xx/fd6_draw.cc b/src/gallium/drivers/freedreno/a6xx/fd6_draw.cc
+index 4ee23d29dcf3..1e778ab6b42b 100644
+--- a/src/gallium/drivers/freedreno/a6xx/fd6_draw.cc
++++ b/src/gallium/drivers/freedreno/a6xx/fd6_draw.cc
+@@ -433,7 +433,7 @@ fd6_clear_lrz(struct fd_batch *batch, struct fd_resource *zsbuf, double depth) a
+ 
+    OUT_WFI5(ring);
+ 
+-   OUT_REG(ring, A6XX_RB_CCU_CNTL(.color_offset = screen->ccu_offset_bypass));
++   fd6_emit_ccu_cntl(ring, screen, false);
+ 
+    OUT_REG(ring,
+            A6XX_HLSQ_INVALIDATE_CMD(.vs_state = true, .hs_state = true,
+diff --git a/src/gallium/drivers/freedreno/a6xx/fd6_emit.cc b/src/gallium/drivers/freedreno/a6xx/fd6_emit.cc
+index 726dbe078720..b8d976cdbb7a 100644
+--- a/src/gallium/drivers/freedreno/a6xx/fd6_emit.cc
++++ b/src/gallium/drivers/freedreno/a6xx/fd6_emit.cc
+@@ -733,6 +733,21 @@ fd6_emit_cs_state(struct fd_context *ctx, struct fd_ringbuffer *ring,
+    fd6_state_emit(&state, ring);
+ }
+ 
++void
++fd6_emit_ccu_cntl(struct fd_ringbuffer *ring, struct fd_screen *screen, bool gmem)
++{
++   uint32_t offset = gmem ? screen->ccu_offset_gmem : screen->ccu_offset_bypass;
++   uint32_t offset_hi = offset >> 21;
++   offset &= 0x1fffff;
++
++   OUT_REG(ring, A6XX_RB_CCU_CNTL(
++         .concurrent_resolve = gmem && screen->info->a6xx.concurrent_resolve,
++         .color_offset_hi = offset_hi,
++         .gmem = gmem,
++         .color_offset = offset,
++   ));
++}
++
+ /* emit setup at begin of new cmdstream buffer (don't rely on previous
+  * state, there could have been a context switch between ioctls):
+  */
+diff --git a/src/gallium/drivers/freedreno/a6xx/fd6_emit.h b/src/gallium/drivers/freedreno/a6xx/fd6_emit.h
+index b948482e3cc9..16e6b48c11ac 100644
+--- a/src/gallium/drivers/freedreno/a6xx/fd6_emit.h
++++ b/src/gallium/drivers/freedreno/a6xx/fd6_emit.h
+@@ -341,6 +341,7 @@ struct fd6_compute_state;
+ void fd6_emit_cs_state(struct fd_context *ctx, struct fd_ringbuffer *ring,
+                        struct fd6_compute_state *cs) assert_dt;
+ 
++void fd6_emit_ccu_cntl(struct fd_ringbuffer *ring, struct fd_screen *screen, bool gmem);
+ void fd6_emit_restore(struct fd_batch *batch, struct fd_ringbuffer *ring);
+ 
+ void fd6_emit_init_screen(struct pipe_screen *pscreen);
+diff --git a/src/gallium/drivers/freedreno/a6xx/fd6_gmem.cc b/src/gallium/drivers/freedreno/a6xx/fd6_gmem.cc
+index bfa70141283f..3577d71d84fe 100644
+--- a/src/gallium/drivers/freedreno/a6xx/fd6_gmem.cc
++++ b/src/gallium/drivers/freedreno/a6xx/fd6_gmem.cc
+@@ -768,10 +768,7 @@ emit_binning_pass(struct fd_batch *batch) assert_dt
+ 
+    OUT_WFI5(ring);
+ 
+-   OUT_REG(ring,
+-           A6XX_RB_CCU_CNTL(.color_offset = screen->ccu_offset_gmem,
+-                            .gmem = true,
+-                            .concurrent_resolve = screen->info->a6xx.concurrent_resolve));
++   fd6_emit_ccu_cntl(ring, screen, true);
+ }
+ 
+ static void
+@@ -836,10 +833,7 @@ fd6_emit_tile_init(struct fd_batch *batch) assert_dt
+    OUT_RING(ring, 0x1);
+ 
+    fd_wfi(batch, ring);
+-   OUT_REG(ring,
+-           A6XX_RB_CCU_CNTL(.color_offset = screen->ccu_offset_gmem,
+-                            .gmem = true,
+-                            .concurrent_resolve = screen->info->a6xx.concurrent_resolve));
++   fd6_emit_ccu_cntl(ring, screen, true);
+ 
+    emit_zs(ring, pfb->zsbuf, batch->gmem_state);
+    emit_mrt(ring, pfb, batch->gmem_state);
+@@ -1625,7 +1619,7 @@ fd6_emit_sysmem_prep(struct fd_batch *batch) assert_dt
+    fd6_cache_inv(batch, ring);
+ 
+    fd_wfi(batch, ring);
+-   OUT_REG(ring, A6XX_RB_CCU_CNTL(.color_offset = screen->ccu_offset_bypass));
++   fd6_emit_ccu_cntl(ring, screen, false);
+ 
+    /* enable stream-out, with sysmem there is only one pass: */
+    OUT_REG(ring, A6XX_VPC_SO_DISABLE(false));
+-- 
+GitLab
+
+
+From 210c6c11cc61c8f53c2c5506e97084dc5f9f2270 Mon Sep 17 00:00:00 2001
+From: Rob Clark <robdclark@chromium.org>
+Date: Mon, 31 Oct 2022 11:53:10 -0700
+Subject: [PATCH 3/3] freedreno+tu: Add a690 support
+
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Part-of: <https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/21573>
+---
+ src/freedreno/common/freedreno_devices.py | 24 +++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/src/freedreno/common/freedreno_devices.py b/src/freedreno/common/freedreno_devices.py
+index 4dd66c6a19c0..2b21b43c34f8 100644
+--- a/src/freedreno/common/freedreno_devices.py
++++ b/src/freedreno/common/freedreno_devices.py
+@@ -464,6 +464,30 @@ add_gpus([
+         )
+     ))
+ 
++add_gpus([
++        GPUId(690),
++    ], A6xxGPUInfo(
++        a6xx_gen4,
++        num_ccu = 8,
++        tile_align_w = 64,
++        tile_align_h = 32,
++        magic_regs = dict(
++            PC_POWER_CNTL = 7,
++            TPL1_DBG_ECO_CNTL = 0x01008000,
++            GRAS_DBG_ECO_CNTL = 0x0,
++            SP_CHICKEN_BITS = 0x00001400,
++            UCHE_CLIENT_PF = 0x00000084,
++            PC_MODE_CNTL = 0x1f,
++            SP_DBG_ECO_CNTL = 0x00000000,
++            RB_DBG_ECO_CNTL = 0x00100000,
++            RB_DBG_ECO_CNTL_blit = 0x00100000,  # ???
++            HLSQ_DBG_ECO_CNTL = 0x0,
++            RB_UNKNOWN_8E01 = 0x0,
++            VPC_DBG_ECO_CNTL = 0x02000000,
++            UCHE_UNKNOWN_0E12 = 0x00000001
++        )
++    ))
++
+ template = """\
+ /* Copyright (C) 2021 Google, Inc.
+  *
+-- 
+GitLab
+
