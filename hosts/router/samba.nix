@@ -3,6 +3,7 @@
   config = {
     lun.persistence.dirs = [ "/var/lib/samba" ];
     services.samba-wsdd.enable = true;
+    services.samba-wsdd.interface = "enp1s0f2";
     services.samba = {
       enable = true;
       openFirewall = lib.mkForce false;
@@ -13,6 +14,8 @@
         server string = router
         server role = standalone server
         map to guest = bad user
+        bind interfaces only = yes
+        interfaces = lo enp1s0f2
       '';
 
       shares = {
