@@ -43,8 +43,8 @@ in
   boot.cleanTmpDir = true;
 
   systemd.sleep.extraConfig = ''
-    AllowHibernation=yes
-    AllowSuspend=no
+    AllowHibernation=no
+    AllowSuspend=yes
     AllowSuspendThenHibernate=no
     AllowHybridSleep=no
   '';
