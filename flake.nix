@@ -97,7 +97,7 @@
           lun-hisame-nixos = linux64.makeHost ./hosts/hisame;
           lun-amayadori-nixos = linuxaarch64.makeHost ./hosts/amayadori;
           mmk-raikiri-nixos = linux64.makeHost ./hosts/raikiri;
-          iso-x13 = linuxaarch64.nixosIso ./hosts/aarch64/x13.nix;
+          iso-x13 = linuxaarch64.nixosIso ./hosts/aarch64/x13s.nix;
         };
 
       deploy.nodes.router = {

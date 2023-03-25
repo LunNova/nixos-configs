@@ -27,7 +27,7 @@ in
     [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./x13.nix
+      ./x13s.nix
     ];
 
   lun.power-saving.enable = false;
