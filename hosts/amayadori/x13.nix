@@ -1,6 +1,23 @@
 { config, options, flakeArgs, lib, pkgs, ... }:
 let
   useGrub = true;
+  kp = [
+    {
+      name = "x13s-cfg";
+      patch = null;
+      extraStructuredConfig = with lib.kernel; {
+        EFI_ARMSTUB_DTB_LOADER = lib.mkForce yes;
+        OF_OVERLAY = lib.mkForce yes;
+        BTRFS_FS = lib.mkForce yes;
+        BTRFS_FS_POSIX_ACL = lib.mkForce yes;
+        MEDIA_CONTROLLER = lib.mkForce yes;
+        SND_USB_AUDIO_USE_MEDIA_CONTROLLER = lib.mkForce yes;
+        SND_USB = lib.mkForce yes;
+        SND_USB_AUDIO = lib.mkForce module;
+        USB_XHCI_PCI = lib.mkForce module;
+      };
+    }
+  ];
   linux_x13s_pkg = { buildLinux, ... } @ args:
     buildLinux (args // rec {
       version = "6.3.0";
@@ -12,7 +29,7 @@ let
         rev = "wip/sc8280xp-v6.3-rc2-wifi";
         hash = "sha256-b8Vhpc4saZilFtdCFh4520n3YGAZqsLTWAxvPkSbh9w=";
       };
-      kernelPatches = [ ];
+      kernelPatches = kp;
 
       extraMeta.branch = "6.3";
     } // (args.argsOverride or { }));
@@ -202,6 +219,9 @@ in
 
       supportedFilesystems = lib.mkForce [ "ext4" "btrfs" "cifs" "f2fs" "jfs" "ntfs" "reiserfs" "vfat" "xfs" ];
       consoleLogLevel = 9;
+      kernelModules = [
+        "snd_usb_audio"
+      ];
       kernelPackages = lib.mkForce linuxPackages_x13s;
       kernelParams = [
         "boot.shell_on_fail"
@@ -212,19 +232,7 @@ in
       ] ++ lib.optionals (!useGrub) [
         "dtb=x13s.dtb"
       ];
-      kernelPatches = [
-        {
-          name = "x13s-cfg";
-          patch = null;
-          extraStructuredConfig = with lib.kernel; {
-            EFI_ARMSTUB_DTB_LOADER = lib.mkForce yes;
-            OF_OVERLAY = lib.mkForce yes;
-            BTRFS_FS = lib.mkForce yes;
-            BTRFS_FS_POSIX_ACL = lib.mkForce yes;
-            # USB_XHCI_PCI = lib.mkForce module;
-          };
-        }
-      ];
+      kernelPatches = kp;
       initrd = {
         includeDefaultModules = false;
         kernelModules = [
