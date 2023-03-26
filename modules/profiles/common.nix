@@ -24,9 +24,6 @@
     # Persist console when getty starts
     # systemd.services."getty@".serviceConfig.TTYVTDisallocate = "no";
 
-    # DISPLAYS
-    hardware.video.hidpi.enable = false;
-
     # LOGGING
     # FIXME: I want 
     # MaxLevelStore=5
