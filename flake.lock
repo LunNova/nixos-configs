@@ -800,11 +800,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1679809847,
-        "narHash": "sha256-zsbUlE52ko7UHqT+zujeyj0ZyprBWZP0Qq7tH2al9t0=",
+        "lastModified": 1679812046,
+        "narHash": "sha256-Mf4Gn6XemwAuWY4iwDIust2+8VH+DhTpf76H8t0PPrI=",
         "owner": "mmk150",
         "repo": "reminder_bot",
-        "rev": "65a63a783e049c15ceec32ee1b1db9807cba2f59",
+        "rev": "9f3335de95e59c37eca943fca25eaf80d4d7fed3",
         "type": "github"
       },
       "original": {
