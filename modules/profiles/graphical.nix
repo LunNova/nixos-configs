@@ -17,6 +17,7 @@
     services.xserver.desktopManager.plasma5.runUsingSystemd = true;
     # vlc is smaller than gstreamer
     services.xserver.desktopManager.plasma5.phononBackend = "vlc";
+    services.xserver.windowManager.i3.enable = true;
 
     # oom kill faster for more responsiveness
     services.earlyoom.enable = true;

@@ -1,6 +1,7 @@
 { pkgs, lib, lun-profiles, ... }:
 {
   imports = [
+    ./i3
     ./media
     ./cad
     ./sway
