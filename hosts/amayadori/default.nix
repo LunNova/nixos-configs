@@ -54,15 +54,24 @@ in
 
   boot.kernelParams = [
     #    "mem_sleep_default=deep" # S3 by default
-    #    "nmi_watchdog=0"
+    "nmi_watchdog=0"
     #    "nowatchdog"
   ];
 
-  # Used to set power profiles, should have support in asus-wmi https://asus-linux.org/blog/updates-2021-07-16/
-  services.power-profiles-daemon.enable = true;
+  services.power-profiles-daemon.enable = false;
   powerManagement.powertop.enable = true;
-  # services.tlp.enable = true;
-
+  services.tlp.enable = true;
+  services.tlp.settings = {
+    PCIE_ASPM_ON_BAT = "powersupersave";
+    RUNTIME_PM_ON_AC = "auto";
+    # Operation mode when no power supply can be detected: AC, BAT.
+    TLP_DEFAULT_MODE = "BAT";
+    # Operation mode select: 0=depend on power source, 1=always use TLP_DEFAULT_MODE
+    TLP_PERSISTENT_DEFAULT = "1";
+    DEVICES_TO_DISABLE_ON_LAN_CONNECT = "wifi wwan";
+    DEVICES_TO_DISABLE_ON_WIFI_CONNECT = "wwan";
+    DEVICES_TO_DISABLE_ON_WWAN_CONNECT = "wifi";
+  };
   # defaults to 16 on this machine which OOMs some builds
   nix.settings.cores = 8;
 }
