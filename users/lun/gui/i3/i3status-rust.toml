@@ -6,8 +6,6 @@ icons = "awesome6"
 [[block]]
 block = "disk_space"
 path = "/persist"
-# alias = "persist"
-info_type = "available"
 interval = 20
 warning = 20.0
 alert = 10.0
@@ -19,14 +17,15 @@ block = "memory"
 block = "cpu"
 interval = 1
 
-[[block]]
-block = "load"
-interval = 1
-format = "{1m}"
+# [[block]]
+# block = "load"
+# interval = 1
+# format = "{1m}"
 
 [[block]]
 block = "net"
 interval = 5
+format = " $icon $signal_strength$frequency "
 
 [[block]]
 block = "sound"
@@ -34,7 +33,7 @@ block = "sound"
 [[block]]
 block = "time"
 interval = 60
-format = "%a %m/%d %I:%M"
+#format = "%a %m/%d %I:%M"
 
 [[block]]
 block = "battery"

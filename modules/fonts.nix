@@ -15,7 +15,9 @@ in
       unifont
       vistafonts # Calibri, Cambria, Candara, Consolas, Constantia, Corbel
       fira-code # use in emacs
+      #(nerdfonts.override { fonts = [ "Hack" ]; })
       twitter-color-emoji # Decent set of emoji
+      font-awesome_6
     ] ++ lib.optionals lotsOfFonts [
       # General fonts
       noto-fonts
@@ -28,7 +30,6 @@ in
       kochi-substitute
 
       # Code/monospace and nsymbol fonts
-      (nerdfonts.override { fonts = [ "Hack" ]; })
       fira-code
       fira-code-symbols
       mplus-outline-fonts.osdnRelease
