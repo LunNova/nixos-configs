@@ -109,6 +109,14 @@ let
       # This is because the firmware is compressed in `apply` on `hardware.firmware`.
       firmwareFilesList = lib.flatten options.hardware.firmware.definitions;
     };
+  x13s-alsa-ucm-conf = pkgs.alsa-ucm-conf.overrideAttrs (_: {
+    src = pkgs.fetchFromGitHub {
+      owner = "alsa-project";
+      repo = "alsa-ucm-conf";
+      rev = "f5d3c381e4471fb90601c4ecd1d3cf72874b2b27";
+      hash = "sha256-N180GHWlw/ztiAGkwT+Nk9w503uoO0dyxpoykGZnsNM=";
+    };
+  });
 in
 {
   config = {
@@ -116,6 +124,13 @@ in
       (lib.hiPrio x13s_fw)
       (lib.hiPrio (x13s_fw // { compressFirmware = false; }))
     ];
+
+    systemd.services.display-manager.serviceConfig.ExecStartPre = [
+      ''
+        ${pkgs.bash}/bin/bash -c '${pkgs.mount}/bin/mount -o bind ${x13s-alsa-ucm-conf}/share/alsa/ ${pkgs.alsa-ucm-conf}/share/alsa/ || true'
+      ''
+    ];
+
     # nixpkgs.overlays = [
     #   (
     #     final: prev: let alsa-lib = 
