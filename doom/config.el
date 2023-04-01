@@ -143,6 +143,14 @@
   "<mouse-7>" #'(lambda () (interactive) (scroll-left 3))
   )
 
+;; (setq! lsp-clients-emmy-lua-jar-path (f-join (getenv "HOME") "sync/dev/lua/emmylua-ls/EmmyLua-LS-all.jar"))
+
+;; use emmylua-ls on path as emmylua language server - should be script which runs java -jar emmylua etc
+(setq! lsp-clients-emmy-lua-command `("emmylua-ls"))
+;; override test as it looks for lsp-clients-emmy-lua-jar-path even if we set lsp-clients-emmy-lua-command
+(defun lsp-clients-emmy-lua-test-fixed () "dummy test which is always true" t)
+(advice-add 'lsp-clients-emmy-lua-test :override #'lsp-clients-emmy-lua-test-fixed)
+
 (use-package sticky-shell
   :ensure t ; install
   ;; add your customization here
