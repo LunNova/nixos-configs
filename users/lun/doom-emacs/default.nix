@@ -3,6 +3,49 @@
 
 { pkgs, pkgs-stable, lib, config, ... }:
 # FIXME: make this a module
+let
+  # native-comp + compile in vterm
+  emacs-compiled = (pkgs.emacsPackagesFor pkgs.emacsUnstable).emacsWithPackages (epkgs: [
+    epkgs.vterm
+  ]);
+  emacs-path = [
+    pkgs.nodejs # some plugins
+    pkgs.binutils # native-comp needs 'as', provided by this
+    ## Doom dependencies
+    pkgs.git
+    (pkgs.ripgrep.override { withPCRE2 = true; })
+    pkgs.gnutls # for TLS connectivity
+
+    ## Optional dependencies
+    pkgs.fd # faster projectile indexing
+    pkgs.imagemagick # for image-dired
+    pkgs.zstd # for undo-fu-session/undo-tree compression
+
+    ## Module dependencies
+    # :checkers spell
+    (pkgs.aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
+    # :tools editorconfig
+    pkgs.editorconfig-core-c # per-project style config
+    # :tools lookup & :lang org +roam
+    pkgs.sqlite
+    # :lang latex & :lang org (latex previews)
+    pkgs.texlive.combined.scheme-medium
+    pkgs.luajitPackages.luacheck
+    emmylua-ls
+    pkgs.python3
+  ];
+  emacs = pkgs.writeShellScriptBin "emacs" ''
+    PATH="${lib.makeBinPath emacs-path}:$PATH" exec ${emacs-compiled}/bin/emacs "$@"
+  '';
+  emmylua-ls-jar = builtins.fetchurl {
+    name = "EmmyLua-LS-all.jar";
+    url = "https://github.com/EmmyLua/EmmyLua-LanguageServer/releases/download/0.5.13/EmmyLua-LS-all.jar";
+    sha256 = "sha256:1fbg5kkfkdjgm2mkwr5cf7cah2vpyz4a8na8mywb94b0is56r6al";
+  };
+  emmylua-ls = pkgs.writeShellScriptBin "emmylua-ls" ''
+    exec ${pkgs.jre}/bin/java -XX:+UseG1GC -Xmx256m -jar "${emmylua-ls-jar}" "$@"
+  '';
+in
 {
   home.sessionPath = [
     "${config.xdg.configHome}/emacs/bin"
@@ -37,34 +80,7 @@
   home.packages = with pkgs; [
     # FIXME: if these are all on main fontconfig path battle.net will become incredibly slow again
     emacs-all-the-icons-fonts
-
-    ## Emacs itself
-    binutils # native-comp needs 'as', provided by this
-    # 28.2 + native-comp
-    ((emacsPackagesFor emacsUnstable).emacsWithPackages
-      (epkgs: [ epkgs.vterm ]))
-
-    ## Doom dependencies
-    git
-    (ripgrep.override { withPCRE2 = true; })
-    gnutls # for TLS connectivity
-
-    ## Optional dependencies
-    fd # faster projectile indexing
-    imagemagick # for image-dired
-    zstd # for undo-fu-session/undo-tree compression
-
-    ## Module dependencies
-    # :checkers spell
-    (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
-    # :tools editorconfig
-    editorconfig-core-c # per-project style config
-    # :tools lookup & :lang org +roam
-    sqlite
-    # :lang latex & :lang org (latex previews)
-    texlive.combined.scheme-medium
-    # :lang beancount
-    beancount
-    pkgs-stable.fava # FIXME: builds fails on unstable
+    emacs
+    emmylua-ls
   ];
 }
