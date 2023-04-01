@@ -4,7 +4,7 @@ let
   # https://github.com/cole-mickens/nixcfg/blob/main/mixins/nvidia.nix
   waylandEnv = {
     WLR_RENDERER = "vulkan";
-    VK_LAYER_PATH = "${pkgs.vulkan-validation-layers}/share/vulkan/explicit_layer.d";
+    # VK_LAYER_PATH = "${pkgs.vulkan-validation-layers}/share/vulkan/explicit_layer.d";
     # KWIN_OPENGL_INTERFACE = "egl";
     #    KWIN_EXPLICIT_SYNC = "0";
     #    KWIN_DRM_USE_MODIFIERS = "1";
