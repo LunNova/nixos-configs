@@ -1,6 +1,9 @@
 { config, options, flakeArgs, lib, pkgs, ... }:
 let
   useGrub = true;
+  useGpu = true;
+  useGpuFw = true;
+  dtbName = "x13s63rc3.dtb";
   kp = [
     {
       name = "x13s-cfg";
@@ -15,27 +18,39 @@ let
         SND_USB = lib.mkForce yes;
         SND_USB_AUDIO = lib.mkForce module;
         USB_XHCI_PCI = lib.mkForce module;
+        HZ_100 = lib.mkForce yes;
+        HZ_250 = lib.mkForce no;
+        DRM_AMDGPU = lib.mkForce no;
+        DRM_NOUVEAU = lib.mkForce no;
       };
+    }
+    {
+      name = "throttling";
+      patch = ./qcom-cpufreq-throttling.patch;
     }
   ];
   linux_x13s_pkg = { buildLinux, ... } @ args:
-    buildLinux (args // rec {
+    buildLinux (args // {
       version = "6.3.0";
-      modDirVersion = "6.3.0-rc2";
+      modDirVersion = "6.3.0-rc3";
 
       src = pkgs.fetchFromGitHub {
-        owner = "jhovold";
+        # owner = "jhovold";
+        # repo = "linux";
+        # rev = "wip/sc8280xp-v6.3-rc3";
+        # hash = "sha256-18Vhpc4saZilFtdCFh4520n3YGAZqsLTWAxvPkSbh9w=";
+        owner = "steev";
         repo = "linux";
-        rev = "wip/sc8280xp-v6.3-rc2-wifi";
-        hash = "sha256-b8Vhpc4saZilFtdCFh4520n3YGAZqsLTWAxvPkSbh9w=";
+        rev = "lenovo-x13s-v6.3-rc3";
+        hash = "sha256-FPrCFRVHluuqPWdR3+diGUnvE4i2n6lCO9bRuvGIMhw=";
       };
-      kernelPatches = kp;
+      kernelPatches = (args.kernelPatches or [ ]) ++ kp;
 
       extraMeta.branch = "6.3";
     } // (args.argsOverride or { }));
 
   linux_x13s = pkgs.callPackage linux_x13s_pkg {
-    defconfig = "johan_defconfig";
+    defconfig = "laptop_defconfig";
   };
 
   linuxPackages_x13s = pkgs.linuxPackagesFor linux_x13s;
@@ -63,28 +78,33 @@ let
   };
   # TODO: https://github.com/alsa-project/alsa-ucm-conf
 
-  x13s_fw = pkgs.runCommandNoCC "ath11k_fw" { } ''
+  ath11k_fw = pkgs.runCommandNoCC "ath11k_fw" { } ''
     mkdir -p $out/lib/firmware/ath11k/
     cp -r ${ath11k_fw_src}/* $out/lib/firmware/ath11k/
+  '';
+  x13s_extra_fw = pkgs.runCommandNoCC "x13s_extra_fw" { } (''
     mkdir -p $out/lib/firmware/qcom/sc8280xp/
     # mkdir -p $out/lib/firmware/qca/
     cp ${x13s-tplg} $out/lib/firmware/qcom/sc8280xp/SC8280XP-LENOVO-X13S-tplg.bin
+  '' + (lib.optionalString useGpuFw ''
     # cp -r ${aarch64-fw}/firmware/qca/* $out/lib/firmware/qca/
     cp -r ${aarch64-fw}/firmware/qcom/* $out/lib/firmware/qcom/
-  '';
+  ''));
   # see https://github.com/szclsya/x13s-alarm
-  pd-mapper = pkgs.callPackage "${flakeArgs.mobile-nixos}/overlay/qrtr/pd-mapper.nix" { inherit qrtr; };
+  pd-mapper = (pkgs.callPackage "${flakeArgs.mobile-nixos}/overlay/qrtr/pd-mapper.nix" { inherit qrtr; }).overrideAttrs (old: {
+    # TODO: use newer version and fix patch
+    # src = pkgs.fetchFromGitHub {
+    #   owner = "andersson";
+    #   repo = "pd-mapper";
+    #   rev = "107104b20bccc1089ba46893e64b3bdcb98c6830";
+    #   hash = "sha256-ypLS/g1FNi2vzIYkIoml2FkMM1Tc8UrRRhWaYbwpwkc=";
+    # };
+  });
   qrtr = pkgs.callPackage "${flakeArgs.mobile-nixos}/overlay/qrtr/qrtr.nix" { };
   qmic = pkgs.callPackage "${flakeArgs.mobile-nixos}/overlay/qrtr/qmic.nix" { };
   rmtfs = pkgs.callPackage "${flakeArgs.mobile-nixos}/overlay/qrtr/rmtfs.nix" { inherit qmic qrtr; };
   uncompressed-fw = pkgs.callPackage
-    (
-      { lib
-      , runCommand
-      , buildEnv
-      , firmwareFilesList
-      }:
-
+    ({ lib, runCommand, buildEnv, firmwareFilesList }:
       runCommand "qcom-modem-uncompressed-firmware-share"
         {
           firmwareFiles = buildEnv {
@@ -102,8 +122,7 @@ let
         mkdir -p $out/share/
         ln -s $firmwareFiles/lib/firmware/ $out/share/uncompressed-firmware
         )
-      ''
-    )
+      '')
     {
       # We have to borrow the pre `apply`'d list, thus `options...definitions`.
       # This is because the firmware is compressed in `apply` on `hardware.firmware`.
@@ -113,16 +132,18 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "alsa-project";
       repo = "alsa-ucm-conf";
-      rev = "f5d3c381e4471fb90601c4ecd1d3cf72874b2b27";
-      hash = "sha256-N180GHWlw/ztiAGkwT+Nk9w503uoO0dyxpoykGZnsNM=";
+      # https://github.com/Srinivas-Kandagatla/alsa-ucm-conf/commits/x13s-fixes
+      rev = "65b44204ea88105ed77cc68224fae440d475acca";
+      hash = "sha256-iNCjyUhF16aXfe+KJ+qZ1kfhKqOOjYbsf1riDME9z9Y=";
     };
   });
 in
 {
   config = {
     hardware.firmware = [
-      (lib.hiPrio x13s_fw)
-      (lib.hiPrio (x13s_fw // { compressFirmware = false; }))
+      (lib.hiPrio ath11k_fw)
+      (lib.hiPrio (ath11k_fw // { compressFirmware = false; }))
+      (lib.lowPrio (x13s_extra_fw // { compressFirmware = false; }))
     ];
 
     systemd.services.display-manager.serviceConfig.ExecStartPre = [
@@ -157,31 +178,32 @@ in
     environment.systemPackages = [ qrtr qmic rmtfs pd-mapper uncompressed-fw ];
     environment.pathsToLink = [ "share/uncompressed-firmware" ];
 
-    hardware.opengl.package = ((pkgs.mesa.override {
-      galliumDrivers = [ "swrast" "freedreno" "zink" ];
-      vulkanDrivers = [ "swrast" "freedreno" ];
-      enableGalliumNine = false;
-      enableOSMesa = false;
-      enableOpenCL = false;
-    }).overrideAttrs (old: {
-      version = "22.3.1-unstable";
-      src = pkgs.fetchFromGitLab {
-        domain = "gitlab.freedesktop.org";
-        owner = "mesa";
-        repo = "mesa";
-        rev = "772cacff32b2ed22799a1dbaeac6857824400f53";
-        hash = "sha256-wiZXS2AmpQNn5Nl/Ai88z9leSAM70OUJCT0d0Rnd6RI=";
-      };
-      buildInputs = old.buildInputs ++ [
-        pkgs.libunwind
-        pkgs.lm_sensors
-      ];
-      mesonFlags = old.mesonFlags ++ [
-        "-Dgallium-vdpau=false"
-        "-Dgallium-va=false"
-        "-Dandroid-libbacktrace=disabled"
-      ];
-      postPatch = old.postPatch + ''
+    hardware.opengl.package = lib.mkIf useGpu
+      ((pkgs.mesa.override {
+        galliumDrivers = [ "swrast" "freedreno" "zink" ];
+        vulkanDrivers = [ "swrast" "freedreno" ];
+        enableGalliumNine = false;
+        enableOSMesa = false;
+        enableOpenCL = false;
+      }).overrideAttrs (old: {
+        version = "22.3.1-unstable";
+        src = pkgs.fetchFromGitLab {
+          domain = "gitlab.freedesktop.org";
+          owner = "mesa";
+          repo = "mesa";
+          rev = "772cacff32b2ed22799a1dbaeac6857824400f53";
+          hash = "sha256-wiZXS2AmpQNn5Nl/Ai88z9leSAM70OUJCT0d0Rnd6RI=";
+        };
+        buildInputs = old.buildInputs ++ [
+          pkgs.libunwind
+          pkgs.lm_sensors
+        ];
+        mesonFlags = old.mesonFlags ++ [
+          "-Dgallium-vdpau=false"
+          "-Dgallium-va=false"
+          "-Dandroid-libbacktrace=disabled"
+        ];
+        postPatch = old.postPatch + ''
 
         echo "option(
   'disk-cache-key',
@@ -190,11 +212,17 @@ in
   description : 'Mesa cache key.'
 )" >> meson_options.txt 
       '';
-      patches = [
-        ./mesa.patch
-      ];
-    })).drivers;
-
+        patches = [
+          ./mesa.patch
+        ];
+      })).drivers;
+    services.logind.extraConfig = ''
+      HandlePowerKey=suspend
+      HandleLidSwitch=lock
+      HandleLidSwitchExternalPower=ignore
+      HandleLidSwitchDocked=ignore
+      IdleAction=ignore
+    '';
     systemd.services = {
       # rmtfs = {
       #   wantedBy = [ "multi-user.target" ];
@@ -244,10 +272,10 @@ in
         "pd_ignore_unused"
         "arm64.nopauth"
         "cma=128M"
+        "nvme.noacpi=1" # fixes high power after suspend resume
       ] ++ lib.optionals (!useGrub) [
-        "dtb=x13s.dtb"
+        "dtb=${dtbName}"
       ];
-      kernelPatches = kp;
       initrd = {
         includeDefaultModules = false;
         kernelModules = [
@@ -285,7 +313,7 @@ in
     } else {
       loader.systemd-boot.enable = true;
       loader.systemd-boot.extraFiles = {
-        "x13s.dtb" = dtb;
+        "${dtbName}" = dtb;
       };
     });
 
@@ -299,7 +327,7 @@ in
     system.activationScripts.x13s-dtb = ''
       in_package="${dtb}"
       esp_tool_folder="${efi.efiSysMountPoint}/"
-      in_esp="''${esp_tool_folder}x13s.dtb"
+      in_esp="''${esp_tool_folder}${dtbName}"
       >&2 echo "Ensuring $in_esp in EFI System Partition"
       if ! ${pkgs.diffutils}/bin/cmp --silent "$in_package" "$in_esp"; then
         >&2 echo "Copying $in_package -> $in_esp"
