@@ -1,7 +1,8 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, flakeArgs, ... }:
 # https://github.com/berbiche/dotfiles/blob/df1cf43f9f7b267e7b4bf3a9e6cc8e4b4defb680/profiles/i3/home-manager/i3-config.nix#L4
 #
 # TODO: eww from https://github.com/FlafyDev/nixos-config/blob/fd7bbff67dfaf056a56d028a9e434722e400fa88/configs/eww/hm-custom-eww.nix
+# TODO: screen locking and idle from https://old.reddit.com/r/i3wm/comments/e6jife/locking_screen_on_lid_close/f9r7pc0/
 let
   mod = "Mod4";
   drun = "${lib.getExe pkgs.rofi} -show run";
@@ -12,12 +13,22 @@ let
   fonts = [
     "Liberation Mono"
     "Font Awesome 6 Free"
-    "Font Awesome 6 Brands"
+    "Font Awesome 6 Brands 8"
   ];
   i3-wp = pkgs.writeShellScriptBin "i3-wallpaper" ''
     if [ "$XDG_CURRENT_DESKTOP" = "none+i3" ]; then
-      ${lib.getExe pkgs.feh} --bg-scale ~/.background-image
+      if [ -f ~/.fehbg ]; then
+        exec ~/.fehbg
+      else
+        exec ${lib.getExe pkgs.feh} --bg-scale ~/sync/theming/wp/default/
+      fi
     fi
+  '';
+  bgswitcher = flakeArgs.background-switcher.packages.${pkgs.system}.switcher.overrideAttrs (old: {
+    postPatch = "sed -i s/kill/wait/ src/main.rs";
+  });
+  bgswitchermenu = pkgs.writeScriptBin "rofi-background" ''
+    ${pkgs.rofi}/bin/rofi -show background -modes "background:${bgswitcher}/bin/background-switcher"
   '';
 in
 {
@@ -49,6 +60,7 @@ in
         "${mod}+space" = "exec ${drun}";
         "${mod}+d" = "exec ${menu}";
         "${mod}+i" = "bar hidden_state toggle";
+        "${mod}+Shift+b" = "exec ${lib.getExe bgswitchermenu}";
       };
 
       startup = [
