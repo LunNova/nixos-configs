@@ -35,6 +35,9 @@
     openxr-nix-flake.url = "github:LunNova/openxr-nix-flake";
     openxr-nix-flake.inputs.nixpkgs.follows = "nixpkgs";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
+    background-switcher.url = "github:bootstrap-prime/background-switcher";
+    background-switcher.inputs.nixpkgs.follows = "nixpkgs";
+    background-switcher.inputs.flake-utils.follows = "flake-utils";
     mobile-nixos = {
       url = "github:NixOS/mobile-nixos";
       flake = false;
