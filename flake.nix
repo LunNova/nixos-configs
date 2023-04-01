@@ -3,13 +3,8 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
-    nixpkgs-mesa.url = "github:NixOS/nixpkgs/staging-next";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/release-22.05";
     nixpkgs-cura-testing.url = "github:LunNova/nixpkgs/bd7de0e7c17a16885fbe25ffb7c266fffb65dfb9";
-    nixpkgs-ancient = {
-      url = "github:NixOS/nixpkgs/18.03";
-      flake = false;
-    };
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
@@ -55,10 +50,10 @@
     # pcp-theme-toggler = { url = "github:redstonekasi/theme-toggler"; flake = false; };
     #Doesn't work on electron 15
     # pcp-better-status-indicators = { url = "github:GriefMoDz/better-status-indicators"; flake = false; };
-    pcp-webhook-tag = { url = "github:BenSegal855/webhook-tag"; flake = false; };
-    pcp-always-push = { url = "github:Karamu98/AlwaysPushNotifications"; flake = false; };
+    # pcp-webhook-tag = { url = "github:BenSegal855/webhook-tag"; flake = false; };
+    # pcp-always-push = { url = "github:Karamu98/AlwaysPushNotifications"; flake = false; };
     # TODO: locked version of this which doesn't hit web
-    pct-clearvision = { url = "github:ClearVision/ClearVision-v6"; flake = false; };
+    # pct-clearvision = { url = "github:ClearVision/ClearVision-v6"; flake = false; };
     # pcp-hidden = { url = "github:discord-modifications/show-hidden-channels"; flake = false; };
     # TODO: background overrides here instead of manually configured?
   };
