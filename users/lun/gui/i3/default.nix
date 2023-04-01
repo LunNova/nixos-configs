@@ -37,6 +37,7 @@ in
     firefox = ""
     Emacs = ""
     kitty = ""
+    ArmCord = ""
   '';
   home.packages = [
     pkgs.i3status-rust
@@ -80,7 +81,7 @@ in
           #mode = "hide";
           fonts = {
             names = fonts;
-            size = 10.0;
+            size = 8.0;
           };
           statusCommand = "${pkgs.i3status-rust}/bin/i3status-rs ${./i3status-rust.toml}";
         }

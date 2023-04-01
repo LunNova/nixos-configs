@@ -36,4 +36,7 @@ interval = 60
 #format = "%a %m/%d %I:%M"
 
 [[block]]
+block = "backlight"
+
+[[block]]
 block = "battery"
