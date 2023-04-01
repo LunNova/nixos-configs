@@ -48,7 +48,6 @@ let
       modules = [
         { nixpkgs.pkgs = perSystemSelf.pkgs; }
         flakeArgs.home-manager.nixosModules.home-manager
-        flakeArgs.nix-gaming.nixosModules.pipewireLowLatency
         path
         ./users
         ({ config, ... }:
