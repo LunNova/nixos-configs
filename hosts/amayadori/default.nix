@@ -33,6 +33,10 @@ in
   lun.power-saving.enable = false;
   lun.power-saving.usb = false;
   lun.persistence.enable = true;
+  lun.persistence.dirs = [
+    "/tmp"
+    "/var/lib/sddm"
+  ];
   lun.conservative-governor.enable = true;
 
   boot.plymouth.enable = lib.mkForce false;
