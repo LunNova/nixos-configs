@@ -478,23 +478,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-ancient": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1522825351,
-        "narHash": "sha256-jtxfSXmc07z8U3l0+TuUCSHcd8BgkapvUzjUN7fwZEI=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "120b013e0c082d58a5712cde0a7371ae8b25a601",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "18.03",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs-cura-testing": {
       "locked": {
         "lastModified": 1665894801,
@@ -534,22 +517,6 @@
       "original": {
         "owner": "jtojnar",
         "repo": "nixpkgs-hammering",
-        "type": "github"
-      }
-    },
-    "nixpkgs-mesa": {
-      "locked": {
-        "lastModified": 1680372061,
-        "narHash": "sha256-+JjtistAuCJJ8n1MEx+afEGdLDGQl/2m92qx8eSrXAM=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "dfe5844bbc18d05cab9453c0aea421d348f0d062",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "staging-next",
-        "repo": "nixpkgs",
         "type": "github"
       }
     },
@@ -704,54 +671,6 @@
         "type": "github"
       }
     },
-    "pcp-always-push": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1643135562,
-        "narHash": "sha256-o2MRXCi3L9HTNwG+1CluyaNaKnEB4rpkQyV7Jr+Eq0M=",
-        "owner": "Karamu98",
-        "repo": "AlwaysPushNotifications",
-        "rev": "6fb152edaa5f7d9ce5cc0bbe48d62576e260619b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Karamu98",
-        "repo": "AlwaysPushNotifications",
-        "type": "github"
-      }
-    },
-    "pcp-webhook-tag": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1645140737,
-        "narHash": "sha256-KBKRwlTDaGXkEFGq08Nbbj8Kmnmz7yuDcZts9JZAgMU=",
-        "owner": "BenSegal855",
-        "repo": "webhook-tag",
-        "rev": "7f573b821006d070a3ea2ec92ca822b0a3980ea9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "BenSegal855",
-        "repo": "webhook-tag",
-        "type": "github"
-      }
-    },
-    "pct-clearvision": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1680314056,
-        "narHash": "sha256-G928t1nDmtZNOyXybIoOpA2xD3SDN/ab75B1/Xb/diw=",
-        "owner": "ClearVision",
-        "repo": "ClearVision-v6",
-        "rev": "712c5c0b8feb3ea8fef5c096b8e0b098ba7a7efc",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ClearVision",
-        "repo": "ClearVision-v6",
-        "type": "github"
-      }
-    },
     "pre-commit-hooks": {
       "inputs": {
         "flake-compat": "flake-compat_5",
@@ -856,16 +775,11 @@
         "nix-gaming": "nix-gaming",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_3",
-        "nixpkgs-ancient": "nixpkgs-ancient",
         "nixpkgs-cura-testing": "nixpkgs-cura-testing",
-        "nixpkgs-mesa": "nixpkgs-mesa",
         "nixpkgs-review-checks": "nixpkgs-review-checks",
         "nixpkgs-stable": "nixpkgs-stable",
         "openxr-nix-flake": "openxr-nix-flake",
         "oxalica-nil": "oxalica-nil",
-        "pcp-always-push": "pcp-always-push",
-        "pcp-webhook-tag": "pcp-webhook-tag",
-        "pct-clearvision": "pct-clearvision",
         "pre-commit-hooks": "pre-commit-hooks_2",
         "replugged-nix-flake": "replugged-nix-flake",
         "thoth-reminder-bot": "thoth-reminder-bot"
