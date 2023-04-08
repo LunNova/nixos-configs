@@ -1,6 +1,6 @@
 { config, options, flakeArgs, lib, pkgs, ... }:
 let
-  useGrub = true;
+  useGrub = false;
   useGpu = true;
   useGpuFw = true;
   dtbName = "x13s63rc3.dtb";
@@ -32,7 +32,7 @@ let
   linux_x13s_pkg = { buildLinux, ... } @ args:
     buildLinux (args // {
       version = "6.3.0";
-      modDirVersion = "6.3.0-rc3";
+      modDirVersion = "6.3.0-rc4";
 
       src = pkgs.fetchFromGitHub {
         # owner = "jhovold";
@@ -41,8 +41,8 @@ let
         # hash = "sha256-18Vhpc4saZilFtdCFh4520n3YGAZqsLTWAxvPkSbh9w=";
         owner = "steev";
         repo = "linux";
-        rev = "lenovo-x13s-v6.3-rc3";
-        hash = "sha256-FPrCFRVHluuqPWdR3+diGUnvE4i2n6lCO9bRuvGIMhw=";
+        rev = "lenovo-x13s-v6.3-rc4";
+        hash = "sha256-OM19b5o/2aoD0wmmdbi8KTR/YLuK5HoqPLXZyMrWOXA=";
       };
       kernelPatches = (args.kernelPatches or [ ]) ++ kp;
 
@@ -256,7 +256,7 @@ in
     # https://dumpstack.io/1675806876_thinkpad_x13s_nixos.html
     boot = {
       loader.efi = {
-        canTouchEfiVariables = lib.mkForce false;
+        canTouchEfiVariables = lib.mkForce true;
         efiSysMountPoint = "/boot";
       };
 
