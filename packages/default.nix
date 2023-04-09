@@ -1,11 +1,7 @@
 { pkgs, flakeArgs }:
 let
   inherit (pkgs) lib;
-  lutris-unwrapped = (pkgs.lutris-unwrapped.override {
-    # TODO wine build with wayland and GE patches?
-    # wine = pkgs.wineWowPackages.wayland;
-    wine = pkgs.emptyDirectory; # don't use system wine with lutris
-  }).overrideAttrs (old: {
+  lutris-unwrapped = pkgs.lutris-unwrapped.overrideAttrs (old: {
     src = pkgs.fetchFromGitHub {
       owner = "lutris";
       repo = "lutris";
