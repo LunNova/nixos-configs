@@ -37,6 +37,16 @@ let
   emacs = pkgs.writeShellScriptBin "emacs" ''
     PATH="${lib.makeBinPath emacs-path}:$PATH" exec ${emacs-compiled}/bin/emacs "$@"
   '';
+  emacsclient = pkgs.writeShellScriptBin "emacsclient" ''
+    PATH="${lib.makeBinPath emacs-path}:$PATH" exec ${emacs-compiled}/bin/emacsclient "$@"
+  '';
+  emacsall = pkgs.symlinkJoin {
+    name = "emacs-all";
+    paths = [
+      emacs
+      emacsclient
+    ];
+  };
   emmylua-ls-jar = builtins.fetchurl {
     name = "EmmyLua-LS-all.jar";
     url = "https://github.com/EmmyLua/EmmyLua-LanguageServer/releases/download/0.5.13/EmmyLua-LS-all.jar";
@@ -80,7 +90,7 @@ in
   home.packages = with pkgs; [
     # FIXME: if these are all on main fontconfig path battle.net will become incredibly slow again
     emacs-all-the-icons-fonts
-    emacs
+    emacsall
     emmylua-ls
   ];
 }
