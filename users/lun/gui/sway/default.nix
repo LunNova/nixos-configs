@@ -53,6 +53,7 @@ in
           inherit (config.wayland.windowManager.sway.config) terminal;
           pactl = "${pkgs.pulseaudio}/bin/pactl";
           pamixer = "${pkgs.pamixer}/bin/pamixer";
+          alt = "Mod1";
         in
         lib.mkOptionDefault {
           "${modifier}+Return" = execSpawn terminal;
@@ -78,8 +79,13 @@ in
           "${modifier}+Control+Shift+Right" = "move workspace to output right";
           "${modifier}+Control+Shift+Up  " = "move workspace to output up";
           "${modifier}+Control+Shift+Down" = "move workspace to output down";
-          "${modifier}+Control+Alt+Shift+Q" = "exec swaymsg -t get_tree | ${pkgs.jq}/bin/jq 'recurse(.nodes[], .floating_nodes[]) | select(.focused).pid' | xargs -L 1 kill -9";
+          "${modifier}+Control+${alt}+Shift+Q" = "exec swaymsg -t get_tree | ${pkgs.jq}/bin/jq 'recurse(.nodes[], .floating_nodes[]) | select(.focused).pid' | xargs -L 1 kill -9";
+          "${modifier}+${alt}+s" = ''
+            exec emacsclient -c "~/sync/dev/scratch/$(date +%Y-%m)/$(date +%F).txt"'';
+          "${modifier}+${alt}+d" = ''
+            exec emacsclient -c "~/sync/org/diary/$(date +%Y-%m)/log_$(date +%F).txt"'';
         };
+
 
       output = {
         "*" = {
