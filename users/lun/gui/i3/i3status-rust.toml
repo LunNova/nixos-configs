@@ -32,11 +32,31 @@ block = "sound"
 
 [[block]]
 block = "time"
-interval = 60
-#format = "%a %m/%d %I:%M"
+interval = 10
+format = " $icon $timestamp.datetime(f:'%F %R') "
+
+[[block]]
+block = "custom"
+command = "cat /etc/hostname"
+interval = "once"
 
 [[block]]
 block = "backlight"
 
 [[block]]
+block = "temperature"
+format = " $icon $max max "
+format_alt = " $icon $min min, $max max, $average avg "
+interval = 10
+chip = "*-virtual-0"
+
+[[block]]
 block = "battery"
+
+[[block]]
+block = "custom"
+command = "echo \uf011" # assumes fontawesome icons
+interval = "once"
+[[block.click]]
+button = "left"
+cmd = "systemctl `echo -e 'suspend\npoweroff\nreboot' | dmenu`"

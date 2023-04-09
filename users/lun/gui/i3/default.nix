@@ -40,6 +40,7 @@ in
     ArmCord = ""
   '';
   home.packages = [
+    pkgs.lm_sensors
     pkgs.i3status-rust
     pkgs.i3wsr
     pkgs.feh
