@@ -16,7 +16,11 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     erosanix.url = "github:emmanuelrosa/erosanix";
     erosanix.inputs.nixpkgs.follows = "nixpkgs";
+    rust-overlay.url = "github:oxalica/rust-overlay";
+    rust-overlay.inputs.flake-utils.follows = "flake-utils";
+    rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
     oxalica-nil.url = "github:oxalica/nil";
+    oxalica-nil.inputs.rust-overlay.follows = "rust-overlay";
     oxalica-nil.inputs.nixpkgs.follows = "nixpkgs";
     oxalica-nil.inputs.flake-utils.follows = "flake-utils";
     thoth-reminder-bot.url = "github:mmk150/reminder_bot";
@@ -33,6 +37,7 @@
     background-switcher.url = "github:bootstrap-prime/background-switcher";
     background-switcher.inputs.nixpkgs.follows = "nixpkgs";
     background-switcher.inputs.flake-utils.follows = "flake-utils";
+    background-switcher.inputs.rust-overlay.follows = "rust-overlay";
     mobile-nixos = {
       url = "github:NixOS/mobile-nixos";
       flake = false;
