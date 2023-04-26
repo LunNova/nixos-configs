@@ -30,8 +30,8 @@ in
       ./x13s.nix
     ];
 
-  lun.power-saving.enable = false;
-  lun.power-saving.usb = false;
+  lun.power-saving.enable = true;
+  lun.power-saving.usb = true;
   lun.persistence.enable = true;
   lun.persistence.dirs = [
     "/tmp"
