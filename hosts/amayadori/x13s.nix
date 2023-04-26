@@ -276,6 +276,7 @@ in
         "arm64.nopauth"
         "cma=128M"
         "nvme.noacpi=1" # fixes high power after suspend resume
+        "iommu.strict=0" # fixes some issues when using USB devices eg slow wifi
       ] ++ lib.optionals (!useGrub) [
         "dtb=${dtbName}"
       ];
