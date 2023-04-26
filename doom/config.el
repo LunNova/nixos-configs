@@ -151,6 +151,11 @@
 (defun lsp-clients-emmy-lua-test-fixed () "dummy test which is always true" t)
 (advice-add 'lsp-clients-emmy-lua-test :override #'lsp-clients-emmy-lua-test-fixed)
 
+;; stop writing dead programs points out vi keybindings made more sense on a layout which had : without a modifier
+(map! :n ";" 'evil-ex)
+;; remap : to ; so don't lose evil-repeat-find-char
+(map! :n ":" 'evil-repeat-find-char)
+
 (use-package sticky-shell
   :ensure t ; install
   ;; add your customization here
