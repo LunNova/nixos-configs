@@ -164,5 +164,8 @@
   ;; (sticky-shell-global-mode)
   )
 
+;; i don't like smart parens
+(remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
+
 ;; goto-address-mode makes links clickable
 (global-goto-address-mode 1)
