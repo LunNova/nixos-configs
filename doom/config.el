@@ -164,4 +164,5 @@
   ;; (sticky-shell-global-mode)
   )
 
+;; goto-address-mode makes links clickable
 (global-goto-address-mode 1)
