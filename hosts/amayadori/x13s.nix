@@ -33,7 +33,7 @@ let
   linux_x13s_pkg = { buildLinux, ... } @ args:
     buildLinux (args // {
       version = "6.3.0";
-      modDirVersion = "6.3.0-rc4";
+      modDirVersion = "6.3.0";
 
       src = pkgs.fetchFromGitHub {
         # owner = "jhovold";
@@ -42,8 +42,9 @@ let
         # hash = "sha256-18Vhpc4saZilFtdCFh4520n3YGAZqsLTWAxvPkSbh9w=";
         owner = "steev";
         repo = "linux";
-        rev = "lenovo-x13s-v6.3-rc4";
-        hash = "sha256-OM19b5o/2aoD0wmmdbi8KTR/YLuK5HoqPLXZyMrWOXA=";
+        # rev = "lenovo-x13s-linux-6.3.y";
+        rev = "af15ae6f36b1628424c1997dc6701425fa2643eb"; # 6.3.y
+        sha256 = "Mp3oDEdcyv5OcnRvCUdM4Bnu7rbD7T/018fNZ+4EmbY=";
       };
       kernelPatches = (args.kernelPatches or [ ]) ++ kp;
 
