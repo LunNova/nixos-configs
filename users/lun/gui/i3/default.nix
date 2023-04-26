@@ -24,9 +24,7 @@ let
       fi
     fi
   '';
-  bgswitcher = flakeArgs.background-switcher.packages.${pkgs.system}.switcher.overrideAttrs (old: {
-    postPatch = "sed -i s/kill/wait/ src/main.rs";
-  });
+  bgswitcher = flakeArgs.background-switcher.packages.${pkgs.system}.switcher;
   bgswitchermenu = pkgs.writeScriptBin "rofi-background" ''
     ${pkgs.rofi}/bin/rofi -show background -modes "background:${bgswitcher}/bin/background-switcher"
   '';
