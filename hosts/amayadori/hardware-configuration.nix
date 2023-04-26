@@ -16,7 +16,6 @@
     {
       device = "/dev/disk/by-partuuid/10b3a7b6-a427-4597-bfc1-c6b18bc1208f";
       fsType = "vfat";
-      neededForBoot = true;
     };
   fileSystems."/" = {
     device = "tmpfs";
