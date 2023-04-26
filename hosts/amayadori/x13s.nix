@@ -18,6 +18,7 @@ let
         SND_USB = lib.mkForce yes;
         SND_USB_AUDIO = lib.mkForce module;
         USB_XHCI_PCI = lib.mkForce module;
+        NO_HZ_FULL = lib.mkForce yes;
         HZ_100 = lib.mkForce yes;
         HZ_250 = lib.mkForce no;
         DRM_AMDGPU = lib.mkForce no;
