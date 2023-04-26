@@ -263,6 +263,7 @@ in
       };
 
       supportedFilesystems = lib.mkForce [ "ext4" "btrfs" "cifs" "f2fs" "jfs" "ntfs" "reiserfs" "vfat" "xfs" ];
+      initrd.supportedFilesystems = [ "ext4" "btrfs" "vfat" ];
       consoleLogLevel = 9;
       kernelModules = [
         "snd_usb_audio"
