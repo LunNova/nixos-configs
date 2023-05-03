@@ -329,7 +329,6 @@ in
       "/boot" = lib.mkForce {
         device = "/dev/disk/by-partlabel/${name}_esp_2";
         fsType = "vfat";
-        neededForBoot = true;
         options = [ "discard" "noatime" ];
       };
       "/persist" = lib.mkForce {
