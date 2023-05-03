@@ -3,7 +3,6 @@ system:
 let
   pkgsPatches = [
     # add .patch to a github PR URL to get a patch quickly
-    ./nixpkgs-patches/lutris-xdg-data-dirs.patch
   ];
   defaultPkgsConfig = {
     config.allowUnfree = true;
