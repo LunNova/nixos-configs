@@ -9,7 +9,6 @@ let
       hash = "sha256-YVm2EFWLZ7jQ2mx6VQdFX1DGAHs+mndsl2Y4JLH3Ebk=";
     };
     patches = (old.patches or [ ]) ++ [ ./lutris/more-vulkan-search-paths.patch ];
-    propagatedBuildInputs = old.propagatedBuildInputs ++ [ pkgs.wineWowPackages.fonts pkgs.python3Packages.pypresence ];
   });
   resholvCfg = {
     inputs = with pkgs; [
