@@ -42,6 +42,11 @@
       url = "github:NixOS/mobile-nixos";
       flake = false;
     };
+    plover-flake = {
+      url = "github:dnaq/plover-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
 
     minimal-shell.url = "github:LunNova/nix-minimal-shell";
 
