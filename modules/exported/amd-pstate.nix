@@ -21,7 +21,6 @@ in
         ]
         (lib.mkIf cfg.sharedMem [ "amd_pstate.shared_mem=1" ])
       ];
-      initrd.kernelModules = [ "amd_pstate" ];
       # kernelPatches = [
       #   {
       #     name = "enable-amd-sme-sev";
@@ -35,7 +34,7 @@ in
     };
 
     system.requiredKernelConfig = with config.lib.kernelConfig; [
-      ((isYes "X86_AMD_PSTATE") or isModule "X86_AMD_PSTATE")
+      (isYes "X86_AMD_PSTATE")
     ];
   };
 }
