@@ -145,6 +145,24 @@
   "<mouse-7>" #'(lambda () (interactive) (scroll-left 3))
   )
 
+;; ignore some folders for lsp mode
+;; TODO: can we ignore things in .gitignore?
+
+(setq ignore-lsp-dirs '("[/\\\\]\\.circleci\\'"
+                        "[/\\\\]\\.clj-kondo\\'"
+                        "[/\\\\]\\.github\\'"
+                        "[/\\\\]\\.cpcache\\'"
+                        "[/\\\\]\\.lsp\\'"
+                        "[/\\\\]\\.node_modules\\'"
+                        "[/\\\\]\\.shadow-cljs\\'"
+                        "[/\\\\]target\\'"
+                        "[/\\\\]result\\'"
+                        ))
+
+(after! lsp-mode
+  (setq lsp-file-watch-ignored-directories (append lsp-file-watch-ignored-directories
+                                                   ignore-lsp-dirs)))
+
 ;; (setq! lsp-clients-emmy-lua-jar-path (f-join (getenv "HOME") "sync/dev/lua/emmylua-ls/EmmyLua-LS-all.jar"))
 
 ;; use emmylua-ls on path as emmylua language server - should be script which runs java -jar emmylua etc
