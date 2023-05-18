@@ -38,7 +38,9 @@
     (switch-to-buffer buf)))
 
 (setq! inhibit-splash-screen t)
-;; (open_scratchpad '"*scratchpad*")
+(setq! confirm-kill-emacs nil)
+
+(global-prettify-symbols-mode t)
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
