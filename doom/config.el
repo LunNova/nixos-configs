@@ -47,7 +47,7 @@
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-outrun-electric)
 
-(setq doom-font (font-spec :family "Fira Code" :size 10))
+(setq doom-font (font-spec :family "Fira Code" :size 11))
 
 ;; allow undoing changes while staying in insert mode and making many changes
 (setq evil-want-fine-undo t)
