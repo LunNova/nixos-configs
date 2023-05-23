@@ -51,6 +51,11 @@
     p7zip
     flakeArgs.deploy-rs.packages.${pkgs.system}.default
     git-filter-repo
+    (flakeArgs.plover-flake.packages.${pkgs.system}.plover.with-plugins
+      (ps: with ps; [
+        plover_console_ui
+      ])
+    )
   ];
 
   programs.git = {
