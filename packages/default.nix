@@ -126,6 +126,7 @@ let
         ./xorg/prefer-highest-refresh-mode.patch
       ];
     });
+    wally = pkgs.callPackage ./wally { };
   } //
   # These packages are x86_64-linux
   # This is mostly due to depending on pkgs.pkgsi686Linux to evaluate
