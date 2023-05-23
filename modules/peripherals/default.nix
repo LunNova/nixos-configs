@@ -9,6 +9,7 @@
     };
 
     services.fwupd.enable = true;
+    hardware.keyboard.zsa.enable = true;
     hardware.steam-hardware.enable = pkgs.system == "x86_64-linux";
     hardware.enableRedistributableFirmware = true;
     hardware.wirelessRegulatoryDatabase = true;
