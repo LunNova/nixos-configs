@@ -36,13 +36,23 @@ _:
         };
       };
     };
-  singleServiceDeployProfile = { modules, services, ... }:
+  node = flakeArgs: self: {
+    hostname = "localhost";
+    profiles.system = {
+      sshUser = "lun";
+      user = "root";
+      path = flakeArgs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.router-nixos;
+    };
+  };
+  singleServiceDeployProfile = { pkgs, homeEnvironment, services, ... }:
     {
       profile = pkgs.buildEnv
         {
           name = "deployProfile";
           paths = [
-
+            (pkgs.writeShellScriptBin "activate-services" { } ''
+'')
+            homeEnvironment.activationPackage
           ];
         };
     };

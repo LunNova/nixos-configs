@@ -77,6 +77,7 @@
   outputs = flakeArgs:
     let
       perSystem = import ./per-system.nix { inherit flakeArgs; };
+      serviceTest = import ./service-test.nix { };
       inherit (flakeArgs) self;
     in
     {
@@ -95,12 +96,12 @@
           linuxaarch64 = perSystem "aarch64-linux";
         in
         {
+          test-vm = linux64.makeHost ./hosts/test-vm;
           router-nixos = linux64.makeHost ./hosts/router;
           lun-kosame-nixos = linux64.makeHost ./hosts/kosame;
           lun-hisame-nixos = linux64.makeHost ./hosts/hisame;
           lun-amayadori-nixos = linuxaarch64.makeHost ./hosts/amayadori;
           mmk-raikiri-nixos = linux64.makeHost ./hosts/raikiri;
-          iso-x13 = linuxaarch64.nixosIso ./hosts/aarch64/x13s.nix;
         };
 
       deploy.nodes.router = {
@@ -111,5 +112,7 @@
           path = flakeArgs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.router-nixos;
         };
       };
+
+      deploy.nodes.service-test = serviceTest.node flakeArgs self;
     } // flakeArgs.flake-utils.lib.eachDefaultSystem perSystem;
 }
