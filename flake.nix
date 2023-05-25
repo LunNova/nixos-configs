@@ -117,7 +117,18 @@
           path = flakeArgs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.router-nixos;
         };
       };
-
-      deploy.nodes.service-test = serviceTest.node flakeArgs self;
+      deploy.nodes.testSingleServiceDeployAsLunOnLocalhost = {
+        hostname = "localhost";
+        profiles.serviceTest = serviceTest.hmProfile {
+          inherit (flakeArgs) deploy-rs;
+          inherit (flakeArgs.nixpkgs) lib;
+          inherit (flakeArgs.self.homeConfigurations.x86_64-linux.lun) pkgs;
+          user = "lun";
+          modules = [
+            serviceTest.helloWorldModule
+          ];
+          hm = import "${flakeArgs.home-manager}/modules";
+        };
+      };
     } // flakeArgs.flake-utils.lib.eachDefaultSystem perSystem;
 }
