@@ -44,7 +44,7 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "A tool to flash firmware to mechanical keyboards";
     homepage = "https://github.com/zsa/wally";
-    platforms = with platforms; linux ++ darwin;
+    platforms = [ "x86_64-linux" ];
     license = licenses.mit;
     maintainers = with maintainers; [ spacekookie r-burns ];
   };

@@ -31,8 +31,8 @@
       pinta # paint.net alternative
       calibre
       obsidian # note taking
-      lun.wally
     ] ++ lib.optionals (pkgs.system == "x86_64-linux") [
+      lun.wally
       microsoft-edge
     ];
   };
