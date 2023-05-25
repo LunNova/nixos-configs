@@ -32,26 +32,6 @@ diff --git a/dlls/ntdll/unix/registry.c b/dlls/ntdll/unix/registry.c
 index 797e32a5bf1..f258e28e730 100644
 --- a/dlls/ntdll/unix/registry.c
 +++ b/dlls/ntdll/unix/registry.c
-@@ -137,10 +137,16 @@ NTSTATUS WINAPI NtOpenKeyEx( HANDLE *key, ACCESS_MASK access, const OBJECT_ATTRI
-     ULONG attributes;
- 
-     *key = 0;
--    if (attr->Length != sizeof(*attr)) return STATUS_INVALID_PARAMETER;
--    if (attr->ObjectName->Length & 1) return STATUS_OBJECT_NAME_INVALID;
-+    if (attr->Length != sizeof(*attr)) {
-+        WARN( "wrong attr length %d expected %d (%p %x %p %x %p)\n", attr->Length, sizeof(*attr), key, access, attr, options);
-+        return STATUS_INVALID_PARAMETER;
-+    }
-+    if (attr->ObjectName->Length & 1) {
-+        WARN( "wrong attr ObjectName length %d is not even (%p %x %p %x %p)\n", attr->ObjectName->Length, key, access, attr, options);
-+        return STATUS_OBJECT_NAME_INVALID;
-+    }
- 
--    TRACE( "(%p,%s,%x,%p)\n", attr->RootDirectory, debugstr_us(attr->ObjectName), access, key );
-+    TRACE( "(%p,%s,%x,%p)\n", attr->RootDirectory, debugstr_us(attr->ObjectName), access, key );
- 
-     if (options & ~REG_OPTION_OPEN_LINK) FIXME( "options %x not implemented\n", options );
- 
 @@ -156,6 +162,7 @@ NTSTATUS WINAPI NtOpenKeyEx( HANDLE *key, ACCESS_MASK access, const OBJECT_ATTRI
          *key = wine_server_ptr_handle( reply->hkey );
      }
@@ -60,15 +40,6 @@ index 797e32a5bf1..f258e28e730 100644
      TRACE("<- %p\n", *key);
      return ret;
  }
-@@ -485,7 +492,7 @@ NTSTATUS WINAPI NtQueryValueKey( HANDLE handle, const UNICODE_STRING *name,
-     UCHAR *data_ptr;
-     unsigned int fixed_size, min_size;
- 
--    TRACE( "(%p,%s,%d,%p,%d)\n", handle, debugstr_us(name), info_class, info, length );
-+    TRACE( "(%p,%s,%d,%p,%d)\n", handle, debugstr_us(name), info_class, info, length );
- 
-     if (name->Length > MAX_VALUE_LENGTH) return STATUS_OBJECT_NAME_NOT_FOUND;
- 
 diff --git a/dlls/winevulkan/loader.c b/dlls/winevulkan/loader.c
 index cddcd0360ac..cd0b6e7f100 100644
 --- a/dlls/winevulkan/loader.c
