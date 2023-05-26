@@ -129,6 +129,8 @@ let
               fi
             done
             # FIXME: this won't start the units / depend on them starting successfully
+            # TODO:  systemctl --reverse list-dependencies --user hello -> if contains default.target should start
+            # or if is currently running should reload/restart
             echo "${profileName}: Start/restart services manually, automating this is not yet implemented"
           '')
         ];
