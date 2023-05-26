@@ -49,45 +49,87 @@ let
           };
           Service = {
             Type = "simple";
-            Restart = "never";
+            Restart = "no";
             ExecStart = "${pkgs.hello}/bin/hello";
           };
           Install = { WantedBy = [ "default.target" ]; };
         };
       };
     };
-    hmProfile = { user, modules, hm, deploy-rs, pkgs, lib }: self.profile {
+    hmProfile = { user, modules, hm, deploy-rs, pkgs, lib, profileName }: self.profile {
       inherit user;
       activationScript = deploy-rs.lib.${pkgs.system}.activate.custom
-        (self.singleServiceDeployScript {
-          homeEnvironment = hm {
-            inherit pkgs;
-            check = true;
-            configuration = {
-              _module.args.pkgs = lib.mkForce pkgs;
-              # don't do i686 backcompat pkgs
-              _module.args.pkgs_i686 = lib.mkForce { };
-              home.homeDirectory = "/home/${user}";
-              home.username = "${user}";
-              home.stateVersion = "23.05";
-            };
-          };
-        }) "./bin/activate-services";
+        (self.activationScriptForUnits
+          (
+            let marker = ".marker-services-${profileName}";
+            in
+            {
+              inherit pkgs marker profileName;
+              units = self.unitsFromHomeEnvironment {
+                inherit pkgs marker profileName;
+                homeEnvironment = hm {
+                  inherit pkgs;
+                  check = true;
+                  configuration = {
+                    imports = modules;
+                    _module.args.pkgs = lib.mkForce pkgs;
+                    # don't do i686 backcompat pkgs
+                    _module.args.pkgs_i686 = lib.mkForce { };
+                    home.homeDirectory = "/home/${user}";
+                    home.username = "${user}";
+                    home.stateVersion = "23.05";
+                  };
+                };
+              };
+            }
+          )) "./bin/activate-services";
     };
     profile = { user, activationScript }: {
       sshUser = user;
       inherit user;
       path = activationScript;
     };
-    singleServiceDeployScript = { homeEnvironment }:
-      homeEnvironment.pkgs.buildEnv {
-        name = "deployProfile";
+    unitsFromHomeEnvironment = { pkgs, homeEnvironment, marker, profileName }:
+      homeEnvironment.pkgs.runCommandNoCC "units-${profileName}" { } ''
+        mkdir -p "$out/units/"
+        touch "$out/units/${marker}"
+        shopt -s failglob
+        shopt -s globstar
+        cd "${homeEnvironment.activationPackage}/home-files/.config/systemd/user"
+        for unit in **; do
+          if [ -d "$unit" ]; then
+            mkdir -p "$out/units/$unit"
+          else
+            ln -s "$(pwd)/$unit" "$out/units/$unit"
+          fi
+        done
+      '';
+    activationScriptForUnits = { pkgs, units, marker, profileName }:
+      pkgs.buildEnv {
+        name = "deployProfile-${profileName}";
         paths = [
-          (homeEnvironment.pkgs.writeShellScriptBin "activate-services" ''
-            mkdir -p $HOME/.local/systemd/
-            # FIXME: remove old services? probably need a unique prefix per deploy script or something?
-            cp -r ${homeEnvironment.activationPackage}/home-files/.config/systemd/** $HOME/.local/systemd/
-            # FIXME: this won't start the units / depend on them starting successfully?
+          (pkgs.writeShellScriptBin "activate-services" ''
+            set -euo pipefail
+            shopt -s failglob
+            shopt -s globstar
+            mkdir -p $HOME/.local/share/systemd/user/
+            for unit in $HOME/.local/share/systemd/**; do
+              if [ ! -d "$unit" ] && ([ -f "$(dirname $(readlink "$unit"))/${marker}" ] || [ -f "$(dirname $(readlink "$unit"))/../${marker}" ]); then
+                echo >&2 "${profileName}: Removing stale unit $unit"
+                rm "$unit"
+              fi
+            done
+            cd "${units}/units"
+            for unit in **; do
+              if [ -d "$unit" ]; then
+                mkdir -p "$HOME/.local/share/systemd/user/$unit"
+              else
+                echo >&2 "${profileName}: Installing unit $unit"
+                ln -s "$(pwd)/$unit" "$HOME/.local/share/systemd/user/$unit"
+              fi
+            done
+            # FIXME: this won't start the units / depend on them starting successfully
+            echo "${profileName}: Start/restart services manually, automating this is not yet implemented"
           '')
         ];
       };

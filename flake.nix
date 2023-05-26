@@ -124,6 +124,7 @@
           inherit (flakeArgs.nixpkgs) lib;
           inherit (flakeArgs.self.homeConfigurations.x86_64-linux.lun) pkgs;
           user = "lun";
+          profileName = "lunHello";
           modules = [
             serviceTest.helloWorldModule
           ];
