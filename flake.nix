@@ -129,6 +129,10 @@
             serviceTest.helloWorldModule
           ];
           hm = import "${flakeArgs.home-manager}/modules";
+          postActivate = ''
+            systemctl --user reload-or-restart hello
+            systemctl --user status hello --lines=1 || true
+          '';
         };
       };
     } // flakeArgs.flake-utils.lib.eachDefaultSystem perSystem;

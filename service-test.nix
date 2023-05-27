@@ -56,34 +56,31 @@ let
         };
       };
     };
-    hmProfile = { user, modules, hm, deploy-rs, pkgs, lib, profileName }: self.profile {
-      inherit user;
-      activationScript = deploy-rs.lib.${pkgs.system}.activate.custom
-        (self.activationScriptForUnits
-          (
-            let marker = ".marker-services-${profileName}";
-            in
-            {
-              inherit pkgs marker profileName;
-              units = self.unitsFromHomeEnvironment {
-                inherit pkgs marker profileName;
-                homeEnvironment = hm {
-                  inherit pkgs;
-                  check = true;
-                  configuration = {
-                    imports = modules;
-                    _module.args.pkgs = lib.mkForce pkgs;
-                    # don't do i686 backcompat pkgs
-                    _module.args.pkgs_i686 = lib.mkForce { };
-                    home.homeDirectory = "/home/${user}";
-                    home.username = "${user}";
-                    home.stateVersion = "23.05";
-                  };
-                };
-              };
-            }
-          )) "./bin/activate-services";
-    };
+    hmProfile = { user, modules, hm, deploy-rs, pkgs, lib, profileName, postActivate ? "" }:
+      let
+        marker = ".marker-services-${profileName}";
+        homeEnvironment = hm {
+          inherit pkgs;
+          check = true;
+          configuration = {
+            imports = modules;
+            _module.args.pkgs = lib.mkForce pkgs;
+            # don't do i686 backcompat pkgs
+            _module.args.pkgs_i686 = lib.mkForce { };
+            home.homeDirectory = "/home/${user}";
+            home.username = "${user}";
+            home.stateVersion = "23.05";
+          };
+        };
+        units = self.unitsFromHomeEnvironment {
+          inherit pkgs marker profileName homeEnvironment;
+        };
+        activationScript = self.activationScriptForUnits { inherit pkgs marker profileName units postActivate; };
+      in
+      self.profile {
+        inherit user;
+        activationScript = deploy-rs.lib.${pkgs.system}.activate.custom activationScript "./bin/activate-services";
+      };
     profile = { user, activationScript }: {
       sshUser = user;
       inherit user;
@@ -104,7 +101,7 @@ let
           fi
         done
       '';
-    activationScriptForUnits = { pkgs, units, marker, profileName }:
+    activationScriptForUnits = { pkgs, units, marker, profileName, postActivate }:
       pkgs.buildEnv {
         name = "deployProfile-${profileName}";
         paths = [
@@ -132,6 +129,7 @@ let
             # TODO:  systemctl --reverse list-dependencies --user hello -> if contains default.target should start
             # or if is currently running should reload/restart
             echo "${profileName}: Start/restart services manually, automating this is not yet implemented"
+            ${postActivate}
           '')
         ];
       };
