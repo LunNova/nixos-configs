@@ -19,8 +19,6 @@ let
     "application/xhtml+xml" = browser;
     "application/x-extension-xhtml" = browser;
     "application/x-extension-xht" = browser;
-    # obsidian stop deleting my mimeapps.list please
-    "x-scheme-handler/obsidian" = [ "obsidian.desktop" ];
   };
 in
 {
