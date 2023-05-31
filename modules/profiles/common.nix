@@ -67,7 +67,7 @@
     # SSH
     services.openssh = {
       enable = true;
-      banner = "This computer system may not be used for any purpose.\nBe gay, do crime.\n";
+      banner = "This computer system may not be used for any purpose. Be gay, do crime.\n";
       startWhenNeeded = true;
       # RSA might be broken, make sure we use ed25519 keys
       # https://www.schneier.com/blog/archives/2023/01/breaking-rsa-with-a-quantum-computer.html
