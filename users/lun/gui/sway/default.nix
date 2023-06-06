@@ -26,7 +26,7 @@ in
   # Borrowed significantly from https://github.com/lovesegfault/nix-config
   home.packages = [ pkgs.lun.spawn ];
 
-  programs.mako = {
+  services.mako = {
     enable = true;
     sort = "+time";
     maxVisible = 10;
