@@ -110,7 +110,6 @@ in
   networking.hostName = "lun-kosame-nixos";
   sconfig.machineId = "0715dc6a95b3419e8e2465240b7e598b";
   system.stateVersion = "21.05";
-  boot.cleanTmpDir = true;
   boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
 
 

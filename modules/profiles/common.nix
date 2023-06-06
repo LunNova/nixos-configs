@@ -92,6 +92,7 @@
       kernelParams = [ "sysrq_always_enabled" ];
       kernelModules = lib.mkIf (pkgs.system == "x86_64-linux") [ "kvm-amd" "kvm-intel" ];
       extraModulePackages = [ ];
+      tmp.cleanOnBoot = true;
     };
 
     # HARDWARE

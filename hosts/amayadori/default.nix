@@ -44,7 +44,6 @@ in
   networking.hostName = "lun-amayadori-nixos";
   sconfig.machineId = "1f3c8ec5230e763537ec8ef5836f334a";
   system.stateVersion = "23.05";
-  boot.cleanTmpDir = true;
 
   systemd.sleep.extraConfig = ''
     AllowHibernation=no
