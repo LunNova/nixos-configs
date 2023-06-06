@@ -10,11 +10,15 @@ let
   i3-screenshot = pkgs.writeShellScriptBin "i3-screenshot" ''
     path="$HOME/sync/screenshots/$(hostname)-$(date "+%Y-%m-%d %T").png" && ${lib.getExe pkgs.maim} -s "$path" && ${lib.getExe pkgs.xclip} -selection clipboard -t image/png "$path"
   '';
-  fonts = [
+  fontNames = [
     "Liberation Mono"
     "Font Awesome 6 Free"
     "Font Awesome 6 Brands 8"
   ];
+  fonts = {
+    names = fontNames;
+    size = 8.0;
+  };
   i3-wp = pkgs.writeShellScriptBin "i3-wallpaper" ''
     if [ "$XDG_CURRENT_DESKTOP" = "none+i3" ]; then
       if [ -f ~/.fehbg ]; then
@@ -76,12 +80,9 @@ in
 
       bars = [
         {
+          inherit fonts;
           position = "top";
           #mode = "hide";
-          fonts = {
-            names = fonts;
-            size = 8.0;
-          };
           statusCommand = "${pkgs.i3status-rust}/bin/i3status-rs ${./i3status-rust.toml}";
         }
       ];
