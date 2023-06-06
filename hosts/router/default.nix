@@ -312,6 +312,17 @@ in
       dataDir = "/persist/plex/";
     };
 
+    systemd.services.nightly-reboot = {
+      description = "Machine reboot";
+
+      serviceConfig = {
+        type = "oneshot";
+        ExecStart = "${pkgs.systemd}/bin/systemctl --force reboot";
+      };
+
+      startAt = "*-*-* 06:00:00";
+    };
+
     # spin down hdds
     powerManagement.powerUpCommands = with pkgs;''
       ${bash}/bin/bash -c "${hdparm}/bin/hdparm -S 9 -B 127 $(${utillinux}/bin/lsblk -dnp -o name,rota |${gnugrep}/bin/grep \'.*\\s1\'|${coreutils}/bin/cut -d \' \' -f 1)"
