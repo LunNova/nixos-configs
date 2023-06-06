@@ -286,7 +286,7 @@ in
     };
     services.avahi = lib.mkForce {
       enable = true;
-      interfaces = [ lanBridge ];
+      allowInterfaces = [ lanBridge ];
       ipv4 = true;
       ipv6 = true;
       reflector = true;
