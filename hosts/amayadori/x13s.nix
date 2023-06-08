@@ -3,7 +3,7 @@ let
   useGrub = false;
   useGpu = true;
   useGpuFw = true;
-  dtbName = "x13s63rc3.dtb";
+  dtbName = "x13s63rc4.dtb";
   kp = [
     {
       name = "x13s-cfg";
@@ -32,19 +32,17 @@ let
   ];
   linux_x13s_pkg = { buildLinux, ... } @ args:
     buildLinux (args // {
-      version = "6.3.0";
-      modDirVersion = "6.3.0";
+      version = "6.4.0";
+      modDirVersion = "6.4.0";
 
       src = pkgs.fetchFromGitHub {
         # owner = "jhovold";
         # repo = "linux";
         # rev = "wip/sc8280xp-v6.3-rc3";
-        # hash = "sha256-18Vhpc4saZilFtdCFh4520n3YGAZqsLTWAxvPkSbh9w=";
         owner = "steev";
         repo = "linux";
-        # rev = "lenovo-x13s-linux-6.3.y";
         rev = "af15ae6f36b1628424c1997dc6701425fa2643eb"; # 6.3.y
-        sha256 = "Mp3oDEdcyv5OcnRvCUdM4Bnu7rbD7T/018fNZ+4EmbY=";
+        hash = "sha256-x9zEE6yxp47xVyeoN5aXy4NQ6RUDWRiNdQhs0+8pDlU";
       };
       kernelPatches = (args.kernelPatches or [ ]) ++ kp;
 
