@@ -184,6 +184,11 @@
   ;; (sticky-shell-global-mode)
   )
 
+;; workaround for https://github.com/emacs-tree-sitter/elisp-tree-sitter/issues/242
+;; but it doesn't seem to do anything, still get x86_64 binaries
+;; (use-package tsc
+;;   :init (setq tsc-dyn-get-from '(:compilation)))
+
 ;; i don't like smart parens
 (remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
 
