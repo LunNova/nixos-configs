@@ -90,3 +90,7 @@
   :recipe (:host github
            :repo "andyjda/sticky-shell"
            :files ("sticky-shell.el")))
+
+;; TODO: get local code completion server working and point copilot at it
+;; (package! copilot
+;;   :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
