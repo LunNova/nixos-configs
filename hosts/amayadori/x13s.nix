@@ -25,15 +25,11 @@ let
         DRM_NOUVEAU = lib.mkForce no;
       };
     }
-    {
-      name = "throttling";
-      patch = ./qcom-cpufreq-throttling.patch;
-    }
   ];
   linux_x13s_pkg = { buildLinux, ... } @ args:
     buildLinux (args // {
       version = "6.4.0";
-      modDirVersion = "6.4.0";
+      modDirVersion = "6.4.0-rc4";
 
       src = pkgs.fetchFromGitHub {
         # owner = "jhovold";
