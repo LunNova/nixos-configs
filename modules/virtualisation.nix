@@ -1,6 +1,7 @@
-{ pkgs, ... }:
+{ pkgs, config, lib, ... }:
 {
-  config = {
+  options.lun.virtualisation.enable = lib.mkEnableOption "virt" // { default = true; };
+  config = lib.mkIf config.lun.virtualisation.enable {
     # Not using NixOS containers currently
     boot.enableContainers = false;
 
