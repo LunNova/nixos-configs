@@ -18,6 +18,10 @@
     # vlc is smaller than gstreamer
     services.xserver.desktopManager.plasma5.phononBackend = "vlc";
     services.xserver.windowManager.i3.enable = true;
+    services.xserver.windowManager.i3.extraSessionCommands = ''
+      systemctl --user import-environment PATH
+    '';
+
 
     # oom kill faster for more responsiveness
     services.earlyoom.enable = true;
