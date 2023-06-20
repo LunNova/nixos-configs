@@ -210,36 +210,29 @@ in
     # dnsmasq handles dhcp and dns
     services.dnsmasq = {
       enable = true;
-      extraConfig = ''
-        # sensible behaviours
-        domain-needed
-        bogus-priv
-        no-resolv
-        stop-dns-rebind
-        # upstream name servers
-        server=${builtins.concatStringsSep ''
-        
-        server='' nameservers}
-        cache-size=10000
-        # local domains
-        expand-hosts
-        domain=${netFqdn}
-        local=/${netFqdn}/
-        # local=/local/
-        # Interfaces to serve on
-        # can repeat this line for multiple interfaces
-        #interface=${lanBridge}
-        #interface=127.0.0.1
-        #interface=::1
-        listen-address=::1,127.0.0.1,${lanV4Self}
-        # subnet IP blocks to use DHCP on, repeat line for multiple
-        dhcp-authoritative
-        dhcp-range=${lanV4Subnet}.50,${lanV4Subnet}.254,24h
-        dhcp-option=option:router,${lanV4Self}
-        dhcp-option=option:mtu,1500
-        # static IP example
-        # dhcp-host=00:0d:b9:5e:22:91,$ {private_subnet}.1
-      '';
+      settings = {
+        domain-needed = true;
+        bogus-priv = true;
+        no-resolv = true;
+        stop-dns-rebind = true;
+        server = nameservers;
+        cache-size = 10000;
+        expand-hosts = true;
+        domain = netFqdn;
+        local = "/${netFqdn}/";
+        # FIXME: need to listen on V6
+        listen-address = "::1,127.0.0.1,${lanV4Self}";
+        dhcp-authoritative = true;
+        dhcp-range = "${lanV4Subnet}.50,${lanV4Subnet}.254,24h";
+        dhcp-option = [
+          "option:router,${lanV4Self}"
+          "option:mtu,1500"
+        ];
+        # static IPs:
+        # dhcp-host = [
+        #   "MAC,ipaddr"
+        # ];
+      };
     };
     boot.kernel.sysctl = {
       "net.ipv4.conf.all.forwarding" = true;
