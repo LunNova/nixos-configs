@@ -21,7 +21,7 @@
     services.xserver.windowManager.i3.extraSessionCommands = ''
       systemctl --user import-environment PATH
     '';
-
+    services.xserver.displayManager.defaultSession = "none+i3";
 
     # oom kill faster for more responsiveness
     services.earlyoom.enable = true;
