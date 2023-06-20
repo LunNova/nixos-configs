@@ -47,9 +47,7 @@ let
   lun-scripts-path = pkgs.symlinkJoin { name = "lun-scripts"; paths = lib.attrValues self.lun-scripts; };
   # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/19101.patch
   mesaOverride =
-    mesaPkg: (mesaPkg.overrideAttrs (old: {
-      patches = old.patches ++ [ ./mesa/mr-19101-device-select.patch ];
-    }));
+    mesaPkg: (mesaPkg.overrideAttrs (old: { }));
   mesaOverrideVersion = mesaPkg: ((mesaPkg.override {
     # libdrm = (if mesaPkg == pkgs.pkgsi686Linux.mesa then pkgs.pkgsi686Linux else pkgs).libdrm.overrideAttrs (old: {
     #   patches = (old.patches or [ ]) ++ [ ./mesa/libdrm-stat-workaround.patch ];
