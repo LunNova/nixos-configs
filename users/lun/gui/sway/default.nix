@@ -129,7 +129,7 @@ in
       export _JAVA_AWT_WM_NONREPARENTING=1
     '';
 
-    systemdIntegration = true;
+    systemd.enable = true;
   };
 
   # systemd.user.services.sway-inactive-windows-transparency =
