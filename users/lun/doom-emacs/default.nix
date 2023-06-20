@@ -5,7 +5,7 @@
 # FIXME: make this a module
 let
   # native-comp + compile in vterm
-  emacs-compiled = (pkgs.emacsPackagesFor pkgs.emacsUnstable).emacsWithPackages (epkgs: [
+  emacs-compiled = (pkgs.emacsPackagesFor pkgs.emacs-unstable).emacsWithPackages (epkgs: [
     epkgs.vterm
   ]);
   emacs-path = [
