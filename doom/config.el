@@ -203,3 +203,6 @@
 ;;               ("TAB" . 'copilot-accept-completion)
 ;;               ("C-TAB" . 'copilot-accept-completion-by-word)
 ;;               ("C-<tab>" . 'copilot-accept-completion-by-word)))
+
+;; disable doom emacs truncating pin shas in packages.el
+(advice-add '+emacs-lisp-truncate-pin :override (lambda () ()) )
