@@ -91,7 +91,6 @@
       lib = import ./lib { bootstrapLib = flakeArgs.nixpkgs.lib; };
       assets = import ./assets;
       overlays.default = import ./overlay.nix { inherit flakeArgs; };
-      overlay = self.overlays.default; # deprecated alias, TODO: remove in 2023
       localPackagesForPkgs = pkgs: import ./packages { inherit pkgs flakeArgs; };
       nixosModules = self.lib.readExportedModules ./modules/exported;
 

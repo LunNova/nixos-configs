@@ -10,7 +10,7 @@ let
       # (final: prev: {
       #   some-package = ...
       # })
-      flakeArgs.self.overlay
+      flakeArgs.self.overlays.default
       flakeArgs.emacs-overlay.overlay
     ];
   };
