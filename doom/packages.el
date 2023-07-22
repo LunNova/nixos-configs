@@ -66,6 +66,15 @@
            :repo "radgeRayden/emacs-scopes-mode"
            :files ("*")))
 
+(package! alicorn-mode
+  :recipe (:host github
+           :repo "LunNova/emacs-alicorn-mode"
+           :files ("*")))
+
+;;(package! alicorn-mode
+;; :recipe (:local-repo "~/sync/dev/fundament/emacs-alicorn-mode"
+;;           :files ("*")))
+
 (package! capnp-mode
   :recipe (:host github
            :repo "capnproto/capnproto"

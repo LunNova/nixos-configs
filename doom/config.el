@@ -79,6 +79,10 @@
   :interpreter "scopes"
   :mode "\\.sc\\'")
 
+(use-package! alicorn-mode
+  :interpreter "alicorn"
+  :mode "\\.alc\\'")
+
 (use-package! capnp-mode
   :mode "\\.capnp\\'")
 
