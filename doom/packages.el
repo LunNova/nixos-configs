@@ -61,11 +61,6 @@
 
 (package! magit-delta)
 
-(package! scopes-mode
-  :recipe (:host github
-           :repo "radgeRayden/emacs-scopes-mode"
-           :files ("*")))
-
 (package! alicorn-mode
   :recipe (:host github
            :repo "LunNova/emacs-alicorn-mode"

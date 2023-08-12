@@ -75,10 +75,6 @@
 ;; Use oxalica/nil as nix lsp - should be on path on our systems
 (setq! lsp-nix-server-path "nil")
 
-(use-package! scopes-mode
-  :interpreter "scopes"
-  :mode "\\.sc\\'")
-
 (use-package! alicorn-mode
   :interpreter "alicorn"
   :mode "\\.alc\\'")
