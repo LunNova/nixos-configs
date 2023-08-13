@@ -18,7 +18,7 @@ let
 in
 {
   options.my.home-manager.enabled-users = with lib; mkOption {
-    type = with types; listOf string;
+    type = with types; listOf str;
     description = "List of users to include home manager configs for";
     default = [ ];
   };
