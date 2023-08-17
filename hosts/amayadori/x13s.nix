@@ -3,7 +3,7 @@ let
   useGrub = false;
   useGpu = true;
   useGpuFw = true;
-  dtbName = "x13s63rc4.dtb";
+  dtbName = "x13s65rc4.dtb";
   kp = [
     {
       name = "x13s-cfg";
@@ -28,8 +28,8 @@ let
   ];
   linux_x13s_pkg = { buildLinux, ... } @ args:
     buildLinux (args // {
-      version = "6.4.0";
-      modDirVersion = "6.4.0-rc4";
+      version = "6.5.0";
+      modDirVersion = "6.5.0-rc4";
 
       src = pkgs.fetchFromGitHub {
         # owner = "jhovold";
@@ -37,8 +37,8 @@ let
         # rev = "wip/sc8280xp-v6.3-rc3";
         owner = "steev";
         repo = "linux";
-        rev = "af15ae6f36b1628424c1997dc6701425fa2643eb"; # 6.3.y
-        hash = "sha256-x9zEE6yxp47xVyeoN5aXy4NQ6RUDWRiNdQhs0+8pDlU";
+        rev = "ce7a36f2aa50715e58c79f51776ba55f668652a5";
+        hash = "sha256-6PteuXz7sN/ebrh6HA6To5JDqYWpg61IgTOvAi3GsM8=";
       };
       kernelPatches = (args.kernelPatches or [ ]) ++ kp;
 
@@ -54,16 +54,18 @@ let
   inherit (config.boot.loader) efi;
 
   ath11k_fw_src = pkgs.fetchFromGitHub {
+    name = "ath11k-firmware-src";
     owner = "kvalo";
     repo = "ath11k-firmware";
-    rev = "fa6886ff0d62e9d84e5985e01fc75da0157c2887";
-    hash = "sha256-/hXU2z+urL3GjM/s9bcyB3yIK+IUtMEbrrH30pbPh84=";
+    rev = "5f72c2124a9b29b9393fb5e8a0f2e0abb130750f";
+    hash = "sha256-l7tAxG7udr7gRHZuXRQNzWKtg5JJS+vayk44ZmisfKg=";
   };
 
-  x13s-tplg = pkgs.fetchurl {
-    name = "x13s-tplg.bin";
-    url = "https://git.linaro.org/people/srinivas.kandagatla/audioreach-topology.git/plain/prebuilt/SC8280XP-LENOVO-X13S-tplg.bin";
-    hash = "sha256-2YOjLgyHOWOnXf0Rl6APou2t2EVcqrnV1l7CtRxl0TI=";
+  x13s-tplg = pkgs.fetchgit {
+    name = "x13s-tplg-audioreach-topology";
+    url = "https://git.linaro.org/people/srinivas.kandagatla/audioreach-topology.git";
+    rev = "1ade4f466b05a86a7c7bdd51f719c08714580d14";
+    hash = "sha256-GFGcm+KicTfNXSY8oMJlqBkrjdyb05C65hqK0vfCQvI=";
   };
   aarch64-fw = pkgs.fetchFromGitHub {
     name = "aarch64-fw-src";
@@ -81,7 +83,8 @@ let
   x13s_extra_fw = pkgs.runCommandNoCC "x13s_extra_fw" { } (''
     mkdir -p $out/lib/firmware/qcom/sc8280xp/
     # mkdir -p $out/lib/firmware/qca/
-    cp ${x13s-tplg} $out/lib/firmware/qcom/sc8280xp/SC8280XP-LENOVO-X13S-tplg.bin
+    cp ${x13s-tplg}/prebuilt/qcom/sc8280xp/LENOVO/21BX/audioreach-tplg.bin $out/lib/firmware/qcom/sc8280xp/SC8280XP-LENOVO-X13S-tplg.bin
+    cp -r ${x13s-tplg}/prebuilt/* $out/lib/firmware/
   '' + (lib.optionalString useGpuFw ''
     # cp -r ${aarch64-fw}/firmware/qca/* $out/lib/firmware/qca/
     cp -r ${aarch64-fw}/firmware/qcom/* $out/lib/firmware/qcom/
