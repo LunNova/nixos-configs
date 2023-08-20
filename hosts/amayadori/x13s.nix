@@ -80,9 +80,26 @@ let
     mkdir -p $out/lib/firmware/ath11k/
     cp -r ${ath11k_fw_src}/* $out/lib/firmware/ath11k/
   '';
+  cenunix_fw_src = pkgs.fetchzip {
+    url = "https://github.com/cenunix/x13s-firmware/releases/download/1.0.0/x13s-firmware.tar.gz";
+    sha256 = "sha256-cr0WMKbGeJyQl5S8E7UEB/Fal6FY0tPenEpd88KFm9Q=";
+    stripRoot = false;
+  };
   x13s_extra_fw = pkgs.runCommandNoCC "x13s_extra_fw" { } (''
     mkdir -p $out/lib/firmware/qcom/sc8280xp/
     # mkdir -p $out/lib/firmware/qca/
+
+    pushd "${cenunix_fw_src}"
+    mkdir -p $out/lib/firmware/qcom/sc8280xp/LENOVO/21BX
+    mkdir -p $out/lib/firmware/qca
+    mkdir -p $out/lib/firmware/ath11k/WCN6855/hw2.0/
+    # cp -v my-repo/a690_gmu.bin $out/lib/firmware/qcom
+    cp -v my-repo/qcvss8280.mbn $out/lib/firmware/qcom/sc8280xp/LENOVO/21BX
+    # cp -v my-repo/SC8280XP-LENOVO-X13S-tplg.bin $out/lib/firmware/qcom/sc8280xp
+    cp -v my-repo/hpnv21.8c $out/lib/firmware/qca/hpnv21.b8c
+    # cp -v my-repo/board-2.bin $out/lib/firmware/ath11k/WCN6855/hw2.0
+    popd
+
     cp ${x13s-tplg}/prebuilt/qcom/sc8280xp/LENOVO/21BX/audioreach-tplg.bin $out/lib/firmware/qcom/sc8280xp/SC8280XP-LENOVO-X13S-tplg.bin
     cp -r ${x13s-tplg}/prebuilt/* $out/lib/firmware/
   '' + (lib.optionalString useGpuFw ''
@@ -131,9 +148,9 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "alsa-project";
       repo = "alsa-ucm-conf";
-      # https://github.com/Srinivas-Kandagatla/alsa-ucm-conf/commits/x13s-fixes
-      rev = "65b44204ea88105ed77cc68224fae440d475acca";
-      hash = "sha256-iNCjyUhF16aXfe+KJ+qZ1kfhKqOOjYbsf1riDME9z9Y=";
+      # master on 2023-08-19
+      rev = "d42e1d149ba14084617819b85ef3cb824d177112";
+      hash = "sha256-P22UpyAHv5a18gfsOTt06+7Pxxd363Dphst601p9990=";
     };
   });
 in
