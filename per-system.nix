@@ -96,6 +96,7 @@ let
               inherit (perSystemSelf) pkgs-stable;
               nixosConfig = null;
               lun-profiles = {
+                emacs = false;
                 graphical = true;
                 wine = false;
               };

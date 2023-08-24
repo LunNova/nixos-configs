@@ -1,4 +1,4 @@
-{ pkgs, lib, lun-profiles, ... }:
+{ pkgs, lib, flakeArgs, lun-profiles, ... }:
 {
   imports = [
     ./i3
@@ -27,9 +27,24 @@
         '';
       });
     };
+
+    # workaround https://github.com/nix-community/home-manager/issues/2064#issuecomment-887300055
+    systemd.user.targets.tray = {
+      Unit = {
+        Description = "Home Manager System Tray";
+        Requires = [ "graphical-session-pre.target" ];
+      };
+    };
+
     home.packages = with pkgs; [
       pinta # paint.net alternative
       calibre
+      (flakeArgs.plover-flake.packages.${pkgs.system}.plover.with-plugins
+        (ps: with ps; [
+          plover_console_ui
+        ])
+      )
+      ark
     ] ++ lib.optionals (pkgs.system == "x86_64-linux") [
       lun.wally
       microsoft-edge

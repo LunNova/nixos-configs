@@ -1,21 +1,14 @@
 { lib, pkgs, flakeArgs, lun-profiles, ... }:
 {
   imports = [
-    ./doom-emacs
     ./modern-unix.nix
     ./shells
     ./on-nixos
+  ] ++ lib.optionals lun-profiles.emacs [
+    ./doom-emacs
   ] ++ lib.optionals lun-profiles.graphical [
     ./gui
   ];
-
-  # workaround https://github.com/nix-community/home-manager/issues/2064#issuecomment-887300055
-  systemd.user.targets.tray = {
-    Unit = {
-      Description = "Home Manager System Tray";
-      Requires = [ "graphical-session-pre.target" ];
-    };
-  };
 
   manual.manpages.enable = false;
   programs.man.enable = false;
@@ -43,19 +36,11 @@
     usbutils
     pciutils
     nixpkgs-fmt
-    flakeArgs.oxalica-nil.packages.${pkgs.system}.nil
     flakeArgs.nixpkgs-review-checks.packages.${pkgs.system}.nixpkgs-review-checks
-    ark
     unar
     unzip
     p7zip
-    flakeArgs.deploy-rs.packages.${pkgs.system}.default
     git-filter-repo
-    (flakeArgs.plover-flake.packages.${pkgs.system}.plover.with-plugins
-      (ps: with ps; [
-        plover_console_ui
-      ])
-    )
   ];
 
   programs.git = {
