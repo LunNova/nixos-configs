@@ -347,6 +347,7 @@ in
         wantedBy = [ "multi-user.target" ];
         wants = [
           "network-online.target"
+          "dnsmasq.service"
         ];
         unitConfig = {
           ConditionPathExists = thothEnv;
@@ -356,7 +357,7 @@ in
         serviceConfig = {
           EnvironmentFile = thothEnv;
           ExecStart = ''
-            ${pkgs.bash}/bin/bash -c "cd ${thothWorkingDirectory}; ${thothPython}/bin/python -c 'import thoth.main; thoth.main.start()'"
+            ${pkgs.bash}/bin/bash -c "cd ${thothWorkingDirectory}; sleep 2; ${thothPython}/bin/python -c 'import thoth.main; thoth.main.start()'"
           '';
           Type = "exec";
           RestartSec = 30;
