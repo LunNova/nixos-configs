@@ -333,7 +333,7 @@ in
 
     systemd.targets.getty.wants = [ "journal@tty12.service" ];
 
-    systemd.services."thoth-ftmp" =
+    systemd.services."thoth-lun" =
       let
         thothPython = pkgs.python3.withPackages (_: [
           flakeArgs.thoth-reminder-bot.packages.${pkgs.system}.thoth
@@ -343,7 +343,7 @@ in
       in
       {
         enable = true;
-        description = "Thoth reminder bot for FTMP.";
+        description = "Thoth reminder bot instance managed by @lun";
         wantedBy = [ "multi-user.target" ];
         wants = [
           "network-online.target"
