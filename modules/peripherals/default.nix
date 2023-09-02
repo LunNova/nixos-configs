@@ -23,8 +23,14 @@
       ACTION=="add", SUBSYSTEM=="usb", DRIVER=="usb", ATTR{power/wakeup}="disabled"
     '';
 
-    services.udev.packages = lib.optionals (pkgs.system == "x86_64-linux") [ pkgs.vial ];
-    environment.systemPackages = lib.optionals (pkgs.system == "x86_64-linux") [ pkgs.vial ];
+    services.udev.packages = lib.optionals (pkgs.system == "x86_64-linux") [
+      pkgs.lun.vial
+      pkgs.via
+    ];
+    environment.systemPackages = lib.optionals (pkgs.system == "x86_64-linux") [
+      pkgs.lun.vial
+      pkgs.via
+    ];
 
     # FIXME: xone doesn't work with wireless, seems unmaintained?
     # find something better or patch it
