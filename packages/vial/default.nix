@@ -8,14 +8,14 @@
 let
   inherit (python3Packages) python;
   pname = "vial";
-  version = "unstable-20230901";
+  version = "unstable-20230903";
 
   src = fetchFromGitHub {
     name = "vial-gui-src";
     owner = "vial-kb";
     repo = "vial-gui";
-    rev = "main";
-    hash = "sha256-5xLjE8ucEex5HcqDTA2r96Ydpub2bJ+Izpjlqk8VqyM=";
+    rev = "5c198e1ec60f3dfe3376503f35291b7ee7b4ced8";
+    hash = "sha256-PtCTzqrwmUJy/jMNRothFlF2Fs4GEQGOqUfy3yV4Un8=";
   };
 
   fbs = python3Packages.buildPythonPackage {
@@ -116,7 +116,7 @@ in
     homepage = "https://get.vial.today";
     license = lib.licenses.gpl2Plus;
     mainProgram = "vial";
-    maintainers = with lib.maintainers; [ kranzes ];
-    platforms = [ "x86_64-linux" ];
+    maintainers = with lib.maintainers; [ LunNova ];
+    platforms = lib.platforms.linux;
   };
 }) // { inherit version; }
