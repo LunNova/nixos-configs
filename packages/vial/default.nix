@@ -1,5 +1,6 @@
 { lib
 , writeText
+, writeTextFile
 , writeShellScript
 , fetchFromGitHub
 , python3Packages
@@ -50,10 +51,24 @@ let
       packages=find_packages(where='src/main/python'),
     )
   '';
+  udev-rule-vial-serial = writeTextFile {
+    name = "vial-udev";
+    contents = ''
+      KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{serial}=="*vial:f64c2b3c*", MODE="0666", TAG+="uaccess", TAG+="udev-acl"
+    '';
+    destination = "/etc/udev/rules.d/99-vial.rules";
+  };
+  udev-rule-all-hidraw = writeTextFile {
+    name = "vial-udev";
+    contents = ''
+      KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0666", TAG+="uaccess", TAG+="udev-acl"
+    '';
+    destination = "/etc/udev/rules.d/99-vial-all-hidraw.rules";
+  };
 in
 (python3Packages.buildPythonApplication {
   inherit pname src version;
-  format = "setuptools";
+  format = "pyproject";
 
   postPatch = ''
     cp "${setupPy}" ./setup.py
@@ -101,15 +116,16 @@ in
     echo "cd $out/vial"  >> $out/bin/vial
     echo "$out/vial/src/main/python/main.py" >> $out/bin/vial
     chmod +x $out/bin/vial
-    # udev rules
-    mkdir -p $out/etc/udev/rules.d/ # https://get.vial.today/getting-started/linux-udev.html
-    echo 'KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0666", TAG+="uaccess", TAG+="udev-acl"' > $out/etc/udev/rules.d/92-viial.rulesa
   '';
 
   postFixup = ''
     [ -d "$out/vial/src/main/python/" ]
     wrapPythonProgramsIn "$out/vial/src/main/python/" "$out $pythonPath"
   '';
+
+  passthru = {
+    inherit udev-rule-all-hidraw udev-rule-vial-serial;
+  };
 
   meta = {
     description = "An Open-source GUI and QMK fork for configuring your keyboard in real time";

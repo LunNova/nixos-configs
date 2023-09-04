@@ -29,7 +29,7 @@
       hardware.steam-hardware.enable = pkgs.system == "x86_64-linux";
       hardware.ledger.enable = true;
 
-      services.udev.packages = [ pkgs.lun.vial ];
+      services.udev.packages = [ pkgs.lun.vial.udev-rule-all-hidraw ];
       environment.systemPackages = [ pkgs.lun.vial ];
 
       # FIXME: xone doesn't work with wireless, seems unmaintained?
