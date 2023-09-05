@@ -26,7 +26,7 @@
       # udev rule for zsa oryx
       hardware.keyboard.zsa.enable = true;
       # steam controller and index headset, only works on x86_64 as of 202309
-      hardware.steam-hardware.enable = pkgs.system == "x86_64-linux";
+      hardware.steam-hardware.enable = lib.mkIf (pkgs.system == "x86_64-linux") true;
       # udev rules for ledger
       hardware.ledger.enable = true;
 
