@@ -5,8 +5,6 @@
       services.fwupd.enable = true;
       hardware.wirelessRegulatoryDatabase = true;
       hardware.enableRedistributableFirmware = true;
-      # use with piper for gaming mouse configuration
-      # services.ratbagd.enable = true;
 
       # no USB wakeups
       # see: https://github.com/NixOS/nixpkgs/issues/109048
@@ -23,13 +21,17 @@
         mouse = { accelProfile = "flat"; };
       };
 
+      # use with piper for logitech gaming mouse configuration
+      # services.ratbagd.enable = true;
       # udev rule for zsa oryx
       hardware.keyboard.zsa.enable = true;
       # steam controller and index headset, only works on x86_64 as of 202309
       hardware.steam-hardware.enable = pkgs.system == "x86_64-linux";
+      # udev rules for ledger
       hardware.ledger.enable = true;
 
-      services.udev.packages = [ pkgs.lun.vial.udev-rule-all-hidraw ];
+      # udev rules and package for vial keyboard remapper
+      services.udev.packages = [ pkgs.lun.vial.udev-rule-vial-serial ];
       environment.systemPackages = [ pkgs.lun.vial ];
 
       # FIXME: xone doesn't work with wireless, seems unmaintained?
