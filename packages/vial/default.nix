@@ -3,22 +3,12 @@
 , writeTextFile
 , writeShellScript
 , fetchFromGitHub
+, stdenv
 , python3Packages
 , wrapQtAppsHook
 }:
 let
-  inherit (python3Packages) python;
-  pname = "vial";
-  version = "unstable-20230903";
-
-  src = fetchFromGitHub {
-    name = "vial-gui-src";
-    owner = "vial-kb";
-    repo = "vial-gui";
-    rev = "5c198e1ec60f3dfe3376503f35291b7ee7b4ced8";
-    hash = "sha256-PtCTzqrwmUJy/jMNRothFlF2Fs4GEQGOqUfy3yV4Un8=";
-  };
-
+  # fbs_runtime ported to 3.x - https://github.com/rnbwdsh/fbs
   fbs = python3Packages.buildPythonPackage {
     pname = "fbs_runtime";
     version = "1.0";
@@ -39,48 +29,20 @@ let
     doCheck = false;
   };
 
-  setupPy = writeText "setup.py" ''
-    #!/usr/bin/env python
-
-    from distutils.core import setup
-    from setuptools import find_packages
-
-    setup(name='vial',
-      version='1.0',
-      package_dir={"": 'src/main/python'},
-      packages=find_packages(where='src/main/python'),
-    )
-  '';
   udev-rule-vial-serial = writeTextFile {
     name = "vial-udev";
-    contents = ''
+    text = ''
       KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{serial}=="*vial:f64c2b3c*", MODE="0666", TAG+="uaccess", TAG+="udev-acl"
     '';
     destination = "/etc/udev/rules.d/99-vial.rules";
   };
   udev-rule-all-hidraw = writeTextFile {
     name = "vial-udev";
-    contents = ''
+    text = ''
       KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0666", TAG+="uaccess", TAG+="udev-acl"
     '';
     destination = "/etc/udev/rules.d/99-vial-all-hidraw.rules";
   };
-in
-(python3Packages.buildPythonApplication {
-  inherit pname src version;
-  format = "pyproject";
-
-  postPatch = ''
-    cp "${setupPy}" ./setup.py
-    sed -i '1s|^|#!/usr/bin/env python\n|' src/main/python/main.py
-    chmod +x src/main/python/main.py
-  '';
-
-  nativeBuildInputs = with python3Packages; [
-    wrapQtAppsHook
-    pyqt5
-  ];
-
   propagatedBuildInputs = with python3Packages; [
     setuptools
     altgraph
@@ -96,17 +58,34 @@ in
     simpleeval
     hidapi
   ];
+in
+stdenv.mkDerivation (final: {
+  pname = "vial";
+  version = "0.7.1";
 
-  doCheck = false;
+  src = fetchFromGitHub {
+    name = "vial-gui-src";
+    owner = "vial-kb";
+    repo = "vial-gui";
+    rev = "v${final.version}";
+    hash = "sha256-1p0X6sovLboYn576GTlmZYNa+riwEBLwzDbbNzrcDiY=";
+  };
+
+  inherit propagatedBuildInputs;
+
+  nativeBuildInputs = with python3Packages; [
+    wrapQtAppsHook
+    wrapPython
+    pyqt5
+    python
+  ];
+
   dontWrapQtApps = true;
 
   makeWrapperArgs = [
     "\${qtWrapperArgs[@]}"
   ];
 
-  # mv $out/bin/${name} $out/bin/${pname}
-  # install -m 444 -D ${appimageContents}/${pname}.desktop -t $out/share/applications
-  # cp -r ${appimageContents}/usr/share/icons $out/share
   preInstall = ''
     mkdir -p $out/bin/ $out/vial/
     # full package
@@ -114,13 +93,17 @@ in
     # launch script
     echo "#!/usr/bin/env bash"  >> $out/bin/vial
     echo "cd $out/vial"  >> $out/bin/vial
-    echo "$out/vial/src/main/python/main.py" >> $out/bin/vial
+    echo "exec $out/vial/src/main/python/main.py" >> $out/bin/vial
     chmod +x $out/bin/vial
+
+    # make main.py executable
+    sed -i '1s|^|#!/usr/bin/env python\n|' $out/vial/src/main/python/main.py
+    chmod +x $out/vial/src/main/python/main.py
   '';
 
   postFixup = ''
     [ -d "$out/vial/src/main/python/" ]
-    wrapPythonProgramsIn "$out/vial/src/main/python/" "$out $pythonPath"
+    wrapPythonProgramsIn "$out/vial/src/main/python/" "$out $$propagatedBuildInputs"
   '';
 
   passthru = {
@@ -135,4 +118,4 @@ in
     maintainers = with lib.maintainers; [ LunNova ];
     platforms = lib.platforms.linux;
   };
-}) // { inherit version; }
+})
