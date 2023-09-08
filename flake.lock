@@ -634,32 +634,6 @@
         "type": "github"
       }
     },
-    "oxalica-nil": {
-      "inputs": {
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "rust-overlay": [
-          "rust-overlay"
-        ]
-      },
-      "locked": {
-        "lastModified": 1693724255,
-        "narHash": "sha256-+Ucv/aBN9wwRE62sUJEBocI+9no7PV4KRDNuFQgygzU=",
-        "owner": "oxalica",
-        "repo": "nil",
-        "rev": "4bdcfcfe38cfcb386142e043392afbfa542665dd",
-        "type": "github"
-      },
-      "original": {
-        "owner": "oxalica",
-        "repo": "nil",
-        "type": "github"
-      }
-    },
     "plover": {
       "flake": false,
       "locked": {
@@ -894,7 +868,6 @@
         "nixpkgs-review-checks": "nixpkgs-review-checks",
         "nixpkgs-stable": "nixpkgs-stable_2",
         "openxr-nix-flake": "openxr-nix-flake",
-        "oxalica-nil": "oxalica-nil",
         "plover-flake": "plover-flake",
         "pre-commit-hooks": "pre-commit-hooks_2",
         "replugged-nix-flake": "replugged-nix-flake",

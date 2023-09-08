@@ -19,10 +19,6 @@
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.flake-utils.follows = "flake-utils";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
-    oxalica-nil.url = "github:oxalica/nil";
-    oxalica-nil.inputs.rust-overlay.follows = "rust-overlay";
-    oxalica-nil.inputs.nixpkgs.follows = "nixpkgs";
-    oxalica-nil.inputs.flake-utils.follows = "flake-utils";
     thoth-reminder-bot.url = "github:mmk150/reminder_bot";
     thoth-reminder-bot.inputs.nixpkgs.follows = "nixpkgs";
     thoth-reminder-bot.inputs.flake-utils.follows = "flake-utils";
