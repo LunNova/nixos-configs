@@ -5,7 +5,7 @@
       nix-output-monitor
       glxinfo
       vulkan-tools
-      flakeArgs.oxalica-nil.packages.${pkgs.system}.nil
+      nixd
       flakeArgs.deploy-rs.packages.${pkgs.system}.default
     ] ++ lib.optionals (pkgs.system == "x86_64-linux") [
       jetbrains.clion

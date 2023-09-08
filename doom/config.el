@@ -72,8 +72,8 @@
 (setq! focus-follows-mouse t)
 (setq! mouse-autoselect-window t)
 
-;; Use oxalica/nil as nix lsp - should be on path on our systems
-(setq! lsp-nix-server-path "nil")
+;; Use nix-community/nixd as nix lsp - should be on path on our systems
+(setq! lsp-nix-server-path "nixd")
 
 (use-package! alicorn-mode
   :interpreter "alicorn"
