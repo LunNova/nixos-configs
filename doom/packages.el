@@ -54,12 +54,13 @@
   :pin "26dc5535a20efe781b172bac73f14a5ebe13efa9")
 
 ;; Use CRDT for collaborative editing
-(package! crdt)
+;; FIXME: this was not reliable, out of order edits :ded:
+;; (package! crdt)
 
 ;; Use rg.el to enable ripgrep-based searching
 (package! rg)
 
-(package! magit-delta)
+;; (package! magit-delta)
 
 (package! alicorn-mode
   :recipe (:host github
@@ -75,20 +76,20 @@
            :repo "capnproto/capnproto"
            :files ("highlighting/emacs/capnp-mode.el")))
 
-(package! evil-tutor
-  :recipe (:host github
-           :repo "syl20bnr/evil-tutor"
-           :files ("evil-tutor.el" "tutor.txt")))
+;; (package! evil-tutor
+;;   :recipe (:host github
+;;            :repo "syl20bnr/evil-tutor"
+;;            :files ("evil-tutor.el" "tutor.txt")))
 
-(package! anki-editor
-  :recipe (:host github
-           :repo "louietan/anki-editor"
-           :files ("anki-editor.el")))
+;; (package! anki-editor
+;;   :recipe (:host github
+;;            :repo "louietan/anki-editor"
+;;            :files ("anki-editor.el")))
 
-(package! evil-motion-trainer
-  :recipe (:host github
-           :repo "martinbaillie/evil-motion-trainer"
-           :files ("evil-motion-trainer.el")))
+;; (package! evil-motion-trainer
+;;  :recipe (:host github
+;;           :repo "martinbaillie/evil-motion-trainer"
+;;           :files ("evil-motion-trainer.el")))
 
 (package! sticky-shell
   :recipe (:host github

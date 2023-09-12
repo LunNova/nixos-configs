@@ -176,14 +176,6 @@
 ;; remap : to ; so don't lose evil-repeat-find-char
 (map! :n ":" 'evil-repeat-find-char)
 
-(use-package sticky-shell
-  :ensure t ; install
-  ;; add your customization here
-  :init
-  ;; (setq! sticky-shell-get-prompt 'sticky-shell-latest-prompt)
-  ;; (sticky-shell-global-mode)
-  )
-
 ;; workaround for https://github.com/emacs-tree-sitter/elisp-tree-sitter/issues/242
 ;; but it doesn't seem to do anything, still get x86_64 binaries
 ;; (use-package tsc

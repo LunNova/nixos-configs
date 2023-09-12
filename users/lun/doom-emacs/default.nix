@@ -5,7 +5,7 @@
 # FIXME: make this a module
 let
   # native-comp + compile in vterm
-  emacs-compiled = (pkgs.emacsPackagesFor pkgs.emacs-unstable).emacsWithPackages (epkgs: [
+  emacs-compiled = (pkgs.emacsPackagesFor pkgs.emacs).emacsWithPackages (epkgs: [
     epkgs.vterm
   ]);
   emacs-path = [
@@ -26,16 +26,18 @@ let
     pkgs.zstd # for undo-fu-session/undo-tree compression
 
     ## Module dependencies
-    # :checkers spell
-    (pkgs.aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
     # :tools editorconfig
     pkgs.editorconfig-core-c # per-project style config
     # :tools lookup & :lang org +roam
     pkgs.sqlite
     # :lang latex & :lang org (latex previews)
     pkgs.texlive.combined.scheme-medium
+
+    # lua
     pkgs.luajitPackages.luacheck
     emmylua-ls
+
+    # various
     pkgs.python3
   ];
   emacs = pkgs.writeShellScriptBin "emacs" ''
@@ -71,16 +73,9 @@ in
 
       # FIXME:
       # need to manually run doom install maybe that's fine
-
-      # FIXME:
-      # haven't setup a repo for config yet / might try to make it part of this repo instead
-      # even if isn't nix managed properly because want it editable inplace
-      # (boops says if don't do this it will be pain)
-      #git clone "todo" "${config.xdg.configHome}/doom"
     fi
 
-
-    if [ ! -d "${config.xdg.configHome}/doom" ]; then
+    if [ ! -d "${config.xdg.configHome}/doom" ] && [ -d ~/dev/nixos-configs/doom/ ]; then
       mkdir -p "${config.xdg.configHome}/doom"
 
       touch "${config.xdg.configHome}/doom/.projectile"
