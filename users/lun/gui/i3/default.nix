@@ -65,6 +65,9 @@ in
         "${mod}+d" = "exec ${menu}";
         "${mod}+i" = "bar hidden_state toggle";
         "${mod}+Shift+b" = "exec ${lib.getExe bgswitchermenu}";
+
+        "XF86KbdBrightnessUp" = "exec ${lib.getExe pkgs.brightnessctl} -d '*kbd*' set +40%";
+        "XF86KbdBrightnessDown" = "exec ${lib.getExe pkgs.brightnessctl} -d '*kbd*' set 40%-";
       };
 
       startup = [
