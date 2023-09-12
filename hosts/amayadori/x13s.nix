@@ -1,8 +1,8 @@
 { config, options, flakeArgs, lib, pkgs, ... }:
 let
   useGrub = false;
-  useGpu = true;
-  useGpuFw = true;
+  inherit (config.lun.x13s) useGpu;
+  useGpuFw = config.lun.x13s.useGpu;
   dtbName = "x13s65rc4.dtb";
   kp = [
     {
@@ -155,7 +155,17 @@ let
   });
 in
 {
+  options = {
+    lun.x13s = {
+      useGpu = lib.mkEnableOption "enable a690 gpu" // { default = true; };
+    };
+  };
+
   config = {
+    specialisation.no-gpu.configuration = {
+      lun.x13s.useGpu = false;
+    };
+
     hardware.firmware = [
       (lib.hiPrio ath11k_fw)
       (lib.hiPrio (ath11k_fw // { compressFirmware = false; }))
@@ -284,6 +294,7 @@ in
       ];
       kernelPackages = lib.mkForce linuxPackages_x13s;
       kernelParams = [
+        # FIXME: pcie_aspm setting?
         "boot.shell_on_fail"
         "clk_ignore_unused"
         "pd_ignore_unused"
