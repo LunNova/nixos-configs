@@ -9,6 +9,10 @@ let
     epkgs.vterm
   ]);
   emacs-path = [
+    # doom wants this to do native comp
+    pkgs.stdenv
+    pkgs.stdenv.cc
+
     pkgs.nodejs # some plugins
     pkgs.binutils # native-comp needs 'as', provided by this
     ## Doom dependencies
