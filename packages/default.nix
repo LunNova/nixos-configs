@@ -185,8 +185,9 @@ let
         ldapSupport = false;
         vkd3dSupport = false;
         embedInstallers = false;
-        waylandSupport = false;
+        waylandSupport = true;
         usbSupport = true;
+        x11Support = true;
       };
     };
   });
