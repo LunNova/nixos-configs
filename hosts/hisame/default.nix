@@ -6,6 +6,7 @@ let
   btrfsHddOpts = btrfsOpts ++ [ ];
   btrfsSsdOpts = btrfsOpts ++ [ "ssd" "discard=async" ];
   enableFbDevs = true;
+  gpuPatches = false;
 in
 {
   imports = [
@@ -102,7 +103,7 @@ in
           FB_RADEON = lib.mkForce no;
         };
       }
-    ]) ++ [
+    ]) ++ lib.optionals gpuPatches [
       {
         name = "amdgpu-no-ecc";
         patch = ./kernel/amdgpu-no-ecc.patch;
