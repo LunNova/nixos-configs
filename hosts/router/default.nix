@@ -15,7 +15,7 @@ let
   fullHostName = "${config.networking.hostName}.${config.networking.domain}";
   btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" "autodefrag" ];
   btrfsSsdOpts = btrfsOpts ++ [ "ssd" "discard=async" ];
-  btrfsHddOpts = btrfsOpts ++ [ ];
+  btrfsHddOpts = btrfsOpts;
   netFqdn = "home.moonstruck.dev";
   lanULA = "fd79:fc8d:af3a:ad8b::";
   selfULA = "${lanULA}1";
