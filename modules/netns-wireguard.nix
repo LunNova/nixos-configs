@@ -18,6 +18,8 @@
 let
   cfg = config.lun.wg-netns;
   ip = "${pkgs.iproute2}/bin/ip";
+  ifName = "wg0";
+  nsName = "wg";
   inherit (pkgs) util-linux;
 
   resolvconf = pkgs.writeText "wg-resolv.conf" "nameserver 8.8.8.8";
@@ -83,15 +85,18 @@ in
 
   config = lib.mkIf cfg.enable {
     boot.kernelModules = [ "wireguard" ];
+    environment.systemPackages = [ pkgs.wireguard-tools ];
 
     systemd =
       let
         patchedServices = lib.genAttrs cfg.isolateServices (_svcname: {
-          bindsTo = [ "wireguard.service" ];
+          bindsTo = [ "wireguard.service" "netns@${nsName}.service" ];
           after = [ "wireguard.service" ];
-          unitConfig.JoinsNamespaceOf = "wireguard-netns.service";
+          # requires = [ "wireguard-netns-init.service" ];
+          unitConfig.JoinsNamespaceOf = "netns@${nsName}.service";
           serviceConfig = {
             PrivateNetwork = true;
+            # NetworkNamespacePath = nsPath;
             BindReadOnlyPaths = [
               "${resolvconf}:/etc/resolv.conf"
               "${nsswitchconf}:/etc/nsswitch.conf"
@@ -115,8 +120,9 @@ in
             value = {
               requires = [ "${name}.socket" ];
               after = [ "${name}.socket" ];
-              unitConfig.JoinsNamespaceOf = "wireguard-netns.service";
+              unitConfig.JoinsNamespaceOf = "netns@${nsName}.service";
               serviceConfig = {
+                #NetworkNamespacePath = nsPath;
                 PrivateNetwork = true;
                 ExecStart = "${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 127.0.0.1:${toString port}";
               };
@@ -126,51 +132,59 @@ in
       in
       {
         services = patchedServices // forwardServices // {
-          wireguard-netns = {
-            description = "wireguard netns manager";
+          "netns@" = {
+            description = "%I network namespace";
             before = [ "network.target" ];
             serviceConfig = {
               Type = "oneshot";
               RemainAfterExit = true;
               PrivateNetwork = true;
-
-              ExecStart = pkgs.writers.writeDash "wireguard-netns-up" ''
-                ${ip} netns add wireguard
-                ${util-linux}/bin/umount /var/run/netns/wireguard
-                ${util-linux}/bin/mount --bind /proc/self/ns/net /var/run/netns/wireguard
-              '';
-              ExecStop = pkgs.writers.writeDash "wireguard-netns-down" ''
-                ${ip} netns del wireguard
-              '';
+              PrivateMounts = false;
+              ExecStart = (pkgs.writeShellScript "netns-up" ''
+                set -xe
+                ${pkgs.iproute}/bin/ip netns add $1
+                ${pkgs.utillinux}/bin/umount /var/run/netns/$1
+                ${pkgs.utillinux}/bin/mount --bind /proc/self/ns/net /var/run/netns/$1
+              '') + " %I";
+              ExecStop = "${pkgs.iproute}/bin/ip netns del %I";
             };
           };
 
           wireguard = {
             description = "wireguard VPN client";
-            bindsTo = [ "wireguard-netns.service" ];
-            requires = [ "network-online.target" ];
-            after = [ "wireguard-netns.service" ];
+            bindsTo = [ "netns@${nsName}.service" ];
+            requires = [ "network-online.target" "netns@${nsName}.service" ];
+            after = [ "wireguard-netns-init.service" ];
             serviceConfig = {
               Type = "oneshot";
               RemainAfterExit = true;
               ExecStart = pkgs.writers.writeDash "wireguard-up" ''
+                ${ip} -n ${nsName} route del default dev ${ifName} || true
+                ${ip} -n ${nsName} -6 route del default dev ${ifName} || true
+                ${ip} route del default dev ${ifName} || true
+                ${ip} -n ${nsName} link del ${ifName} || true
+                ${ip} link del ${ifName} || true
                 # Note: creating the iface in the outer netns means that wg will
                 # "remember" the packets need to go through the outer netns.
-                ${ip} link add wireguard type wireguard
-                ${pkgs.wireguard-tools}/bin/wg set wireguard \
+                set -xe
+                ${ip} link add ${ifName} type wireguard
+                ${pkgs.wireguard-tools}/bin/wg set ${ifName} \
                     private-key '${cfg.privateKey}' \
                     peer '${cfg.peerPublicKey}' \
                     endpoint '${cfg.endpointAddr}' \
                     allowed-ips '0.0.0.0/0,::0/0'
-                ${ip} link set wireguard netns wireguard up
-                ${ip} -n wireguard addr add ${cfg.ip4} dev wireguard
-                ${ip} -n wireguard -6 addr add ${cfg.ip6} dev wireguard
-                ${ip} -n wireguard route add default dev wireguard
-                ${ip} -n wireguard -6 route add default dev wireguard
+                ${ip} link set ${ifName} netns ${nsName}
+                ${ip} -n ${nsName} link set ${ifName} up
+                ${ip} -n ${nsName} addr add ${cfg.ip4} dev ${ifName}
+                ${ip} -n ${nsName} -6 addr add ${cfg.ip6} dev ${ifName}
+                ${ip} -n ${nsName} route add default dev ${ifName}
+                ${ip} -n ${nsName} -6 route add default dev ${ifName}
               '';
               ExecStop = pkgs.writers.writeDash "wireguard-down" ''
-                ${ip} -n wireguard route del default dev wireguard
-                ${ip} -n wireguard link del wireguard
+                set -xe
+                ${ip} -n ${nsName} route del default dev ${ifName} || true
+                ${ip} -n ${nsName} -6 route del default dev ${ifName} || true
+                ${ip} -n ${nsName} link del ${ifName}
               '';
             };
           };
