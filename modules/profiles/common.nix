@@ -39,7 +39,7 @@
     # NIX
     nixpkgs.config.allowUnfree = true;
     nix = {
-      package = pkgs.nixUnstable;
+      package = pkgs.nixVersions.nix_2_17; # FIXME: revert after https://github.com/NixOS/nix/issues/9052
       daemonCPUSchedPolicy = "idle";
       extraOptions = lib.mkMerge [
         "experimental-features = nix-command flakes"
