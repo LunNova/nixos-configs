@@ -243,8 +243,8 @@ in
       privateKey = "/persist/mullvad/priv.key";
       peerPublicKey = "c3OgLZw8kh5k3lqACXIiShPGr8xcIfdrUs+qRW9zmk4=";
       endpointAddr = "174.127.113.11:51820";
-      ip4 = "10.64.165.53/32";
-      ip6 = "fc00:bbbb:bbbb:bb01::1:a534/128";
+      ip4 = "10.68.90.202/32";
+      ip6 = "fc00:bbbb:bbbb:bb01::5:5ac9/128";
 
       isolateServices = [ "transmission" ];
       forwardPorts = [ 9091 ];
