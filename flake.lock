@@ -800,43 +800,6 @@
         "type": "github"
       }
     },
-    "replugged": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1664511204,
-        "narHash": "sha256-wgVInLJd97vsndfSVLRvJzOl4e1yZCXYsFpp0ITZvzQ=",
-        "owner": "replugged-org",
-        "repo": "replugged",
-        "rev": "e984d8fdae3a3585e6ca7dc7fa8aed3725062b31",
-        "type": "github"
-      },
-      "original": {
-        "owner": "replugged-org",
-        "repo": "replugged",
-        "type": "github"
-      }
-    },
-    "replugged-nix-flake": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "replugged": "replugged"
-      },
-      "locked": {
-        "lastModified": 1669681358,
-        "narHash": "sha256-lkUUaIabrTDYK7U17iTIZJ2GK90zcV42SoiBh/fdDmU=",
-        "owner": "LunNova",
-        "repo": "replugged-nix-flake",
-        "rev": "6e6bb35f7016632cc661c31c54bdc9021229e2da",
-        "type": "github"
-      },
-      "original": {
-        "owner": "LunNova",
-        "repo": "replugged-nix-flake",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "background-switcher": "background-switcher",
@@ -856,7 +819,6 @@
         "openxr-nix-flake": "openxr-nix-flake",
         "plover-flake": "plover-flake",
         "pre-commit-hooks": "pre-commit-hooks_2",
-        "replugged-nix-flake": "replugged-nix-flake",
         "rust-overlay": "rust-overlay_2",
         "thoth-reminder-bot": "thoth-reminder-bot"
       }

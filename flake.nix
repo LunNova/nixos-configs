@@ -46,23 +46,6 @@
     };
 
     minimal-shell.url = "github:LunNova/nix-minimal-shell";
-
-    # Powercord. pcp- and pct- prefix have meaning, cause inclusion as powercord plugin/theme
-    replugged-nix-flake = {
-      url = "github:LunNova/replugged-nix-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    # TODO: check for web access loading scripts and patch out
-    # pcp-tweaks = { url = "github:NurMarvin/discord-tweaks"; flake = false; };
-    # pcp-theme-toggler = { url = "github:redstonekasi/theme-toggler"; flake = false; };
-    #Doesn't work on electron 15
-    # pcp-better-status-indicators = { url = "github:GriefMoDz/better-status-indicators"; flake = false; };
-    # pcp-webhook-tag = { url = "github:BenSegal855/webhook-tag"; flake = false; };
-    # pcp-always-push = { url = "github:Karamu98/AlwaysPushNotifications"; flake = false; };
-    # TODO: locked version of this which doesn't hit web
-    # pct-clearvision = { url = "github:ClearVision/ClearVision-v6"; flake = false; };
-    # pcp-hidden = { url = "github:discord-modifications/show-hidden-channels"; flake = false; };
-    # TODO: background overrides here instead of manually configured?
   };
 
   # SCHEMA:
