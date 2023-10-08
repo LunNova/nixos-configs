@@ -3,7 +3,7 @@ let
   useGrub = false;
   inherit (config.lun.x13s) useGpu;
   useGpuFw = config.lun.x13s.useGpu;
-  dtbName = "x13s65rc4.dtb";
+  dtbName = "x13s66rc4.dtb";
   kp = [
     {
       name = "x13s-cfg";
@@ -28,21 +28,20 @@ let
   ];
   linux_x13s_pkg = { buildLinux, ... } @ args:
     buildLinux (args // {
-      version = "6.5.0";
-      modDirVersion = "6.5.0-rc4";
+      version = "6.6.0";
+      modDirVersion = "6.6.0-rc4";
 
+      # https://github.com/steev/linux/tree/lenovo-x13s-v6.6.0-rc4
       src = pkgs.fetchFromGitHub {
-        # owner = "jhovold";
-        # repo = "linux";
-        # rev = "wip/sc8280xp-v6.3-rc3";
+        name = "steev-linux-x13s-6.6.0-rc4";
         owner = "steev";
         repo = "linux";
-        rev = "ce7a36f2aa50715e58c79f51776ba55f668652a5";
-        hash = "sha256-6PteuXz7sN/ebrh6HA6To5JDqYWpg61IgTOvAi3GsM8=";
+        rev = "553fbd2f768ebcfef528ce8d42a1f082eef06d6f";
+        hash = "sha256-x+K7qI/f9DsgNfBdTk0kdCsR5ACQxVfpl9z21vdy43M=";
       };
       kernelPatches = (args.kernelPatches or [ ]) ++ kp;
 
-      extraMeta.branch = "6.3";
+      extraMeta.branch = "6.6";
     } // (args.argsOverride or { }));
 
   linux_x13s = pkgs.callPackage linux_x13s_pkg {
@@ -53,6 +52,7 @@ let
   dtb = "${linuxPackages_x13s.kernel}/dtbs/qcom/sc8280xp-lenovo-thinkpad-x13s.dtb";
   inherit (config.boot.loader) efi;
 
+  # nurl https://github.com/kvalo/ath11k-firmware
   ath11k_fw_src = pkgs.fetchFromGitHub {
     name = "ath11k-firmware-src";
     owner = "kvalo";
@@ -67,6 +67,7 @@ let
     rev = "1ade4f466b05a86a7c7bdd51f719c08714580d14";
     hash = "sha256-GFGcm+KicTfNXSY8oMJlqBkrjdyb05C65hqK0vfCQvI=";
   };
+  # nurl https://github.com/linux-surface/aarch64-firmware
   aarch64-fw = pkgs.fetchFromGitHub {
     name = "aarch64-fw-src";
     owner = "linux-surface";
