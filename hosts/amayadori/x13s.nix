@@ -4,6 +4,18 @@ let
   inherit (config.lun.x13s) useGpu;
   useGpuFw = config.lun.x13s.useGpu;
   dtbName = "x13s66rc4.dtb";
+  remove-dupe-fw = ''
+    pushd ${pkgs.linux-firmware}
+    shopt -s extglob
+    shopt -s globstar
+    for file in */**; do
+      if [ -f "$file" ] && [ -f "$out/$file" ]; then
+        echo "Duplicate file $file"
+        rm -fv "$out/$file"
+      fi
+    done
+    popd
+  '';
   kp = [
     {
       name = "x13s-cfg";
@@ -79,14 +91,16 @@ let
 
   ath11k_fw = pkgs.runCommandNoCC "ath11k_fw" { } ''
     mkdir -p $out/lib/firmware/ath11k/
-    cp -r ${ath11k_fw_src}/* $out/lib/firmware/ath11k/
+    cp -r --no-preserve=mode,ownership ${ath11k_fw_src}/* $out/lib/firmware/ath11k/
+
+    ${remove-dupe-fw}
   '';
   cenunix_fw_src = pkgs.fetchzip {
     url = "https://github.com/cenunix/x13s-firmware/releases/download/1.0.0/x13s-firmware.tar.gz";
     sha256 = "sha256-cr0WMKbGeJyQl5S8E7UEB/Fal6FY0tPenEpd88KFm9Q=";
     stripRoot = false;
   };
-  x13s_extra_fw = pkgs.runCommandNoCC "x13s_extra_fw" { } (''
+  x13s_extra_fw = pkgs.runCommandNoCC "x13s_extra_fw" { } ''
     mkdir -p $out/lib/firmware/qcom/sc8280xp/
     # mkdir -p $out/lib/firmware/qca/
 
@@ -102,11 +116,14 @@ let
     popd
 
     cp ${x13s-tplg}/prebuilt/qcom/sc8280xp/LENOVO/21BX/audioreach-tplg.bin $out/lib/firmware/qcom/sc8280xp/SC8280XP-LENOVO-X13S-tplg.bin
-    cp -r ${x13s-tplg}/prebuilt/* $out/lib/firmware/
-  '' + (lib.optionalString useGpuFw ''
-    # cp -r ${aarch64-fw}/firmware/qca/* $out/lib/firmware/qca/
-    cp -r ${aarch64-fw}/firmware/qcom/* $out/lib/firmware/qcom/
-  ''));
+    cp -r --no-preserve=mode,ownership ${x13s-tplg}/prebuilt/* $out/lib/firmware/
+    ${lib.optionalString useGpuFw ''
+      # cp -r ${aarch64-fw}/firmware/qca/* $out/lib/firmware/qca/
+      cp -r --no-preserve=mode,ownership ${aarch64-fw}/firmware/qcom/* $out/lib/firmware/qcom/
+    ''}
+
+    ${remove-dupe-fw}
+  '';
   # see https://github.com/szclsya/x13s-alarm
   pd-mapper = (pkgs.callPackage "${flakeArgs.mobile-nixos}/overlay/qrtr/pd-mapper.nix" { inherit qrtr; }).overrideAttrs (old: {
     # TODO: use newer version and fix patch
@@ -169,7 +186,6 @@ in
 
     hardware.firmware = [
       (lib.hiPrio ath11k_fw)
-      (lib.hiPrio (ath11k_fw // { compressFirmware = false; }))
       (lib.lowPrio (x13s_extra_fw // { compressFirmware = false; }))
     ];
 
@@ -178,29 +194,6 @@ in
         ${pkgs.bash}/bin/bash -c '${pkgs.mount}/bin/mount -o bind ${x13s-alsa-ucm-conf}/share/alsa/ ${pkgs.alsa-ucm-conf}/share/alsa/ || true'
       ''
     ];
-
-    # nixpkgs.overlays = [
-    #   (
-    #     final: prev: let alsa-lib = 
-    #         prev.alsa-lib.override {
-    #           alsa-ucm-conf = prev.alsa-ucm-conf.overrideAttrs (_: rec {
-    #             src = pkgs.fetchFromGitHub {
-    #               owner = "alsa-project";
-    #               repo = "alsa-ucm-conf";
-    #               rev = "f5d3c381e4471fb90601c4ecd1d3cf72874b2b27";
-    #               hash = "sha256-N180GHWlw/ztiAGkwT+Nk9w503uoO0dyxpoykGZnsNM=";
-    #             };
-    #           });
-    #         }; in {
-    #       pipewire = prev.pipewire.override {
-    #         inherit alsa-lib;
-    #       };
-    #       alsa-utils = prev.alsa-utils.override {
-    #         inherit alsa-lib;
-    #       };
-    #     }
-    #   )
-    # ];
 
     environment.systemPackages = [ qrtr qmic rmtfs pd-mapper uncompressed-fw ];
     environment.pathsToLink = [ "share/uncompressed-firmware" ];
@@ -213,34 +206,10 @@ in
         enableOSMesa = false;
         enableOpenCL = false;
       }).overrideAttrs (old: {
-        version = "22.3.1-unstable";
-        src = pkgs.fetchFromGitLab {
-          domain = "gitlab.freedesktop.org";
-          owner = "mesa";
-          repo = "mesa";
-          rev = "772cacff32b2ed22799a1dbaeac6857824400f53";
-          hash = "sha256-wiZXS2AmpQNn5Nl/Ai88z9leSAM70OUJCT0d0Rnd6RI=";
-        };
-        buildInputs = old.buildInputs ++ [
-          pkgs.libunwind
-          pkgs.lm_sensors
-        ];
         mesonFlags = old.mesonFlags ++ [
           "-Dgallium-vdpau=false"
           "-Dgallium-va=false"
           "-Dandroid-libbacktrace=disabled"
-        ];
-        postPatch = old.postPatch + ''
-
-        echo "option(
-  'disk-cache-key',
-  type : 'string',
-  value : ${"''"},
-  description : 'Mesa cache key.'
-)" >> meson_options.txt 
-      '';
-        patches = [
-          ./mesa.patch
         ];
       })).drivers;
     services.logind.extraConfig = ''
@@ -342,9 +311,6 @@ in
       loader.systemd-boot.enable = lib.mkForce false;
     } else {
       loader.systemd-boot.enable = true;
-      loader.systemd-boot.extraFiles = {
-        "${dtbName}" = dtb;
-      };
     });
 
     #    isoImage.contents = [
