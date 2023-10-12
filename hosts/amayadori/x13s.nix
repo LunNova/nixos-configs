@@ -261,7 +261,7 @@ in
     # https://dumpstack.io/1675806876_thinkpad_x13s_nixos.html
     boot = {
       loader.efi = {
-        canTouchEfiVariables = lib.mkForce true;
+        canTouchEfiVariables = lib.mkForce false;
         efiSysMountPoint = "/boot";
       };
 
