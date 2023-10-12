@@ -11,8 +11,13 @@ fi
 set -xeuo pipefail
 
 nix-collect-garbage --delete-older-than 3d
+nix profile wipe-history --profile /home/lun/.local/state/nix/profiles/home-manager
+
 /nix/var/nix/profiles/system/bin/switch-to-configuration boot
 
-nix-store --optimise
+nix-store --gc
+nix store gc --verbose --no-keep-derivations --no-keep-env-derivations
+nix store optimise
+sync
 
 fstrim -av
