@@ -4,6 +4,7 @@ let
   inherit (config.lun.x13s) useGpu;
   useGpuFw = config.lun.x13s.useGpu;
   dtbName = "x13s66rc4.dtb";
+  bindOverAlsa = false;
   remove-dupe-fw = ''
     pushd ${pkgs.linux-firmware}
     shopt -s extglob
@@ -189,7 +190,7 @@ in
       (lib.lowPrio (x13s_extra_fw // { compressFirmware = false; }))
     ];
 
-    systemd.services.display-manager.serviceConfig.ExecStartPre = [
+    systemd.services.display-manager.serviceConfig.ExecStartPre = lib.mkIf bindOverAlsa [
       ''
         ${pkgs.bash}/bin/bash -c '${pkgs.mount}/bin/mount -o bind ${x13s-alsa-ucm-conf}/share/alsa/ ${pkgs.alsa-ucm-conf}/share/alsa/ || true'
       ''
