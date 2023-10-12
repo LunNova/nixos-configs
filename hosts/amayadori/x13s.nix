@@ -44,16 +44,20 @@ let
     }
   ];
   linux_x13s_pkg = { buildLinux, ... } @ args:
-    buildLinux (args // {
+    let
       version = "6.6.0";
-      modDirVersion = "6.6.0-rc4";
+      modDirVersion = "${version}-rc4";
+      rev = "553fbd2f768ebcfef528ce8d42a1f082eef06d6f";
+    in
+    buildLinux (args // {
+      inherit version modDirVersion;
 
       # https://github.com/steev/linux/tree/lenovo-x13s-v6.6.0-rc4
       src = pkgs.fetchFromGitHub {
-        name = "steev-linux-x13s-6.6.0-rc4";
+        inherit rev;
+        name = "x13s-linux-${modDirVersion}-${rev}";
         owner = "steev";
         repo = "linux";
-        rev = "553fbd2f768ebcfef528ce8d42a1f082eef06d6f";
         hash = "sha256-x+K7qI/f9DsgNfBdTk0kdCsR5ACQxVfpl9z21vdy43M=";
       };
       kernelPatches = (args.kernelPatches or [ ]) ++ kp;
