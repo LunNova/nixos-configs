@@ -38,6 +38,10 @@ let
         DRM_NOUVEAU = lib.mkForce no;
       };
     }
+    {
+      name = "x13s-hotter-revert";
+      patch = ./x13s-hotter-revert.patch;
+    }
   ];
   linux_x13s_pkg = { buildLinux, ... } @ args:
     buildLinux (args // {

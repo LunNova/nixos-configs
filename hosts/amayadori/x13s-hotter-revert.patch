@@ -1,0 +1,24 @@
+Revert 6d522fb56f0cad0a3a116b4480206ed7a676b9f3
+Date: Fri, 17 Feb 2023 16:11:51 -0600
+Subject: [PATCH] arm64: dts: lenovo-x13s: Make it hotter
+
+I don't like limiting the cpu so early, so let it get a bit warmer
+before doing so.
+--- b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
++++ a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+@@ -301,13 +301,13 @@
+ 
+ 			trips {
+ 				skin_temp_alert0: trip-point0 {
++					temperature = <55000>;
+-					temperature = <60000>;
+ 					hysteresis = <1000>;
+ 					type = "passive";
+ 				};
+ 
+ 				skin_temp_alert1: trip-point1 {
++					temperature = <58000>;
+-					temperature = <65000>;
+ 					hysteresis = <1000>;
+ 					type = "passive";
+ 				};
