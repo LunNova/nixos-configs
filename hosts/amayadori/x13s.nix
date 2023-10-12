@@ -273,7 +273,7 @@ in
       ];
       kernelPackages = lib.mkForce linuxPackages_x13s;
       kernelParams = [
-        # FIXME: pcie_aspm setting?
+        "pcie_aspm=force"
         "boot.shell_on_fail"
         "clk_ignore_unused"
         "pd_ignore_unused"
