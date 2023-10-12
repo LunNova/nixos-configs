@@ -79,7 +79,8 @@ in
     DEVICES_TO_DISABLE_ON_WIFI_CONNECT = "wwan";
     DEVICES_TO_DISABLE_ON_WWAN_CONNECT = "wifi";
   };
-  # defaults to 16 on this machine which OOMs some builds
-  nix.settings.cores = 8;
+  # not much RAM available to build with so limit jobs and cores
+  nix.settings.max-jobs = 2;
+  nix.settings.cores = 6;
 }
 
