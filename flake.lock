@@ -476,22 +476,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-cura-testing": {
-      "locked": {
-        "lastModified": 1665894801,
-        "narHash": "sha256-iF52gpIeZtEPL6nMDyCiy4JbR2RiEBmH4pQsiIDmSc4=",
-        "owner": "LunNova",
-        "repo": "nixpkgs",
-        "rev": "bd7de0e7c17a16885fbe25ffb7c266fffb65dfb9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "LunNova",
-        "repo": "nixpkgs",
-        "rev": "bd7de0e7c17a16885fbe25ffb7c266fffb65dfb9",
-        "type": "github"
-      }
-    },
     "nixpkgs-lib": {
       "locked": {
         "dir": "lib",
@@ -813,7 +797,6 @@
         "nix-gaming": "nix-gaming",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
-        "nixpkgs-cura-testing": "nixpkgs-cura-testing",
         "nixpkgs-review-checks": "nixpkgs-review-checks",
         "nixpkgs-stable": "nixpkgs-stable_2",
         "openxr-nix-flake": "openxr-nix-flake",
