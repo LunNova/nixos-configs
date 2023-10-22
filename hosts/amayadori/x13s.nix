@@ -327,13 +327,6 @@ in
       loader.systemd-boot.enable = true;
     });
 
-    #    isoImage.contents = [
-    #      {
-    #        source = dtb;
-    #        target = "/x13s.dtb";
-    #      }
-    #    ];
-
     system.activationScripts.x13s-dtb = ''
       in_package="${dtb}"
       esp_tool_folder="${efi.efiSysMountPoint}/"
