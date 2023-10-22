@@ -1,10 +1,11 @@
 { config, options, flakeArgs, lib, pkgs, ... }:
+# See https://github.com/jhovold/linux/wiki/X13s for non distro specific info
 let
   useGrub = false;
   inherit (config.lun.x13s) useGpu;
   useGpuFw = config.lun.x13s.useGpu;
   dtbName = "x13s66rc4.dtb";
-  bindOverAlsa = false;
+  bindOverAlsa = true;
   remove-dupe-fw = ''
     pushd ${pkgs.linux-firmware}
     shopt -s extglob
@@ -38,10 +39,10 @@ let
         DRM_NOUVEAU = lib.mkForce no;
       };
     }
-    {
-      name = "x13s-hotter-revert";
-      patch = ./x13s-hotter-revert.patch;
-    }
+    # {
+    #   name = "x13s-hotter-revert";
+    #   patch = ./x13s-hotter-revert.patch;
+    # }
   ];
   linux_x13s_pkg = { buildLinux, ... } @ args:
     let
@@ -66,7 +67,7 @@ let
     } // (args.argsOverride or { }));
 
   linux_x13s = pkgs.callPackage linux_x13s_pkg {
-    defconfig = "laptop_defconfig";
+    defconfig = "johan_defconfig";
   };
 
   linuxPackages_x13s = pkgs.linuxPackagesFor linux_x13s;
@@ -173,11 +174,12 @@ let
     };
   x13s-alsa-ucm-conf = pkgs.alsa-ucm-conf.overrideAttrs (_: {
     src = pkgs.fetchFromGitHub {
+      name = "alsa-ucm-conf-src";
       owner = "alsa-project";
       repo = "alsa-ucm-conf";
-      # master on 2023-08-19
-      rev = "d42e1d149ba14084617819b85ef3cb824d177112";
-      hash = "sha256-P22UpyAHv5a18gfsOTt06+7Pxxd363Dphst601p9990=";
+      # https://github.com/alsa-project/alsa-ucm-conf/pull/335/commits
+      rev = "e8c3e7792336e9f68aa560db8ad19ba06ba786bb";
+      hash = "sha256-4fIvgHIkTyGApM3uvucFPSYMMGYR5vjHOz6KQ26Kg7A=";
     };
   });
 in
@@ -270,17 +272,21 @@ in
       consoleLogLevel = 9;
       kernelModules = [
         "snd_usb_audio"
+        "msm"
       ];
       kernelPackages = lib.mkForce linuxPackages_x13s;
       kernelParams = [
-        "pcie_aspm=force"
+        "pcie_aspm.policy=powersupersave"
+        # "pcie_aspm=force"
         "boot.shell_on_fail"
         "clk_ignore_unused"
         "pd_ignore_unused"
         "arm64.nopauth"
-        "cma=128M"
+        "efi=noruntime"
+        # "cma=128M"
         "nvme.noacpi=1" # fixes high power after suspend resume
         "iommu.strict=0" # fixes some issues when using USB devices eg slow wifi
+        # "iommu.passthrough=0"
       ] ++ lib.optionals (!useGrub) [
         "dtb=${dtbName}"
       ];
@@ -297,7 +303,6 @@ in
           "gpio_sbu_mux"
           "phy_qcom_qmp_combo"
           "panel-edp"
-          "msm"
           "phy_qcom_edp"
           "i2c-core"
           "i2c-hid"
@@ -335,6 +340,7 @@ in
       in_esp="''${esp_tool_folder}${dtbName}"
       >&2 echo "Ensuring $in_esp in EFI System Partition"
       if ! ${pkgs.diffutils}/bin/cmp --silent "$in_package" "$in_esp"; then
+        ls -l "$in_esp" || true
         >&2 echo "Copying $in_package -> $in_esp"
         mkdir -p "$esp_tool_folder"
         cp "$in_package" "$in_esp"
