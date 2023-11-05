@@ -1,15 +1,6 @@
 { pkgs, flakeArgs }:
 let
   inherit (pkgs) lib;
-  lutris-unwrapped = pkgs.lutris-unwrapped.overrideAttrs (old: {
-    src = pkgs.fetchFromGitHub {
-      owner = "lutris";
-      repo = "lutris";
-      rev = "e6efe2366df2c487455e0f8c429aa3dda9689ba9";
-      hash = "sha256-YVm2EFWLZ7jQ2mx6VQdFX1DGAHs+mndsl2Y4JLH3Ebk=";
-    };
-    patches = (old.patches or [ ]) ++ [ ./lutris/more-vulkan-search-paths.patch ];
-  });
   resholvCfg = {
     inputs = with pkgs; [
       coreutils
@@ -134,7 +125,6 @@ let
     # FIXME: this is upstreamed?
     wowup = pkgs.callPackage ./wowup { };
     lutris = pkgs.lutris.override {
-      inherit lutris-unwrapped;
       extraLibraries = pkgs: with pkgs; [
         jansson
         gnutls
