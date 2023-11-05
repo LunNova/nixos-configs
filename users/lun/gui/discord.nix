@@ -12,7 +12,7 @@ in
       [
         ((pkgs.discord.override {
           withOpenASAR = true;
-          withVencord = true;
+          withVencord = false;
         }).overrideAttrs (old: {
           postInstall = ''
             ${old.postInstall}
