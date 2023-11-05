@@ -210,7 +210,8 @@ in
     lun.power-saving.enable = true;
     lun.efi-tools.enable = true;
 
-    services.xserver.videoDrivers = [ "amdgpu" ];
+    services.xserver.videoDrivers = [ "nvidia" ];
+    services.xserver.dpi = 96; # force 100% DPI
     # services.xserver.drivers = lib.mkIf (config.lun.gpu-select.card != null) (lib.mkForce [{
     #   name = "modesetting";
     #   display = true;
