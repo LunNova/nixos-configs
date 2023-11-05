@@ -29,7 +29,7 @@ let
     fi
   '';
   bgswitcher = flakeArgs.background-switcher.packages.${pkgs.system}.switcher;
-  bgswitchermenu = pkgs.writeScriptBin "rofi-background" ''
+  bgswitchermenu = pkgs.writeScriptBin "rofi-background-switcher" ''
     ${pkgs.rofi}/bin/rofi -show background -modes "background:${bgswitcher}/bin/background-switcher"
   '';
 in
@@ -41,6 +41,7 @@ in
     kitty = ""
     ArmCord = ""
   '';
+  xdg.configFile."random-background/config.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/sync/theming/background-switcher.toml";
   home.packages = [
     pkgs.lm_sensors
     pkgs.i3status-rust
@@ -48,6 +49,7 @@ in
     pkgs.feh
     i3-wp
     i3-screenshot
+    bgswitchermenu
   ];
   xsession.windowManager.i3 = {
     enable = true;
