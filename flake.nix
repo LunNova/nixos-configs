@@ -65,7 +65,7 @@
       lib = import ./lib { bootstrapLib = flakeArgs.nixpkgs.lib; };
       perSystem = import ./per-system.nix { inherit flakeArgs; };
       allSystemsUnmerged = flakeArgs.flake-utils.lib.eachDefaultSystem perSystem;
-      allSystems = allSystemsUnmerged // { homeConfigurations = lib.flattenTree allSystemsUnmerged.homeConfigurations; };
+      allSystems = allSystemsUnmerged // { homeConfigurations = lib.flatten allSystemsUnmerged.homeConfigurations; };
       serviceTest = import ./service-test.nix { };
       inherit (flakeArgs) self;
     in
