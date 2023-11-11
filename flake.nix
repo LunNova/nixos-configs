@@ -32,10 +32,30 @@
     openxr-nix-flake.inputs.nixpkgs.follows = "nixpkgs";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
-    background-switcher.url = "github:bootstrap-prime/background-switcher";
-    background-switcher.inputs.nixpkgs.follows = "nixpkgs";
-    background-switcher.inputs.flake-utils.follows = "flake-utils";
-    background-switcher.inputs.rust-overlay.follows = "rust-overlay";
+    crane = {
+      url = "github:ipetkov/crane";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    advisory-db = {
+      url = "github:rustsec/advisory-db";
+      flake = false;
+    };
+    background-switcher = {
+      url = "github:bootstrap-prime/background-switcher";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.rust-overlay.follows = "rust-overlay";
+      inputs.crane.follows = "crane";
+      inputs.advisory-db.follows = "advisory-db";
+    };
+    i3status-nix-update-widget = {
+      url = "github:bootstrap-prime/i3status-nix-update-widget";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.rust-overlay.follows = "rust-overlay";
+      inputs.crane.follows = "crane";
+      inputs.advisory-db.follows = "advisory-db";
+    };
     mobile-nixos = {
       url = "github:NixOS/mobile-nixos";
       flake = false;

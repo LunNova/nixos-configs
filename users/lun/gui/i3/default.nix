@@ -88,8 +88,47 @@ in
           inherit fonts;
           position = "top";
           #mode = "hide";
-          statusCommand = "${pkgs.i3status-rust}/bin/i3status-rs ${./i3status-rust.toml}";
+          statusCommand = "${pkgs.i3status-rust}/bin/i3status-rs ~/.config/i3status-rust/config-default.toml";
         }
+      ];
+    };
+  };
+  # ref https://github.com/workflow/nixos-config/blob/e559dbb5ce560084ce9249dd6febe721cb512d10/home/i3status-rust.nix#L76
+  programs.i3status-rust = {
+    enable = true;
+    bars.default = {
+      settings.theme.theme = "solarized-dark";
+      settings.icons.icons = "awesome6";
+      blocks = [
+        {
+          block = "custom";
+          command = "${
+              flakeArgs.i3status-nix-update-widget.packages.${pkgs.system}.default.override {
+                flakelock = "${flakeArgs.self}/flake.lock";
+              }
+            }/bin/i3status-nix-update-widget";
+          interval = 3000;
+          json = true;
+        }
+        {
+          block = "custom";
+          command = "cat /etc/hostname";
+          interval = "once";
+        }
+        { block = "memory"; }
+        { block = "cpu"; }
+        {
+          block = "net";
+          interval = 5;
+          format = " $icon $signal_strength$frequency ";
+        }
+        {
+          block = "time";
+          interval = 10;
+          format = " $icon $timestamp.datetime(f:'%F %R') ";
+        }
+        { block = "backlight"; }
+        { block = "sound"; }
       ];
     };
   };
