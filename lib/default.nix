@@ -1,6 +1,18 @@
 { bootstrapLib, ... }:
 let
   lib = bootstrapLib;
+  flattenOp = sum: path: val:
+    if (builtins.typeOf val) != "set" then
+      sum
+    else if val ? type && val.type == "derivation" then
+      (sum // { "${builtins.concatStringsSep "/" path}" = val; })
+    else
+      (recurse sum path val);
+  recurse = sum: path: val:
+    builtins.foldl'
+      (sum: key: flattenOp sum (path ++ [ key ]) val.${key})
+      sum
+      (builtins.attrNames val);
   self =
     (import ./mkFlake.nix { inherit bootstrapLib; }) //
     {
@@ -38,6 +50,7 @@ let
               pkgs = args.pkgs // { lun = args.pkgs.lun or (self.localPackagesForPkgs args.pkgs); };
             })))
         (builtins.readDir path);
+      flattenTree = recurse { } [ ];
     };
 in
 self
