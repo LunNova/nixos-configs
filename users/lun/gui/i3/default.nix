@@ -47,6 +47,7 @@ in
     pkgs.i3status-rust
     pkgs.i3wsr
     pkgs.feh
+    pkgs.kitty # add to path sice we use it as meta-enter
     i3-wp
     i3-screenshot
     bgswitchermenu
