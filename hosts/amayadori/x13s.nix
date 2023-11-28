@@ -192,6 +192,7 @@ in
 
   config = {
     specialisation.no-gpu.configuration = {
+      services.xserver.displayManager.sddm.wayland.enable = false;
       lun.x13s.useGpu = false;
     };
 
