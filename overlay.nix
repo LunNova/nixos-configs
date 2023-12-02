@@ -9,7 +9,6 @@ in
   lun = localPackages;
   powercord-plugins = self.lib.filterPrefix "pcp-" flakeArgs;
   powercord-themes = self.lib.filterPrefix "pct-" flakeArgs;
-  inherit (localPackages) kwinft;
   nix-gaming = flakeArgs.nix-gaming.packages.${final.system};
   # gst-plugins-bad pulls in opencv which we don't want
   # TODO: upstream option for this
@@ -34,17 +33,9 @@ in
   #       #   sha256 = "sha256-OkLi3nU1iBuELffC4I97TvsFkws3ihTHNeo2gVbQfN8=";
   #       # };
   #       patches = (old.patches or []) ++ [
-  #         ./packages/kwin/927-tearing.patch
+  #         ./packages/kwin/tearing-patch-try-2.diff
   #        ];
   #     });
   #   });
   # });
-} // (self.lib.setIf enableKwinFt {
-  plasma5Packages = prev.plasma5Packages.overrideScope' (_self2: super2: {
-    plasma5 = super2.plasma5.overrideScope' (_self1: _super1: {
-      inherit (localPackages.kwinft) kwin;
-      inherit (prev.plasma5Packages.plasma5) plasma-workspace;
-    });
-  });
-  # TODO: can we get disman and kdisplay included just with this toggle
-})
+}
