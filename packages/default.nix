@@ -148,6 +148,7 @@ let
       patches = old.patches ++ [
         ./wine/testing.patch
         ./wine/log-wpm.patch
+        ./wine/virtualprotect-log.patch
       ];
     })).override {
       supportFlags = {

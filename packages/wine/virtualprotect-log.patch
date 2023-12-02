@@ -1,0 +1,61 @@
+Messing around with VirtualProtectEx behaving differently under wine-proton-ge and windows, investigating with this patch.
+diff --git a/dlls/ntdll/unix/virtual.c b/dlls/ntdll/unix/virtual.c
+index f5c0cccbc59..92f9959c0d5 100644
+--- a/dlls/ntdll/unix/virtual.c
++++ b/dlls/ntdll/unix/virtual.c
+@@ -1763,12 +1763,18 @@ static NTSTATUS set_protection( struct file_view *view, void *base, SIZE_T size,
+     if ((status = get_vprot_flags( protect, &vprot, view->protect & SEC_IMAGE ))) return status;
+     if (is_view_valloc( view ))
+     {
+-        if (vprot & VPROT_WRITECOPY) return STATUS_INVALID_PAGE_PROTECTION;
++        if (vprot & VPROT_WRITECOPY) {
++            FIXME("   !!!! set_protection failed on VPROT_WRITECOPY check\n\n");
++            return STATUS_INVALID_PAGE_PROTECTION;
++        }
+     }
+     else
+     {
+         BYTE access = vprot & (VPROT_READ | VPROT_WRITE | VPROT_EXEC);
+-        if ((view->protect & access) != access) return STATUS_INVALID_PAGE_PROTECTION;
++        if ((view->protect & access) != access) {
++            FIXME("   !!!! set_protection failed on access check. access: %p . view->protect %p\n\n", (void *) access, (void *) view->protect);
++            //return STATUS_INVALID_PAGE_PROTECTION;
++        }
+     }
+ 
+     if (!set_vprot( view, base, size, vprot | VPROT_COMMITTED )) return STATUS_ACCESS_DENIED;
+@@ -4612,7 +4618,10 @@ NTSTATUS WINAPI NtProtectVirtualMemory( HANDLE process, PVOID *addr_ptr, SIZE_T
+         call.virtual_protect.size = size;
+         call.virtual_protect.prot = new_prot;
+         status = server_queue_process_apc( process, &call, &result );
+-        if (status != STATUS_SUCCESS) return status;
++        if (status != STATUS_SUCCESS) {
++            FIXME("NtProtectVirtualMemory failed for other process %p %p %08lx %08x\n", process, addr, size, (int)new_prot);
++            return status;
++        }
+ 
+         if (result.virtual_protect.status == STATUS_SUCCESS)
+         {
+@@ -4664,10 +4673,20 @@ NTSTATUS WINAPI NtProtectVirtualMemory( HANDLE process, PVOID *addr_ptr, SIZE_T
+                     set_page_vprot_bits(base, page_size, VPROT_COPIED, 0);
+                 }
+             }
++
++            if (status != STATUS_SUCCESS) {
++                FIXME("NtProtectVirtualMemory set_protection failed%p %p %08lx %08x\n", process, addr, size, (int)new_prot);
++            }
++        }
++        else {
++            FIXME("NtProtectVirtualMemory not committed %p %p %08lx %08x\n", process, addr, size, (int)new_prot);
++            status = STATUS_NOT_COMMITTED;
+         }
+-        else status = STATUS_NOT_COMMITTED;
+     }
+-    else status = STATUS_INVALID_PARAMETER;
++    else {
++        FIXME("NtProtectVirtualMemory view missing %p %p %08lx %08x\n", process, addr, size, (int)new_prot);
++        status = STATUS_INVALID_PARAMETER;
++    }
+ 
+     if (!status) VIRTUAL_DEBUG_DUMP_VIEW( view );
+ 
