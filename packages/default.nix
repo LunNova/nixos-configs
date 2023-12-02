@@ -26,7 +26,13 @@ let
       "cannot:${pkgs.slirp4netns}/bin/slirp4netns" # can:
     ]);
     fake = {
-      external = [ "sudo" "idea-ultimate" "wine" "nix" ];
+      external = [
+        "sudo"
+        "idea-ultimate"
+        "wine"
+        "nix"
+        "systemctl"
+      ];
     };
   };
   wrapScripts = path:
