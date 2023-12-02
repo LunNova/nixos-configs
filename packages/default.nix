@@ -99,7 +99,6 @@ let
   self = {
     lun-scripts = wrapScripts ./lun-scripts;
     xdg-open-with-portal = pkgs.callPackage ./xdg-open-with-portal { };
-    kwinft = pkgs.lib.recurseIntoAttrs (pkgs.callPackage ./kwinft { });
     spawn = pkgs.callPackage ./spawn { };
     swaysome = pkgs.callPackage ./swaysome { };
     sworkstyle = pkgs.callPackage ./sworkstyle { };
