@@ -33,8 +33,7 @@
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
     kde2nix = {
-      #url = "github:nix-community/kde2nix/main";
-      url = "git+file:///home/lun/sync/dev/LinuxGaming/kde2nix";
+      url = "github:nix-community/kde2nix/main";
       # currently uses special branch
       # inputs.nixpkgs.follows = "nixpkgs";
     };
