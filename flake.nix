@@ -32,6 +32,12 @@
     openxr-nix-flake.inputs.nixpkgs.follows = "nixpkgs";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
+    kde2nix = {
+      #url = "github:nix-community/kde2nix/main";
+      url = "git+file:///home/lun/sync/dev/LinuxGaming/kde2nix";
+      # currently uses special branch
+      # inputs.nixpkgs.follows = "nixpkgs";
+    };
     crane = {
       url = "github:ipetkov/crane";
       inputs.nixpkgs.follows = "nixpkgs";

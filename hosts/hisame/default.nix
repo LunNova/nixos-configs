@@ -7,15 +7,34 @@ let
   btrfsSsdOpts = btrfsOpts ++ [ "ssd" "discard=async" ];
   enableFbDevs = true;
   gpuPatches = false;
+  # env = {
+  #   # kwin wayland tearing support requires this for now
+  #   # https://invent.kde.org/plasma/kwin/-/merge_requests/927
+  #   # FIXME: remove once AMS tearing patch goes in
+  #   # is already in drm-misc-next, kwin doesn't support it yet
+  #   KWIN_DRM_NO_AMS = 1;
+  # };
+  # openrgb = pkgs.openrgb.overrideAttrs {
+  #   src = pkgs.fetchFromGitLab {
+  #     owner = "LunaA";
+  #     repo = "OpenRGB";
+  #     rev = "lunnova/pny-4090-verto";
+  #     hash = "sha256-WcBJ1t5UaH9qL0hI3qtJFWFD1kROqwK0ElCRW1p60gQ=";
+  #   };
+  # };
 in
 {
   imports = [
+    flakeArgs.kde2nix.nixosModules.default
   ];
 
   config = {
     networking.hostName = "lun-${name}-nixos";
     sconfig.machineId = "63d3399d2f2f65c96848f11d73082aef";
     system.stateVersion = "22.05";
+
+    # environment.variables = env;
+    # environment.sessionVariables = env;
 
     boot.kernelParams = [
       # force fastest transfer size
@@ -134,6 +153,18 @@ in
       # }
     ];
     services.hardware.bolt.enable = true;
+    specialisation.plasma6.configuration = {
+      services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
+      services.xserver.desktopManager.plasma6.enable = true;
+      system.forbiddenDependenciesRegex = "breeze-qt5";
+    };
+
+    # services.hardware.openrgb = {
+    #   enable = true;
+    #   package = openrgb;
+    # };
+    # environment.systemPackages = [ openrgb ];
+
     # lun.gpu-select.card = "card0";
     # specialisation.carddefault.configuration = {
     #   lun.gpu-select.card = lib.mkForce null;
@@ -223,6 +254,9 @@ in
     # lun.nvidia-gpu-standalone.enable = true; # enable nvidia gpu kernel modules and opengl/vulkan support only, no x stuff changes
     lun.nvidia-gpu-standalone.delayXWorkaround = true; # enable nvidia gpu kernel modules and opengl/vulkan support only, no x stuff changes
     hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
+    hardware.nvidia.modesetting.enable = true;
+    hardware.nvidia.powerManagement.enable = true;
+    # hardware.nvidia.powerManagement.finegrained = true;
     lun.ml = {
       enable = false; # FIXME: rocm https://github.com/NixOS/nixpkgs/issues/203949
       gpus = [ "amd" ];
