@@ -1,0 +1,78 @@
+diff --git a/src/backends/drm/drm_gpu.cpp b/src/backends/drm/drm_gpu.cpp
+index e2dcf8c41b..4d37e799e7 100644
+--- a/src/backends/drm/drm_gpu.cpp
++++ b/src/backends/drm/drm_gpu.cpp
+@@ -146,7 +146,7 @@ void DrmGpu::initDrmResources()
+ {
+     // try atomic mode setting
+     bool isEnvVarSet = false;
+-    bool noAMS = qEnvironmentVariableIntValue("KWIN_DRM_NO_AMS", &isEnvVarSet) != 0 && isEnvVarSet;
++    bool noAMS = true; //qEnvironmentVariableIntValue("KWIN_DRM_NO_AMS", &isEnvVarSet) != 0 && isEnvVarSet;
+     if (m_isVirtualMachine && !isEnvVarSet) {
+         qCWarning(KWIN_DRM, "Atomic Mode Setting disabled on GPU %s because of cursor offset issues in virtual machines", qPrintable(m_devNode));
+     } else if (noAMS) {
+diff --git a/src/backends/drm/drm_output.cpp b/src/backends/drm/drm_output.cpp
+index 8a982051de..c84b3d5a80 100644
+--- a/src/backends/drm/drm_output.cpp
++++ b/src/backends/drm/drm_output.cpp
+@@ -40,7 +40,10 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
+     , m_pipeline(conn->pipeline())
+     , m_connector(conn)
+ {
+-    RenderLoopPrivate::get(m_renderLoop.get())->canDoTearing = gpu()->asyncPageflipSupported();
++    auto tearingSupported = gpu()->asyncPageflipSupported();
++    auto rl = RenderLoopPrivate::get(m_renderLoop.get());
++    rl->canDoTearing = tearingSupported;
++    qCWarning(KWIN_DRM) << "Tearing supported on GPU " << gpu()->devNode() << " is " << tearingSupported;
+     m_pipeline->setOutput(this);
+     m_renderLoop->setRefreshRate(m_pipeline->mode()->refreshRate());
+ 
+@@ -106,6 +109,7 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
+     connect(&m_turnOffTimer, &QTimer::timeout, this, [this] {
+         setDrmDpmsMode(DpmsMode::Off);
+     });
++    rl->allowTearing = tearingSupported;
+ }
+ 
+ DrmOutput::~DrmOutput()
+diff --git a/src/core/renderloop.cpp b/src/core/renderloop.cpp
+index 034c9b1d7c..50d4535ba7 100644
+--- a/src/core/renderloop.cpp
++++ b/src/core/renderloop.cpp
+@@ -37,7 +37,7 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q)
+ 
+ void RenderLoopPrivate::scheduleRepaint()
+ {
+-    if (kwinApp()->isTerminating() || (compositeTimer.isActive() && !allowTearing)) {
++    if (kwinApp()->isTerminating() || compositeTimer.isActive()) {
+         return;
+     }
+     if (vrrPolicy == RenderLoop::VrrPolicy::Always || (vrrPolicy == RenderLoop::VrrPolicy::Automatic && fullscreenItem != nullptr)) {
+@@ -68,7 +68,8 @@ void RenderLoopPrivate::scheduleRepaint()
+     }
+ 
+     if (presentationMode == PresentationMode::Async || presentationMode == PresentationMode::AdaptiveAsync) {
+-        compositeTimer.start(0);
++        // consider bodging this to 1 for testing
++        compositeTimer.start(1);
+     } else {
+         const std::chrono::nanoseconds waitInterval = nextRenderTimestamp - currentTime;
+         compositeTimer.start(std::chrono::duration_cast<std::chrono::milliseconds>(waitInterval));
+@@ -223,11 +224,12 @@ std::chrono::nanoseconds RenderLoop::nextPresentationTimestamp() const
+ void RenderLoop::setFullscreenSurface(Item *surfaceItem)
+ {
+     d->fullscreenItem = surfaceItem;
+-    if (SurfaceItemWayland *wayland = qobject_cast<SurfaceItemWayland *>(surfaceItem)) {
+-        d->allowTearing = d->canDoTearing && options->allowTearing() && wayland->surface()->presentationHint() == PresentationHint::Async;
+-    } else {
+-        d->allowTearing = false;
+-    }
++    d->allowTearing = d->canDoTearing;
++    // if (SurfaceItemWayland *wayland = qobject_cast<SurfaceItemWayland *>(surfaceItem)) {
++    //     d->allowTearing = d->canDoTearing && options->allowTearing() && wayland->surface()->presentationHint() == PresentationHint::Async;
++    // } else {
++    //     d->allowTearing = false;
++    // }
+ }
+ 
+ RenderLoop::VrrPolicy RenderLoop::vrrPolicy() const
