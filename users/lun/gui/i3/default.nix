@@ -128,6 +128,7 @@ in
           interval = 10;
           format = " $icon $timestamp.datetime(f:'%F %R') ";
         }
+        { block = "battery"; }
         { block = "backlight"; }
         { block = "sound"; }
       ];
