@@ -81,6 +81,6 @@ in
   };
   # not much RAM available to build with so limit jobs and cores
   nix.settings.max-jobs = 2;
-  nix.settings.cores = 6;
+  nix.settings.cores = 4;
 }
 
