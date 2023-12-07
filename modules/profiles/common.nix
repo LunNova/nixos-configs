@@ -47,6 +47,7 @@
       settings = {
         auto-optimise-store = true;
         trusted-users = [ "@wheel" ];
+        max-substitution-jobs = 32;
       };
     };
 
