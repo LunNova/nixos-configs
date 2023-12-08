@@ -8,7 +8,7 @@ let
   drun = "${lib.getExe pkgs.rofi} -show run";
   menu = "${lib.getExe pkgs.rofi} -show combi";
   i3-screenshot = pkgs.writeShellScriptBin "i3-screenshot" ''
-    path="$HOME/sync/screenshots/$(hostname)-$(date "+%Y-%m-%d %T").png" && ${lib.getExe pkgs.maim} -s "$path" && ${lib.getExe pkgs.xclip} -selection clipboard -t image/png "$path"
+    path="$HOME/sync/screenshots/$(hostname)-$(date "+%Y-%m-%d %T").png" && ${lib.getExe pkgs.maim} --hidecursor -s "$path" && ${lib.getExe pkgs.xclip} -selection clipboard -t image/png "$path"
   '';
   fontNames = [
     "Liberation Mono"
