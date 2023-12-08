@@ -34,7 +34,11 @@
     xdg.portal = {
       enable = true;
       xdgOpenUsePortal = true;
-      extraPortals = lib.mkIf (!config.services.xserver.desktopManager.plasma5.enable) [ pkgs.xdg-desktop-portal-gtk ];
+      config.${"none+i3"}.default = [ "kde" "gtk" "*" ];
+      extraPortals = [
+        pkgs.xdg-desktop-portal-gtk
+        pkgs.xdg-desktop-portal-wlr
+      ];
     };
 
     # GRAPHICS ACCEL
