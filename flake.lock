@@ -418,17 +418,16 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "nixpkgs-21": "nixpkgs-21",
         "rust-overlay": [
           "rust-overlay"
         ]
       },
       "locked": {
-        "lastModified": 1700882028,
-        "narHash": "sha256-aMpOGpzjgVsnZfjVsRAuFpKve6tyGUr0YHQn6Ebk/Ig=",
+        "lastModified": 1702438432,
+        "narHash": "sha256-xJYb8Ake3Vw8UsigEAYJxoi6k5t4VvTeuajjSkF32mo=",
         "owner": "bootstrap-prime",
         "repo": "i3status-nix-update-widget",
-        "rev": "4ffdc7bd8bb0eda38bbb2f578002b6a4db2c3336",
+        "rev": "1884767dffab7809829a4412f77ca3b678dc0afc",
         "type": "github"
       },
       "original": {
@@ -553,22 +552,6 @@
       "original": {
         "owner": "K900",
         "ref": "qt6ening",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs-21": {
-      "locked": {
-        "lastModified": 1659446231,
-        "narHash": "sha256-hekabNdTdgR/iLsgce5TGWmfIDZ86qjPhxDg/8TlzhE=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "eabc38219184cc3e04a974fe31857d8e0eac098d",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-21.11",
         "repo": "nixpkgs",
         "type": "github"
       }
