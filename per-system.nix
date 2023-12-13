@@ -23,7 +23,7 @@ let
     # https://github.com/NixOS/nix/pull/6530
     pkgs = flakeArgs.self.lib.mkPkgs flakeArgs.nixpkgs system (if system == "x86_64-linux" then pkgsPatches else [ ]) (defaultPkgsConfig // { inherit system; });
     pkgs-stable = flakeArgs.self.lib.mkPkgs flakeArgs.nixpkgs-stable system [ ] (defaultPkgsConfig // { inherit system; });
-    nixpkgsLib = flakeArgs.nixpkgs.lib.extend (final: _prev: {
+    nixpkgsLib = flakeArgs.nixpkgs.lib.extend (_final: _prev: {
       nixosSystem = args:
         import "${flakeArgs.nixpkgs}/nixos/lib/eval-config.nix" (args // {
           modules = args.modules ++ [{
@@ -136,17 +136,27 @@ let
       pre-commit-check = flakeArgs.pre-commit-hooks.lib.${system}.run {
         src = ./.;
         hooks = {
+          # nix
           statix.enable = true;
+          deadnix.enable = true;
+          nil.enable = true;
           nixpkgs-fmt.enable = true;
+          # shell
           shellcheck = {
             enable = true;
             files = "\\.sh$";
             types_or = lib.mkForce [ ];
           };
-          shfmt = {
+          bats.enable = true;
+          beautysh = {
             enable = true;
             files = "\\.sh$";
+            entry = lib.mkForce "${lib.getExe perSystemSelf.pkgs.beautysh} -t";
           };
+          # TOML
+          taplo.enable = true;
+          # YAML
+          yamllint.enable = true;
         };
       };
     } // flakeArgs.deploy-rs.lib.${system}.deployChecks flakeArgs.self.deploy;
