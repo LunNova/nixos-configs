@@ -4,7 +4,7 @@ let
   useGrub = false;
   inherit (config.lun.x13s) useGpu;
   useGpuFw = config.lun.x13s.useGpu;
-  dtbName = "x13s66rc4.dtb";
+  dtbName = "x13s67rc3.dtb";
   bindOverAlsa = true;
   remove-dupe-fw = ''
     pushd ${pkgs.linux-firmware}
@@ -37,6 +37,9 @@ let
         HZ_250 = lib.mkForce no;
         DRM_AMDGPU = lib.mkForce no;
         DRM_NOUVEAU = lib.mkForce no;
+        QCOM_TSENS = lib.mkForce yes;
+        NVMEM_QCOM_QFPROM = lib.mkForce yes;
+        ARM_QCOM_CPUFREQ_NVMEM = lib.mkForce yes;
       };
     }
     # {
@@ -46,24 +49,24 @@ let
   ];
   linux_x13s_pkg = { buildLinux, ... } @ args:
     let
-      version = "6.6.0";
-      modDirVersion = "${version}-rc4";
-      rev = "553fbd2f768ebcfef528ce8d42a1f082eef06d6f";
+      version = "6.7.0";
+      modDirVersion = "${version}-rc3";
+      rev = "b6a9604820404c31e9332b7b0a7f1e81add77946";
     in
     buildLinux (args // {
       inherit version modDirVersion;
 
-      # https://github.com/steev/linux/tree/lenovo-x13s-v6.6.0-rc4
+      # https://github.com/steev/linux/tree/lenovo-x13s-v6.7.0-rc3
       src = pkgs.fetchFromGitHub {
         inherit rev;
         name = "x13s-linux-${modDirVersion}-${rev}";
         owner = "steev";
         repo = "linux";
-        hash = "sha256-x+K7qI/f9DsgNfBdTk0kdCsR5ACQxVfpl9z21vdy43M=";
+        hash = "sha256-CPnPmLNX94n+N4Ku7riKoL7AlllcGKHE3xECC990AFY=";
       };
       kernelPatches = (args.kernelPatches or [ ]) ++ kp;
 
-      extraMeta.branch = "6.6";
+      extraMeta.branch = "6.7";
     } // (args.argsOverride or { }));
 
   linux_x13s = pkgs.callPackage linux_x13s_pkg {
