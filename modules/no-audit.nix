@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+_:
 {
   config = {
     security.audit.enable = false;

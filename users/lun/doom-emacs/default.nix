@@ -1,7 +1,7 @@
 # like hlissner's dotfiles https://github.com/hlissner/dotfiles/blob/master/modules/editors/emacs.nix
 # except home manager module and probably worse
 
-{ pkgs, pkgs-stable, lib, config, ... }:
+{ pkgs, lib, config, ... }:
 # FIXME: make this a module
 let
   # native-comp + compile in vterm

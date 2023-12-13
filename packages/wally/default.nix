@@ -3,7 +3,6 @@
 , fetchurl
 , autoPatchelfHook
 , libusb1
-, libsoup
 , webkitgtk
 , wrapGAppsHook
 , gtk3

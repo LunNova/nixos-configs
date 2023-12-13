@@ -138,7 +138,7 @@ let
     ${remove-dupe-fw}
   '';
   # see https://github.com/szclsya/x13s-alarm
-  pd-mapper = (pkgs.callPackage "${flakeArgs.mobile-nixos}/overlay/qrtr/pd-mapper.nix" { inherit qrtr; }).overrideAttrs (old: {
+  pd-mapper = (pkgs.callPackage "${flakeArgs.mobile-nixos}/overlay/qrtr/pd-mapper.nix" { inherit qrtr; }).overrideAttrs (_old: {
     # TODO: use newer version and fix patch
     # src = pkgs.fetchFromGitHub {
     #   owner = "andersson";
@@ -151,7 +151,7 @@ let
   qmic = pkgs.callPackage "${flakeArgs.mobile-nixos}/overlay/qrtr/qmic.nix" { };
   rmtfs = pkgs.callPackage "${flakeArgs.mobile-nixos}/overlay/qrtr/rmtfs.nix" { inherit qmic qrtr; };
   uncompressed-fw = pkgs.callPackage
-    ({ lib, runCommand, buildEnv, firmwareFilesList }:
+    ({ runCommand, buildEnv, firmwareFilesList }:
       runCommand "qcom-modem-uncompressed-firmware-share"
         {
           firmwareFiles = buildEnv {

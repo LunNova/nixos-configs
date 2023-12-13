@@ -3,7 +3,6 @@ let
   name = "hisame";
   swap = "/dev/disk/by-partlabel/hisame_swap";
   btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" "autodefrag" ];
-  btrfsHddOpts = btrfsOpts;
   btrfsSsdOpts = btrfsOpts ++ [ "ssd" "discard=async" ];
   enableFbDevs = true;
   gpuPatches = false;

@@ -44,58 +44,7 @@ let
   lun-scripts-path = pkgs.symlinkJoin { name = "lun-scripts"; paths = lib.attrValues self.lun-scripts; };
   # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/19101.patch
   mesaOverride =
-    mesaPkg: (mesaPkg.overrideAttrs (old: { }));
-  mesaOverrideVersion = mesaPkg: ((mesaPkg.override {
-    # libdrm = (if mesaPkg == pkgs.pkgsi686Linux.mesa then pkgs.pkgsi686Linux else pkgs).libdrm.overrideAttrs (old: {
-    #   patches = (old.patches or [ ]) ++ [ ./mesa/libdrm-stat-workaround.patch ];
-    # });
-    galliumDrivers = [ "iris" "i915" "radeonsi" ];
-    vulkanDrivers = [ "amd" "intel" ];
-    enableGalliumNine = false;
-    enableOSMesa = false;
-    enableOpenCL = false;
-  }).overrideAttrs (old: {
-    version = "22.3.1";
-    src = pkgs.fetchFromGitLab {
-      domain = "gitlab.freedesktop.org";
-      owner = "mesa";
-      repo = "mesa";
-      rev = "mesa-22.3.1";
-      hash = "sha256-oDJLgVqPEhxmUBsKxwadT+UAv/BwMA+eCEaBwnUwwEU=";
-    };
-    # version = "23.0.0-dev";
-    # src = pkgs.fetchFromGitLab {
-    #   domain = "gitlab.freedesktop.org";
-    #   owner = "mesa";
-    #   repo = "mesa";
-    #   rev = "321dc93276408300eefc89b5e38676582599585a";
-    #   hash = "sha256-LRlF+bImSPO07AOeZKErVUNeKfHQ26oRCjQFumozT5E=";
-    # };
-    mesonFlags = lib.lists.remove "-Dxvmc-libs-path=${placeholder "drivers"}/lib" old.mesonFlags;
-    patches = (old.patches or [ ]) ++ [
-      # ./mesa/mr-19101-prereq-22.0.patch # if < 23
-      ./mesa/mr-19101-device-select.patch
-    ];
-  }));
-  mesaOverride23WithZink = mesaPkg: (mesaPkg.override {
-    # MESA_LOADER_DRIVER_OVERRIDE=zink
-    galliumDrivers = [ "zink" "iris" "i915" "radeonsi" "swrast" ];
-    vulkanDrivers = [ "amd" "intel" "swrast" ];
-    enableGalliumNine = false;
-    enableOSMesa = true;
-    enableOpenCL = true;
-  }).overrideAttrs (old: {
-    patches = old.patches ++ [ ./mesa/mr-19101-device-select.patch ];
-    version = "23.0.0-dev";
-    src = pkgs.fetchFromGitLab {
-      domain = "gitlab.freedesktop.org";
-      owner = "lun";
-      repo = "mesa";
-      rev = "7641e3524319dd9272be822b6e70c801496d9d92";
-      sha256 = "sha256-NLuNND5dJnqVocxk7zZrCJs+WxktKeUbZQVrf/nZXaQ=";
-    };
-    mesonFlags = lib.lists.remove "-Dxvmc-libs-path=${placeholder "drivers"}/lib" old.mesonFlags;
-  });
+    mesaPkg: (mesaPkg.overrideAttrs (_old: { }));
   self = {
     lun-scripts = wrapScripts ./lun-scripts;
     xdg-open-with-portal = pkgs.callPackage ./xdg-open-with-portal { };

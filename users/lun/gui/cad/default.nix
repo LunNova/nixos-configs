@@ -1,4 +1,4 @@
-{ pkgs, lib, flakeArgs, ... }:
+{ pkgs, ... }:
 {
   home.packages = [
     pkgs.openscad

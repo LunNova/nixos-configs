@@ -1,4 +1,4 @@
-{ pkgs, config, lib, ... }:
+{ config, lib, ... }:
 {
   options.lun.tablet.enable = lib.mkEnableOption "drawing tablet support";
 

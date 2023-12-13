@@ -1,9 +1,8 @@
 { flakeArgs }:
-final: prev:
+final: _prev:
 let
   inherit (flakeArgs) self;
   localPackages = self.localPackagesForPkgs final;
-  enableKwinFt = false;
 in
 {
   lun = localPackages;

@@ -1,4 +1,4 @@
-{ pkgs, config, lib, ... }:
+{ config, lib, ... }:
 {
   config = {
     lun.persistence.dirs = [ "/var/lib/samba" ];

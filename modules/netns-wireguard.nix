@@ -20,7 +20,6 @@ let
   ip = "${pkgs.iproute2}/bin/ip";
   ifName = "wg0";
   nsName = "wg";
-  inherit (pkgs) util-linux;
 
   resolvconf = pkgs.writeText "wg-resolv.conf" "nameserver 8.8.8.8";
   nsswitchconf = pkgs.writeText "wg-nsswitch.conf" "hosts: files dns";

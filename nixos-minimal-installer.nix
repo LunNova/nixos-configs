@@ -1,4 +1,4 @@
-{ lib, pkgs, config, options, nixpkgs-modules-path, ... }:
+{ lib, pkgs, config, nixpkgs-modules-path, ... }:
 {
   imports =
     [

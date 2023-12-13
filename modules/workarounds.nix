@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+_:
 {
   config = {
     # networkd just stops managing my wlan0 after some generation changes #195777

@@ -6,7 +6,7 @@ let
     # nixos module for host system which enables systemd lingering
     # lingering.users = [ "user1" "user2" ];
     # This allows systemd user services for these users to start on system boot.
-    hostNixosModule = { pkgs, lib, config, ... }:
+    hostNixosModule = { lib, config, ... }:
       let
         lingerTouch = lib.concatMapStringsSep "\n"
           (user: ''

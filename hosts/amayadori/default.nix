@@ -1,4 +1,4 @@
-{ config, pkgs, lib, nixos-hardware-modules-path, ... }:
+{ lib, ... }:
 
 let
   # https://github.com/cole-mickens/nixcfg/blob/main/mixins/nvidia.nix

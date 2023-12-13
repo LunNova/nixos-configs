@@ -1,7 +1,5 @@
 { lib
-, writeText
 , writeTextFile
-, writeShellScript
 , fetchFromGitHub
 , stdenv
 , python3Packages
