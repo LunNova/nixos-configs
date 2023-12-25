@@ -3,6 +3,7 @@ system:
 let
   pkgsPatches = [
     # add .patch to a github PR URL to get a patch quickly
+    ./nixpkgs-patches/graphical-session-delay.patch
   ];
   defaultPkgsConfig = {
     config.allowUnfree = true;
