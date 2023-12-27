@@ -16,6 +16,9 @@
     programs.vscode = {
       enable = true;
       package = pkgs.vscode.fhs;
+      extensions = with pkgs.vscode-extensions; [
+        flakeArgs.alicorn-vscode-extension.packages.${pkgs.system}.alicorn-vscode-extension
+      ];
     };
   };
 }

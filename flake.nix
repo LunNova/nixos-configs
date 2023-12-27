@@ -70,6 +70,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
+    alicorn-vscode-extension = {
+      # TODO: point at main once flake gets merged
+      url = "github:Fundament-Software/alicorn-vscode-extension/da203e1ab2061463c5fe40e04e82397796ba4bed";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
 
     minimal-shell.url = "github:LunNova/nix-minimal-shell";
   };
