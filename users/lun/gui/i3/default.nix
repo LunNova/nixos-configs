@@ -68,6 +68,7 @@ in
         "${mod}+d" = "exec ${menu}";
         "${mod}+i" = "bar hidden_state toggle";
         "${mod}+Shift+b" = "exec ${lib.getExe bgswitchermenu}";
+        "${mod}+Shift+r" = "restart";
 
         "XF86KbdBrightnessUp" = "exec ${lib.getExe pkgs.brightnessctl} -d '*kbd*' set +40%";
         "XF86KbdBrightnessDown" = "exec ${lib.getExe pkgs.brightnessctl} -d '*kbd*' set 40%-";
@@ -121,14 +122,18 @@ in
         {
           block = "net";
           interval = 5;
-          format = " $icon $signal_strength$frequency ";
+          format = " $icon {$signal_strength $ssid $frequency|} ";
+          format_alt = " $icon {$signal_strength $ssid $frequency|Wired connection} via $device ";
         }
         {
           block = "time";
           interval = 10;
           format = " $icon $timestamp.datetime(f:'%F %R') ";
         }
-        { block = "battery"; }
+        {
+          block = "battery";
+          format = " {$icon $percentage|} {$time |}";
+        }
         { block = "backlight"; }
         { block = "sound"; }
       ];
