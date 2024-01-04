@@ -4,8 +4,9 @@ let
   useGrub = false;
   inherit (config.lun.x13s) useGpu;
   useGpuFw = config.lun.x13s.useGpu;
-  dtbName = "x13s67rc3.dtb";
+  dtbName = "x13s67rc8.dtb";
   bindOverAlsa = true;
+  kernelPdMapper = true;
   remove-dupe-fw = ''
     pushd ${pkgs.linux-firmware}
     shopt -s extglob
@@ -40,6 +41,9 @@ let
         QCOM_TSENS = lib.mkForce yes;
         NVMEM_QCOM_QFPROM = lib.mkForce yes;
         ARM_QCOM_CPUFREQ_NVMEM = lib.mkForce yes;
+      } // lib.optionalAttrs kernelPdMapper {
+        QCOM_PD_MAPPER = lib.mkForce yes;
+        QRTR = lib.mkForce yes;
       };
     }
     # {
@@ -50,19 +54,19 @@ let
   linux_x13s_pkg = { buildLinux, ... } @ args:
     let
       version = "6.7.0";
-      modDirVersion = "${version}-rc3";
-      rev = "b6a9604820404c31e9332b7b0a7f1e81add77946";
+      modDirVersion = "${version}-rc8";
+      rev = "65a5d4648bcf112a4e9738fb459f8bf18c45828a";
     in
     buildLinux (args // {
       inherit version modDirVersion;
 
-      # https://github.com/steev/linux/tree/lenovo-x13s-v6.7.0-rc3
+      # https://github.com/steev/linux/tree/lenovo-x13s-v6.7.0-rc8
       src = pkgs.fetchFromGitHub {
         inherit rev;
         name = "x13s-linux-${modDirVersion}-${rev}";
         owner = "steev";
         repo = "linux";
-        hash = "sha256-CPnPmLNX94n+N4Ku7riKoL7AlllcGKHE3xECC990AFY=";
+        hash = "sha256-lg52pgvL3Js69DganSnSu+cQoyECj1OTgs49a7OWqg0=";
       };
       kernelPatches = (args.kernelPatches or [ ]) ++ kp;
 
@@ -210,8 +214,8 @@ in
       ''
     ];
 
-    environment.systemPackages = [ qrtr qmic rmtfs pd-mapper uncompressed-fw ];
-    environment.pathsToLink = [ "share/uncompressed-firmware" ];
+    environment.systemPackages = lib.mkIf (!kernelPdMapper) [ qrtr qmic rmtfs pd-mapper uncompressed-fw ];
+    environment.pathsToLink = lib.mkIf (!kernelPdMapper) [ "share/uncompressed-firmware" ];
 
     hardware.opengl.package = lib.mkIf useGpu
       ((pkgs.mesa.override {
