@@ -61,8 +61,8 @@ let
   linux_x13s_pkg = { buildLinux, ... } @ args:
     let
       version = "6.7.0";
-      modDirVersion = "${version}-rc8";
-      rev = "65a5d4648bcf112a4e9738fb459f8bf18c45828a";
+      modDirVersion = "${version}";
+      rev = "70361dbe4c3ca972cba6adaea3e08419978644f5";
     in
     buildLinux (args // {
       inherit version modDirVersion;
@@ -71,9 +71,9 @@ let
       src = pkgs.fetchFromGitHub {
         inherit rev;
         name = "x13s-linux-${modDirVersion}-${rev}";
-        owner = "steev";
+        owner = "jhovold";
         repo = "linux";
-        hash = "sha256-lg52pgvL3Js69DganSnSu+cQoyECj1OTgs49a7OWqg0=";
+        hash = "sha256-7LSxxXtTitbBKFlFJtlfhBgY6Ld0/1cbP3SBAk15ZRc=";
       };
       kernelPatches = (args.kernelPatches or [ ]) ++ kp;
 
