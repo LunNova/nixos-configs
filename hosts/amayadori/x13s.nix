@@ -7,6 +7,11 @@ let
   dtbName = "x13s67rc8.dtb";
   bindOverAlsa = true;
   kernelPdMapper = true;
+  kernelOpts = {
+    Y = lib.mkForce lib.kernel.yes;
+    N = lib.mkForce lib.kernel.no;
+    M = lib.mkForce lib.kernel.module;
+  };
   remove-dupe-fw = ''
     pushd ${pkgs.linux-firmware}
     shopt -s extglob
@@ -23,27 +28,29 @@ let
     {
       name = "x13s-cfg";
       patch = null;
-      extraStructuredConfig = with lib.kernel; {
-        EFI_ARMSTUB_DTB_LOADER = lib.mkForce yes;
-        OF_OVERLAY = lib.mkForce yes;
-        BTRFS_FS = lib.mkForce yes;
-        BTRFS_FS_POSIX_ACL = lib.mkForce yes;
-        MEDIA_CONTROLLER = lib.mkForce yes;
-        SND_USB_AUDIO_USE_MEDIA_CONTROLLER = lib.mkForce yes;
-        SND_USB = lib.mkForce yes;
-        SND_USB_AUDIO = lib.mkForce module;
-        USB_XHCI_PCI = lib.mkForce module;
-        NO_HZ_FULL = lib.mkForce yes;
-        HZ_100 = lib.mkForce yes;
-        HZ_250 = lib.mkForce no;
-        DRM_AMDGPU = lib.mkForce no;
-        DRM_NOUVEAU = lib.mkForce no;
-        QCOM_TSENS = lib.mkForce yes;
-        NVMEM_QCOM_QFPROM = lib.mkForce yes;
-        ARM_QCOM_CPUFREQ_NVMEM = lib.mkForce yes;
+      extraStructuredConfig = with kernelOpts; {
+        EFI_ARMSTUB_DTB_LOADER = Y;
+        OF_OVERLAY = Y;
+        BTRFS_FS = Y;
+        BTRFS_FS_POSIX_ACL = Y;
+        SND_USB = Y;
+        SND_USB_AUDIO = M;
+        NO_HZ_FULL = Y;
+        HZ_100 = Y;
+        HZ_250 = N;
+        DRM_AMDGPU = N;
+        DRM_NOUVEAU = N;
+        QCOM_TSENS = Y;
+        NVMEM_QCOM_QFPROM = Y;
+        ARM_QCOM_CPUFREQ_NVMEM = Y;
+        MEDIA_CONTROLLER = Y;
+        SND_USB_AUDIO_USE_MEDIA_CONTROLLER = Y;
+        # linux> ../drivers/media/i2c/ar1337.c: In function 'ar1337_get_fmt':
+        # linux> ../drivers/media/i2c/ar1337.c:349:68: error: passing argument 2 of 'v4l2_subdev_get_pad_format' from incompatible pointer type [-Werror=incompatible-pointer-types]
+        VIDEO_AR1337 = N;
       } // lib.optionalAttrs kernelPdMapper {
-        QCOM_PD_MAPPER = lib.mkForce yes;
-        QRTR = lib.mkForce yes;
+        QCOM_PD_MAPPER = M;
+        QRTR = M;
       };
     }
     # {
