@@ -257,13 +257,13 @@ in
       #     RestartSec = "1";
       #   };
       # };
-      qrtr-ns = {
+      qrtr-ns = lib.mkIf (!kernelPdMapper) {
         serviceConfig = {
           ExecStart = "${qrtr}/bin/qrtr-ns -f 1";
           Restart = "always";
         };
       };
-      pd-mapper = {
+      pd-mapper = lib.mkIf (!kernelPdMapper) {
         wantedBy = [ "multi-user.target" ];
         requires = [ "qrtr-ns.service" ];
         after = [ "qrtr-ns.service" ];
@@ -288,6 +288,9 @@ in
       kernelModules = [
         "snd_usb_audio"
         "msm"
+      ] ++ lib.optionals kernelPdMapper [
+        "qrtr"
+        "qcom_pd_mapper"
       ];
       kernelPackages = lib.mkForce linuxPackages_x13s;
       kernelParams = [
