@@ -67,6 +67,9 @@
     services.blueman.enable = true;
     programs.dconf.enable = true;
 
+    # required for automounting with udiskie
+    services.udisks2.enable = true;
+
     sconfig.yubikey = false; # modules/yubikey # FIXME pam error
   };
 }
