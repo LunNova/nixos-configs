@@ -9,6 +9,6 @@
 
   options.lun.profiles = {
     androidDev = lib.mkEnableOption "enable android development";
-    emacs = lib.mkEnableOption "include emacs editor" // { default = true; };
+    emacs = lib.mkEnableOption "include emacs editor";
   };
 }
