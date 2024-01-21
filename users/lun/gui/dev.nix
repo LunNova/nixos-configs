@@ -7,6 +7,8 @@
       vulkan-tools
       nixd
       rehex
+      imhex
+      nurl # nix-prefetch-url but better
       flakeArgs.deploy-rs.packages.${pkgs.system}.default
     ] ++ lib.optionals (pkgs.system == "x86_64-linux") [
       jetbrains.idea-ultimate
