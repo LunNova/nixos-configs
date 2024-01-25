@@ -5,6 +5,7 @@
     ./audio.nix
     ./input-remapper.nix
     ./blueman.nix
+    ./barrier.nix
     ./kdeconfig.nix
   ];
 }
