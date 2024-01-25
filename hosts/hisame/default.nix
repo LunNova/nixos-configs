@@ -123,6 +123,13 @@ in
       }
     ]) ++ lib.optionals gpuPatches [
       {
+        name = "THP";
+        patch = null;
+        extraStructuredConfig = with lib.kernel; {
+          READ_ONLY_THP_FOR_FS = lib.mkForce yes;
+        };
+      }
+      {
         name = "amdgpu-no-ecc";
         patch = ./kernel/amdgpu-no-ecc.patch;
       }
