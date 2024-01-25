@@ -32,7 +32,11 @@
 
       # udev rules and package for vial keyboard remapper
       services.udev.packages = [ pkgs.lun.vial.udev-rule-vial-serial ];
-      environment.systemPackages = [ pkgs.lun.vial ];
+      environment.systemPackages = [ pkgs.lun.vial pkgs.barrier pkgs.openssl ];
+
+      programs.noisetorch.enable = true;
+      networking.firewall.allowedTCPPorts = [ 24800 ];
+      networking.firewall.allowedUDPPorts = [ 24800 ];
 
       # FIXME: xone doesn't work with wireless, seems unmaintained?
       # find something better or patch it
