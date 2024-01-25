@@ -4,6 +4,8 @@ let
   pkgsPatches = [
     # add .patch to a github PR URL to get a patch quickly
     ./nixpkgs-patches/graphical-session-delay.patch
+    #    ./nixpkgs-patches/279694-barrier.patch
+    # ./nixpkgs-patches/279531.patch
   ];
   defaultPkgsConfig = {
     config.allowUnfree = true;
@@ -155,9 +157,11 @@ let
             entry = lib.mkForce "${lib.getExe perSystemSelf.pkgs.beautysh} -t";
           };
           # TOML
-          taplo.enable = true;
+          # taplo.enable = true;
           # YAML
           yamllint.enable = true;
+          # markdown
+          markdownlint.enable = true;
         };
       };
     } // flakeArgs.deploy-rs.lib.${system}.deployChecks flakeArgs.self.deploy;
