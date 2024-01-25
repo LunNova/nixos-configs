@@ -164,6 +164,19 @@ in
       services.xserver.desktopManager.plasma6.enable = true;
       system.forbiddenDependenciesRegex = "breeze-qt5";
     };
+    specialisation.nvk.configuration = {
+      lun.nvk.enable = true;
+      # services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
+      # services.xserver.desktopManager.plasma6.enable = true;
+      # system.forbiddenDependenciesRegex = "breeze-qt5";
+    };
+    specialisation.nvk-sddmx.configuration = {
+      lun.nvk.enable = true;
+      services.xserver.displayManager.sddm.wayland.enable = false;
+      # services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
+      # services.xserver.desktopManager.plasma6.enable = true;
+      # system.forbiddenDependenciesRegex = "breeze-qt5";
+    };
 
     # services.hardware.openrgb = {
     #   enable = true;
@@ -215,7 +228,7 @@ in
     # Use zenpower rather than k10temp for CPU temperatures.
     # boot.extraModulePackages = with config.boot.kernelPackages; [ zenpower ];
     boot.blacklistedKernelModules = [
-      "nouveau"
+      # "nouveau"
       "radeon"
       "sp5100_tco" # watchdog hardware doesn't work
       # "k10temp" # replaced by zenpower
