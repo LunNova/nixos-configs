@@ -7,7 +7,12 @@ if [[ $(id -u) -ne 0 ]]; then
 fi
 
 profile="$1"; shift
-result="$2"; shift
+result="$1"; shift
+
+if ! [ -f "$result/bin/switch-to-configuration" ]; then
+	>&2 echo "Invalid system derivation at $result"
+	exit 1
+fi
 
 # This is a bodge.
 # amayadori's boot SSD sometimes seems to drop recent writes when it hangs and reboots
