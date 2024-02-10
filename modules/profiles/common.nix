@@ -14,7 +14,7 @@
     time = {
       timeZone = "America/Los_Angeles";
     };
-    services.xserver.layout = "us";
+    services.xserver.xkb.layout = "us";
 
     # CONSOLE
     console = {
@@ -59,7 +59,8 @@
     };
     services.avahi = {
       enable = true;
-      nssmdns = true;
+      nssmdns6 = true; # TODO: does this cause too much delay like the nssmdns4 option suggests?
+      nssmdns4 = true;
       publish.enable = true;
       publish.addresses = true;
     };

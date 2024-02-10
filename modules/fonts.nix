@@ -5,9 +5,9 @@ let lotsOfFonts = false;
 in
 {
   fonts = {
-    enableDefaultFonts = false;
+    enableDefaultPackages = false;
 
-    fonts = lib.mkForce (with pkgs; [
+    packages = lib.mkForce (with pkgs; [
       dejavu_fonts
       freefont_ttf
       gyre-fonts # TrueType substitutes for standard PostScript fonts
