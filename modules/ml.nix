@@ -25,9 +25,9 @@ in
     (lib.mkIf (virtualisation && amd) {
       # TODO: anything else needed?
       hardware.opengl.extraPackages = [
-        pkgs.rocm-opencl-icd
-        pkgs.rocm-opencl-runtime
-        pkgs.rocm-runtime
+        pkgs.rocmPackages.rocm-opencl-icd
+        pkgs.rocmPackages.rocm-opencl-runtime
+        pkgs.rocmPackages.rocm-runtime
       ];
     })
   ]);
