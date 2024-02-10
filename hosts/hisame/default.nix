@@ -272,7 +272,9 @@ in
     lun.gpu-select.enable = true;
     # lun.nvidia-gpu-standalone.enable = true; # enable nvidia gpu kernel modules and opengl/vulkan support only, no x stuff changes
     lun.nvidia-gpu-standalone.delayXWorkaround = true; # enable nvidia gpu kernel modules and opengl/vulkan support only, no x stuff changes
-    hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
+    # Need to use .production driver to match version in some docker containers right now
+    # Typically use .beta
+    hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.production;
     hardware.nvidia.modesetting.enable = true;
     hardware.nvidia.powerManagement.enable = true;
     # hardware.nvidia.powerManagement.finegrained = true;
