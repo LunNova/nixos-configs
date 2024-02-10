@@ -6,11 +6,13 @@
     boot.enableContainers = false;
 
     virtualisation = {
-      podman = {
-        enable = true;
-        dockerCompat = true; # docker alias
-      };
-      oci-containers.backend = "podman";
+      # FIXME: rootless podman keeps fucking up so disabling it for now
+      # podman = {
+      #   enable = true;
+      #   dockerCompat = true; # docker alias
+      # };
+      docker.enable = true;
+      oci-containers.backend = "docker";
     };
 
     lun.persistence.dirs = [

@@ -9,6 +9,8 @@ let cfg = config.lun.home-assistant; in
 
     systemd.services.podman.after = [ "NetworkManager-wait-online.service" ];
     systemd.services.podman.wants = [ "NetworkManager-wait-online.service" ];
+    systemd.services.docker.after = [ "NetworkManager-wait-online.service" ];
+    systemd.services.docker.wants = [ "NetworkManager-wait-online.service" ];
 
     virtualisation.oci-containers = {
       containers.homeassistant = {
