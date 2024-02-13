@@ -35,18 +35,6 @@ let
     };
   });
 
-  libDrmOverride = pkgs: pkgs.libdrm.overrideAttrs (new: _: {
-    version = "2.4.119";
-
-    src = pkgs.fetchFromGitLab {
-      domain = "gitlab.freedesktop.org";
-      owner = "mesa";
-      repo = "drm";
-      rev = "libdrm-${new.version}";
-      hash = "sha256-bIP3yK3VGZ/WGaUclJpb4nH8y6+zHQlQma+C9Or+Vg8=";
-    };
-  });
-
   mesonOverride = pkgs: pkgs.meson.overrideAttrs (new: old:
     let
       inherit (pkgs) lib;
@@ -135,7 +123,6 @@ let
     (pkgs.mesa.override {
       directx-headers = directx-headersOverride pkgs;
       meson = mesonOverride pkgs;
-      # libdrm = libDrmOverride pkgs;
 
       # we use the new flag for this
       enablePatentEncumberedCodecs = false;
@@ -206,7 +193,6 @@ in
 {
   overlay = _final: prev: {
     mesa = mesaOverride prev;
-    libdrm = libDrmOverride prev;
     pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
       (
         _python-final: python-prev: {

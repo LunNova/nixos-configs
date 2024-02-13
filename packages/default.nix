@@ -48,6 +48,7 @@ let
   self = {
     lun-scripts = wrapScripts ./lun-scripts;
     xdg-open-with-portal = pkgs.callPackage ./xdg-open-with-portal { };
+    compositor-killer = pkgs.callPackage ./compositor-killer { };
     spawn = pkgs.callPackage ./spawn { };
     swaysome = pkgs.callPackage ./swaysome { };
     sworkstyle = pkgs.callPackage ./sworkstyle { };

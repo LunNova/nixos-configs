@@ -36,6 +36,35 @@ let
     export __VK_LAYER_NV_optimus=NVIDIA_only
     exec -a "$0" "$@"
   '';
+  low-power-cfg = {
+    lun.amd-nvidia-laptop.enable = lib.mkForce false;
+    boot.blacklistedKernelModules = [
+      "i2c_nvidia_gpu"
+      "radeon"
+      "nouveau"
+      "nvidia"
+      "nvidia_drm"
+      "nvidia_uvm"
+      "nvidia_modeset"
+    ];
+    services.xserver.videoDrivers = [ "amdgpu" ];
+    boot.initrd.kernelModules = [ "amdgpu" ];
+    services.udev.extraRules = ''
+      #enable pci port kernel power management
+      SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", ATTR{power/control}="auto"
+      SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", ATTR{power/control}="auto"
+      # Remove NVIDIA USB xHCI Host Controller devices, if present
+      ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c0330", ATTR{remove}="1"
+      # Remove NVIDIA USB Type-C UCSI devices, if present
+      ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c8000", ATTR{remove}="1"
+      # Remove NVIDIA Audio devices, if present
+      ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{remove}="1"
+      # Remove NVIDIA VGA/3D controller
+      ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x03[0-9]*", ATTR{remove}="1"
+      # (disabled) Remove all nVidia devices, when present.
+      # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{remove}="1"
+      #'';
+  };
 in
 {
   imports =
@@ -73,34 +102,14 @@ in
   #   ];
   # };
 
-  specialisation.low-power.configuration = {
-    lun.amd-nvidia-laptop.enable = lib.mkForce false;
-    boot.blacklistedKernelModules = [
-      "i2c_nvidia_gpu"
-      "radeon"
-      "nouveau"
-      "nvidia"
-      "nvidia_drm"
-      "nvidia_uvm"
-      "nvidia_modeset"
+  specialisation.low-power.configuration = low-power-cfg;
+
+  specialisation.gnome.configuration = low-power-cfg // {
+    services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
+    services.xserver.desktopManager.gnome.enable = lib.mkForce true;
+    xdg.portal.extraPortals = lib.mkForce [
+      pkgs.xdg-desktop-portal-gnome
     ];
-    services.xserver.videoDrivers = [ "amdgpu" ];
-    boot.initrd.kernelModules = [ "amdgpu" ];
-    services.udev.extraRules = ''
-      #enable pci port kernel power management
-      SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", ATTR{power/control}="auto"
-      SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", ATTR{power/control}="auto"
-      # Remove NVIDIA USB xHCI Host Controller devices, if present
-      ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c0330", ATTR{remove}="1"
-      # Remove NVIDIA USB Type-C UCSI devices, if present
-      ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c8000", ATTR{remove}="1"
-      # Remove NVIDIA Audio devices, if present
-      ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{remove}="1"
-      # Remove NVIDIA VGA/3D controller
-      ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x03[0-9]*", ATTR{remove}="1"
-      # (disabled) Remove all nVidia devices, when present.
-      # ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{remove}="1"
-      #'';
   };
 
   boot.plymouth.enable = lib.mkForce false;

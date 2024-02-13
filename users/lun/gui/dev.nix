@@ -11,6 +11,8 @@
       meld # graphical diff, lets you paste in pretty easily
       nurl # nix-prefetch-url but better
       flakeArgs.deploy-rs.packages.${pkgs.system}.default
+      # waylandn't
+      pkgs.lun.compositor-killer
     ] ++ lib.optionals (pkgs.system == "x86_64-linux") [
       jetbrains.idea-ultimate
       jetbrains.rust-rover
