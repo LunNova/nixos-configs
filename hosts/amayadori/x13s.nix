@@ -1,11 +1,19 @@
 { config, options, flakeArgs, lib, pkgs, ... }:
+# Hi! This is the Thinkpad X13s specific part of my NixOS config.
+# I daily drive it when I'm travelling but it's not without issues.
 # See https://github.com/jhovold/linux/wiki/X13s for non distro specific info
 let
   useGrub = false;
   inherit (config.lun.x13s) useGpu;
   useGpuFw = config.lun.x13s.useGpu;
   dtbName = "x13s67rc8.dtb";
+  # Hacky workaround which mounts an updated alsa-ucm-confs package over the original nix store version
+  # Upgrading properly rebuilds the world and I don't have a fast enough system for that.
+  # TODO: remove once alsa-ucm-confs upstream has working audio configs for x13s
   bindOverAlsa = true;
+  # When on use the in-kernel QCOM_PD_MAPPER module instead of
+  # userspace. Avoids some workarounds to make sure the userspace one has access to uncompressed firmware
+  # Doesn't seem to be working right yet though, need to investigate.
   kernelPdMapper = true;
   kernelOpts = {
     Y = lib.mkForce lib.kernel.yes;
