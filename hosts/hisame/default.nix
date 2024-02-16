@@ -374,20 +374,20 @@ in
         path = "/mnt/_nas0/borg/uknas";
       };
     };
-    # services.beesd.filesystems = {
-    #   persist = {
-    #     spec = "PARTLABEL=${name}_persist_2";
-    #     hashTableSizeMB = 256;
-    #     verbosity = "crit";
-    #     extraOptions = [ "--loadavg-target" "2.0" ];
-    #   };
-    #   scratch = {
-    #     spec = "PARTLABEL=${name}_scratch";
-    #     hashTableSizeMB = 256;
-    #     verbosity = "crit";
-    #     extraOptions = [ "--loadavg-target" "2.0" ];
-    #   };
-    # };
+    services.beesd.filesystems = {
+      persist = {
+        spec = "PARTLABEL=${name}_persist_2";
+        hashTableSizeMB = 256;
+        verbosity = "crit";
+        extraOptions = [ "--loadavg-target" "2.0" ];
+      };
+      scratch = {
+        spec = "PARTLABEL=${name}_scratch";
+        hashTableSizeMB = 256;
+        verbosity = "crit";
+        extraOptions = [ "--loadavg-target" "2.0" ];
+      };
+    };
     fileSystems = {
       "/" = {
         device = "tmpfs";
