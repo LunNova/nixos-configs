@@ -159,21 +159,21 @@ in
       # }
     ];
     services.hardware.bolt.enable = true;
-    specialisation.gnome.configuration = {
-      services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
-      services.xserver.desktopManager.gnome.enable = lib.mkForce true;
-      xdg.portal.extraPortals = lib.mkForce [
-        pkgs.xdg-desktop-portal-gnome
-      ];
-    };
-    specialisation.gnome-nvk.configuration = {
-      lun.nvk.enable = true;
-      services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
-      services.xserver.desktopManager.gnome.enable = lib.mkForce true;
-      xdg.portal.extraPortals = lib.mkForce [
-        pkgs.xdg-desktop-portal-gnome
-      ];
-    };
+    # specialisation.gnome.configuration = {
+    #   services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
+    #   services.xserver.desktopManager.gnome.enable = lib.mkForce true;
+    #   xdg.portal.extraPortals = lib.mkForce [
+    #     pkgs.xdg-desktop-portal-gnome
+    #   ];
+    # };
+    # specialisation.gnome-nvk.configuration = {
+    #   lun.nvk.enable = true;
+    #   services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
+    #   services.xserver.desktopManager.gnome.enable = lib.mkForce true;
+    #   xdg.portal.extraPortals = lib.mkForce [
+    #     pkgs.xdg-desktop-portal-gnome
+    #   ];
+    # };
     specialisation.plasma6.configuration = {
       services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
       services.xserver.desktopManager.plasma6.enable = true;
