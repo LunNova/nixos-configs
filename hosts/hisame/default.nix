@@ -413,7 +413,7 @@ in
         fsType = "tmpfs";
         device = "tmpfs";
         neededForBoot = true;
-        options = [ "mode=1777" "rw" "nosuid" "nodev" "size=32G" ];
+        options = [ "mode=1777" "rw" "nosuid" "nodev" "size=40G" ];
       };
       "/mnt/scratch" = {
         fsType = "btrfs";
