@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 if [[ ! -f /etc/NIXOS ]]; then
 	echo "This script is only for nixos systems"
+	echo "If you're on a nixos system make sure you aren't inside an FHS environment shell"
 	exit 1
 fi
 if [[ $(id -u) -ne 0 ]]; then

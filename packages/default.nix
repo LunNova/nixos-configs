@@ -95,9 +95,9 @@ let
       dontStrip = true;
       debug = true;
       patches = old.patches ++ [
-        ./wine/testing.patch
-        ./wine/log-wpm.patch
-        ./wine/virtualprotect-log.patch
+        ./wine/fix-NtQueryInformationProcess-ProcessDebugPort-size.patch
+        ./wine/log-NtWriteVirtualMemory.patch
+        ./wine/log-NtProtectVirtualMemory.patch
       ];
     })).override {
       supportFlags = {

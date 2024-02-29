@@ -1,7 +1,1 @@
-_: {
-  config = {
-    nixpkgs.overlays = [
-
-    ];
-  };
-}
+_: { }

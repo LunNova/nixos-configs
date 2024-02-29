@@ -19,7 +19,7 @@ index f5c0cccbc59..92f9959c0d5 100644
 -        if ((view->protect & access) != access) return STATUS_INVALID_PAGE_PROTECTION;
 +        if ((view->protect & access) != access) {
 +            FIXME("   !!!! set_protection failed on access check. access: %p . view->protect %p\n\n", (void *) access, (void *) view->protect);
-+            //return STATUS_INVALID_PAGE_PROTECTION;
++            return STATUS_INVALID_PAGE_PROTECTION;
 +        }
      }
  

@@ -21,6 +21,6 @@ in
     #pkgs = pkgs provided to this system
     nix.registry.pkgs.flake =
       mkFlake pkgs { config = flakeArgs.self; }
-        "{config,...}: {legacyPackages.${escapeNixIdentifier config.nixpkgs.system}=config.nixosConfigurations.${escapeNixIdentifier config.networking.hostName}.pkgs;}";
+        "{config,...}: {legacyPackages.${escapeNixIdentifier pkgs.system}=config.pkgs.${escapeNixIdentifier pkgs.system};}";
   };
 }

@@ -1,11 +1,12 @@
 { flakeArgs }:
 system:
 let
+  # Patches applied before importing nixpkgs
+  # Only applied to pkgs/nixpkgs input, not stable input
   pkgsPatches = [
     # add .patch to a github PR URL to get a patch quickly
     ./nixpkgs-patches/graphical-session-delay.patch
-    #    ./nixpkgs-patches/279694-barrier.patch
-    # ./nixpkgs-patches/279531.patch
+    ./nixpkgs-patches/cosmic.patch
   ];
   defaultPkgsConfig = {
     config.allowUnfree = true;
@@ -15,6 +16,7 @@ let
       # })
       flakeArgs.self.overlays.default
       flakeArgs.emacs-overlay.overlay
+      (import ./overlay-nixpkgs.nix { inherit flakeArgs; })
     ];
   };
   readModules = path: builtins.map (x: path + "/${x}") (builtins.filter (str: (builtins.match "^[^.]*(\.nix)?$" str) != null) (builtins.attrNames (builtins.readDir path)));
@@ -24,31 +26,38 @@ let
     # eventually will get rid of this IFD
     # once there's patches support for flake inputs
     # https://github.com/NixOS/nix/pull/6530
-    pkgs = flakeArgs.self.lib.mkPkgs flakeArgs.nixpkgs system (if system == "x86_64-linux" then pkgsPatches else [ ]) (defaultPkgsConfig // { inherit system; });
+    pkgs = flakeArgs.self.lib.mkPkgs flakeArgs.nixpkgs system pkgsPatches (defaultPkgsConfig // { inherit system; });
     pkgs-stable = flakeArgs.self.lib.mkPkgs flakeArgs.nixpkgs-stable system [ ] (defaultPkgsConfig // { inherit system; });
     nixpkgsLib = flakeArgs.nixpkgs.lib.extend (_final: _prev: {
       nixosSystem = args:
-        import "${flakeArgs.nixpkgs}/nixos/lib/eval-config.nix" (args // {
-          modules = args.modules ++ [{
+        ((import "${perSystemSelf.pkgs}/nixos/lib/eval-config-minimal.nix" { inherit lib; }).evalModules (args // {
+          modules = args.modules
+            ++ (import "${perSystemSelf.pkgs}/nixos/modules/module-list.nix")
+            # ++ [ (import "${perSystemSelf.pkgs}/nixos/modules/services/x11/desktop-managers/cosmic.nix") ]
+            ++ [{
+            # Avoid reimporting pkgs (disables config.pkgs.overlays)
+            # FIXME: is it possible to have a specific
+            # specialisation for a system which still uses
+            # overlays when this is on?
+            imports = [ (import "${perSystemSelf.pkgs}/nixos/modules/misc/nixpkgs/read-only.nix") ];
+            nixpkgs.pkgs = perSystemSelf.pkgs;
+            # _module.args.pkgs = lib.mkForce perSystemSelf.pkgs;
             system.nixos.versionSuffix = "";
             system.nixos.revision = "";
           }];
-        });
-
+        }));
     });
     makeHost = path: lib.nixosSystem {
-      inherit (perSystemSelf.pkgs) system;
-
       specialArgs =
         {
           inherit flakeArgs;
-          inherit (perSystemSelf) pkgs-stable;
+          inherit (perSystemSelf) pkgs pkgs-stable;
           nixpkgs-modules-path = "perSystemSelf.pkgs";
           nixos-hardware-modules-path = "${flakeArgs.nixos-hardware}";
         };
 
       modules = [
-        { nixpkgs.pkgs = perSystemSelf.pkgs; }
+        #{ nixpkgs.pkgs = perSystemSelf.pkgs; }
         flakeArgs.home-manager.nixosModules.home-manager
         path
         ./users

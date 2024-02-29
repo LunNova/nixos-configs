@@ -1,4 +1,4 @@
-{ config, pkgs, lib, flakeArgs, ... }:
+{ config, pkgs, lib, ... }:
 let
   name = "hisame";
   swap = "/dev/disk/by-partlabel/hisame_swap";
@@ -21,10 +21,13 @@ let
   #     hash = "sha256-WcBJ1t5UaH9qL0hI3qtJFWFD1kROqwK0ElCRW1p60gQ=";
   #   };
   # };
+  env = {
+    XDP_COSMIC = lib.getExe pkgs.xdg-desktop-portal-cosmic;
+  };
 in
 {
   imports = [
-    flakeArgs.kde2nix.nixosModules.default
+    # flakeArgs.kde2nix.nixosModules.default
   ];
 
   config = {
@@ -32,8 +35,8 @@ in
     sconfig.machineId = "63d3399d2f2f65c96848f11d73082aef";
     system.stateVersion = "22.05";
 
-    # environment.variables = env;
-    # environment.sessionVariables = env;
+    environment.variables = env;
+    environment.sessionVariables = env;
 
     boot.kernelParams = [
       # force fastest transfer size
@@ -104,6 +107,9 @@ in
 
       # allow intel arc gpu to be used
       "i915.force_probe=*"
+
+      # use nvidia-drm instead of efifb
+      "nvidia-drm.fbdev=1"
     ];
 
     boot.plymouth.enable = lib.mkForce false;
@@ -174,23 +180,37 @@ in
     #     pkgs.xdg-desktop-portal-gnome
     #   ];
     # };
-    specialisation.plasma6.configuration = {
-      services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
-      services.xserver.desktopManager.plasma6.enable = true;
-      system.forbiddenDependenciesRegex = "breeze-qt5";
-    };
+    services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
+    services.xserver.desktopManager.plasma6.enable = true;
+    services.xserver.desktopManager.cosmic.enable = true;
+    system.forbiddenDependenciesRegex = "breeze-qt5";
     specialisation.nvk.configuration = {
       lun.nvk.enable = true;
-      # services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
-      # services.xserver.desktopManager.plasma6.enable = true;
-      # system.forbiddenDependenciesRegex = "breeze-qt5";
     };
-    specialisation.nvk-sddmx.configuration = {
+    specialisation.cosmic.configuration = {
       lun.nvk.enable = true;
-      services.xserver.displayManager.sddm.wayland.enable = false;
-      # services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
-      # services.xserver.desktopManager.plasma6.enable = true;
-      # system.forbiddenDependenciesRegex = "breeze-qt5";
+      services.xserver.displayManager.cosmic-greeter.enable = true;
+      services.xserver.displayManager.sddm.enable = lib.mkForce false;
+      services.xserver.desktopManager.cosmic.enable = true;
+      environment.systemPackages = [
+        pkgs.pop-launcher
+        pkgs.cosmic-greeter
+        pkgs.cosmic-applibrary
+        pkgs.cosmic-launcher
+      ];
+      security.pam.services.cosmic-greeter = { };
+    };
+    specialisation.cosmic-nvidia-proprietary.configuration = {
+      services.xserver.displayManager.cosmic-greeter.enable = true;
+      services.xserver.displayManager.sddm.enable = lib.mkForce false;
+      services.xserver.desktopManager.cosmic.enable = true;
+      environment.systemPackages = [
+        pkgs.pop-launcher
+        pkgs.cosmic-greeter
+        pkgs.cosmic-applibrary
+        pkgs.cosmic-launcher
+      ];
+      security.pam.services.cosmic-greeter = { };
     };
 
     # services.hardware.openrgb = {

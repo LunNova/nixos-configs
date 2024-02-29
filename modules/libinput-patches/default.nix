@@ -17,25 +17,25 @@ in
       # SUBSYSTEM=="input", ENV{MOUSE_WHEEL_CLICK_COUNT}=3
       # There is no generic libinput solution for this :/
 
-      nixpkgs.overlays = [
-        (_self: super: {
-          xorg = super.xorg.overrideScope' (_selfB: superB: {
-            inherit (super.xorg) xlibsWrapper;
-            xf86inputlibinput = superB.xf86inputlibinput.overrideAttrs (_attr: {
-              patches = [ ./libinput.patch ./no-accel.patch ];
-            });
-          });
-        })
-      ];
+      # nixpkgs.overlays = [
+      #   (_self: super: {
+      #     xorg = super.xorg.overrideScope' (_selfB: superB: {
+      #       inherit (super.xorg) xlibsWrapper;
+      #       xf86inputlibinput = superB.xf86inputlibinput.overrideAttrs (_attr: {
+      #         patches = [ ./libinput.patch ./no-accel.patch ];
+      #       });
+      #     });
+      #   })
+      # ];
     })
     (lib.mkIf cfg.accel-default-off {
-      nixpkgs.overlays = [
-        (_self: super: {
-          runtime-patched.libinput = super.libinput.overrideAttrs (old: {
-            patches = (old.patches or [ ]) ++ [ ./libinput-no-accel.patch ];
-          });
-        })
-      ];
+      # nixpkgs.overlays = [
+      #   (_self: super: {
+      #     runtime-patched.libinput = super.libinput.overrideAttrs (old: {
+      #       patches = (old.patches or [ ]) ++ [ ./libinput-no-accel.patch ];
+      #     });
+      #   })
+      # ];
     })
     {
       environment.etc."libinput/local-overrides.quirks".text = ''
