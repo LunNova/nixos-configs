@@ -72,6 +72,8 @@ in
 
         "XF86KbdBrightnessUp" = "exec ${lib.getExe pkgs.brightnessctl} -d '*kbd*' set +40%";
         "XF86KbdBrightnessDown" = "exec ${lib.getExe pkgs.brightnessctl} -d '*kbd*' set 40%-";
+        "XF86MonBrightnessUp" = "exec ${lib.getExe pkgs.brightnessctl} set +5%";
+        "XF86MonBrightnessDown" = "exec ${lib.getExe pkgs.brightnessctl} set 5%-";
       };
 
       startup = [
