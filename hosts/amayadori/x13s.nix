@@ -6,15 +6,24 @@ let
   useGrub = false;
   inherit (config.lun.x13s) useGpu;
   useGpuFw = config.lun.x13s.useGpu;
-  dtbName = "x13s67rc8.dtb";
+  kernelVersion = "6.7.5";
+  dtbName = "x13s${kernelVersion}.dtb";
+  modDirVersion = "${kernelVersion}";
+  kernelSrc = {
+    owner = "steev";
+    repo = "linux";
+    version = kernelVersion;
+    rev = "45411854bb931cb5c989e00ded127d4fc68dfa01";
+    hash = "sha256-2FSsuKEl+KTYmiDtgCbxHS7y8Qz+Y1zkRuRcWWE0iqc=";
+  };
   # Hacky workaround which mounts an updated alsa-ucm-confs package over the original nix store version
   # Upgrading properly rebuilds the world and I don't have a fast enough system for that.
   # TODO: remove once alsa-ucm-confs upstream has working audio configs for x13s
-  bindOverAlsa = true;
+  bindOverAlsa = false;
   # When on use the in-kernel QCOM_PD_MAPPER module instead of
   # userspace. Avoids some workarounds to make sure the userspace one has access to uncompressed firmware
   # Doesn't seem to be working right yet though, need to investigate.
-  kernelPdMapper = true;
+  kernelPdMapper = false;
   kernelOpts = {
     Y = lib.mkForce lib.kernel.yes;
     N = lib.mkForce lib.kernel.no;
@@ -67,22 +76,15 @@ let
     # }
   ];
   linux_x13s_pkg = { buildLinux, ... } @ args:
-    let
-      version = "6.7.0";
-      modDirVersion = "${version}";
-      rev = "70361dbe4c3ca972cba6adaea3e08419978644f5";
-    in
     buildLinux (args // {
-      inherit version modDirVersion;
+      inherit modDirVersion;
+      name = "x13s-linux-${modDirVersion}";
+      version = kernelVersion;
 
       # https://github.com/steev/linux/tree/lenovo-x13s-v6.7.0-rc8
-      src = pkgs.fetchFromGitHub {
-        inherit rev;
-        name = "x13s-linux-${modDirVersion}-${rev}";
-        owner = "jhovold";
-        repo = "linux";
-        hash = "sha256-7LSxxXtTitbBKFlFJtlfhBgY6Ld0/1cbP3SBAk15ZRc=";
-      };
+      src = pkgs.fetchFromGitHub ({
+        name = "src-x13s-linux";
+      } // kernelSrc);
       kernelPatches = (args.kernelPatches or [ ]) ++ kp;
 
       extraMeta.branch = "6.7";
