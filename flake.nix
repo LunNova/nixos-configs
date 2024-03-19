@@ -71,6 +71,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
+    nixos-cosmic = {
+      url = "github:lilyinstarlight/nixos-cosmic";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     alicorn-vscode-extension = {
       # TODO: point at main once flake gets merged
       url = "github:Fundament-Software/alicorn-vscode-extension/da203e1ab2061463c5fe40e04e82397796ba4bed";

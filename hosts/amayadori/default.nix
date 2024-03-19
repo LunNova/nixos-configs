@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, flakeArgs, ... }:
 
 let
   # https://github.com/cole-mickens/nixcfg/blob/main/mixins/nvidia.nix
@@ -82,5 +82,16 @@ in
   # not much RAM available to build with so limit jobs and cores
   nix.settings.max-jobs = 2;
   nix.settings.cores = 4;
+
+  specialisation.cosmic.configuration = {
+    imports = [
+      flakeArgs.nixos-cosmic.nixosModules.default
+    ];
+
+    services.xserver.displayManager.cosmic-greeter.enable = true;
+    services.xserver.displayManager.sddm.enable = lib.mkForce false;
+    services.xserver.desktopManager.cosmic.enable = true;
+    security.pam.services.cosmic-greeter = { };
+  };
 }
 
