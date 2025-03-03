@@ -66,6 +66,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
+    apple-fonts = {
+      url = "github:Lyndeno/apple-fonts.nix/714767021b57d0d30de35eb90e4b748fbbb9c99f";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     minimal-shell.url = "github:LunNova/nix-minimal-shell";
   };

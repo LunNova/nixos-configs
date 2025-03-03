@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, flakeArgs, ... }:
 # Using a much more minimal set of system fonts now because
 # battle.net seems to break if there are lots of fonts
 let lotsOfFonts = false;
@@ -15,11 +15,14 @@ in
       unifont
       vistafonts # Calibri, Cambria, Candara, Consolas, Constantia, Corbel
       #(nerdfonts.override { fonts = [ "Hack" ]; })
-      twitter-color-emoji # Decent set of emoji
+      # twitter-color-emoji # Decent set of emoji
       font-awesome
 
       symbola # only font with alchemical symbol block?
       last-resort
+      meslo-lg #-nf
+      flakeArgs.apple-fonts.packages.${pkgs.system}.sf-pro
+      flakeArgs.apple-fonts.packages.${pkgs.system}.sf-mono
     ] ++ lib.optionals lotsOfFonts [
       # General fonts
       noto-fonts
@@ -49,20 +52,48 @@ in
     ]);
 
     # # Lucida -> iosevka as no free Lucida font available and it's used widely
-    fontconfig.localConf = lib.mkIf lotsOfFonts ''
+    fontconfig.localConf = ''
       <?xml version="1.0"?>
       <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
       <fontconfig>
+        ${lib.optionalString lotsOfFonts ''
         <match target="pattern">
           <test name="family" qual="any"><string>Lucida</string></test>
           <edit name="family" mode="assign">
             <string>iosevka</string>
           </edit>
         </match>
-         <match target="font">
-          <edit mode="assign" name="rgba">
-          <const>none</const>
+        ''}
+        <!-- Map Menlo to Meslo LG S -->
+        <match target="pattern">
+          <test name="family">
+            <string>Menlo</string>
+          </test>
+          <edit name="family" mode="prepend" binding="strong">
+            <string>Meslo LG S</string>
           </edit>
+        </match>
+
+        <match target="pattern">
+          <test name="family" qual="any">
+            <string>ui-monospace</string>
+          </test>
+          <edit binding="strong" mode="prepend" name="family">
+            <string>SF Mono</string>
+          </edit>
+        </match>
+        <match target="pattern">
+          <test name="family" qual="any">
+            <string>monospace</string>
+          </test>
+          <edit binding="strong" mode="prepend" name="family">
+            <string>SF Mono</string>
+          </edit>
+        </match>
+
+         <match target="font">
+          <!-- none = grayscale antialiasing. have a mix of OLED and LCD with different subpixel layouts. -->
+          <edit mode="assign" name="rgba"><const>none</const></edit>
         </match>
         <match target="font">
           <edit mode="assign" name="hinting">
@@ -79,6 +110,12 @@ in
           <bool>true</bool>
           </edit>
         </match>
+        <edit name="autohint" mode="assign">
+            <bool>true</bool>
+        </edit>
+        <edit name="lcdfilter" mode="assign">
+            <const>lcdnone</const>
+        </edit>
       </fontconfig>
     '';
   };
