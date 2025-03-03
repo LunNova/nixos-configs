@@ -17,6 +17,11 @@
     services.xserver.xkb.layout = "us";
     services.xserver.xkb.variant = "altgr-intl"; # «cool and new»
     services.xserver.xkb.options = "compose:rwin"; # grp:caps_toggle,grp_led:scroll
+    # Required for some compose key mappings to work
+    # <Multi_key> <Z> <Z>			: "ℤ"	U2124 # DOUBLE-STRUCK CAPITAL Z
+    # just showed underlined CC without setting this
+    environment.variables.GTK_IM_MODULE = "xim";
+    environment.sessionVariables.GTK_IM_MODULE = "xim";
     # CONSOLE
     console = {
       font = "${pkgs.terminus_font}/share/consolefonts/ter-u12n.psf.gz";
