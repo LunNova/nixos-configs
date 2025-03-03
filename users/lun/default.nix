@@ -50,10 +50,11 @@
     };
     userName = "Luna Nova";
     userEmail = "git@lunnova.dev";
+    iniContent.gpg.format = lib.mkForce "ssh";
     extraConfig = {
       checkout.defaultRemote = "origin";
       core.eol = "lf";
-      gpg.format = "ssh";
+      gpg.format = lib.mkForce "ssh";
       commit.gpgsign = true;
       user.signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZjpZ0wdmXwnVycJw8abOpspCbfWwDDm9WA8L/k9AID lun_signing_2021-12-21";
       diff.colorMoved = "zebra";
