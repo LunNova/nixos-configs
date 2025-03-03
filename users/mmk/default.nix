@@ -26,7 +26,7 @@
   home.packages = with pkgs; [
     glxinfo
     vulkan-tools
-    ark
+    kdePackages.ark
     unar
     p7zip
     discord

@@ -45,7 +45,8 @@
           plover-console-ui
         ])
       )
-      ark
+      kdePackages.ark
+      google-chrome
     ] ++ lib.optionals (pkgs.system == "x86_64-linux") [
       lun.wally
       microsoft-edge
