@@ -13,7 +13,7 @@
     # services.displayManager.gdm.nvidiaWayland = true;
     environment.systemPackages = lib.mkMerge [
       (lib.mkIf config.services.xserver.desktopManager.plasma5.enable [
-        pkgs.sddm-kcm # KDE settings panel for sddm
+        pkgs.libsForQt5.sddm-kcm # KDE settings panel for sddm
         pkgs.libsForQt5.bismuth # KDE tiling plugin
       ]
       )
@@ -58,7 +58,7 @@
     };
 
     # SOUND
-    hardware.pulseaudio.enable = false;
+    services.pulseaudio.enable = false;
     security.rtkit.enable = true;
     services.pipewire = {
       enable = true;
