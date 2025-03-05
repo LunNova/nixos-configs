@@ -268,11 +268,12 @@ in
         dhcp-option = [
           "option:router,${lanV4Self}"
           "option:mtu,9000"
+          "tag:standard,option:mtu,1500"
         ];
-        # static IPs:
-        # dhcp-host = [
-        #   "MAC,ipaddr"
-        # ];
+        dhcp-host = [
+          # Remarkable which can't network with jumbo frames
+          "b8:2d:28:b2:ad:45,set:standard"
+        ];
       };
     };
     boot.kernel.sysctl = {
