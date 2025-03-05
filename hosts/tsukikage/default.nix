@@ -100,6 +100,7 @@ in
     # using beesd so don't need to hardlink within store
     # avoids intellij bug where hardlinks make dirwatcher crash
     nix.settings.auto-optimise-store = lib.mkForce false;
+    nix.settings.cores = 64;
 
     boot.initrd.systemd.enable = true;
     boot.initrd.systemd.emergencyAccess = true;
