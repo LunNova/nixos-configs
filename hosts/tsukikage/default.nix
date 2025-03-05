@@ -68,6 +68,12 @@ in
     services.xserver.autorun = false;
     services.power-profiles-daemon.enable = true;
     lun.amd-pstate.enable = true;
+    lun.profiles = {
+      server = true;
+      personal = false;
+      gaming = false;
+      graphical = false;
+    };
     services.xserver.videoDrivers = [ "amdgpu" ];
     lun.ml = {
       enable = true;
