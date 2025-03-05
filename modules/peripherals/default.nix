@@ -37,13 +37,13 @@ in
 
       # udev rules and package for vial keyboard remapper
       services.udev.packages = [
-        pkgs.lun.vial.udev-rule-vial-serial
+        # pkgs.lun.vial.udev-rule-vial-serial FIXME: one of vial's deps is broken
         pkgs.android-udev-rules
         pkgs.libmtp.out
         pkgs.kdePackages.kio-extras
       ] ++ crPackages;
       environment.systemPackages = [
-        pkgs.lun.vial
+        # pkgs.lun.vial FIXME: one of vial's deps is broken
         pkgs.barrier
         pkgs.openssl
         pkgs.jmtpfs
