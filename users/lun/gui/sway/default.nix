@@ -161,7 +161,7 @@ in
       Unit = {
         Description = "A lightweight Wayland notification daemon";
         Documentation = "man:mako(1)";
-        PartOf = "graphical-session.target";
+        PartOf = "sway-session.target";
       };
       Service = {
         Type = "simple";
