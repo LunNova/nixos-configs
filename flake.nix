@@ -72,6 +72,10 @@
     };
 
     minimal-shell.url = "github:LunNova/nix-minimal-shell";
+    lanzaboote.url = "github:nix-community/lanzaboote";
+    lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
+    x1e-nixos-config.url = "github:kuruczgy/x1e-nixos-config";
+    x1e-nixos-config.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   # SCHEMA:
@@ -110,6 +114,7 @@
         lun-kosame-nixos = allSystems.makeHost.x86_64-linux ./hosts/kosame;
         lun-hisame-nixos = allSystems.makeHost.x86_64-linux ./hosts/hisame;
         lun-shigure = allSystems.makeHost.x86_64-linux ./hosts/shigure;
+        lun-aoame = allSystems.makeHost.aarch64-linux ./hosts/aoame;
         lun-amayadori-nixos = allSystems.makeHost.aarch64-linux ./hosts/amayadori;
         builder-nixos = allSystems.makeHost.x86_64-linux ./hosts/builder;
       };

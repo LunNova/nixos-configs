@@ -3,10 +3,11 @@ system:
 let
   # Patches applied before importing nixpkgs
   # Only applied to pkgs/nixpkgs input, not stable input
-  pkgsPatches = [
-    # add .patch to a github PR URL to get a patch quickly
-    ./nixpkgs-patches/graphical-session-delay.patch
-  ];
+  pkgsPatches =
+    if system == "x86_64-linux" then [
+      # add .patch to a github PR URL to get a patch quickly
+      ./nixpkgs-patches/graphical-session-delay.patch
+    ] else [ ];
   defaultPkgsConfig = {
     config.allowUnfree = true;
     overlays = [
@@ -16,6 +17,8 @@ let
       flakeArgs.self.overlays.default
       flakeArgs.nixos-cosmic.overlays.default
       (import ./overlay-nixpkgs.nix { inherit flakeArgs; })
+    ] ++ lib.optionals (system == "aarch64-linux") [
+      (import "${flakeArgs.x1e-nixos-config}/packages/overlay.nix")
     ];
   };
   readModules = path: builtins.map (x: path + "/${x}") (builtins.filter (str: (builtins.match "^[^.]*(\.nix)?$" str) != null) (builtins.attrNames (builtins.readDir path)));
