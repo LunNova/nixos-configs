@@ -12,8 +12,8 @@ with lib; let
     firmwareSource = pkgs.fetchFromGitHub {
       owner = "geoffreybennett";
       repo = "scarlett2-firmware";
-      rev = "a5fefaff35262c6ebe2ca8723ccd8622607baf15"; # tag 2128b
-      hash = "sha256-V++JC0odIzSISt8JTAr4vS5/veHvGWs22SVI7XngfPw=";
+      rev = "f628dfb4d2e874b2078dbb43e8c1d59dd6553dd1";
+      hash = "sha256-s61eyS47SuIbK9KR59XxHpybvl9tHFWPLkpHmdqwO24=";
     };
 
     src = pkgs.fetchFromGitHub {
