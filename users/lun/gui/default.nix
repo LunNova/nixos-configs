@@ -8,6 +8,7 @@
     ./dev.nix
     ./file-management.nix
     ./xdg-mime-apps.nix
+    ./hyprland.nix
   ] ++ lib.optionals (lun-profiles.personal or false) [
     ./music.nix
     ./syncthing.nix
