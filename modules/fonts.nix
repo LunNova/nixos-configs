@@ -23,6 +23,10 @@ in
       meslo-lg #-nf
       flakeArgs.apple-fonts.packages.${pkgs.system}.sf-pro
       flakeArgs.apple-fonts.packages.${pkgs.system}.sf-mono
+
+      font-awesome_4
+      font-awesome_5
+      nerd-fonts.caskaydia-cove # symbol font for bars
     ] ++ lib.optionals lotsOfFonts [
       # General fonts
       noto-fonts
@@ -35,13 +39,11 @@ in
       kochi-substitute
 
       # Code/monospace and nsymbol fonts
+      mplus-outline-fonts.osdnRelease
       fira-code
       fira-code-symbols
-      mplus-outline-fonts.osdnRelease
       dina-font
       proggyfonts
-      font-awesome_4
-      font-awesome_5
       dejavu_fonts
       source-code-pro
       iosevka-bin
