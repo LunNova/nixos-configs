@@ -35,13 +35,20 @@ in
         lun = ./lun;
       };
 
+      services.impermanent-user-passwords = lib.mkIf config.lun.persistence.enable {
+        enable = true;
+        username = "lun";
+        persistLocation = "${config.lun.persistence.persistPath}/secrets/lun-hashFile";
+        initialPassword = "nix-placeholder";
+      };
+
       users.users.lun = {
         isNormalUser = true;
         shell = pkgs.fish;
-        # Change after install
-        initialPassword = "nix-placeholder";
         # TODO: are these sensible
         extraGroups = adminGroups;
+      } // lib.optionalAttrs (!config.lun.persistence.enable) {
+        initialPassword = "nix-placeholder";
       };
     })
     (lib.mkIf (builtins.elem "mmk" cfg.enabled-users) {
