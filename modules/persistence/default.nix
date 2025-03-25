@@ -63,6 +63,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = config.fileSystems.${persistPath}.neededForBoot;
+        message = "${persistPath} filesystem should be neededForBoot";
+      }
+    ];
+
     lun.persistence.dirs_for_shell_script = builtins.concatStringsSep "\n" cfg.dirs;
 
     # Don't bother with the lecture or the need to keep state about who's been lectured
@@ -125,12 +132,16 @@ in
             device = "${persistPath}${name}";
             # fsType = "none";
             noCheck = true;
-            neededForBoot = true;
             # depends = [ "${persistPath}" ];
             options = [
               "bind"
-              # "x-systemd.requires-mounts-for=${persistPath}"
-              #"x-systemd.requires=create-persist-dirs"
+              "x-systemd.requires-mounts-for=${persistPath}"
+              "x-systemd.requires-mounts-for=/sysroot${persistPath}"
+              "x-systemd.requires-mounts-for=${config.fileSystems.${persistPath}.device}"
+              "x-systemd.requires-mounts-for=/sysroot${config.fileSystems.${persistPath}.device}"
+              "x-systemd.requires=cryptsetup.target"
+              #"x-systemd.requires=persist.mount"
+              #"x-systemd.requires=nix.mount"
               # "x-systemd.requires-mounts-for=/sysroot${persistPath}"
               # "x-systemd.requires=/sysroot${persistPath}"
               # "x-systemd.automount"
@@ -140,6 +151,8 @@ in
               #  "x-systemd.device-timeout=5s"
               #  "x-systemd.mount-timeout=5s"
             ];
+          } // lib.optionalAttrs (!(lib.hasPrefix "/home" name)) {
+            neededForBoot = true;
           };
         };
       in
