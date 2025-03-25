@@ -1,4 +1,4 @@
-{ pkgs, lib, flakeArgs, lun-profiles, ... }:
+{ pkgs, config, lib, flakeArgs, lun-profiles, ... }:
 let
   sshAddDefault = pkgs.writeShellApplication {
     name = "sshAddDefault";
@@ -38,9 +38,35 @@ in
       # jetbrains.rust-rover
     ];
 
+    home.activation.makeVSCodeConfigWritable =
+      let
+        configDirName = {
+          "vscode" = "Code";
+          "vscode-insiders" = "Code - Insiders";
+          "vscodium" = "VSCodium";
+        }.${config.programs.vscode.package.pname};
+        configPath = "${config.xdg.configHome}/${configDirName}/User/settings.json";
+      in
+      {
+        after = [ "writeBoundary" ];
+        before = [ ];
+        data = ''
+          echo install -m 0640 "$(readlink ${configPath})" ${configPath}
+          if [ -l ${configPath} ]; then
+            install -m 0640 "$(readlink -m ${configPath})" ${configPath}
+          fi
+        '';
+      };
+
+    home.file."${config.xdg.configHome}/Code/User/settings.json".force = true;
     programs.vscode = {
       enable = true;
       package = pkgs.vscode.fhs;
+      userSettings = {
+        "workbench.colorTheme" = "Tomorrow Night Blue";
+        "editor.fontFamily" = ''"SF Mono Regular", "SF Mono", SF Mono, SFMono-Regular, monospace'';
+        # Add other settings as needed
+      };
       extensions = with pkgs.vscode-extensions; [
         flakeArgs.alicorn-vscode-extension.packages.${pkgs.system}.alicorn-vscode-extension
       ];
