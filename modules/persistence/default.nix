@@ -62,6 +62,10 @@ in
     };
   };
 
+  imports = [
+    ./impure-passwords.nix
+  ];
+
   config = lib.mkIf cfg.enable {
     assertions = [
       {
