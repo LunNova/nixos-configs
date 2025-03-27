@@ -9,7 +9,6 @@ in
   imports = [
     ./disks.nix
     flakeArgs.disko.nixosModules.disko
-    flakeArgs.nixos-cosmic.nixosModules.default
   ];
   config = {
     networking.hostName = "lun-${name}";
