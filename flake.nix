@@ -72,6 +72,7 @@
     lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
     x1e-nixos-config.url = "github:kuruczgy/x1e-nixos-config";
     x1e-nixos-config.inputs.nixpkgs.follows = "nixpkgs";
+    hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
   };
 
   # SCHEMA:
