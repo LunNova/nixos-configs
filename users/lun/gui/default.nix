@@ -3,13 +3,14 @@
   imports = [
     ./i3
     ./cad
-    ./sway
+    # ./sway
     # ./conky.nix # TODO: perf issues
     ./dev.nix
     ./file-management.nix
     ./xdg-mime-apps.nix
-    ./hyprland.nix
   ] ++ lib.optionals (lun-profiles.personal or false) [
+    ./rose-pine.nix
+    ./hyprland.nix
     ./music.nix
     ./syncthing.nix
     ./discord.nix

@@ -1,15 +1,27 @@
 { pkgs, ... }:
 {
   home.packages = [
+    pkgs.rofi-wayland
     pkgs.rose-pine-cursor
     pkgs.rose-pine-hyprcursor
     pkgs.waypaper
     pkgs.swaybg
     pkgs.swww
   ];
+  home.pointerCursor = {
+    gtk.enable = true;
+    x11.enable = true;
+    hyprcursor.enable = true;
+  };
   wayland.windowManager.hyprland = {
     enable = true;
+
+    # set the Hyprland and XDPH packages to null to use the ones from the NixOS module
     package = null;
+    portalPackage = null;
+    # Import env vars to systemd user session so portals work
+    systemd.variables = [ "--all" ];
+
     plugins = [
       pkgs.hyprlandPlugins.hypr-dynamic-cursors
     ];
@@ -49,7 +61,7 @@
 
         # Set to true enable resizing windows by clicking and dragging on borders and gaps
         resize_on_border = true;
-        allow_tearing = true;
+        # allow_tearing = true;
 
         layout = "dwindle";
 
@@ -72,9 +84,9 @@
 
       render = {
         #xp_mode = 1;
-        #explicit_sync = 1;
-        #explicit_sync_kms = 1;
-        direct_scanout = 1;
+        explicit_sync = 1;
+        explicit_sync_kms = 1;
+        #direct_scanout = 1;
       };
 
       decoration = {
@@ -113,22 +125,22 @@
         ];
 
         animation = [
-          "global, 1, 10, default"
-          "border, 1, 5.39, easeOutQuint"
-          "windows, 1, 4.79, easeOutQuint"
-          "windowsIn, 1, 4.1, easeOutQuint, popin 87%"
-          "windowsOut, 1, 1.49, linear, popin 87%"
-          "fadeIn, 1, 1.73, almostLinear"
-          "fadeOut, 1, 1.46, almostLinear"
+          "global, 1, 10, quick"
+          "border, 1, 5.39, quick"
+          "windows, 1, 4.79, quick"
+          "windowsIn, 1, 4.1, quick, popin 87%"
+          "windowsOut, 1, 1.49, quick, popin 87%"
+          "fadeIn, 1, 1.73, quick"
+          "fadeOut, 1, 1.46, quick"
           "fade, 1, 3.03, quick"
-          "layers, 1, 3.81, easeOutQuint"
-          "layersIn, 1, 4, easeOutQuint, fade"
+          "layers, 1, 3.81, quick"
+          "layersIn, 1, 4, quick, fade"
           "layersOut, 1, 1.5, linear, fade"
-          "fadeLayersIn, 1, 1.79, almostLinear"
-          "fadeLayersOut, 1, 1.39, almostLinear"
-          "workspaces, 1, 1.94, almostLinear, fade"
-          "workspacesIn, 1, 1.21, almostLinear, fade"
-          "workspacesOut, 1, 1.94, almostLinear, fade"
+          "fadeLayersIn, 1, 1.79, quick"
+          "fadeLayersOut, 1, 1.39, quick"
+          "workspaces, 1, 1.94, quick, fade"
+          "workspacesIn, 1, 1.21, quick, fade"
+          "workspacesOut, 1, 1.94, quick, fade"
         ];
       };
       monitor = ",preferred,auto,1";
@@ -149,7 +161,7 @@
 
       "$terminal" = "kitty";
       "$fileManager" = "dolphin";
-      "$menu" = "wofi --show drun";
+      "$menu" = "rofi -show drun";
 
       bind = [
         # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
