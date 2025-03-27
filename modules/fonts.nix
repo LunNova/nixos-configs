@@ -14,19 +14,19 @@ in
       liberation_ttf
       unifont
       vistafonts # Calibri, Cambria, Candara, Consolas, Constantia, Corbel
-      #(nerdfonts.override { fonts = [ "Hack" ]; })
-      # twitter-color-emoji # Decent set of emoji
       font-awesome
 
       symbola # only font with alchemical symbol block?
       last-resort
       meslo-lg #-nf
-      flakeArgs.apple-fonts.packages.${pkgs.system}.sf-pro
-      flakeArgs.apple-fonts.packages.${pkgs.system}.sf-mono
 
       font-awesome_4
       font-awesome_5
       nerd-fonts.caskaydia-cove # symbol font for bars
+
+      # Apple UI fonts, override XML below sets these as monospace default
+      flakeArgs.apple-fonts.packages.${pkgs.system}.sf-pro
+      flakeArgs.apple-fonts.packages.${pkgs.system}.sf-mono
     ] ++ lib.optionals lotsOfFonts [
       # General fonts
       noto-fonts
