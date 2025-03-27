@@ -62,12 +62,12 @@ in
     programs.vscode = {
       enable = true;
       package = pkgs.vscode.fhs;
-      userSettings = {
+      profiles.default.userSettings = {
         "workbench.colorTheme" = "Tomorrow Night Blue";
         "editor.fontFamily" = ''"SF Mono Regular", "SF Mono", SF Mono, SFMono-Regular, monospace'';
         # Add other settings as needed
       };
-      extensions = with pkgs.vscode-extensions; [
+      profiles.default.extensions = with pkgs.vscode-extensions; [
         flakeArgs.alicorn-vscode-extension.packages.${pkgs.system}.alicorn-vscode-extension
       ];
     };
