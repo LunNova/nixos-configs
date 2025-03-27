@@ -21,8 +21,11 @@
         pkgs.kdePackages.kate
         pkgs.kdePackages.kamera
       ]
+      config.xdg.portal.configPackages
+      config.xdg.portal.extraPortals
     ];
-    services.xserver.desktopManager.plasma5.enable = true;
+    services.desktopManager.plasma6.enable = true;
+    services.xserver.desktopManager.plasma5.enable = false;
     services.xserver.desktopManager.plasma5.runUsingSystemd = true;
     # vlc is smaller than gstreamer
     services.xserver.desktopManager.plasma5.phononBackend = "vlc";
@@ -44,11 +47,9 @@
     xdg.portal = {
       enable = true;
       xdgOpenUsePortal = true;
-      config.${"none+i3"}.default = [ "kde" "gtk" "*" ];
-      extraPortals = [
-        pkgs.xdg-desktop-portal-gtk
-        pkgs.xdg-desktop-portal-wlr
-      ];
+      config.${"none+i3"}.default = [ "kde" "gtk" "gnome" "wlr" "cosmic" "*" ];
+      config.hyprland.default = [ "hyprland" "kde" "gtk" "gnome" "wlr" "cosmic" "*" ];
+      config.Hyprland.default = [ "hyprland" "kde" "gtk" "gnome" "wlr" "cosmic" "*" ];
     };
 
     # GRAPHICS ACCEL
