@@ -1,4 +1,4 @@
-{ flakeArgs, lib, pkgs, ... }:
+{ flakeArgs, config, lib, pkgs, ... }:
 let
   name = "aoame";
 in
@@ -22,14 +22,40 @@ in
     boot.loader.systemd-boot = {
       enable = true;
       # Limit space in EFI partition
-      configurationLimit = 10;
+      configurationLimit = 25;
     };
     boot.initrd.systemd = {
       enable = true;
-
       # This is not secure, but it makes diagnosing errors easier.
       emergencyAccess = true;
     };
+    boot.initrd.extraFirmwarePaths = map (file: "qcom/${file}") [
+      "gen70500_sqe.fw"
+      "gen70500_gmu.bin"
+      "x1e80100/LENOVO/83ED/qcdxkmsuc8380.mbn"
+    ];
+    programs.hyprland = {
+      enable = true;
+      withUWSM = true;
+      package = pkgs.hyprland;
+      portalPackage = pkgs.xdg-desktop-portal-hyprland;
+      systemd.setPath.enable = true;
+    };
+    environment.systemPackages = [
+      pkgs.walker
+      pkgs.hyprpanel
+      pkgs.hyprcursor
+      pkgs.hyprland
+      pkgs.code-cursor
+      pkgs.rose-pine-cursor
+      pkgs.rose-pine-hyprcursor
+      pkgs.hyprland
+      pkgs.hyprlandPlugins.hypr-dynamic-cursors
+    ];
+    # programs.wayfire.enable = true;
+    # programs.river.enable = true;
+    # programs.niri.enable = true;
+    # xdg.portal.wlr.enable = lib.mkForce true;
 
     zramSwap.enable = true;
     zramSwap.memoryPercent = 30;
@@ -50,6 +76,11 @@ in
       plugins = lib.mkForce [ ];
     };
 
+    lun.profiles = {
+      personal = true;
+      gaming = false;
+      wineGaming = false;
+    };
     hardware.bluetooth.enable = true;
     lun.persistence.enable = true;
     lun.persistence.dirs = [
