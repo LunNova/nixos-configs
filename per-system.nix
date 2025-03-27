@@ -15,7 +15,6 @@ let
       #   some-package = ...
       # })
       flakeArgs.self.overlays.default
-      flakeArgs.nixos-cosmic.overlays.default
       (import ./overlay-nixpkgs.nix { inherit flakeArgs; })
     ] ++ lib.optionals (system == "aarch64-linux") [
       (import "${flakeArgs.x1e-nixos-config}/packages/overlay.nix")

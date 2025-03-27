@@ -57,10 +57,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
-    nixos-cosmic = {
-      url = "github:lilyinstarlight/nixos-cosmic";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     alicorn-vscode-extension = {
       url = "github:Fundament-Software/alicorn-vscode-extension";
       inputs.nixpkgs.follows = "nixpkgs";
