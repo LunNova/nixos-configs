@@ -3,11 +3,20 @@
 {
   config = rec {
     home.pointerCursor = {
+      enable = true;
       name = "BreezeX-RosePine-Linux";
       size = 32;
       package = pkgs.rose-pine-cursor;
+      # hyprcursor.enable = true;
+      # hyprcursor.size = 32;
       gtk.enable = true;
       x11.enable = true;
+    };
+
+    home.sessionVariables = {
+      HYPRCURSOR_THEME = "rose-pine-hyprcursor";
+      HYPRCURSOR_SIZE = config.home.pointerCursor.size;
+      XCURSOR_SIZE = config.home.pointerCursor.size;
     };
 
     gtk = {
@@ -42,6 +51,7 @@
         themeDir = "${gtk.theme.package}/share/themes/${gtk.theme.name}";
       in
       {
+        dataFile."icons/rose-pine-hyprcursor".source = "${pkgs.rose-pine-hyprcursor}/share/icons/rose-pine-hyprcursor";
         configFile."gtk-4.0/gtk.css".source = "${themeDir}/gtk-4.0/gtk.css";
       };
   };

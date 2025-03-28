@@ -8,9 +8,10 @@
     ./dev.nix
     ./file-management.nix
     ./xdg-mime-apps.nix
+    ./kitty.nix
   ] ++ lib.optionals (lun-profiles.personal or false) [
     ./rose-pine.nix
-    ./hyprland.nix
+    ./hyprland
     ./music.nix
     ./syncthing.nix
     ./discord.nix

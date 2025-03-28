@@ -47,7 +47,6 @@ in
     pkgs.i3status-rust
     pkgs.i3wsr
     pkgs.feh
-    pkgs.kitty # add to path sice we use it as meta-enter
     i3-wp
     i3-screenshot
     bgswitchermenu
@@ -63,7 +62,7 @@ in
         "Print" = "exec ${lib.getExe i3-screenshot}";
         "${mod}+x" = "exec sh -c '${lib.getExe pkgs.maim} -s | ${lib.getExe pkgs.xclip} -selection clipboard -t image/png'";
         "${mod}+q" = "exec sh -c '${lib.getExe pkgs.i3lock} -c ba9bff & sleep 2 && ${lib.getExe pkgs.xorg.xset} dpms force off'";
-        "${mod}+Return" = "exec ${lib.getExe pkgs.kitty}";
+        "${mod}+Return" = "exec ${lib.getExe config.programs.kitty.package}";
         "${mod}+space" = "exec ${drun}";
         "${mod}+d" = "exec ${menu}";
         "${mod}+i" = "bar hidden_state toggle";
