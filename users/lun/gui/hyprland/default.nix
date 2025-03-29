@@ -15,8 +15,8 @@
     enable = true;
     dimPercentage = 5;
     dimTimeout = 60;
-    dpmsTimeout = 300;
-    lockTimeout = null;
+    dpmsTimeout = 180;
+    lockTimeout = 600;
     suspendTimeout = null;
     # ask hyprland to dpms on if mouse moves/keyboard is pressed
     # regardless of why DPMS is off
@@ -28,6 +28,49 @@
     ignoreDbus = false;
     ignoreSystemd = false;
     ignorePipewire = false;
+  };
+  # IMPORTANT: set `security.pam.services.hyprlock = {};` in SYSTEM config
+  programs.hyprlock = {
+    enable = true;
+    settings = {
+      general = {
+        disable_loading_bar = true;
+        # Configure delay where only mouse movement is needed to unlock
+        # grace = 300;
+        hide_cursor = true;
+        no_fade_in = false;
+      };
+
+      background = [
+        {
+          path = "screenshot"; # Use screen contents as background of lock screen
+          # Optionally set a BG color instead:
+          # color = "rgba(17, 17, 17, 1.0)";
+          # Or a path to an image
+          # path = "~/lock.png"
+          blur_passes = 3;
+          blur_size = 3;
+          # Can automate loading new images over time by calling a script
+          # See https://wiki.hyprland.org/Hypr-Ecosystem/hyprlock/#background
+        }
+      ];
+
+      input-field = [
+        {
+          size = "200, 50";
+          position = "0, -80";
+          monitor = "";
+          dots_center = true;
+          fade_on_empty = false;
+          font_color = "rgb(0, 55, 252)";
+          inner_color = "rgb(50, 61, 112)";
+          outer_color = "rgb(2, 7, 78)";
+          outline_thickness = 5;
+          placeholder_text = ''<span foreground="##cad3f5">Password...</span>'';
+          shadow_passes = 2;
+        }
+      ];
+    };
   };
 
   services.hyprpaper.enable = true;

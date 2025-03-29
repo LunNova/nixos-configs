@@ -26,8 +26,14 @@ in
 
     lockScreenCommand = lib.mkOption {
       type = lib.types.str;
+      default = "pidof hyprlock || hyprlock";
+      description = "Command to lock the screen, should be triggered when session is locked";
+    };
+
+    sessionLockCommand = lib.mkOption {
+      type = lib.types.str;
       default = "loginctl lock-session";
-      description = "Command to lock the screen";
+      description = "Command to trigger session lock, used for before sleep and lock timeout.";
     };
 
     dimTimeout = lib.mkOption {
@@ -45,7 +51,7 @@ in
     lockTimeout = lib.mkOption {
       type = lib.types.nullOr lib.types.int;
       default = null;
-      description = "Timeout in seconds before locking the screen, null to disable";
+      description = "Timeout in seconds before locking the session, null to disable";
     };
 
     dpmsTimeout = lib.mkOption {
@@ -100,11 +106,6 @@ in
       ];
     };
 
-    # systemd.user.services.swayidle = {
-    #   Unit.Requires = [ "graphical-session-pre.target" "wayland-session@Hyprland.target" ];
-    #   Install.WantedBy = [ "wayland-session@Hyprland.target" ];;
-    # };
-
     systemd.user.services = lib.mkMerge [
       (lib.mkIf (!idleCfg.ignorePipewire) {
         wayland-idle-pipewire-inhibit-serv = {
@@ -137,7 +138,7 @@ in
           lock_cmd = idleCfg.lockScreenCommand;
           ignore_systemd_inhibit = idleCfg.ignoreSystemd;
           # Add before-sleep command if enabled
-          before_sleep_cmd = lib.mkIf idleCfg.beforeSleepLock idleCfg.lockScreenCommand;
+          before_sleep_cmd = lib.mkIf idleCfg.beforeSleepLock idleCfg.sessionLockCommand;
         };
 
         listener = lib.flatten [
@@ -151,7 +152,7 @@ in
           # Lock screen timeout
           (lib.optional (idleCfg.lockTimeout != null) {
             timeout = idleCfg.lockTimeout;
-            on-timeout = idleCfg.lockScreenCommand;
+            on-timeout = idleCfg.sessionLockCommand;
           })
 
           # DPMS timeout
@@ -170,37 +171,4 @@ in
       };
     };
   };
-  #   services.swayidle = {
-  #     enable = true;
-  #     events = lib.mkForce (lib.flatten [
-  #       (lib.optional idleCfg.beforeSleepLock {
-  #         event = "before-sleep";
-  #         command = idleCfg.lockScreenCommand;
-  #       })
-  #       { event = "after-resume"; command = "${hyprCmd} dispatch dpms on"; }
-  #       { event = "unlock"; command = "${hyprCmd} dispatch dpms on"; }
-  #     ]);
-
-  #     timeouts = lib.mkForce (lib.flatten [
-  #       (lib.optional (idleCfg.dimTimeout != null) {
-  #         timeout = idleCfg.dimTimeout;
-  #         command = "${pkgs.brillo}/bin/brillo -U ${toString idleCfg.dimPercentage}";
-  #         resumeCommand = "${pkgs.brillo}/bin/brillo -A ${toString idleCfg.dimPercentage}";
-  #       })
-  #       (lib.optional (idleCfg.lockTimeout != null) {
-  #         timeout = idleCfg.lockTimeout;
-  #         command = idleCfg.lockScreenCommand;
-  #       })
-  #       (lib.optional (idleCfg.dpmsTimeout != null) {
-  #         timeout = idleCfg.dpmsTimeout;
-  #         command = "${hyprCmd} dispatch dpms off";
-  #         resumeCommand = "${hyprCmd} dispatch dpms on";
-  #       })
-  #       (lib.optional (idleCfg.suspendTimeout != null) {
-  #         timeout = idleCfg.suspendTimeout;
-  #         command = "systemctl suspend";
-  #       })
-  #     ]);
-  #   };
-  # };
 }
