@@ -122,6 +122,12 @@
       bar.customModules.cpuTemp.sensor = "/sys/devices/virtual/thermal/thermal_zone9/hwmon9/temp1_input";
       # bar.launcher.icon = "";
 
+      menus.dashboard.shortcuts.left.shortcut1.command = "firefox";
+      menus.dashboard.shortcuts.left.shortcut1.icon = "";
+      menus.dashboard.shortcuts.left.shortcut1.tooltip = "Firefox";
+      menus.dashboard.shortcuts.left.shortcut2.command = "waypaper";
+      menus.dashboard.shortcuts.left.shortcut2.icon = "";
+      menus.dashboard.shortcuts.left.shortcut2.tooltip = "Waypaper";
     };
   };
   wayland.windowManager.hyprland = {
