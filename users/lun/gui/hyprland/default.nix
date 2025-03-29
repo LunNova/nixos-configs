@@ -117,6 +117,7 @@
       bar.workspaces.show_numbered = true;
       bar.workspaces.showApplicationIcons = true;
       menus.dashboard.stats.enable_gpu = true;
+      menus.dashboard.powermenu.avatar.image = builtins.toString flakeArgs.self.assets.images.crescent_moon_100x100;
       theme.bar.location = "top";
       bar.customModules.cpuTemp.sensor = "/sys/devices/virtual/thermal/thermal_zone9/hwmon9/temp1_input";
       # bar.launcher.icon = "";
