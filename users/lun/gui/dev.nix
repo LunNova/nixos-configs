@@ -64,7 +64,7 @@ in
       package = pkgs.vscode.fhs;
       profiles.default.userSettings = {
         "workbench.colorTheme" = "Tomorrow Night Blue";
-        "editor.fontFamily" = ''"SF Mono Regular", "SF Mono", SF Mono, SFMono-Regular, monospace, 'Font Awesome 6 Brands', 'Font Awesome 6 Free', mono'';
+        "editor.fontFamily" = ''"SF Mono Regular", "SF Mono", SF Mono, SFMono-Regular, monospace, 'Font Awesome 6 Brands', 'Font Awesome 6 Free', Symbola, 'Last Resort High\-Efficiency', 'Last Resort High-Efficiency', mono'';
         # Add other settings as needed
       };
       profiles.default.extensions = with pkgs.vscode-extensions; [
