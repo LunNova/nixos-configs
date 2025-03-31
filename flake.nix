@@ -73,6 +73,8 @@
     x1e-nixos-config.url = "github:kuruczgy/x1e-nixos-config";
     x1e-nixos-config.inputs.nixpkgs.follows = "nixpkgs";
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
+    hyprland.url = "github:hyprwm/Hyprland/v0.48.0";
+    hyprland.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   # SCHEMA:
