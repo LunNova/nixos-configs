@@ -34,23 +34,27 @@ in
       "gen70500_gmu.bin"
       "x1e80100/LENOVO/83ED/qcdxkmsuc8380.mbn"
     ];
+    system.activationScripts.min-clock = ''
+      if [ ! -d /usr/lib/clock-epoch ]; then
+        mkdir -p /usr/lib/
+        ${pkgs.coreutils}/bin/touch -d "2025-01-01" /usr/lib/clock-epoch
+      fi
+    '';
+    security.pam.services.hyprlock = { };
     programs.hyprland = {
       enable = true;
       withUWSM = true;
-      package = pkgs.hyprland;
-      portalPackage = pkgs.xdg-desktop-portal-hyprland;
+      package = flakeArgs.hyprland.packages.${pkgs.system}.hyprland; # pkgs.hyprland;
+      # portalPackage = pkgs.xdg-desktop-portal-hyprland;
+      portalPackage = flakeArgs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
       systemd.setPath.enable = true;
     };
     environment.systemPackages = [
-      pkgs.walker
+      # pkgs.walker
       pkgs.hyprpanel
       pkgs.hyprcursor
-      pkgs.hyprland
+      config.programs.hyprland.package
       pkgs.code-cursor
-      pkgs.rose-pine-cursor
-      pkgs.rose-pine-hyprcursor
-      pkgs.hyprland
-      pkgs.hyprlandPlugins.hypr-dynamic-cursors
     ];
     # programs.wayfire.enable = true;
     # programs.river.enable = true;
