@@ -1,4 +1,4 @@
-{ pkgs, flakeArgs, ... }:
+{ pkgs, lib, flakeArgs, ... }:
 {
   imports = [
     ./idle.nix
@@ -40,6 +40,7 @@
         hide_cursor = true;
         no_fade_in = false;
       };
+      input.accel_profile = "flat";
 
       background = [
         {
@@ -76,7 +77,7 @@
   services.hyprpaper.enable = true;
   services.hyprpaper.settings = {
     ipc = "on";
-    splash = true;
+    splash = false;
   };
   # systemd.user.services = {
   #   hyprpaper = {
@@ -100,6 +101,7 @@
   #   splash = true
   # '';
   xdg.configFile.hyprpanel.force = true;
+  xdg.configFile.hyprpanel.onChange = lib.mkForce "${pkgs.hyprpanel}/bin/hyprpanel r || true";
   programs.hyprpanel = {
     enable = true;
     overwrite.enable = true;
@@ -291,8 +293,14 @@
         ];
       };
       monitor = [
-        "desc:Samsung Display Corp. 0x4189,highrr,auto,1"
+        # fallback
         ",preferred,auto,1"
+        # aoame
+        "desc:Samsung Display Corp. 0x4189,highrr,auto,1"
+        # hisame
+        "desc:LG Electronics LG ULTRAGEAR+ 405NTAB8K768,3440x1440@120.04Hz,0x0,1"
+        "desc:Dell Inc. DELL S3422DWG 2RSXS63,3440x1440@119.99Hz,0x-1440,1"
+        "desc:HAT Kamvas Pro 13 demoset-1,2560x1600@59.97Hz,440x1440,1"
       ];
       gestures = {
         workspace_swipe = true;
