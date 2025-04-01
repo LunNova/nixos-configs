@@ -40,20 +40,7 @@ in
         ${pkgs.coreutils}/bin/touch -d "2025-01-01" /usr/lib/clock-epoch
       fi
     '';
-    security.pam.services.hyprlock = { };
-    programs.hyprland = {
-      enable = true;
-      withUWSM = true;
-      package = flakeArgs.hyprland.packages.${pkgs.system}.hyprland; # pkgs.hyprland;
-      # portalPackage = pkgs.xdg-desktop-portal-hyprland;
-      portalPackage = flakeArgs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
-      systemd.setPath.enable = true;
-    };
     environment.systemPackages = [
-      # pkgs.walker
-      pkgs.hyprpanel
-      pkgs.hyprcursor
-      config.programs.hyprland.package
       pkgs.code-cursor
     ];
     # programs.wayfire.enable = true;
