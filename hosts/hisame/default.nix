@@ -318,6 +318,7 @@ in
     hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.production;
     hardware.nvidia.modesetting.enable = true;
     hardware.nvidia.powerManagement.enable = true;
+    lun.openxr.enable = true;
     boot.kernelModules = [ "nvidia_uvm" ];
     # hardware.nvidia.powerManagement.finegrained = true;
     lun.ml = {
