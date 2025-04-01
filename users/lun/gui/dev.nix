@@ -52,7 +52,7 @@ in
         before = [ ];
         data = ''
           echo install -m 0640 "$(readlink ${configPath})" ${configPath}
-          if [ -l ${configPath} ]; then
+          if [ -L ${configPath} ]; then
             install -m 0640 "$(readlink -m ${configPath})" ${configPath}
           fi
         '';
