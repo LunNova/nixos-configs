@@ -110,8 +110,8 @@ let spawn = "${pkgs.lun.spawn}/bin/spawn"; in
       "bar.layouts" = {
         "0" = {
           left = [ "dashboard" "workspaces" ];
-          middle = [ "media" "ram" "cpu" "cputemp" "storage" "battery" ];
-          right = [ "bluetooth" "wifi" "volume" "systray" "notifications" "clock" ];
+          middle = [ "media" "hypridle" "ram" "cpu" "cputemp" "storage" "battery" ];
+          right = [ "bluetooth" "wifi" "volume" "systray" "notifications" "clock" "power" ];
         };
       };
     };
