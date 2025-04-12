@@ -365,6 +365,10 @@ let spawn = "${pkgs.lun.spawn}/bin/spawn"; in
         "$mainMod SHIFT, 9, movetoworkspace, 9"
         "$mainMod SHIFT, 0, movetoworkspace, 10"
 
+        # prtscrn
+        ''$mainMod, Print, exec, hyprctl setprop active opaque 1; ${lib.getExe pkgs.grim} -g "$(${lib.getExe pkgs.slurp})" - | ${lib.getExe pkgs.satty} -f - --fullscreen --output-filename "$HOME/sync/screenshots/$(hostname)-$(date "+%Y%m%d-%T").png"; sleep 0.2; hyprctl setprop active opaque 0''
+        '', Print, exec, hyprctl setprop active opaque 1; ${lib.getExe pkgs.grim} -g "$(${lib.getExe pkgs.slurp})" "$HOME/sync/screenshots/$(hostname)-$(date "+%Y%m%d-%T").png"; sleep 0.2; hyprctl setprop active opaque 0''
+        #'', Print, exec, hyprctl setprop active opaque 1; ${lib.getExe pkgs.grimblast} copysave area "$HOME/sync/screenshots/$(hostname)-$(date "+%Y-%m-%d %T").png"; sleep 0.2; hyprctl setprop active opaque 0''
 
         # Toggle Group with mainMod + Z
         "$mainMod, Z, togglegroup,"
