@@ -24,6 +24,7 @@
       config.xdg.portal.configPackages
       config.xdg.portal.extraPortals
     ];
+    systemd.services."drkonqi-coredump-processor@".wantedBy = lib.mkForce [ ];
     services.desktopManager.plasma6.enable = true;
     services.xserver.desktopManager.plasma5.enable = false;
     services.xserver.desktopManager.plasma5.runUsingSystemd = true;
