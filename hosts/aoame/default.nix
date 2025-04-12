@@ -40,9 +40,6 @@ in
         ${pkgs.coreutils}/bin/touch -d "2025-01-01" /usr/lib/clock-epoch
       fi
     '';
-    environment.systemPackages = [
-      pkgs.code-cursor
-    ];
     # programs.wayfire.enable = true;
     # programs.river.enable = true;
     # programs.niri.enable = true;
