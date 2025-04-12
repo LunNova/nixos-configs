@@ -1,4 +1,5 @@
 { pkgs, lib, flakeArgs, ... }:
+let spawn = "${pkgs.lun.spawn}/bin/spawn"; in
 {
   imports = [
     ./idle.nix
@@ -327,9 +328,9 @@
       # See https://wiki.hyprland.org/Configuring/Keywords/
       "$mainMod" = "SUPER"; # Sets "Windows" key as main modifier
 
-      "$terminal" = "kitty";
-      "$fileManager" = "dolphin";
-      "$menu" = "rofi -show drun";
+      "$terminal" = "${spawn} kitty";
+      "$fileManager" = "${spawn} dolphin";
+      "$menu" = "${spawn} rofi -show drun";
 
       bind = [
         # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
