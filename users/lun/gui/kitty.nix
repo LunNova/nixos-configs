@@ -5,7 +5,7 @@
 
     font = {
       name = "Meslo LG M";
-      size = 12.0;
+      size = 9.0;
     };
 
     # extraConfig = builtins.readFile ./kitty-theme/adwaita.conf;
