@@ -3,8 +3,6 @@ let
   idleCfg = config.lun.hyprland-idle;
   hyprCmd = "hyprctl";
   hyprlandTargets = [
-    "hyprland-session.target"
-    "wayland-session.target"
     "wayland-session@Hyprland.target"
   ];
 in
@@ -94,7 +92,7 @@ in
   config = lib.mkIf idleCfg.enable {
     wayland.windowManager.hyprland.settings = {
       bind = [
-        "$mainMod, I, exec, sleep 1 && ${hyprCmd} dispatch dpms off"
+        "$mainMod, I, exec, sleep 1 && loginctl lock-session; ${hyprCmd} dispatch dpms off"
       ];
       misc = lib.mkMerge [
         (lib.mkIf idleCfg.keyPressEnablesDpms {
@@ -110,7 +108,7 @@ in
       (lib.mkIf (!idleCfg.ignorePipewire) {
         wayland-idle-pipewire-inhibit-serv = {
           Unit = {
-            Wants = "graphical-session.target";
+            # Wants = "graphical-session.target";
             After = "graphical-session.target";
           };
 
@@ -126,7 +124,13 @@ in
       })
 
       # Ensure hypridle starts with Hyprland
-      { hypridle.Install.WantedBy = lib.mkForce hyprlandTargets; }
+      {
+        hypridle = {
+          Unit.Wants = lib.mkForce [ ];
+          Unit.Requires = lib.mkForce [ ];
+          Unit.PartOf = lib.mkForce hyprlandTargets;
+        };
+      }
     ];
 
     services.hypridle = {
