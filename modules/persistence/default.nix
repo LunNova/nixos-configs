@@ -143,6 +143,8 @@ in
               "x-systemd.requires-mounts-for=/sysroot${persistPath}"
               "x-systemd.requires-mounts-for=${config.fileSystems.${persistPath}.device}"
               "x-systemd.requires-mounts-for=/sysroot${config.fileSystems.${persistPath}.device}"
+            ]
+            ++ lib.optionals (builtins.any (x: (x.device or null) != null) (builtins.attrValues config.boot.initrd.luks.devices)) [
               "x-systemd.requires=cryptsetup.target"
               #"x-systemd.requires=persist.mount"
               #"x-systemd.requires=nix.mount"
