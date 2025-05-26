@@ -1,4 +1,8 @@
 { pkgs, config, lib, lun-profiles, ... }:
+let
+  runtime = "${pkgs.opencomposite}/lib/opencomposite";
+  # runtime = "${pkgs.xrizer}/lib/xrizer";
+in
 {
   home.packages = with pkgs; [
     # osu-lazer not currently playing
@@ -16,7 +20,7 @@
       "external_drivers": null,
       "jsonid": "vrpathreg",
       "log": ["${config.xdg.dataHome}/Steam/logs"],
-      "runtime" : ["${pkgs.opencomposite}/lib/opencomposite"],
+      "runtime" : ["${runtime}"],
       "version" : 1
     }
   '';
