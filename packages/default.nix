@@ -75,7 +75,6 @@ let
         ./xorg/prefer-highest-refresh-mode.patch
       ];
     });
-    vial = pkgs.libsForQt5.callPackage ./vial { };
     wally = pkgs.callPackage ./wally { };
   } //
   # These packages are x86_64-linux
