@@ -123,9 +123,11 @@ in
         };
       })
 
-      # Ensure hypridle starts with Hyprland
+      # Ensure hypridle starts with Hyprland (and only hyprland), not all wayland sessions
       {
         hypridle = {
+          Install.WantedBy = lib.mkForce hyprlandTargets;
+          # ConditionEnvironment = "WAYLAND_DISPLAY";
           Unit.Wants = lib.mkForce [ ];
           Unit.Requires = lib.mkForce [ ];
           Unit.PartOf = lib.mkForce hyprlandTargets;

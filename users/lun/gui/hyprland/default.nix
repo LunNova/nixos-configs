@@ -106,16 +106,16 @@ let spawn = "${pkgs.lun.spawn}/bin/spawn"; in
   programs.hyprpanel = {
     enable = true;
     overwrite.enable = true;
-    layout = {
-      "bar.layouts" = {
-        "0" = {
-          left = [ "dashboard" "workspaces" ];
-          middle = [ "media" "hypridle" "ram" "cpu" "cputemp" "storage" "battery" ];
-          right = [ "bluetooth" "wifi" "volume" "systray" "notifications" "clock" "power" ];
+    settings = {
+      layout = {
+        "bar.layouts" = {
+          "0" = {
+            left = [ "dashboard" "workspaces" ];
+            middle = [ "media" "hypridle" "ram" "cpu" "cputemp" "storage" "battery" ];
+            right = [ "bluetooth" "wifi" "volume" "systray" "notifications" "clock" "power" ];
+          };
         };
       };
-    };
-    settings = {
       bar.launcher.autoDetectIcon = true;
       bar.workspaces.show_numbered = true;
       bar.workspaces.showApplicationIcons = true;
@@ -183,7 +183,7 @@ let spawn = "${pkgs.lun.spawn}/bin/spawn"; in
         "plugin:chromakey, class:^(legcord)$"
         "focusonactivate 1, initialClass:firefox"
         "immediate 1, initialClass:.*"
-        "opacity 1.0 0.9, class:.*"
+        # "opacity 1.0 0.9, class:.*"
         "opacity 0.93 0.75, class:^([cC]ode)$"
       ];
 
@@ -340,6 +340,7 @@ let spawn = "${pkgs.lun.spawn}/bin/spawn"; in
         "$mainMod, E, exec, $fileExplorer"
         "$mainMod, V, togglefloating,"
         "$mainMod, SUPER_L, exec, $menu"
+        "$mainMod SHIFT, SHIFT_L, exec, $menu"
 
         # Switch workspaces with mainMod + [0-9]
         "$mainMod, 1, workspace, 1"
