@@ -100,7 +100,6 @@
       nixosModules = self.lib.readExportedModules ./modules/exported;
 
       nixosConfigurations = {
-        test-vm = allSystems.makeHost.x86_64-linux ./hosts/test-vm;
         router-nixos = allSystems.makeHost.x86_64-linux ./hosts/router;
         tsukiakari-nixos = allSystems.makeHost.x86_64-linux ./hosts/tsukiakari;
         tsukikage-nixos = allSystems.makeHost.x86_64-linux ./hosts/tsukikage;
