@@ -4,7 +4,11 @@ let
 
   openvrRuntimeEnv = pkgs.buildEnv {
     name = "openvr-runtime";
-    paths = [ (getLib pkgs.opencomposite) (lib.attrsets.getStatic pkgs.monado) ];
+    paths = [
+      (getLib pkgs.opencomposite)
+      (getLib pkgs.xrizer)
+      (lib.attrsets.getStatic pkgs.monado)
+    ];
   };
 
   openvrRuntimeEnv32 = pkgs.buildEnv {
@@ -32,6 +36,16 @@ let
 
   #   # ...
   # }) {};
+  monadoEnv = {
+    LH_DEFAULT_BRIGHTNESS = "1.0";
+    STEAMVR_LH_ENABLE = "1";
+    XRT_COMPOSITOR_COMPUTE = "1";
+    XRT_COMPOSITOR_SCALE_PERCENTAGE = "150";
+    OXR_VIEWPORT_SCALE_PERCENTAGE = "125";
+    WMR_HANDTRACKING = "0";
+    XRT_CURATED_GUI = "1";
+    IPC_EXIT_WHEN_IDLE = "1";
+  };
 in
 {
   options.lun.openxr.enable = lib.mkEnableOption "Enable openxr compatible VR runtime with monado and opencomposite";
@@ -41,11 +55,8 @@ in
       defaultRuntime = true; # Register as default OpenXR runtime
       highPriority = true;
     };
-    systemd.user.services.monado.environment = {
-      # STEAMVR_LH_ENABLE = "1";
-      XRT_COMPOSITOR_COMPUTE = "1";
-      WMR_HANDTRACKING = "0";
-    };
+    environment.variables = monadoEnv;
+    systemd.user.services.monado.environment = monadoEnv;
     environment.systemPackages = [ pkgs.libsurvive pkgs.xrgears pkgs.wlx-overlay-s ];
 
     systemd.tmpfiles.settings.openvr-runtime = {
