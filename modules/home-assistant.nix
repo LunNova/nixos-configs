@@ -17,7 +17,7 @@ let cfg = config.lun.home-assistant; in
         volumes = [ "/var/lib/home-assistant/main:/config" ];
         environment.TZ = "America/Los_Angeles";
         # https://github.com/home-assistant/core/pkgs/container/home-assistant/versions?filters%5Bversion_type%5D=tagged
-        image = "ghcr.io/home-assistant/home-assistant:2024.9 ";
+        image = "ghcr.io/home-assistant/home-assistant:2025.4";
         extraOptions = [
           "--network=host"
           "--device=/dev/ttyUSB0:/dev/ttyUSB0"
@@ -35,7 +35,7 @@ let cfg = config.lun.home-assistant; in
         volumes = [ "/var/lib/home-assistant/zwave:/usr/src/app/store" ];
         environment.TZ = "America/Los_Angeles";
         # https://hub.docker.com/r/zwavejs/zwave-js-ui/tags
-        image = "zwavejs/zwave-js-ui:9";
+        image = "zwavejs/zwave-js-ui:10.1";
         extraOptions = [
           "--network=host"
           "--device=/dev/serial/by-id/usb-Silicon_Labs_Zooz_ZST10_700_Z-Wave_Stick_0001-if00-port0:/dev/zwave"
