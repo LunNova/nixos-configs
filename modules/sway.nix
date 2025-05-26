@@ -20,7 +20,9 @@
         swayidle
         xwayland
         wl-clipboard
-        mako # notification daemon
+        # FIXME: mako adds socket activated notification handler just by being in here
+        # but we want to only start it explicitly :/
+        # mako # notification daemon
         foot # foot is the default terminal in the config
         dmenu # Dmenu is the default in the config but i recommend wofi since its wayland native
         wofi
