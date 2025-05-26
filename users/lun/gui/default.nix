@@ -1,22 +1,23 @@
-{ pkgs, lib, flakeArgs, lun-profiles, ... }:
+{ pkgs, lib, flakeArgs, lun-profiles, nixosConfig, ... }:
 {
   imports = [
-    ./i3
     ./cad
-    # ./sway
     # ./conky.nix # TODO: perf issues
     ./dev.nix
     ./file-management.nix
     ./xdg-mime-apps.nix
     ./kitty.nix
-  ] ++ lib.optionals (lun-profiles.personal or false) [
-    ./rose-pine.nix
-    ./hyprland
+  ] ++ lib.optionals (lun-profiles.personal or false) ([
     ./music.nix
     ./syncthing.nix
     ./discord.nix
     ./media
-  ] ++ lib.optionals (lun-profiles.gaming or false) [
+  ] ++ lib.optionals (nixosConfig != null) [
+    ./rose-pine.nix
+    ./i3
+    # ./sway
+    ./hyprland
+  ]) ++ lib.optionals (lun-profiles.gaming or false) [
     ./gaming.nix
     ./vr-gaming.nix
   ];
