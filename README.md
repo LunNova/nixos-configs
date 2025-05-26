@@ -7,6 +7,19 @@ Our initial attempts at using NixOS.
 - [Packages](packages/#readme)
 - [Users](users/#readme)
 
+# Hosts
+
+This folder contains information about our various hosts, each named after a Japanese word related to rain or moonlight.
+
+## Host List
+
+- `amayadori`: A low-power laptop. The name means "shelter from rain".
+- `kosame`: A fast laptop. The name means "light rain".
+- `hisame`: A fast desktop. The name means "freezing rain, sleet".
+- `hoshitsuki`: A CPU/inference desktop with 5950x 16c32t CPU and 2x32GB VRAM GPUs. The name could be interpreted as "starlit moon".
+- `tsukiakari`: A CPU/inference server with an EPYC 7V13 64-core, 128-thread CPU and 6x32GB Instinct MI100 GPUs. The name means "moonlight".
+- `tsukikage`: Similar to `tsukiakari` but with a single 64GB Instinct MI210 GPU. The name means "moonlight shadow".
+
 # Fresh install
 
 Similar to [tmpfs on root](https://elis.nu/blog/2020/05/nixos-tmpfs-as-root/).
