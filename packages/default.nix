@@ -53,7 +53,6 @@ let
     samrewritten = pkgs.callPackage ./samrewritten { };
     sillytavern = pkgs.callPackage ./sillytavern { };
     spawn = pkgs.callPackage ./spawn { };
-    swaysome = pkgs.callPackage ./swaysome { };
     sworkstyle = pkgs.callPackage ./sworkstyle { };
     lun = pkgs.writeShellScriptBin "lun" ''
       exec "${lun-scripts-path}/bin/$1" "''${@:2}"
