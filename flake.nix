@@ -130,14 +130,14 @@
           nodes.router = mkNode { name = "router"; hostname = "10.5.5.1"; };
           nodes.tsukiakari = mkNode { name = "tsukiakari"; fast = true; };
           nodes.tsukikage = mkNode { name = "tsukikage"; fast = true; };
-          nodes.shigure = mkNode { name = "shigure"; fast = true; };
+          nodes.shigure = mkNode { name = "shigure"; cfg = self.nixosConfigurations.lun-shigure; fast = true; };
           nodes.hoshitsuki = mkNode { name = "hoshitsuki"; fast = true; };
           nodes.testSingleServiceDeployAsLunOnLocalhost = {
             hostname = "localhost";
             profiles.serviceTest = serviceTest.hmProfile {
               inherit (flakeArgs) deploy-rs;
               inherit (flakeArgs.nixpkgs) lib;
-              inherit (flakeArgs.self.homeConfigurations.x86_64-linux.lun) pkgs;
+              inherit (flakeArgs.self.homeConfigurations."x86_64-linux/lun") pkgs;
               user = "lun";
               profileName = "lunHello";
               modules = [
