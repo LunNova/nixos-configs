@@ -18,6 +18,7 @@ let
       (import ./overlay-nixpkgs.nix { inherit flakeArgs; })
       flakeArgs.hyprland.overlays.default
       flakeArgs.hyprpanel.overlay
+      flakeArgs.lun-pkgs.overlays.default
     ] ++ lib.optionals (system == "aarch64-linux") [
       (import "${flakeArgs.x1e-nixos-config}/packages/overlay.nix")
     ];
