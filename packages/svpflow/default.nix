@@ -3,7 +3,7 @@
 , lib
 , fetchurl
 , unzip
-, addOpenGLRunpath
+, addDriverRunpath
 , ...
 }:
 stdenv.mkDerivation rec {
@@ -17,7 +17,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     unzip
-    addOpenGLRunpath
+    addDriverRunpath
   ];
 
   sourceRoot = ".";
