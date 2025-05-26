@@ -76,6 +76,7 @@
     lun.persistence.dirs = [ "/var/lib/bluetooth" ];
     services.blueman.enable = true;
     programs.dconf.enable = true;
+    services.speechd.enable = true;
 
     sconfig.yubikey = false; # modules/yubikey # FIXME pam error
   };
