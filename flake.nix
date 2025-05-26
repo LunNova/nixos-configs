@@ -62,6 +62,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    lun-pkgs.url = "github:LunNova/lun-pkgs.nix";
     minimal-shell.url = "github:LunNova/nix-minimal-shell";
     lanzaboote.url = "github:nix-community/lanzaboote";
     lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
