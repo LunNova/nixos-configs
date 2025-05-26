@@ -23,15 +23,16 @@ in
       glxinfo
       vulkan-tools
       nixd
-      #rehex
-      imhex
-      meld # graphical diff, lets you paste in pretty easily
       nurl # nix-prefetch-url but better
     ] ++ lib.optionals lun-profiles.personal [
       flakeArgs.deploy-rs.packages.${pkgs.system}.default
       # waylandn't
       # pkgs.lun.compositor-killer # FIXME: wayland-scanner not found
+      rehex
+      imhex
+      meld # graphical diff, lets you paste in pretty easily
       pkgs.code-cursor
+      pkgs.claude-code
     ] ++ lib.optionals (pkgs.system == "x86_64-linux") [
       # FIXME: these don't work well non-fsh
       # jetbrains.idea-ultimate
