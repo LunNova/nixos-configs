@@ -66,8 +66,6 @@ let
   # These packages are x86_64-linux
   # This is mostly due to depending on pkgs.pkgsi686Linux to evaluate
   (lib.optionalAttrs (pkgs.system == "x86_64-linux") {
-    # FIXME: this is upstreamed?
-    tabby = pkgs.callPackage ./tabby { };
     cursorai = pkgs.callPackage ./cursorai { };
     rmc = pkgs.python3Packages.callPackage ./rmc { };
     wowup = pkgs.callPackage ./wowup { };
