@@ -5,7 +5,7 @@
     prismlauncher # Hi emstar (:
   ] ++ lib.optionals (lun-profiles.wineGaming or false) [
     lun.lutris
-    pkgs.lun.wine
+    pkgs.lun-pkgs.wine
     # TODO: try bottles instead of lutris
   ];
 
