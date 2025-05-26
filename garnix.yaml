@@ -2,4 +2,6 @@
 builds:
   exclude:
     # builds are massive due to custom kernel
-    - nixosConfigurations.lun-hisame-*
+    - nixosConfigurations.*
+    # pull in same large systems
+    - checks.deploy*
