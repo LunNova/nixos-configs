@@ -6,7 +6,7 @@ let
   pkgsPatches =
     if system == "x86_64-linux" then [
       # add .patch to a github PR URL to get a patch quickly
-      ./nixpkgs-patches/graphical-session-delay.patch
+      # ./nixpkgs-patches/graphical-session-delay.patch
     ] else [ ];
   defaultPkgsConfig = {
     config.allowUnfree = true;
