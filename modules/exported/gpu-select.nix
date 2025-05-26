@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }:
+{ lib, config, ... }:
 let
   cfg = config.lun.gpu-select;
   env = {
@@ -31,9 +31,6 @@ in
       systemd.services.displayManager.environment = env;
     }
     (lib.mkIf (cfg.card != null) {
-      # Adds support for KMS_DEVICE env var to ensure only one device is accessed by X server
-      services.xserver.displayManager.xserverBin = lib.mkForce "${pkgs.lun.xorgserver.out}/bin/X";
-
       services.udev.extraRules = ''
         # ensure all cards don't get seat and master-of-seat tags
         SUBSYSTEM=="drm", KERNEL=="card[0-9]", TAG-="seat", TAG-="master-of-seat", ENV{ID_FOR_SEAT}="", ENV{ID_PATH}=""
