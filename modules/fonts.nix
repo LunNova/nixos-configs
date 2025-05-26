@@ -24,13 +24,15 @@ in
       font-awesome_5
       nerd-fonts.caskaydia-cove # symbol font for bars
 
+      ipafont
+      kochi-substitute
+      noto-fonts-cjk-sans
+
       # Apple UI fonts, override XML below sets these as monospace default
       flakeArgs.apple-fonts.packages.${pkgs.system}.sf-pro
       flakeArgs.apple-fonts.packages.${pkgs.system}.sf-mono
     ] ++ lib.optionals lotsOfFonts [
       # General fonts
-      noto-fonts
-      noto-fonts-cjk
       liberation_ttf
       ttf_bitstream_vera
 
@@ -49,6 +51,7 @@ in
       iosevka-bin
 
       # Emoji
+      noto-fonts
       noto-fonts-emoji
       noto-fonts-extra
     ]);
