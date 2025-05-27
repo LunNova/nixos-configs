@@ -30,5 +30,8 @@ stdenv.mkDerivation {
   postConfigure = ''
     ./VERSION-GEN -include $(OBJDIR)/version.mk
   '';
+  postInstall = ''
+    ln -s $out/lib/libswitchtec.so.4.2 $out/lib/libswitchtec.so.4
+  '';
   meta.mainProgram = "switchtec";
 }
