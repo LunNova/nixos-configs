@@ -27,7 +27,7 @@ in
         ACTION=="add", SUBSYSTEM=="ata_port", KERNEL=="ata*", TEST=="../../power/control" ATTR{../../power/control}="auto"
 
         # misc
-        ATTR{power/async}=="disabled", ATTR{power/async}="enabled"
+        # ATTR{power/async}=="disabled", ATTR{power/async}="enabled"
         # this is either a on/off switch or a timeout in seconds depending on the module
         # gets set to 10 later for snd_hda_intel which uses it as seconds timeout
         TEST=="parameters/power_save", ATTR{parameters/power_save}="1"
