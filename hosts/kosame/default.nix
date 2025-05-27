@@ -91,6 +91,7 @@ in
     let nPkgs = config.boot.kernelPackages.nvidiaPackages;
     in
     lib.mkForce (if (lib.versionOlder nPkgs.beta.version nPkgs.stable.version) then nPkgs.stable else nPkgs.beta);
+  hardware.nvidia.open = true;
 
   # TODO 2022-08-07 Marked broken
   # specialisation.nvidia-open.configuration = {
@@ -146,12 +147,6 @@ in
   # services.xserver.desktopManager.gnome.enable = true;
   # # https://github.com/NixOS/nixpkgs/issues/75867
   # programs.ssh.askPassword = pkgs.lib.mkForce "${pkgs.gnome.seahorse.out}/libexec/seahorse/ssh-askpass";
-
-  #services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
-  services.xserver.displayManager.sessionPackages = [
-    (pkgs.plasma-workspace.overrideAttrs
-      (_old: { passthru.providedSessions = [ "plasmawayland" ]; }))
-  ];
 
   boot.kernelParams = [
     "mitigations=off"
