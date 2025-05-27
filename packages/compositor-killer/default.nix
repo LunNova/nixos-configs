@@ -2,6 +2,7 @@
 , stdenv
 , meson
 , wayland-protocols
+, wayland-scanner
 , wayland
 , cmake
 , pkg-config
@@ -23,6 +24,6 @@ stdenv.mkDerivation {
     cp ./compositor-killer $out/bin/
   '';
   nativeBuildInputs = [ meson cmake pkg-config ninja ];
-  buildInputs = [ wayland-protocols wayland libglvnd egl-wayland ];
+  buildInputs = [ wayland-protocols wayland-scanner wayland libglvnd egl-wayland ];
   meta.mainPackage = "compositor-killer";
 }
