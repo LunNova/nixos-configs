@@ -49,8 +49,8 @@ stdenv.mkDerivation rec {
     '';
 
   postFixup = ''
-    addOpenGLRunpath $out/lib/libsvpflow1_vs64.so
-    addOpenGLRunpath $out/lib/libsvpflow2_vs64.so
+    addDriverRunpath $out/lib/libsvpflow1_vs64.so
+    addDriverRunpath $out/lib/libsvpflow2_vs64.so
   '';
 
   meta = with lib; {
