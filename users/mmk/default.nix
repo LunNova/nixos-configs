@@ -29,7 +29,8 @@
     kdePackages.ark
     unar
     p7zip
-    discord
+  ] ++ lib.optionals pkgs.stdenv.hostPlatform.isx86 [
+    pkgs.discord
   ];
 
   programs.firefox = {
