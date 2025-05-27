@@ -13,6 +13,7 @@ in
     networking.hostName = "lun-${name}";
     sconfig.machineId = "829c75bd19699f20f80e5b3fc80f7310";
     system.stateVersion = "24.11";
+    hardware.lenovo-yoga-slim7x.enable = true; # from x1e-nixos-config
 
     boot.loader.systemd-boot.consoleMode = "max";
     console.font = lib.mkForce "ter-v12n";
