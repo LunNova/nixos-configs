@@ -274,6 +274,8 @@ in
           # Remarkable which can't network with jumbo frames
           "b8:2d:28:b2:ad:45,set:standard"
         ];
+        # https://github.com/sjhgvr/oisd/blob/main/dnsmasq_small.txt
+        conf-file = "${flakeArgs.oisd}/dnsmasq_small.txt";
       };
     };
     boot.kernel.sysctl = {
