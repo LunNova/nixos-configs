@@ -1,12 +1,12 @@
-{ pkgs, lib, config, flakeArgs, ... }:
+{ pkgs, lib, config, ... }:
 {
   config = lib.mkIf config.lun.profiles.graphical {
     security.pam.services.hyprlock = { };
     programs.hyprland = {
       enable = true;
       withUWSM = true;
-      package = flakeArgs.hyprland.packages.${pkgs.system}.hyprland;
-      portalPackage = flakeArgs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
+      package = pkgs.hyprland;
+      portalPackage = pkgs.xdg-desktop-portal-hyprland;
       systemd.setPath.enable = true;
     };
     environment.systemPackages = [

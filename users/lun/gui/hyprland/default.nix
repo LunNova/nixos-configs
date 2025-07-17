@@ -3,7 +3,6 @@ let spawn = "${pkgs.lun.spawn}/bin/spawn"; in
 {
   imports = [
     ./idle.nix
-    flakeArgs.hyprpanel.homeManagerModules.hyprpanel
     # flakeArgs.hyprchroma.Hypr-DarkWindow
   ];
   home.packages = [
@@ -105,7 +104,7 @@ let spawn = "${pkgs.lun.spawn}/bin/spawn"; in
   xdg.configFile.hyprpanel.onChange = lib.mkForce "${pkgs.hyprpanel}/bin/hyprpanel r || true";
   programs.hyprpanel = {
     enable = true;
-    overwrite.enable = true;
+    # overwrite.enable = true;
     settings = {
       layout = {
         "bar.layouts" = {

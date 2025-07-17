@@ -58,7 +58,7 @@
       inputs.flake-utils.follows = "flake-utils";
     };
     apple-fonts = {
-      url = "github:Lyndeno/apple-fonts.nix/714767021b57d0d30de35eb90e4b748fbbb9c99f";
+      url = "github:Lyndeno/apple-fonts.nix/875c694d7f0ec2020d7511264907a1f0e3262931";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     oisd = { url = "github:sjhgvr/oisd"; flake = false; };
@@ -69,9 +69,6 @@
     lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
     x1e-nixos-config.url = "github:kuruczgy/x1e-nixos-config";
     x1e-nixos-config.inputs.nixpkgs.follows = "nixpkgs";
-    hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
-    hyprland.url = "github:hyprwm/Hyprland/v0.48.0";
-    hyprland.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   # SCHEMA:
