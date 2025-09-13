@@ -195,9 +195,7 @@
     ];
 
     # systemd
-    systemd.extraConfig = ''
-      DefaultTimeoutStopSec=45s
-    '';
+    systemd.settings.Manager.DefaultTimeoutStopSec = "45s";
     systemd.user.extraConfig = ''
       DefaultTimeoutStopSec=45s
     '';
