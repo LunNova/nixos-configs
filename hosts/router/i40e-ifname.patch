@@ -1,0 +1,27 @@
+The same naming regression which was reported in ixgbe and fixed in
+commit e67a0bc3ed4f ("ixgbe: prevent from unwanted interface name
+changes") still exists in i40e.
+
+Fix i40e by setting the same flag, added in commit c5ec7f49b480
+("devlink: let driver opt out of automatic phys_port_name generation").
+
+Fixes: 9e479d64dc58 ("i40e: Add initial devlink support")
+Signed-off-by: Calvin Owens <calvin@wbinvd.org>
+---
+ drivers/net/ethernet/intel/i40e/i40e_devlink.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_devlink.c b/drivers/net/ethernet/intel/i40e/i40e_devlink.c
+index cc4e9e2addb7..40f81e798151 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_devlink.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_devlink.c
+@@ -212,6 +212,7 @@ int i40e_devlink_create_port(struct i40e_pf *pf)
+ 
+ 	attrs.flavour = DEVLINK_PORT_FLAVOUR_PHYSICAL;
+ 	attrs.phys.port_number = pf->hw.pf_id;
++	attrs.no_phys_port_name = 1;
+ 	i40e_devlink_set_switch_id(pf, &attrs.switch_id);
+ 	devlink_port_attrs_set(&pf->devlink_port, &attrs);
+ 	err = devlink_port_register(devlink, &pf->devlink_port, pf->hw.pf_id);
+-- 
+2.47.2
