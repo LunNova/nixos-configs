@@ -30,8 +30,8 @@
 
     # oom kill faster for more responsiveness
     services.earlyoom.enable = true;
-    services.earlyoom.freeMemThreshold = 6; # defaults to 10% which is excessive
-    services.earlyoom.freeSwapThreshold = 6;
+    services.earlyoom.freeMemThreshold = 5; # defaults to 10% which is excessive
+    services.earlyoom.freeSwapThreshold = 10;
 
     # PRINT
     # lun.print.enable = true; # FIXME: cups never works right with long uptime / after nixos-rebuild ?
