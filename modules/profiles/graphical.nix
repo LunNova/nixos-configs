@@ -12,11 +12,7 @@
     # services.displayManager.gdm.wayland = true;
     # services.displayManager.gdm.nvidiaWayland = true;
     environment.systemPackages = lib.mkMerge [
-      (lib.mkIf config.services.xserver.desktopManager.plasma5.enable [
-        pkgs.libsForQt5.sddm-kcm # KDE settings panel for sddm
-        pkgs.libsForQt5.bismuth # KDE tiling plugin
-      ]
-      )
+      # TODO: kdePackages bismuth?
       [
         pkgs.kdePackages.kate
         pkgs.kdePackages.kamera
@@ -26,10 +22,6 @@
     ];
     systemd.services."drkonqi-coredump-processor@".wantedBy = lib.mkForce [ ];
     services.desktopManager.plasma6.enable = true;
-    services.xserver.desktopManager.plasma5.enable = false;
-    services.xserver.desktopManager.plasma5.runUsingSystemd = true;
-    # vlc is smaller than gstreamer
-    services.xserver.desktopManager.plasma5.phononBackend = "vlc";
     services.xserver.windowManager.i3.enable = true;
     services.xserver.windowManager.i3.extraSessionCommands = ''
       systemctl --user import-environment PATH
