@@ -28,7 +28,7 @@ in
         {
           name = "enable-amd-sme-sev";
           patch = null;
-          extraStructuredConfig = with lib.kernel; {
+          structuredExtraConfig = with lib.kernel; {
             AMD_MEM_ENCRYPT = yes;
           };
         }

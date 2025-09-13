@@ -115,7 +115,7 @@ in
       {
         name = "whoneedstodebuganyway";
         patch = null;
-        extraStructuredConfig = with lib.kernel; {
+        structuredExtraConfig = with lib.kernel; {
           DRM_FBDEV_EMULATION = lib.mkForce no;
           FB_VGA16 = lib.mkForce no;
           FB_UVESA = lib.mkForce no;
@@ -129,7 +129,7 @@ in
       {
         name = "THP";
         patch = null;
-        extraStructuredConfig = with lib.kernel; {
+        structuredExtraConfig = with lib.kernel; {
           READ_ONLY_THP_FOR_FS = lib.mkForce yes;
         };
       }

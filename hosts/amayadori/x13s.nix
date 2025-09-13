@@ -41,7 +41,7 @@ let
     {
       name = "x13s-cfg";
       patch = null;
-      extraStructuredConfig = with kernelOpts; {
+      structuredExtraConfig = with kernelOpts; {
         EFI_ARMSTUB_DTB_LOADER = Y;
         OF_OVERLAY = Y;
         BTRFS_FS = Y;
