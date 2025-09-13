@@ -1,12 +1,12 @@
 { pkgs, lib, ... }:
 let
-  extraElectronArgs = "--ignore-gpu-blocklist --disable-features=UseOzonePlatform --enable-features=VaapiVideoDecoder --use-gl=desktop --enable-gpu-rasterization --enable-zero-copy --disable-smooth-scrolling";
+  extraElectronArgs = "--disable-smooth-scrolling";
   discordPathSuffix = "";
   extractCmd = pkgs.makeBinaryWrapper.extractCmd or (pkgs.writeShellScript "extract-binary-wrapper-cmd" ''
     strings -dw "$1" | sed -n '/^makeCWrapper/,/^$/ p'
   '');
   openAsarDiscord = (pkgs.discord.override {
-    withOpenASAR = true;
+    # withOpenASAR = true;
     withVencord = false;
   }).overrideAttrs (old: {
     postInstall = ''
