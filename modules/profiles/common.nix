@@ -120,6 +120,9 @@
       sudo.execWheelOnly = true;
       doas.enable = true;
     };
+    system.fsPackages = [
+      pkgs.e2fsprogs
+    ];
     boot.kernel.sysctl = with lib; {
       "net.core.default_qdisc" = "fq"; # fq best if using bbr https://groups.google.com/g/bbr-dev/c/4jL4ropdOV8
       "net.ipv4.tcp_ecn" = 0; # ECN has been misbehaving locally, don't know why
