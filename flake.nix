@@ -2,8 +2,9 @@
   description = "lun's system config";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-24.11";
+    # TEMP: staging immediately after merging enable-default-pie for gcc
+    nixpkgs.url = "github:NixOS/nixpkgs/411faf46e2c88c284c8ecaee890d61eab4c28f83";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.05";
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
@@ -58,7 +59,7 @@
       inputs.flake-utils.follows = "flake-utils";
     };
     apple-fonts = {
-      url = "github:Lyndeno/apple-fonts.nix/875c694d7f0ec2020d7511264907a1f0e3262931";
+      url = "github:Lyndeno/apple-fonts.nix/08e109e74a8b8d2d965cdd79eb175d2d68dc0214";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     oisd = { url = "github:sjhgvr/oisd"; flake = false; };
