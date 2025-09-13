@@ -1,7 +1,4 @@
 { config, pkgs, lib, ... }:
-let
-  crPackages = lib.optionals pkgs.stdenv.hostPlatform.isx86 [ pkgs.framesh ];
-in
 {
   config = lib.mkMerge [
     {
@@ -37,22 +34,24 @@ in
 
       # udev rules and package for vial keyboard remapper
       services.udev.packages = [
-        pkgs.vial
-        # pkgs.lun.vial.udev-rule-vial-serial FIXME: one of vial's deps is broken
         pkgs.android-udev-rules
         pkgs.libmtp.out
         pkgs.kdePackages.kio-extras
-      ] ++ crPackages;
-      environment.systemPackages = [
+      ] ++ lib.optionals pkgs.stdenv.hostPlatform.isx86 [
+        pkgs.framesh
         pkgs.vial
-        # pkgs.lun.vial FIXME: one of vial's deps is broken
+      ];
+      environment.systemPackages = [
         pkgs.barrier
         pkgs.openssl
         pkgs.jmtpfs
         pkgs.libmtp
         pkgs.kdePackages.kio-extras
         pkgs.kdePackages.kio-admin
-      ] ++ crPackages;
+      ] ++ lib.optionals pkgs.stdenv.hostPlatform.isx86 [
+        pkgs.framesh
+        pkgs.vial
+      ];
 
       programs.noisetorch.enable = true;
       networking.firewall.allowedTCPPorts = [ 24800 ];
