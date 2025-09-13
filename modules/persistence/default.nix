@@ -107,11 +107,9 @@ in
         ForwardToConsole=yes
         MaxLevelConsole=info
       '';
-      systemd.extraConfig = ''
-        StatusUnitFormat=combined
-        LogLevel=info
-        DefaultTimeoutStartSec=30
-      '';
+      systemd.settings.Manager.StatusUnitFormat = "combined";
+      systemd.settings.Manager.LogLevel = "info";
+      systemd.settings.Manager.DefaultTimeoutStartSec = "30";
       systemd.services = {
         create-persist-dirs = {
           wantedBy = [ "initrd-root-device.target" ];
