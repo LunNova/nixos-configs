@@ -28,6 +28,7 @@ in
       flakeArgs.deploy-rs.packages.${pkgs.system}.default
       # waylandn't
       # pkgs.lun.compositor-killer # FIXME: wayland-scanner not found
+      nix-diff
       rehex
       imhex
       meld # graphical diff, lets you paste in pretty easily
