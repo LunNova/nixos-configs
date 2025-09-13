@@ -6,7 +6,7 @@ let spawn = "${pkgs.lun.spawn}/bin/spawn"; in
     # flakeArgs.hyprchroma.Hypr-DarkWindow
   ];
   home.packages = [
-    pkgs.rofi-wayland
+    pkgs.rofi
     pkgs.waypaper
     pkgs.hyprpaper
     pkgs.hyprpanel
