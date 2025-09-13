@@ -109,7 +109,10 @@
     hardware = {
       enableRedistributableFirmware = true;
     };
-    services.fstrim.enable = true;
+    services.fstrim = {
+      enable = true;
+      interval = "daily";
+    };
 
     # HARDENING
     nix.settings.allowed-users = [ "@users" ];
