@@ -124,6 +124,10 @@
       pkgs.e2fsprogs
     ];
     boot.kernel.sysctl = with lib; {
+      # increase the limits to avoid running out of inotify watches
+      "fs.inotify.max_user_watches" = 4 * 1024 * 1024;
+      "fs.inotify.max_user_instances" = 4 * 1024;
+
       "net.core.default_qdisc" = "fq"; # fq best if using bbr https://groups.google.com/g/bbr-dev/c/4jL4ropdOV8
       "net.ipv4.tcp_ecn" = 0; # ECN has been misbehaving locally, don't know why
       "net.ipv4.tcp_congestion_control" = "bbr";
