@@ -122,7 +122,7 @@
               user = "root";
               path = flakeArgs.deploy-rs.lib.x86_64-linux.activate.nixos cfg;
             };
-            remoteBuild = fast;
+            # remoteBuild = fast;
           };
         in
         {
