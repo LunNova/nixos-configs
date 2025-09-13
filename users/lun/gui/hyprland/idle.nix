@@ -132,6 +132,14 @@ in
           Unit.Requires = lib.mkForce [ ];
           Unit.PartOf = lib.mkForce hyprlandTargets;
         };
+
+        hyprpanel = {
+          Install.WantedBy = lib.mkForce hyprlandTargets;
+          # ConditionEnvironment = "WAYLAND_DISPLAY";
+          Unit.Wants = lib.mkForce [ ];
+          Unit.Requires = lib.mkForce [ ];
+          Unit.PartOf = lib.mkForce hyprlandTargets;
+        };
       }
     ];
 
