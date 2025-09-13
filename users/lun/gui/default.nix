@@ -50,7 +50,7 @@
       kdePackages.ark
     ] ++ lib.optionals (pkgs.system == "x86_64-linux") [
       google-chrome
-      lun.wally
+      # lun.wally # FIXME: webkitgtk dep on libsoup_2_4 marked insecure
     ]);
   };
 }
