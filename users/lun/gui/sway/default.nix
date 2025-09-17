@@ -26,13 +26,8 @@ in
   # Borrowed significantly from https://github.com/lovesegfault/nix-config
   home.packages = [ pkgs.lun.spawn ];
 
-  services.mako = {
-    enable = true;
-    sort = "+time";
-    maxVisible = 10;
-    layer = "overlay";
-    borderRadius = 5;
-  };
+  # FIXME: work out how to enable mako *only* for sway, it likes to conflict
+  # with plasma or hyprpanel
 
   wayland.windowManager.sway = {
     enable = true;
@@ -157,19 +152,6 @@ in
   #   };
 
   systemd.user.services = {
-    mako = {
-      Unit = {
-        Description = "A lightweight Wayland notification daemon";
-        Documentation = "man:mako(1)";
-        PartOf = "sway-session.target";
-      };
-      Service = {
-        Type = "simple";
-        Restart = "always";
-        ExecStart = "${pkgs.mako}/bin/mako";
-      };
-      Install = { WantedBy = [ "sway-session.target" ]; };
-    };
     polkit-agent = {
       Unit = {
         Description = "polkit-gnome-authentication-agent-1";
