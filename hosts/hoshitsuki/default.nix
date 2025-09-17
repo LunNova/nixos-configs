@@ -120,6 +120,9 @@ in
 
     nix.settings.cores = 16;
     lun.persistence.enable = true;
+    lun.persistence.dirs = [
+      "/var/lib/private/atticd"
+    ];
     zramSwap.enable = true;
     zramSwap.memoryPercent = 30;
     fileSystems = {
