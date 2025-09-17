@@ -14,7 +14,8 @@
       pkgs.hyprpanel
       pkgs.hyprcursor
     ];
-    environment.sessionVariables = {
+    # Sometimes useful to force ATK support but don't run this always
+    environment.sessionVariables = lib.optionalAttrs false {
       GTK_MODULES = "gail:atk-bridge";
       OOO_FORCE_DESKTOP = "gnome";
       GNOME_ACCESSIBILITY = "1";
