@@ -7,7 +7,6 @@ let
       bash
       borgbackup
       findutils
-      optipng
       vulkan-tools
       gnugrep
       curl
@@ -32,6 +31,8 @@ let
         "wine"
         "nix"
         "systemctl"
+        "chattr"
+        "btrfs"
       ];
     };
   };
