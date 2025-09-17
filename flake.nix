@@ -114,6 +114,7 @@
 
       deploy =
         let
+          useRemoteBuilds = false;
           mkNode = { name, hostname ? "${name}-nixos", fast ? false, cfg ? self.nixosConfigurations.${name + "-nixos"} }: {
             inherit hostname;
             # interactiveSudo = true;
@@ -122,7 +123,7 @@
               user = "root";
               path = flakeArgs.deploy-rs.lib.x86_64-linux.activate.nixos cfg;
             };
-            # remoteBuild = fast;
+            remoteBuild = fast && useRemoteBuilds;
           };
         in
         {
