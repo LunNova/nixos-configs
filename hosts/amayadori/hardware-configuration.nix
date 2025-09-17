@@ -9,7 +9,7 @@
       device = "/dev/disk/by-label/amayadori_persist";
       fsType = "btrfs";
       neededForBoot = true;
-      options = [ "defaults" "subvol=@persist" "ssd" "discard=async" "rw" "noatime" "compress=zstd" "space_cache=v2" "autodefrag" ];
+      options = [ "defaults" "subvol=@persist" "ssd" "nodiscard" "rw" "noatime" "compress=zstd" "space_cache=v2" ];
     };
 
   fileSystems."/boot" =

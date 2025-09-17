@@ -1,9 +1,9 @@
-{ config, flakeArgs, pkgs, lib, ... }:
+{ flakeArgs, pkgs, lib, ... }:
 let
   name = "hoshitsuki";
   swap = null; #"/dev/disk/by-partlabel/${name}_swap";
-  btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" "autodefrag" ];
-  btrfsSsdOpts = btrfsOpts ++ [ "ssd" "discard=async" ];
+  btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" ];
+  btrfsSsdOpts = btrfsOpts ++ [ "ssd" "nodiscard" ];
 in
 {
   imports = [

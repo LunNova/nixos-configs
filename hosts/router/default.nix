@@ -13,7 +13,7 @@ let
   lanV4Subnet = "10.5.5";
   lanV4Self = "${lanV4Subnet}.1";
   fullHostName = "${config.networking.hostName}.${config.networking.domain}";
-  btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" "autodefrag" ];
+  btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" ];
   btrfsSsdOpts = btrfsOpts ++ [ "ssd" "discard=async" ];
   btrfsHddOpts = btrfsOpts;
   netFqdn = "home.moonstruck.dev";

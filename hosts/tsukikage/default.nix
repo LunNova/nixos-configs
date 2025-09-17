@@ -2,7 +2,7 @@
 let
   name = "tsukikage";
   swap = "/dev/disk/by-partlabel/${name}_swap";
-  btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" "autodefrag" ];
+  btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" ];
   btrfsSsdOpts = btrfsOpts ++ [ "ssd" "discard=async" ];
 in
 {
