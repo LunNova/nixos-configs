@@ -61,10 +61,11 @@ in
       "acpi_enforce_resources=lax"
       "mem_encrypt=off"
     ];
+    lun.power-saving.enable = true;
     services.udev.packages = [ pkgs.i2c-tools pkgs.openrgb-with-all-plugins ];
     environment.systemPackages = [ pkgs.i2c-tools pkgs.openrgb-with-all-plugins pkgs.linuxPackages_latest.cpupower pkgs.dmidecode ];
     boot.kernelModules = [ "i2c-dev" "i2c-piix4" "i2c-smbus" "sp5100-tco" ];
-    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+    boot.kernelPackages = lib.mkForce pkgs.linuxPackages;
     boot.kernelPatches = [
       # {
       #   name = "amdgpu-plimit-override";
@@ -85,7 +86,6 @@ in
       }
     ];
     lun.efi-tools.enable = true;
-    #lun.power-saving.enable = true;
     services.nscd.enableNsncd = true;
     networking.firewall.allowedTCPPorts = [ 5000 5001 8000 8080 8081 ];
     programs.nix-ld.enable = true;
@@ -95,7 +95,8 @@ in
     services.xserver.autorun = false;
     #services.xserver.displayManager.startx.enable = true;
     #services.displayManager.sddm.enable = lib.mkForce false;
-    services.power-profiles-daemon.enable = true;
+    services.upower.enable = true;
+    services.tuned.enable = true;
     lun.amd-pstate.enable = true;
     services.xserver.videoDrivers = [ "amdgpu" ];
     lun.ml = {
