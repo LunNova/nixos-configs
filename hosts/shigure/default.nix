@@ -48,7 +48,8 @@ in
     networking.firewall.allowedTCPPorts = [ 5000 5001 8000 8080 8081 ];
 
     boot.plymouth.enable = lib.mkForce false;
-    services.power-profiles-daemon.enable = true;
+    services.upower.enable = true;
+    services.tuned.enable = true;
     lun.amd-pstate.enable = true;
     services.xserver.videoDrivers = [ "amdgpu" ];
     lun.ml = {
