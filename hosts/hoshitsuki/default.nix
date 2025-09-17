@@ -88,6 +88,29 @@ in
     lun.efi-tools.enable = true;
     services.nscd.enableNsncd = true;
     networking.firewall.allowedTCPPorts = [ 5000 5001 8000 8080 8081 ];
+    # FIXME: swap to module if https://github.com/NixOS/nixpkgs/pull/427964/ gets merged
+    systemd.services.cloudflared-tunnel = {
+      startLimitBurst = 5;
+      after = [
+        "network.target"
+        "network-online.target"
+      ];
+      wants = [
+        "network.target"
+        "network-online.target"
+      ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        RuntimeDirectory = "cloudflared-tunnel-${name}";
+        RuntimeDirectoryMode = "0400";
+        LoadCredential = [ "credentials.json:/persist/var/cloudflared/tunnel-5747fa14" ];
+        ExecStart = "${lib.getExe pkgs.cloudflared} tunnel run --token-file /run/credentials/cloudflared-tunnel.service/credentials.json";
+        Restart = "on-failure";
+        RestartSec = "1s";
+        RestartMaxDelaySec = "30s";
+        DynamicUser = true;
+      };
+    };
     programs.nix-ld.enable = true;
 
     systemd.defaultUnit = lib.mkForce "multi-user.target";
