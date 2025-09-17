@@ -7,7 +7,7 @@ let spawn = "${pkgs.lun.spawn}/bin/spawn"; in
   ];
   home.packages = [
     pkgs.rofi
-    pkgs.waypaper
+    # pkgs.waypaper # FIXME
     pkgs.hyprpaper
     pkgs.hyprpanel
   ];
