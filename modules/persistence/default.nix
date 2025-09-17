@@ -7,13 +7,8 @@ let
     // { description = "${elemType.description} (with check: ${desc})"; };
   isNonEmpty = s: (builtins.match "[ \t\n]*" s) == null;
   absolutePathWithoutTrailingSlash = addCheckDesc "absolute path without trailing slash" lib.types.str
-    (s: isNonEmpty s && (builtins.match "/.+/" s) == null);
-  directories = config.lun.persistence.dirs;
-  persistentStoragePaths = lib.unique directories;
-  all = config.fileSystems; # // config.virtualisation.fileSystems;
+    (s: isNonEmpty s && (builtins.match "/.+/" s) == null); # // config.virtualisation.fileSystems;
   getDevice = fs: if fs.device != null then fs.device else "/dev/disk/by-label/${fs.label}";
-  matchFileSystems = fs: lib.attrValues (lib.filterAttrs (_: v: v.mountPoint or null == fs) all);
-  fileSystems = lib.concatMap matchFileSystems persistentStoragePaths;
   deviceUnits = lib.unique
     (map
       (fs:
