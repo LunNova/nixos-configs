@@ -39,7 +39,6 @@ in
     "/var/lib/sddm"
   ];
   lun.conservative-governor.enable = true;
-  #  services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
   services.displayManager.defaultSession = "none+i3";
   lun.virtualisation.enable = lib.mkForce false;
 
