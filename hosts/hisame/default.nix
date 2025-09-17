@@ -45,10 +45,7 @@ in
       "nosplash"
       "preempt=full"
 
-      # FIXME: turn back on once arc multigpu doesn't fall over
-      # workaround for https://gitlab.freedesktop.org/drm/intel/-/issues/7306
-      # "iommo=off"
-      # "amd_iommu=off"
+      "iommu=pt"
 
       # Potential workaround for high idle mclk?
       # https://gitlab.freedesktop.org/drm/amd/-/issues/1301#note_629735
