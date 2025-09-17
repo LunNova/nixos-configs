@@ -79,10 +79,9 @@ in
           PCI_P2PDMA y
           DMABUF_MOVE_NOTIFY y
           HSA_AMD_P2P y
+          PCI_SW_SWITCHTEC y
+          FONT_TER16x32 n
         '';
-        # EEPROM_AT24 m
-        # EEPROM_AT25 m
-        # #SP5100_TCO m
       }
     ];
     lun.efi-tools.enable = true;
