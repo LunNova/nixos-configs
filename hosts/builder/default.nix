@@ -1,4 +1,4 @@
-{ config, flakeArgs, pkgs, lib, ... }:
+{ flakeArgs, pkgs, lib, ... }:
 let
   name = "builder";
   swap = null; #"/dev/disk/by-partlabel/${name}_swap";
@@ -40,7 +40,8 @@ in
     systemd.defaultUnit = lib.mkForce "multi-user.target";
     boot.plymouth.enable = lib.mkForce false;
     services.xserver.autorun = false;
-    services.power-profiles-daemon.enable = true;
+    services.upower.enable = true;
+    services.tuned.enable = true;
     lun.amd-pstate.enable = true;
     services.xserver.videoDrivers = [ "amdgpu" ];
     lun.ml = {
