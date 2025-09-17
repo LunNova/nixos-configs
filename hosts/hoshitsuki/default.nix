@@ -21,6 +21,9 @@ in
       vulkan-loader
     ];
 
+    services.atticd.enable = true;
+    services.atticd.environmentFile = "/persist/attic-env";
+
     boot.kernelParams = [
       #"pci=pcie_bus_perf,big_root_window,ecrc=on"
       #"pcie_ports=native" # handle everything in linux even if uefi wants to
