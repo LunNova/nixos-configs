@@ -36,13 +36,13 @@ in
     services.udev.packages = [ pkgs.i2c-tools ];
     environment.systemPackages = [
       pkgs.i2c-tools
-      pkgs.linuxPackages_latest.cpupower
+      pkgs.linuxPackages.cpupower
       pkgs.dmidecode
       pkgs.mergerfs
       pkgs.mergerfs-tools
     ];
     systemd.services."systemd-machined".enable = false;
-    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+    boot.kernelPackages = lib.mkForce pkgs.linuxPackages;
     boot.kernelPatches = [
       {
         name = "lun-cfg";
@@ -66,7 +66,8 @@ in
     systemd.defaultUnit = lib.mkForce "multi-user.target";
     boot.plymouth.enable = lib.mkForce false;
     services.xserver.autorun = false;
-    services.power-profiles-daemon.enable = true;
+    services.upower.enable = true;
+    services.tuned.enable = true;
     lun.amd-pstate.enable = true;
     lun.profiles = {
       server = true;
@@ -74,6 +75,7 @@ in
       gaming = false;
       graphical = false;
     };
+    services.fstrim.interval = "daily";
     services.xserver.videoDrivers = [ "amdgpu" ];
     lun.ml = {
       enable = true;
@@ -100,7 +102,7 @@ in
     # using beesd so don't need to hardlink within store
     # avoids intellij bug where hardlinks make dirwatcher crash
     nix.settings.auto-optimise-store = lib.mkForce false;
-    nix.settings.cores = 64;
+    nix.settings.cores = 56;
 
     boot.initrd.systemd.enable = true;
     boot.initrd.systemd.emergencyAccess = true;
