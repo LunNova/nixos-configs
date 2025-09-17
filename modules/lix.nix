@@ -1,6 +1,6 @@
 { pkgs, ... }:
 {
-  nix.package = pkgs.lix;
+  nix.package = pkgs.lixPackageSets.git.lix;
 
   # HACK: sleep for 1s in pre-build-hook until load average is below some number
   # cpus=$(${pkgs.coreutils}/bin/nproc)
