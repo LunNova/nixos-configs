@@ -186,51 +186,6 @@ in
         { from = 1714; to = 1764; } # KDE Connect
       ];
     };
-    specialisation.nvk.configuration = {
-      lun.nvk.enable = true;
-    };
-    # specialisation.cosmic.configuration = {
-    #   lun.nvk.enable = true;
-
-    #   imports = [
-    #     flakeArgs.nixos-cosmic.nixosModules.default
-    #   ];
-
-    #   services.displayManager.cosmic-greeter.enable = true;
-    #   services.xserver.displayManager.sddm.enable = lib.mkForce false;
-    #   services.desktopManager.cosmic.enable = true;
-    #   security.pam.services.cosmic-greeter = { };
-    # };
-    # specialisation.cosmic-nvidia-proprietary.configuration = {
-    #   imports = [
-    #     flakeArgs.nixos-cosmic.nixosModules.default
-    #   ];
-
-    #   services.displayManager.cosmic-greeter.enable = true;
-    #   services.xserver.displayManager.sddm.enable = lib.mkForce false;
-    #   services.desktopManager.cosmic.enable = true;
-    #   security.pam.services.cosmic-greeter = { };
-    # };
-
-    # services.hardware.openrgb = {
-    #   enable = true;
-    #   package = openrgb;
-    # };
-    # environment.systemPackages = [ openrgb ];
-
-    # lun.gpu-select.card = "card0";
-    # specialisation.carddefault.configuration = {
-    #   lun.gpu-select.card = lib.mkForce null;
-    # };
-    # specialisation.card0.configuration = {
-    #   lun.gpu-select.card = lib.mkForce "card0";
-    # };
-    # specialisation.card1.configuration = {
-    #   lun.gpu-select.card = lib.mkForce "card1";
-    # };
-    # specialisation.card2.configuration = {
-    #   lun.gpu-select.card = lib.mkForce "card2";
-    # };
     lun.amd-pstate.enable = true;
     lun.amd-pstate.mode = "active";
     lun.conservative-governor.enable = true;
