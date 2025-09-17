@@ -1,13 +1,13 @@
 { pkgs, lib, flakeArgs, lun-profiles, nixosConfig, ... }:
 {
   imports = [
-    ./cad
-    # ./conky.nix # TODO: perf issues
     ./dev.nix
     ./file-management.nix
     ./xdg-mime-apps.nix
     ./kitty.nix
   ] ++ lib.optionals (lun-profiles.personal or false) ([
+    # ./conky.nix # TODO: perf issues
+    ./cad
     ./music.nix
     ./syncthing.nix
     ./discord.nix
