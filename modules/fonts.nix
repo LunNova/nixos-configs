@@ -1,10 +1,10 @@
-{ pkgs, lib, ... }:
+{ pkgs, config, lib, ... }:
 # Using a much more minimal set of system fonts now because
 # battle.net seems to break if there are lots of fonts
 let lotsOfFonts = false;
 in
 {
-  fonts = {
+  fonts = lib.mkIf config.lun.profiles.graphical {
     enableDefaultPackages = false;
 
     packages = lib.mkForce (with pkgs; [
