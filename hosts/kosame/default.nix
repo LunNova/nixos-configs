@@ -105,14 +105,6 @@ in
 
   specialisation.low-power.configuration = low-power-cfg;
 
-  specialisation.gnome.configuration = low-power-cfg // {
-    services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
-    services.xserver.desktopManager.gnome.enable = lib.mkForce true;
-    xdg.portal.extraPortals = lib.mkForce [
-      pkgs.xdg-desktop-portal-gnome
-    ];
-  };
-
   boot.plymouth.enable = lib.mkForce false;
 
   hardware.asus.battery.chargeUpto = 90;
