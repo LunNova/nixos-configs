@@ -8,7 +8,7 @@ in
     # osu-lazer not currently playing
     prismlauncher # Hi emstar (:
   ] ++ lib.optionals (lun-profiles.wineGaming or false) [
-    lun.lutris
+    # lun.lutris
     pkgs.lun-pkgs.wine
     # TODO: try bottles instead of lutris
   ];
