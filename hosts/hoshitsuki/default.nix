@@ -118,6 +118,7 @@ in
       "mutter"
     ];
 
+    nix.settings.cores = 16;
     lun.persistence.enable = true;
     zramSwap.enable = true;
     zramSwap.memoryPercent = 30;
