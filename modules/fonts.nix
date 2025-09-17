@@ -1,4 +1,4 @@
-{ pkgs, lib, flakeArgs, ... }:
+{ pkgs, lib, ... }:
 # Using a much more minimal set of system fonts now because
 # battle.net seems to break if there are lots of fonts
 let lotsOfFonts = false;
@@ -29,8 +29,8 @@ in
       noto-fonts-cjk-sans
 
       # Apple UI fonts, override XML below sets these as monospace default
-      flakeArgs.apple-fonts.packages.${pkgs.system}.sf-pro
-      flakeArgs.apple-fonts.packages.${pkgs.system}.sf-mono
+      # flakeArgs.apple-fonts.packages.${pkgs.system}.sf-pro
+      # flakeArgs.apple-fonts.packages.${pkgs.system}.sf-mono
     ] ++ lib.optionals lotsOfFonts [
       # General fonts
       liberation_ttf
@@ -56,8 +56,8 @@ in
       noto-fonts-extra
     ]);
 
-    # # Lucida -> iosevka as no free Lucida font available and it's used widely
-    fontconfig.localConf = ''
+    # Lucida -> iosevka as no free Lucida font available and it's used widely
+    fontconfig.localConf = lib.optionalString false ''
       <?xml version="1.0"?>
       <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
       <fontconfig>
