@@ -30,7 +30,7 @@ in
       # pkgs.lun.compositor-killer # FIXME: wayland-scanner not found
       nix-diff
       rehex
-      imhex
+      # imhex FIXME
       meld # graphical diff, lets you paste in pretty easily
       pkgs.code-cursor
       pkgs.claude-code
