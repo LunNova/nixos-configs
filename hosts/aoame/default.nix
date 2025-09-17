@@ -1,4 +1,4 @@
-{ flakeArgs, config, lib, pkgs, ... }:
+{ flakeArgs, lib, pkgs, ... }:
 let
   name = "aoame";
 in
@@ -51,7 +51,6 @@ in
     # not much RAM available to build with so limit jobs and cores
     nix.settings.max-jobs = 3;
     nix.settings.cores = 6;
-    #  services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
     services.displayManager.defaultSession = "none+i3";
     lun.virtualisation.enable = lib.mkForce false;
 
