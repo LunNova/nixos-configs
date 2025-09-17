@@ -2,19 +2,40 @@
 let
   name = "tsukiakari";
   swap = "/dev/disk/by-partlabel/${name}_swap";
-  btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" "autodefrag" ];
-  btrfsSsdOpts = btrfsOpts ++ [ "ssd" "discard=async" ];
+  btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" ];
+  btrfsSsdOpts = btrfsOpts ++ [ "ssd" "nodiscard" ];
+
+  modDirVersion = "6.10.0";
+  kernelVersion = "6.10.0";
+  linux_ROCK_pkg = { buildLinux, ... } @ args:
+    buildLinux (args // {
+      inherit modDirVersion;
+      # kernelPatches = kernelPatches ++ [];
+      name = "x13s-linux-${modDirVersion}";
+      version = kernelVersion;
+
+      src = pkgs.fetchFromGitHub {
+        owner = "ROCm";
+        repo = "ROCK-Kernel-Driver";
+        rev = "rocm-6.3.3";
+        hash = "sha256-MLsCvIHap3GSWvqV4NQkhCAPL0X+NdwERNLbdwXOHaE=";
+      };
+
+      extraMeta.branch = modDirVersion;
+    } // (args.argsOverride or { }));
+
+  linux_ROCK = pkgs.callPackage linux_ROCK_pkg {
+    # inherit (config.boot) kernelPatches;
+  };
+
+  linuxPackages_ROCK = pkgs.linuxPackagesFor linux_ROCK;
+  useRockKernel = false;
 in
 {
   config = {
     networking.hostName = "${name}-nixos";
     sconfig.machineId = "b0ba0bde10f87905ffa39b7eba520df0";
     system.stateVersion = "24.05";
-
-    hardware.graphics.extraPackages = with pkgs; [
-      #amdvlk
-      vulkan-loader
-    ];
 
     boot.loader.systemd-boot.consoleMode = "max";
     # console.font = "ter-v12n";
@@ -32,7 +53,7 @@ in
       #"pci=pcie_bus_perf,big_root_window,pcie_scan_all,ecrc=on,realloc=on"
       #"pcie_ports=native" # handle everything in linux even if uefi wants to
       "pcie_port_pm=force" # force pm on even if not wanted by platform
-      "pcie_aspm=force" # force link state
+      # "pcie_aspm=force" # force link state
 
       # modinfo amdgpu | grep "^parm:"
       # "amdgpu.gpu_recovery=2" # advanced TDR mode
@@ -54,7 +75,7 @@ in
       # trust tsc, modern AMD platform
       "tsc=nowatchdog,reliable"
 
-      # "iommu=off" # AMD recommend disabling iommu for ML loads
+      #"iommu=off" # AMD recommend disabling iommu for ML loads
       "iommu=pt" # RCCL / NCCL complaining that should be set to pt?
       "amd_iommu=pgtbl_v2"
 
@@ -70,7 +91,7 @@ in
     ];
     boot.kernel.sysctl = {
       # RCCL recommends this
-      # "kernel.numa_balancing" = 0;
+      "kernel.numa_balancing" = 0;
     };
 
     services.udev.packages = [ pkgs.i2c-tools ];
@@ -83,11 +104,12 @@ in
       pkgs.dmidecode
       pkgs.mergerfs
       pkgs.mergerfs-tools
-      pkgs.lun.switchtec-user
+      # pkgs.lun.switchtec-user
     ];
+
+    boot.kernelPackages = lib.mkForce (if useRockKernel then linuxPackages_ROCK else pkgs.linuxPackages_latest);
     #boot.kernelModules = [ "i2c-dev" "i2c-piix4" "i2c-smbus" "sp5100-tco" ];
     boot.kernelModules = [ "sp5100-tco" ];
-    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
     boot.kernelPatches = [
 
       # {
@@ -139,8 +161,15 @@ in
     systemd.defaultUnit = lib.mkForce "multi-user.target";
     boot.plymouth.enable = lib.mkForce false;
     services.xserver.autorun = false;
-    services.power-profiles-daemon.enable = true;
+    services.upower.enable = true;
+    services.tuned.enable = true;
     lun.amd-pstate.enable = true;
+    lun.profiles = {
+      server = true;
+      personal = false;
+      gaming = false;
+      graphical = false;
+    };
     services.xserver.videoDrivers = [ "amdgpu" ];
     lun.ml = {
       enable = true;
@@ -156,7 +185,14 @@ in
           hashTableSizeMB = 768;
           # logLevels = { emerg = 0; alert = 1; crit = 2; err = 3; warning = 4; notice = 5; info = 6; debug = 7; };
           verbosity = "info";
-          extraOptions = [ "--loadavg-target" "2.0" "--thread-count" "2" ];
+          extraOptions = [
+            "--loadavg-target"
+            "3.0"
+            "--thread-count"
+            "3"
+            "--throttle-factor"
+            "3.0"
+          ];
         };
       in
       {
@@ -167,6 +203,7 @@ in
     # using beesd so don't need to hardlink within store
     # avoids intellij bug where hardlinks make dirwatcher crash
     nix.settings.auto-optimise-store = lib.mkForce false;
+    nix.settings.cores = 64;
 
     boot.initrd.systemd.enable = true;
     boot.initrd.systemd.emergencyAccess = true;
@@ -175,7 +212,7 @@ in
     my.home-manager.enabled-users = [ "lun" ];
     lun.persistence.enable = true;
     zramSwap.enable = true;
-    zramSwap.memoryPercent = 30;
+    zramSwap.memoryPercent = 20;
     fileSystems = {
       "/" = {
         device = "tmpfs";
