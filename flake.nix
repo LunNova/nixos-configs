@@ -58,10 +58,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
-    apple-fonts = {
-      url = "github:Lyndeno/apple-fonts.nix/08e109e74a8b8d2d965cdd79eb175d2d68dc0214";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # FIXME: this but not relying on apple to host due to frequent invalid nar hash errors
+    # apple-fonts = {
+    #   url = "github:Lyndeno/apple-fonts.nix";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    #};
     oisd = { url = "github:sjhgvr/oisd"; flake = false; };
 
     lun-pkgs.url = "github:LunNova/lun-pkgs.nix";
