@@ -15,6 +15,6 @@
     procs
     htop
     smartmontools
-    linuxPackages_latest.perf
+    perf
   ];
 }
