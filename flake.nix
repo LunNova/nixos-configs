@@ -2,8 +2,7 @@
   description = "lun's system config";
 
   inputs = {
-    # TEMP: staging immediately after merging enable-default-pie for gcc
-    nixpkgs.url = "github:NixOS/nixpkgs/411faf46e2c88c284c8ecaee890d61eab4c28f83";
+    nixpkgs.url = "github:NixOS/nixpkgs/master";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.05";
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
