@@ -4,6 +4,7 @@
     ./modern-unix.nix
     ./shells
     ./on-nixos
+    ./jujutsu.nix
   ] ++ lib.optionals lun-profiles.graphical [
     ./gui
   ];
