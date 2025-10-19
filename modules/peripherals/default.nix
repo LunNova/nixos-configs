@@ -42,7 +42,6 @@
         pkgs.vial
       ];
       environment.systemPackages = [
-        pkgs.barrier
         pkgs.openssl
         pkgs.jmtpfs
         pkgs.libmtp
