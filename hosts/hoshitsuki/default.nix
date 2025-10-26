@@ -140,13 +140,15 @@ in
       "mutter"
     ];
 
-    nix.settings.cores = 16;
+    nix.settings.cores = 18;
     lun.persistence.enable = true;
     lun.persistence.dirs = [
       "/var/lib/private/atticd"
     ];
     zramSwap.enable = true;
-    zramSwap.memoryPercent = 30;
+    zramSwap.memoryPercent = 15;
+    services.earlyoom.freeMemThreshold = 5;
+    services.earlyoom.freeSwapThreshold = 10;
     fileSystems = {
       "/" = {
         device = "tmpfs";
