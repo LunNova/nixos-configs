@@ -1,4 +1,4 @@
-{ pkgs, flakeArgs, lib, ... }:
+{ pkgs, config, flakeArgs, lib, ... }:
 let
   name = "shigure";
   swap = null;
@@ -36,7 +36,7 @@ in
     services.udev.packages = [ pkgs.i2c-tools ];
     environment.systemPackages = [
       pkgs.i2c-tools
-      pkgs.linuxPackages_latest.cpupower
+      config.boot.kernelPackages.cpupower
       pkgs.dmidecode
       pkgs.mergerfs
       pkgs.mergerfs-tools
