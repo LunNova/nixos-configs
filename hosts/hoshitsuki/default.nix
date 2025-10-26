@@ -2,7 +2,7 @@
 let
   name = "hoshitsuki";
   swap = null; #"/dev/disk/by-partlabel/${name}_swap";
-  btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" ];
+  btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" ];
   btrfsSsdOpts = btrfsOpts ++ [ "ssd" "nodiscard" ];
 in
 {
