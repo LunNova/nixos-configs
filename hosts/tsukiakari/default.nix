@@ -212,7 +212,7 @@ in
     my.home-manager.enabled-users = [ "lun" ];
     lun.persistence.enable = true;
     zramSwap.enable = true;
-    zramSwap.memoryPercent = 20;
+    zramSwap.memoryPercent = 15;
     fileSystems = {
       "/" = {
         device = "tmpfs";
