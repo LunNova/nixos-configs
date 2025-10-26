@@ -65,7 +65,7 @@ in
     services.udev.packages = [ pkgs.i2c-tools pkgs.openrgb-with-all-plugins ];
     environment.systemPackages = [ pkgs.i2c-tools pkgs.openrgb-with-all-plugins config.boot.kernelPackages.cpupower pkgs.dmidecode ];
     boot.kernelModules = [ "i2c-dev" "i2c-piix4" "i2c-smbus" "sp5100-tco" ];
-    boot.kernelPackages = lib.mkForce pkgs.linuxPackages;
+    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
     boot.kernelPatches = [
       # {
       #   name = "amdgpu-plimit-override";
