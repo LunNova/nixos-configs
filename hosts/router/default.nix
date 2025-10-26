@@ -78,7 +78,17 @@ in
     boot.kernelParams = [
       "iommu=pt"
     ];
-    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_6_6; # Trying 6_6 due to i40e not coming up
+    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_6_6;
+
+    # i40e + systemd interface naming has a breaking change
+    # and interface names change on kernels after 6_6
+    # TODO: either patch this, or figure out the new names and change config over
+    # boot.kernelPatches = [
+    #   {
+    #     name = "i40e-ifname.patch";
+    #     patch = ./i40e-ifname.patch;
+    #   }
+    # ];
 
     # lib.mkForce is important here, want to make sure service modules
     # don't open ports to the outside world
