@@ -2,8 +2,8 @@
 let
   name = "shigure";
   swap = null;
-  btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" "noatime" ];
-  btrfsSsdOpts = btrfsOpts ++ [ "ssd" "discard=async" ];
+  btrfsOpts = [ "rw" "noatime" "compress=zstd" "space_cache=v2" ];
+  btrfsSsdOpts = btrfsOpts ++ [ "ssd" "nodiscard" ];
 in
 {
   imports = [
