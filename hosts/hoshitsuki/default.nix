@@ -1,4 +1,4 @@
-{ flakeArgs, pkgs, lib, ... }:
+{ config, flakeArgs, pkgs, lib, ... }:
 let
   name = "hoshitsuki";
   swap = null; #"/dev/disk/by-partlabel/${name}_swap";
@@ -63,7 +63,7 @@ in
     ];
     lun.power-saving.enable = true;
     services.udev.packages = [ pkgs.i2c-tools pkgs.openrgb-with-all-plugins ];
-    environment.systemPackages = [ pkgs.i2c-tools pkgs.openrgb-with-all-plugins pkgs.linuxPackages_latest.cpupower pkgs.dmidecode ];
+    environment.systemPackages = [ pkgs.i2c-tools pkgs.openrgb-with-all-plugins config.boot.kernelPackages.cpupower pkgs.dmidecode ];
     boot.kernelModules = [ "i2c-dev" "i2c-piix4" "i2c-smbus" "sp5100-tco" ];
     boot.kernelPackages = lib.mkForce pkgs.linuxPackages;
     boot.kernelPatches = [
