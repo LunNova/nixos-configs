@@ -119,7 +119,7 @@ in
     #services.displayManager.sddm.enable = lib.mkForce false;
     services.upower.enable = true;
     services.tuned.enable = true;
-    lun.amd-pstate.enable = true;
+    lun.amd-pstate.enable = false;
     services.xserver.videoDrivers = [ "amdgpu" ];
     lun.ml = {
       enable = true;
