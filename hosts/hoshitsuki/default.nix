@@ -184,8 +184,10 @@ in
         options = [ "mode=1777" "rw" "nosuid" "nodev" "size=50G" ];
       };
     };
-    swapDevices = lib.optionals (swap != null) [{
-      device = swap;
+    swapDevices = [{
+      device = "/persist/swapfile.swp";
+      discardPolicy = "once";
+      size = 16384;
     }];
     boot.resumeDevice = if (swap != null) then swap else "";
   };
