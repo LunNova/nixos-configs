@@ -34,7 +34,6 @@
 
       # udev rules and package for vial keyboard remapper
       services.udev.packages = [
-        pkgs.android-udev-rules
         pkgs.libmtp.out
         pkgs.kdePackages.kio-extras
       ] ++ lib.optionals pkgs.stdenv.hostPlatform.isx86 [
