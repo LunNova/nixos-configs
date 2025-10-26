@@ -133,7 +133,7 @@
           nodes.router = mkNode { name = "router"; hostname = "10.5.5.1"; };
           nodes.tsukiakari = mkNode { name = "tsukiakari"; fast = true; };
           nodes.tsukikage = mkNode { name = "tsukikage"; fast = true; };
-          nodes.shigure = mkNode { name = "shigure"; cfg = self.nixosConfigurations.lun-shigure; fast = true; };
+          nodes.shigure = mkNode { name = "shigure"; hostname = "lun-shigure"; cfg = self.nixosConfigurations.lun-shigure; fast = true; };
           nodes.hoshitsuki = mkNode { name = "hoshitsuki"; fast = true; };
           nodes.testSingleServiceDeployAsLunOnLocalhost = {
             hostname = "localhost";
