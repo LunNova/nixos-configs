@@ -13,7 +13,7 @@ in
       gyre-fonts # TrueType substitutes for standard PostScript fonts
       liberation_ttf
       unifont
-      vistafonts # Calibri, Cambria, Candara, Consolas, Constantia, Corbel
+      vista-fonts # Calibri, Cambria, Candara, Consolas, Constantia, Corbel
       font-awesome
 
       symbola # only font with alchemical symbol block?
