@@ -29,8 +29,8 @@ in
       noto-fonts-cjk-sans
 
       # Apple UI fonts, override XML below sets these as monospace default
-      # flakeArgs.apple-fonts.packages.${pkgs.system}.sf-pro
-      # flakeArgs.apple-fonts.packages.${pkgs.system}.sf-mono
+      lun.sf-pro
+      lun.sf-mono
     ] ++ lib.optionals lotsOfFonts [
       # General fonts
       liberation_ttf
