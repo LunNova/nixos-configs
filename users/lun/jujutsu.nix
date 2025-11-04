@@ -3,6 +3,8 @@
   programs.jujutsu = {
     enable = true;
     settings = {
+      # Config reference
+      # https://andre.arko.net/2025/10/15/jj-part-4-configuration/
       # consider user.name/email unset to encourage setting them per-repo?
       user.name = config.programs.git.userName;
       user.email = config.programs.git.userEmail;
@@ -56,7 +58,6 @@
         "current_work" = "trunk()..@ | @..trunk() | trunk() | @:: | fork_point(trunk() | @)";
       };
       template-aliases = {
-        "format_short_id(id)" = "id.shortest()";
         "abbreviate_timestamp_suffix(s, suffix, abbr)" = ''
           if(
               s.ends_with(suffix),
@@ -84,43 +85,6 @@
         '';
       };
       templates = {
-        log = ''
-          if(root,
-            format_root_commit(self),
-            label(if(current_working_copy, "working_copy"),
-              concat(
-                separate(" ",
-                  pad_end(4, format_short_change_id_with_hidden_and_divergent_info(self)),
-                  if(empty, label("empty", "(empty)")),
-                  if(description,
-                    description.first_line(),
-                    label(if(empty, "empty"), description_placeholder),
-                  ),
-                  bookmarks,
-                  tags,
-                  working_copies,
-                  if(git_head, label("git_head", "HEAD")),
-                  if(conflict, label("conflict", "conflict")),
-                  if(config("ui.show-cryptographic-signatures").as_boolean(),
-                    format_short_cryptographic_signature(signature)),
-                  format_timestamp(commit_timestamp(self)),
-                ) ++ "\n",
-              ),
-            )
-          )
-        '';
-        log_node = ''
-          label("node",
-            coalesce(
-              if(!self, label("elided", "~")),
-              if(current_working_copy, label("working_copy", "@")),
-              if(conflict, label("conflict", "×")),
-
-              if(immutable, label("immutable", "*")),
-              label("normal", "·")
-            )
-          )
-        '';
         draft_commit_description = ''
           concat(
             coalesce(description, default_commit_description, "\n"),
