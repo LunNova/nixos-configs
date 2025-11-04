@@ -20,7 +20,7 @@ in
   config = {
     home.packages = with pkgs; [
       nix-output-monitor
-      glxinfo
+      mesa-demos
       vulkan-tools
       nixd
       nurl # nix-prefetch-url but better

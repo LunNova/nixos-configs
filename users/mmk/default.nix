@@ -24,7 +24,6 @@
   home.stateVersion = "22.05";
 
   home.packages = with pkgs; [
-    glxinfo
     vulkan-tools
     kdePackages.ark
     unar

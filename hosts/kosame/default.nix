@@ -124,7 +124,6 @@ in
 
   environment.systemPackages = with pkgs; [
     prime-run
-    glxinfo
   ];
 
   lun.amd-nvidia-laptop = {
