@@ -59,6 +59,8 @@ let
     '';
     switchtec-user = pkgs.callPackage ./switchtec-user { };
     svpflow = pkgs.callPackage ./svpflow { };
+    sf-mono = pkgs.callPackage ./sf-mono { };
+    sf-pro = pkgs.callPackage ./sf-pro { };
     # inherit (flakeArgs.nixpkgs-mesa-pr.legacyPackages.${pkgs.system}) mesa;
     mesa = mesaOverride pkgs.mesa;
     wally = pkgs.callPackage ./wally { };
