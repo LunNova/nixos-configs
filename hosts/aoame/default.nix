@@ -47,7 +47,7 @@ in
     # xdg.portal.wlr.enable = lib.mkForce true;
 
     zramSwap.enable = true;
-    zramSwap.memoryPercent = 30;
+    zramSwap.memoryPercent = 25;
     # not much RAM available to build with so limit jobs and cores
     nix.settings.max-jobs = 3;
     nix.settings.cores = 6;
