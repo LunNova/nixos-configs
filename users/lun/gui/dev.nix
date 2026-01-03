@@ -22,18 +22,25 @@ in
       nix-output-monitor
       mesa-demos
       vulkan-tools
-      nixd
       nurl # nix-prefetch-url but better
     ] ++ lib.optionals lun-profiles.personal [
       flakeArgs.deploy-rs.packages.${pkgs.system}.default
+
+      # LSPs
+      cmake-language-server
+      nixd
+      nil
+      lua-language-server
+      typescript-language-server
+      yaml-language-server
+      crates-lsp
+
       # waylandn't
       # pkgs.lun.compositor-killer # FIXME: wayland-scanner not found
       nix-diff
       rehex
-      # imhex FIXME
       meld # graphical diff, lets you paste in pretty easily
-      pkgs.code-cursor
-      pkgs.claude-code
+      claude-code
     ] ++ lib.optionals (pkgs.system == "x86_64-linux") [
       # FIXME: these don't work well non-fsh
       # jetbrains.idea-ultimate
@@ -61,6 +68,7 @@ in
       };
 
     home.file."${config.xdg.configHome}/Code/User/settings.json".force = true;
+    programs.zed-editor.enable = true;
     programs.vscode = {
       enable = true;
       package = pkgs.vscode.fhs;
