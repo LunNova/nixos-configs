@@ -4,7 +4,7 @@
     {
       # FIXME: causes spurious GPU resumes https://lunnova.dev/articles/linux-gpu-runpm-spurious-resumes/
       # would prefer to enable
-      services.fwupd.enable = false;
+      services.fwupd.enable = true;
       hardware.wirelessRegulatoryDatabase = true;
       hardware.enableRedistributableFirmware = true;
 
