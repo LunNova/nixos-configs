@@ -86,7 +86,7 @@ let
       inherit user;
       path = activationScript;
     };
-    unitsFromHomeEnvironment = { pkgs, homeEnvironment, marker, profileName }:
+    unitsFromHomeEnvironment = { homeEnvironment, marker, profileName }:
       homeEnvironment.pkgs.runCommandNoCC "units-${profileName}" { } ''
         mkdir -p "$out/units/"
         touch "$out/units/${marker}"
