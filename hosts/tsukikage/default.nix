@@ -43,20 +43,6 @@ in
     ];
     systemd.services."systemd-machined".enable = false;
     boot.kernelPackages = lib.mkForce pkgs.linuxPackages;
-    boot.kernelPatches = [
-      {
-        name = "lun-cfg";
-        patch = null;
-        extraConfig = ''
-          HSA_AMD y
-          PCI_P2PDMA y
-          DMABUF_MOVE_NOTIFY y
-          HSA_AMD_P2P y
-          PCI_SW_SWITCHTEC y
-          FONT_TER16x32 n
-        '';
-      }
-    ];
     lun.efi-tools.enable = true;
     lun.power-saving.enable = true;
     services.nscd.enableNsncd = true;
