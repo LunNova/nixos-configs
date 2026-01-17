@@ -10,6 +10,15 @@
       {
         defaultLocale = locale;
         supportedLocales = [ "${locale}/UTF-8" ];
+        inputMethod = {
+          enable = true;
+          type = "ibus";
+          ibus.engines = with pkgs.ibus-engines; [
+            table
+            table-others # for LaTeX input
+            m17n
+          ];
+        };
       };
     time = {
       timeZone = "America/Los_Angeles";
@@ -20,8 +29,8 @@
     # Required for some compose key mappings to work
     # <Multi_key> <Z> <Z>			: "ℤ"	U2124 # DOUBLE-STRUCK CAPITAL Z
     # just showed underlined CC without setting this
-    environment.variables.GTK_IM_MODULE = "xim";
-    environment.sessionVariables.GTK_IM_MODULE = "xim";
+    environment.variables.GTK_IM_MODULE = lib.mkForce "";
+    environment.variables.QT_IM_MODULE = lib.mkForce "";
     # CONSOLE
     console = {
       font = "${pkgs.terminus_font}/share/consolefonts/ter-u12n.psf.gz";
