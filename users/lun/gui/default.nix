@@ -5,6 +5,7 @@
     ./file-management.nix
     ./xdg-mime-apps.nix
     ./kitty.nix
+    ./compose-key.nix
   ] ++ lib.optionals (lun-profiles.personal or false) ([
     # ./conky.nix # TODO: perf issues
     ./cad
@@ -23,11 +24,6 @@
   ];
 
   config = {
-    home.sessionVariables = {
-      GTK_DEBUG = "portals";
-      GTK_USE_PORTAL = "1";
-    };
-
     programs.firefox = {
       enable = true;
       package = pkgs.firefox;
