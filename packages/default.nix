@@ -1,4 +1,4 @@
-{ pkgs }:
+{ pkgs, ... }:
 let
   inherit (pkgs) lib;
   resholvCfg = {
