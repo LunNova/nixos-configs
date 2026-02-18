@@ -4,11 +4,9 @@ let
   # runtime = "${pkgs.xrizer}/lib/xrizer";
 in
 {
-  home.packages = with pkgs; [
-    # osu-lazer not currently playing
-    prismlauncher # Hi emstar (:
-  ] ++ lib.optionals (lun-profiles.wineGaming or false) [
-    # lun.lutris
+  # osu-lazer # not currently playing
+  # prismlauncher # not currently playing
+  home.packages = lib.optionals (lun-profiles.wineGaming or false) [
     pkgs.lun-pkgs.wine
     # TODO: try bottles instead of lutris
   ];
