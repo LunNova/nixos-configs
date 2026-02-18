@@ -10,7 +10,6 @@
       systemd.setPath.enable = true;
     };
     environment.systemPackages = [
-      pkgs.at-spi2-atk
       pkgs.hyprpanel
       pkgs.hyprcursor
     ];
@@ -23,6 +22,7 @@
       QT_LINUX_ACCESSIBILITY_ALWAYS_ON = "1";
     };
     programs.uwsm.waylandCompositors.hyprland.binPath = lib.mkForce "/run/wrappers/bin/Hyprland";
+    programs.uwsm.waylandCompositors.hyprland.prettyName = "Hyprland";
     security.wrappers."Hyprland" = {
       setuid = false;
       permissions = "u+rx,g+rx,o+rx";
