@@ -24,7 +24,7 @@
       };
 
       # use with piper for logitech gaming mouse configuration
-      # services.ratbagd.enable = true;
+      services.ratbagd.enable = true;
       # udev rule for zsa oryx
       hardware.keyboard.zsa.enable = true;
       # steam controller and index headset, only works on x86_64 as of 202309
