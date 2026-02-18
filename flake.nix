@@ -73,6 +73,8 @@
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     vscode-server.inputs.nixpkgs.follows = "nixpkgs";
     vscode-server.inputs.flake-utils.follows = "flake-utils";
+
+    llm-agents.url = "github:numtide/llm-agents.nix";
   };
 
   # SCHEMA:
