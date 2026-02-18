@@ -1,4 +1,4 @@
-{ pkgs, flakeArgs }:
+{ pkgs }:
 let
   inherit (pkgs) lib;
   resholvCfg = {
@@ -82,52 +82,53 @@ let
       ];
     };
     mesa-i686 = mesaOverride pkgs.pkgsi686Linux.mesa;
-    wine = (flakeArgs.nix-gaming.packages.${pkgs.system}.wine-ge.overrideAttrs (old: {
-      dontStrip = true;
-      debug = true;
-      patches = old.patches ++ [
-        ./wine/fix-NtQueryInformationProcess-ProcessDebugPort-size.patch
-        ./wine/log-NtWriteVirtualMemory.patch
-        ./wine/log-NtProtectVirtualMemory.patch
-      ];
-      env.NIX_CFLAGS_COMPILE = (old.env.NIX_CFLAGS_COMPILE or "") + " -w -Wno-incompatible-pointer-types";
-    })).override {
-      supportFlags = {
-        gettextSupport = true;
-        fontconfigSupport = true;
-        alsaSupport = true;
-        openglSupport = true;
-        vulkanSupport = true;
-        tlsSupport = true;
-        cupsSupport = true;
-        dbusSupport = true;
-        cairoSupport = true;
-        cursesSupport = true;
-        saneSupport = true;
-        pulseaudioSupport = true;
-        udevSupport = true;
-        xineramaSupport = true;
-        sdlSupport = true;
-        mingwSupport = true;
-        gtkSupport = false;
-        gstreamerSupport = false;
-        openalSupport = false;
-        openclSupport = false;
-        odbcSupport = false;
-        netapiSupport = false;
-        vaSupport = false;
-        pcapSupport = false;
-        v4lSupport = false;
-        gphoto2Support = false;
-        krb5Support = false;
-        ldapSupport = false;
-        vkd3dSupport = false;
-        embedInstallers = false;
-        waylandSupport = true;
-        usbSupport = true;
-        x11Support = true;
-      };
-    };
+    inherit (pkgs) wine; # FIXME
+    # wine = (flakeArgs.nix-gaming.packages.${pkgs.system}.wine-ge.overrideAttrs (old: {
+    #   dontStrip = true;
+    #   debug = true;
+    #   patches = old.patches ++ [
+    #     ./wine/fix-NtQueryInformationProcess-ProcessDebugPort-size.patch
+    #     ./wine/log-NtWriteVirtualMemory.patch
+    #     ./wine/log-NtProtectVirtualMemory.patch
+    #   ];
+    #   env.NIX_CFLAGS_COMPILE = (old.env.NIX_CFLAGS_COMPILE or "") + " -w -Wno-incompatible-pointer-types";
+    # })).override {
+    #   supportFlags = {
+    #     gettextSupport = true;
+    #     fontconfigSupport = true;
+    #     alsaSupport = true;
+    #     openglSupport = true;
+    #     vulkanSupport = true;
+    #     tlsSupport = true;
+    #     cupsSupport = true;
+    #     dbusSupport = true;
+    #     cairoSupport = true;
+    #     cursesSupport = true;
+    #     saneSupport = true;
+    #     pulseaudioSupport = true;
+    #     udevSupport = true;
+    #     xineramaSupport = true;
+    #     sdlSupport = true;
+    #     mingwSupport = true;
+    #     gtkSupport = false;
+    #     gstreamerSupport = false;
+    #     openalSupport = false;
+    #     openclSupport = false;
+    #     odbcSupport = false;
+    #     netapiSupport = false;
+    #     vaSupport = false;
+    #     pcapSupport = false;
+    #     v4lSupport = false;
+    #     gphoto2Support = false;
+    #     krb5Support = false;
+    #     ldapSupport = false;
+    #     vkd3dSupport = false;
+    #     embedInstallers = false;
+    #     waylandSupport = true;
+    #     usbSupport = true;
+    #     x11Support = true;
+    #   };
+    # };
   });
 in
 self
