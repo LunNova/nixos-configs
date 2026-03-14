@@ -13,6 +13,7 @@ in
       gyre-fonts # TrueType substitutes for standard PostScript fonts
       liberation_ttf
       unifont
+      corefonts # Times New Roman, …
       vista-fonts # Calibri, Cambria, Candara, Consolas, Constantia, Corbel
       font-awesome
 
