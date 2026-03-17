@@ -21,6 +21,7 @@ This folder contains information about our various hosts, mostly named after a J
 - `hoshitsuki`: A CPU/inference desktop with 5950x 16c32t CPU and 2x32GB VRAM GPUs. The name could be interpreted as «starlit moon».
 - `tsukiakari`: A CPU/inference server with an EPYC 7V13 64-core, 128-thread CPU and 6x32GB Instinct MI100 GPUs for CDNA1 testing. The name means «moonlight».
 - `tsukikage`: Similar to `tsukiakari` but Instinct MI210, for CDNA2 testing. The name means «moonlight shadow».
+- `murasame`: EPYC 9575F server with Instinct MI350X for CDNA4 testing. The name means «passing shower, sudden rain». Transiently available and external, unlike the other lab devices.
 - `router`: HP t740 thin client with SFP+ PCIe NIC.
 - `builder`: minimal testcase with disko for image building, not deployed to any machine.
 
