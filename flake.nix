@@ -118,6 +118,7 @@
         lun-aoame = allSystems.makeHost.aarch64-linux ./hosts/aoame;
         lun-amayadori-nixos = allSystems.makeHost.aarch64-linux ./hosts/amayadori;
         builder-nixos = allSystems.makeHost.x86_64-linux ./hosts/builder;
+        kirisame-nixos = allSystems.makeHost.x86_64-linux ./hosts/kirisame;
       };
 
       deploy =
@@ -140,6 +141,7 @@
           nodes.tsukikage = mkNode { name = "tsukikage"; fast = true; };
           nodes.shigure = mkNode { name = "shigure"; hostname = "lun-shigure"; cfg = self.nixosConfigurations.lun-shigure; fast = true; };
           nodes.hoshitsuki = mkNode { name = "hoshitsuki"; fast = true; };
+          nodes.kirisame = mkNode { name = "kirisame"; fast = true; };
           nodes.testSingleServiceDeployAsLunOnLocalhost = {
             hostname = "localhost";
             profiles.serviceTest = serviceTest.hmProfile {
