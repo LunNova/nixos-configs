@@ -75,6 +75,9 @@
     vscode-server.inputs.flake-utils.follows = "flake-utils";
 
     llm-agents.url = "github:numtide/llm-agents.nix";
+
+    celler.url = "github:blitz/celler";
+    celler.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   # SCHEMA:
