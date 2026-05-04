@@ -40,7 +40,6 @@ in
       nix-diff
       rehex
       meld # graphical diff, lets you paste in pretty easily
-      claude-code
     ] ++ lib.optionals (pkgs.system == "x86_64-linux") [
       # FIXME: these don't work well non-fsh
       # jetbrains.idea-ultimate
@@ -68,7 +67,6 @@ in
       };
 
     home.file."${config.xdg.configHome}/Code/User/settings.json".force = true;
-    programs.zed-editor.enable = true;
     programs.vscode = {
       enable = true;
       package = pkgs.vscode.fhs;
