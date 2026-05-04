@@ -57,6 +57,7 @@ let
     lun = pkgs.writeShellScriptBin "lun" ''
       exec "${lun-scripts-path}/bin/$1" "''${@:2}"
     '';
+    mtoc = pkgs.callPackage ./mtoc { };
     obsbot-camera-control = pkgs.callPackage ./obsbot-camera-control { };
     switchtec-user = pkgs.callPackage ./switchtec-user { };
     svpflow = pkgs.callPackage ./svpflow { };
