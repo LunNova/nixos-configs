@@ -19,6 +19,8 @@ let
     unzip
     gnutar
     diffutils
+    python3
+    perl
   ]);
 
   mkJailedAgent = { name, pkg, writableDirs }:
@@ -107,13 +109,17 @@ let
 
   jailedClaudeCode = mkJailedAgent {
     name = "claude-code";
-    pkg = pkgs.claude-code;
+    pkg = llm-agents.claude-code;
     writableDirs = [ "$HOME/.claude" "$HOME/.config/claude-code" ];
   };
 in
 {
   config = lib.mkIf (lun-profiles.personal or false) {
+    programs.zed-editor.enable = true;
     home.packages = [
+      pkgs.code-cursor
+      llm-agents.codex
+      llm-agents.claude-code
       jailedCodex
       jailedOpencode
       jailedClaudeCode

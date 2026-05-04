@@ -6,6 +6,7 @@
     ./xdg-mime-apps.nix
     ./kitty.nix
     ./compose-key.nix
+    ./agent-jail.nix
   ] ++ lib.optionals (lun-profiles.personal or false) ([
     # ./conky.nix # TODO: perf issues
     ./cad
