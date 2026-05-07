@@ -35,6 +35,7 @@ in
       pkgs.dmidecode
       pkgs.mergerfs
       pkgs.mergerfs-tools
+      pkgs.lun.switchtec-user
     ];
     systemd.services."systemd-machined".enable = false;
     boot.kernelPackages = lib.mkForce pkgs.linuxPackages;
