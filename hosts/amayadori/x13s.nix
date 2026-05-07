@@ -117,7 +117,7 @@ let
     hash = "sha256-Lyav0RtoowocrhC7Q2Y72ogHhgFuFli+c/us/Mu/Ugc=";
   };
 
-  ath11k_fw = pkgs.runCommandNoCC "ath11k_fw" { } ''
+  ath11k_fw = pkgs.runCommand "ath11k_fw" { } ''
     mkdir -p $out/lib/firmware/ath11k/
     cp -r --no-preserve=mode,ownership ${ath11k_fw_src}/* $out/lib/firmware/ath11k/
 
@@ -128,7 +128,7 @@ let
     sha256 = "sha256-cr0WMKbGeJyQl5S8E7UEB/Fal6FY0tPenEpd88KFm9Q=";
     stripRoot = false;
   };
-  x13s_extra_fw = pkgs.runCommandNoCC "x13s_extra_fw" { } ''
+  x13s_extra_fw = pkgs.runCommand "x13s_extra_fw" { } ''
     mkdir -p $out/lib/firmware/qcom/sc8280xp/
     # mkdir -p $out/lib/firmware/qca/
 

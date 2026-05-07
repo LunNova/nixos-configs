@@ -8,7 +8,7 @@ in
   lun = localPackages;
   powercord-plugins = self.lib.filterPrefix "pcp-" flakeArgs;
   powercord-themes = self.lib.filterPrefix "pct-" flakeArgs;
-  nix-gaming = flakeArgs.nix-gaming.packages.${final.system};
+  nix-gaming = flakeArgs.nix-gaming.packages.${final.stdenv.hostPlatform.system};
   # gst-plugins-bad pulls in opencv which we don't want
   # TODO: upstream option for this
   # gst_all_1 = (prev.gst_all_1 // {

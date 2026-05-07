@@ -70,7 +70,7 @@ in
 
     services.cellerd = {
       enable = true;
-      package = flakeArgs.celler.packages.${pkgs.system}.celler;
+      package = flakeArgs.celler.packages.${pkgs.stdenv.hostPlatform.system}.celler;
       environmentFile = "/persist/celler-env";
       settings = {
         listen = "[::]:8080";

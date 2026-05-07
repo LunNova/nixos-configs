@@ -29,7 +29,7 @@ let
       "https://github.com/Arroquw/rtl8761bu_fw/raw/refs/heads/main/rtl8761bu_fw.bin";
     sha256 = "sha256:1hdk46hly2ir4ccqcwlb48mvvpkwd3zc8vhhfhkbl770fszmn49d";
   };
-  rtl8761_fw = pkgs.runCommandNoCC "rtl_bt-firmware" { } ''
+  rtl8761_fw = pkgs.runCommand "rtl_bt-firmware" { } ''
     mkdir -p $out/lib/firmware/rtl_bt
     cp "${rtl_bt_fw_file}" "$out"/lib/firmware/rtl_bt/rtl8761bu_fw.bin
   '';
@@ -172,7 +172,7 @@ in
     ];
 
     # services.hardware.bolt.enable = true;
-    services.xserver.desktopManager.plasma6.enableQt5Integration = lib.mkForce false; # FIXME: pulls in kio-extras-kf5!!
+    services.desktopManager.plasma6.enableQt5Integration = lib.mkForce false; # FIXME: pulls in kio-extras-kf5!!
     services.desktopManager.plasma6.enable = true;
     programs.kdeconnect.enable = true;
     networking.firewall = {
@@ -388,7 +388,7 @@ in
     # ┃        nix::ForeignException: kj/async-unix.c++:466: failed: epoll_ctl(eventPort.epollFd, EPOLL_CTL_DEL, fd, nullptr): Bad file descriptor
     # ┃        stack: 7fc676fb7990 7fc67695d697 7fc676951b88 7fc676fa7f21 7fc676fa7c4e 7fc67694e730 7fc67693ebdd
     nix.settings.max-silent-time = 11111;
-    boot.binfmt.emulatedSystems = lib.remove pkgs.hostPlatform.system [
+    boot.binfmt.emulatedSystems = lib.remove pkgs.stdenv.hostPlatform.system [
       "aarch64-linux"
       "loongarch64-linux"
       "riscv64-linux"

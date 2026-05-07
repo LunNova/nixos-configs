@@ -48,7 +48,7 @@
     # GRAPHICS ACCEL
     hardware.graphics = {
       enable = true;
-      enable32Bit = lib.mkForce (pkgs.system == "x86_64-linux");
+      enable32Bit = lib.mkForce (pkgs.stdenv.hostPlatform.system == "x86_64-linux");
     };
 
     # SOUND

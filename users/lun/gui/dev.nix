@@ -24,7 +24,7 @@ in
       vulkan-tools
       nurl # nix-prefetch-url but better
     ] ++ lib.optionals lun-profiles.personal [
-      flakeArgs.deploy-rs.packages.${pkgs.system}.default
+      flakeArgs.deploy-rs.packages.${pkgs.stdenv.hostPlatform.system}.default
 
       # LSPs
       cmake-language-server
@@ -40,7 +40,7 @@ in
       nix-diff
       rehex
       meld # graphical diff, lets you paste in pretty easily
-    ] ++ lib.optionals (pkgs.system == "x86_64-linux") [
+    ] ++ lib.optionals (pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
       # FIXME: these don't work well non-fsh
       # jetbrains.idea-ultimate
       # jetbrains.rust-rover
@@ -76,7 +76,7 @@ in
         # Add other settings as needed
       };
       profiles.default.extensions = with pkgs.vscode-extensions; [
-        flakeArgs.alicorn-vscode-extension.packages.${pkgs.system}.alicorn-vscode-extension
+        flakeArgs.alicorn-vscode-extension.packages.${pkgs.stdenv.hostPlatform.system}.alicorn-vscode-extension
       ];
     };
 

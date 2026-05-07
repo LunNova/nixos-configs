@@ -79,7 +79,7 @@ let
       in
       self.profile {
         inherit user;
-        activationScript = deploy-rs.lib.${pkgs.system}.activate.custom activationScript "./bin/activate-services";
+        activationScript = deploy-rs.lib.${pkgs.stdenv.hostPlatform.system}.activate.custom activationScript "./bin/activate-services";
       };
     profile = { user, activationScript }: {
       sshUser = user;
@@ -87,7 +87,7 @@ let
       path = activationScript;
     };
     unitsFromHomeEnvironment = { homeEnvironment, marker, profileName }:
-      homeEnvironment.pkgs.runCommandNoCC "units-${profileName}" { } ''
+      homeEnvironment.pkgs.runCommand "units-${profileName}" { } ''
         mkdir -p "$out/units/"
         touch "$out/units/${marker}"
         shopt -s failglob

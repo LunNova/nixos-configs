@@ -69,7 +69,7 @@ let
   } //
   # These packages are x86_64-linux
   # This is mostly due to depending on pkgs.pkgsi686Linux to evaluate
-  (lib.optionalAttrs (pkgs.system == "x86_64-linux") {
+  (lib.optionalAttrs (pkgs.stdenv.hostPlatform.system == "x86_64-linux") {
     rmc = pkgs.python3Packages.callPackage ./rmc { };
     wowup = pkgs.callPackage ./wowup { };
     lutris = pkgs.lutris.override {

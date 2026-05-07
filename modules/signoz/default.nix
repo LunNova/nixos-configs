@@ -139,7 +139,7 @@ in
         environment =
           let
             inherit (config.networking) hostName;
-            osType = "nixos-${pkgs.system}";
+            osType = "nixos-${pkgs.stdenv.hostPlatform.system}";
             # serviceName = "otel-collector";
             # taskName = config.services.signoz.taskName;
           in

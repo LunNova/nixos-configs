@@ -23,7 +23,7 @@ let
     "x86_64-linux" = "BOOTX64.efi";
     "aarch64-linux" = "BOOTX64.efi";
   };
-  efiFileName = efiFileNames.${pkgs.system} or (builtins.throw "Unknown EFI filename for ${pkgs.system}");
+  efiFileName = efiFileNames.${pkgs.stdenv.hostPlatform.system} or (builtins.throw "Unknown EFI filename for ${pkgs.stdenv.hostPlatform.system}");
 in
 {
   options.lun.efi-tools = {

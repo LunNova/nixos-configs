@@ -6,14 +6,14 @@
       # Config reference
       # https://andre.arko.net/2025/10/15/jj-part-4-configuration/
       # consider user.name/email unset to encourage setting them per-repo?
-      user.name = config.programs.git.userName;
-      user.email = config.programs.git.userEmail;
+      user.name = config.programs.git.settings.user.name;
+      user.email = config.programs.git.settings.user.email;
       git.colocate = true;
 
       signing = {
         behavior = "own";
         backend = "ssh";
-        key = config.programs.git.extraConfig.user.signingkey;
+        key = config.programs.git.settings.user.signingkey;
       };
 
       colors = {

@@ -28,7 +28,7 @@ let
       fi
     fi
   '';
-  bgswitcher = flakeArgs.background-switcher.packages.${pkgs.system}.switcher;
+  bgswitcher = flakeArgs.background-switcher.packages.${pkgs.stdenv.hostPlatform.system}.switcher;
   bgswitchermenu = pkgs.writeScriptBin "rofi-background-switcher" ''
     ${pkgs.rofi}/bin/rofi -show background -modes "background:${bgswitcher}/bin/background-switcher"
   '';
@@ -61,7 +61,7 @@ in
       keybindings = config.wayland.windowManager.sway.config.keybindings // {
         "Print" = "exec ${lib.getExe i3-screenshot}";
         "${mod}+x" = "exec sh -c '${lib.getExe pkgs.maim} -s | ${lib.getExe pkgs.xclip} -selection clipboard -t image/png'";
-        "${mod}+q" = "exec sh -c '${lib.getExe pkgs.i3lock} -c ba9bff & sleep 2 && ${lib.getExe pkgs.xorg.xset} dpms force off'";
+        "${mod}+q" = "exec sh -c '${lib.getExe pkgs.i3lock} -c ba9bff & sleep 2 && ${lib.getExe pkgs.xset} dpms force off'";
         "${mod}+Return" = "exec ${lib.getExe config.programs.kitty.package}";
         "${mod}+space" = "exec ${drun}";
         "${mod}+d" = "exec ${menu}";
@@ -110,7 +110,7 @@ in
         {
           block = "custom";
           command = "${
-              flakeArgs.i3status-nix-update-widget.packages.${pkgs.system}.default.override {
+              flakeArgs.i3status-nix-update-widget.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
                 flakelock = "${flakeArgs.self}/flake.lock";
               }
             }/bin/i3status-nix-update-widget";

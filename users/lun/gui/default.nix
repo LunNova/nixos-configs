@@ -41,11 +41,11 @@
     home.packages = [
       pkgs.lun.spawn
     ] ++
-    lib.optionals ((pkgs.system == "x86_64-linux") && lun-profiles.personal or false) (with pkgs; [
+    lib.optionals ((pkgs.stdenv.hostPlatform.system == "x86_64-linux") && lun-profiles.personal or false) (with pkgs; [
       pinta # paint.net alternative
       calibre
       kdePackages.ark
-    ] ++ lib.optionals (pkgs.system == "x86_64-linux") [
+    ] ++ lib.optionals (pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
       google-chrome
     ]);
   };

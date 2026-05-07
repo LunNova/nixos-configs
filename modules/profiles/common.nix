@@ -104,7 +104,7 @@
 
     # BOOT
     boot = {
-      initrd.availableKernelModules = lib.mkIf (pkgs.system == "x86_64-linux") [ "nvme" "ahci" "xhci_pci" "usb_storage" "usbhid" "sd_mod" ];
+      initrd.availableKernelModules = lib.mkIf (pkgs.stdenv.hostPlatform.system == "x86_64-linux") [ "nvme" "ahci" "xhci_pci" "usb_storage" "usbhid" "sd_mod" ];
       initrd.kernelModules = [ "tcp_bbr" "sch_cake" ];
       kernelParams = [
         "sysrq_always_enabled"
@@ -212,7 +212,7 @@
     # CHECKS
     assertions = [
       {
-        assertion = config.hardware.cpu.amd.updateMicrocode || config.hardware.cpu.intel.updateMicrocode || pkgs.system != "x86_64-linux";
+        assertion = config.hardware.cpu.amd.updateMicrocode || config.hardware.cpu.intel.updateMicrocode || pkgs.stdenv.hostPlatform.system != "x86_64-linux";
         message = "updateMicrocode should be set for intel or amd";
       }
     ];

@@ -49,10 +49,9 @@
     lfs = {
       enable = true;
     };
-    userName = "Luna Nova";
-    userEmail = "git@lunnova.dev";
-    iniContent.gpg.format = lib.mkForce "ssh";
-    extraConfig = {
+    settings = {
+      user.name = "Luna Nova";
+      user.email = "git@lunnova.dev";
       checkout.defaultRemote = "origin";
       core.eol = "lf";
       gpg.format = lib.mkForce "ssh";

@@ -31,5 +31,5 @@ let
 in
 {
   home.packages = [ pkgs.legcord ]
-    ++ lib.optional (pkgs.system == "x86_64-linux") openAsarDiscord;
+    ++ lib.optional (pkgs.stdenv.hostPlatform.system == "x86_64-linux") openAsarDiscord;
 }

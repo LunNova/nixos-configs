@@ -1,6 +1,6 @@
 { pkgs, lib, flakeArgs, lun-profiles, ... }:
 let
-  llm-agents = flakeArgs.llm-agents.packages.${pkgs.system};
+  llm-agents = flakeArgs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
 
   # Packages available inside the jail
   jailPath = lib.makeBinPath (with pkgs; [
