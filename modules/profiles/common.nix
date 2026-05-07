@@ -84,7 +84,6 @@
     # SSH
     services.openssh = {
       enable = true;
-      banner = "This system runs on free software and spite.\n";
       startWhenNeeded = true;
       # RSA might be broken, make sure we use ed25519 keys
       # https://www.schneier.com/blog/archives/2023/01/breaking-rsa-with-a-quantum-computer.html
@@ -93,6 +92,7 @@
         type = "ed25519";
       }];
       settings = {
+        Banner = "${pkgs.writeText "banner" "This system runs on free software and spite.\n"}";
         PermitRootLogin = "no";
         # TODO: ssh-keygen -A at boot so these get generated while still using startWhenNeeded?
         # Maybe should always pregen when setting up a new system because will be using agenix later so this is irrelevant
