@@ -28,38 +28,16 @@ in
   options.lun.wg-netns = with lib; {
     enable = mkEnableOption "Wireguard netns container";
 
-    privateKey = mkOption {
+    configFile = mkOption {
       type = types.str;
       description = ''
-        Wireguard private key for this host.
-      '';
-    };
-
-    peerPublicKey = mkOption {
-      type = types.str;
-      description = ''
-        Wireguard public key of the peer host.
-      '';
-    };
-
-    endpointAddr = mkOption {
-      type = types.str;
-      description = ''
-        IP:port of the Wireguard endpoint to connect to.
-      '';
-    };
-
-    ip4 = mkOption {
-      type = types.str;
-      description = ''
-        Local IPv4 of this host on the Wireguard interface.
-      '';
-    };
-
-    ip6 = mkOption {
-      type = types.str;
-      description = ''
-        Local IPv6 of this host on the Wireguard interface.
+        Path to an env file sourced at runtime containing WG configuration.
+        Expected variables:
+          PRIVATE_KEY - path to the wireguard private key file
+          PEER_PUBLIC_KEY - public key of the wireguard peer
+          ENDPOINT_ADDR - IP:port of the wireguard endpoint
+          IP4 - local IPv4 with prefix (e.g. 10.0.0.1/32)
+          IP6 - local IPv6 with prefix
       '';
     };
 
@@ -158,6 +136,7 @@ in
               Type = "oneshot";
               RemainAfterExit = true;
               ExecStart = pkgs.writers.writeDash "wireguard-up" ''
+                . '${cfg.configFile}'
                 ${ip} -n ${nsName} route del default dev ${ifName} || true
                 ${ip} -n ${nsName} -6 route del default dev ${ifName} || true
                 ${ip} route del default dev ${ifName} || true
@@ -168,14 +147,14 @@ in
                 set -xe
                 ${ip} link add ${ifName} type wireguard
                 ${pkgs.wireguard-tools}/bin/wg set ${ifName} \
-                    private-key '${cfg.privateKey}' \
-                    peer '${cfg.peerPublicKey}' \
-                    endpoint '${cfg.endpointAddr}' \
+                    private-key "$PRIVATE_KEY" \
+                    peer "$PEER_PUBLIC_KEY" \
+                    endpoint "$ENDPOINT_ADDR" \
                     allowed-ips '0.0.0.0/0,::0/0'
                 ${ip} link set ${ifName} netns ${nsName}
                 ${ip} -n ${nsName} link set ${ifName} up
-                ${ip} -n ${nsName} addr add ${cfg.ip4} dev ${ifName}
-                ${ip} -n ${nsName} -6 addr add ${cfg.ip6} dev ${ifName}
+                ${ip} -n ${nsName} addr add "$IP4" dev ${ifName}
+                ${ip} -n ${nsName} -6 addr add "$IP6" dev ${ifName}
                 ${ip} -n ${nsName} route add default dev ${ifName}
                 ${ip} -n ${nsName} -6 route add default dev ${ifName}
               '';

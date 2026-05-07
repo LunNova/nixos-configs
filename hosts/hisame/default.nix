@@ -327,25 +327,17 @@ in
     users.mutableUsers = false;
 
     # debugging: sudo ip -all netns exec wg show
-    # if 0b received probably need to refresh info below
     lun.wg-netns = {
       enable = true;
-
-      privateKey = "/persist/mullvad/priv.key";
-      peerPublicKey = "c3OgLZw8kh5k3lqACXIiShPGr8xcIfdrUs+qRW9zmk4=";
-      endpointAddr = "174.127.113.11:51820";
-      ip4 = "10.68.90.202/32";
-      ip6 = "fc00:bbbb:bbbb:bb01::5:5ac9/128";
-
+      configFile = "/persist/mullvad/wg.env";
       isolateServices = [ "transmission" ];
       forwardPorts = [ 9091 ];
-
-      # dns = [ "10.64.0.1" ];
     };
 
     services.transmission = let downloadBase = "/persist/transmission"; in
       {
         enable = true;
+        package = pkgs.transmission_4;
         # group = "nas";
 
         settings = {
