@@ -2,7 +2,6 @@
 system:
 let
   # Patches applied before importing nixpkgs
-  # Only applied to pkgs/nixpkgs input, not stable input
   pkgsPatches =
     if system == "x86_64-linux" then [
       # add .patch to a github PR URL to get a patch quickly
@@ -29,7 +28,6 @@ let
     # once there's patches support for flake inputs
     # https://github.com/NixOS/nix/pull/6530
     pkgs = flakeArgs.self.lib.mkPkgs flakeArgs.nixpkgs system pkgsPatches (defaultPkgsConfig // { inherit system; });
-    pkgs-stable = flakeArgs.self.lib.mkPkgs flakeArgs.nixpkgs-stable system [ ] (defaultPkgsConfig // { inherit system; });
     nixpkgsLib = flakeArgs.nixpkgs.lib.extend (_final: _prev: {
       nixosSystem = args:
         ((import "${perSystemSelf.pkgs}/nixos/lib/eval-config-minimal.nix" { inherit lib; }).evalModules (args // {
@@ -53,7 +51,7 @@ let
       specialArgs =
         {
           inherit flakeArgs;
-          inherit (perSystemSelf) pkgs pkgs-stable;
+          inherit (perSystemSelf) pkgs;
           nixpkgs-modules-path = "perSystemSelf.pkgs";
           nixos-hardware-modules-path = "${flakeArgs.nixos-hardware}";
         };
@@ -68,7 +66,6 @@ let
             config = {
               home-manager.extraSpecialArgs = {
                 inherit flakeArgs;
-                inherit (perSystemSelf) pkgs-stable;
                 lun-profiles = config.lun.profiles;
               };
               home-manager.useGlobalPkgs = true;
@@ -107,7 +104,6 @@ let
             check = true;
             extraSpecialArgs = {
               inherit flakeArgs;
-              inherit (perSystemSelf) pkgs-stable;
               nixosConfig = null;
               lun-profiles = {
                 graphical = true;
