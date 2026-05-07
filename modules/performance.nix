@@ -1,8 +1,8 @@
-_:
+{ config, ... }:
 {
   config = {
     boot.kernel.sysctl = {
-      "vm.swappiness" = 10;
+      "vm.swappiness" = if config.boot.zswap.enable then 15 else 10;
       # TODO: the higher default of 10% of RAM would be better here,
       # but it makes removable storage dangerous as it's a system wide setting
       # and there's no way to make the limit smaller for removable storeage
