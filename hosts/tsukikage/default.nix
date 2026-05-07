@@ -98,8 +98,7 @@ in
     };
 
     lun.persistence.enable = true;
-    zramSwap.enable = true;
-    zramSwap.memoryPercent = 20;
+    boot.zswap.enable = true;
     lun.virtualisation.enable = false;
     fileSystems = {
       "/" = {
