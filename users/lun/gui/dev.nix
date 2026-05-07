@@ -80,29 +80,30 @@ in
       ];
     };
 
-    services.activitywatch = {
-      enable = true;
-      package = pkgs.aw-server-rust;
-      watchers = {
-        aw-watcher-afk = {
-          package = pkgs.activitywatch;
-          settings = {
-            timeout = 30;
-            poll_time = 5;
-          };
-        };
+    # https://github.com/nix-community/home-manager/issues/5988
+    # services.activitywatch = {
+    #   enable = true;
+    #   package = pkgs.aw-server-rust;
+    #   watchers = {
+    #     aw-watcher-afk = {
+    #       package = pkgs.activitywatch;
+    #       settings = {
+    #         timeout = 30;
+    #         poll_time = 5;
+    #       };
+    #     };
 
-        aw-watcher-window = {
-          package = pkgs.activitywatch;
-          settings = {
-            aw-watcher-window = {
-              poll_time = 5.0;
-              exclude_title = false;
-            };
-          };
-        };
-      };
-    };
+    #     aw-watcher-window = {
+    #       package = pkgs.activitywatch;
+    #       settings = {
+    #         aw-watcher-window = {
+    #           poll_time = 5.0;
+    #           exclude_title = false;
+    #         };
+    #       };
+    #     };
+    #   };
+    # };
 
     services.ssh-agent.enable = true;
 
