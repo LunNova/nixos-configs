@@ -23,6 +23,7 @@ This folder contains information about our various hosts, mostly named after a J
 - `tsukiakari`: A CPU/inference server with an EPYC 7V13 64-core, 128-thread CPU and 6x32GB Instinct MI100 GPUs for CDNA1 testing. The name means «moonlight».
 - `tsukikage`: Similar to `tsukiakari` but Instinct MI210, for CDNA2 testing. The name means «moonlight shadow».
 - `murasame`: WIP. Transiently available and external, unlike the other lab devices. The name means «passing shower, sudden rain».  Typical deployment targets are nodes with: Instinct MI35⌷X for CDNA4 testing, MI300⌷ for CDNA3 testing. Thanks hotaisle.xyz and cloudrift.ai!
+- `kirisame`: ASUS PN50 mini-PC. Always-on services host. The name means «misty rain».
 - `router`: HP t740 thin client with SFP+ PCIe NIC. 
 - `builder`: minimal testcase with disko for image building, not deployed to any machine.
 
