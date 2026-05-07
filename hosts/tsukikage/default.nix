@@ -91,6 +91,12 @@ in
 
     users.mutableUsers = false;
     my.home-manager.enabled-users = [ "lun" ];
+    lun.k3s = {
+      enable = true;
+      role = "agent";
+      serverAddr = "https://hoshitsuki-nixos.home.moonstruck.dev:6443";
+    };
+
     lun.persistence.enable = true;
     zramSwap.enable = true;
     zramSwap.memoryPercent = 20;
