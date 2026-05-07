@@ -34,7 +34,7 @@
     services.earlyoom.freeSwapThreshold = 10;
 
     # PRINT
-    # lun.print.enable = true; # FIXME: cups never works right with long uptime / after nixos-rebuild ?
+    lun.print.enable = true;
 
     # XDG
     xdg.portal = {
