@@ -150,8 +150,7 @@ in
     lun.persistence.dirs = [
       "/var/lib/private/atticd"
     ];
-    zramSwap.enable = true;
-    zramSwap.memoryPercent = 15;
+    boot.zswap.enable = true;
     services.earlyoom.freeMemThreshold = 5;
     services.earlyoom.freeSwapThreshold = 10;
     fileSystems = {
