@@ -141,6 +141,11 @@ in
     ];
 
     nix.settings.cores = 18;
+    lun.k3s = {
+      enable = true;
+      role = "server";
+    };
+
     lun.persistence.enable = true;
     lun.persistence.dirs = [
       "/var/lib/private/atticd"
