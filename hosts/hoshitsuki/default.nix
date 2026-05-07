@@ -191,7 +191,7 @@ in
     swapDevices = [{
       device = "/persist/swapfile.swp";
       discardPolicy = "once";
-      size = 16384;
+      size = 32768;
     }];
     boot.resumeDevice = if (swap != null) then swap else "";
   };
