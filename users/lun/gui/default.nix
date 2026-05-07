@@ -1,4 +1,4 @@
-{ pkgs, lib, flakeArgs, lun-profiles, nixosConfig, ... }:
+{ pkgs, lib, lun-profiles, nixosConfig, ... }:
 {
   imports = [
     ./dev.nix
@@ -43,11 +43,10 @@
     ] ++
     lib.optionals ((pkgs.system == "x86_64-linux") && lun-profiles.personal or false) (with pkgs; [
       pinta # paint.net alternative
-      flakeArgs.nixpkgs-stable.legacyPackages.${pkgs.system}.calibre
+      calibre
       kdePackages.ark
     ] ++ lib.optionals (pkgs.system == "x86_64-linux") [
       google-chrome
-      # lun.wally # FIXME: webkitgtk dep on libsoup_2_4 marked insecure
     ]);
   };
 }

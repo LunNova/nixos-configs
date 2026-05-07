@@ -1,4 +1,4 @@
-{ pkgs, pkgs-stable, ... }:
+{ pkgs, ... }:
 {
   # workaround https://github.com/nix-community/home-manager/issues/2064#issuecomment-887300055
   systemd.user.targets.tray = {
@@ -34,7 +34,7 @@
 
   programs.firefox = {
     enable = true;
-    package = pkgs-stable.firefox-bin;
+    package = pkgs.firefox-bin;
   };
 
   programs.vscode = {
