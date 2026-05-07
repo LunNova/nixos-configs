@@ -115,7 +115,6 @@ let
 in
 {
   config = lib.mkIf (lun-profiles.personal or false) {
-    programs.zed-editor.enable = true;
     home.packages = [
       pkgs.code-cursor
       llm-agents.codex
