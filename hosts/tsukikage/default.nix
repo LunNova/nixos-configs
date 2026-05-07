@@ -15,11 +15,6 @@ in
     sconfig.machineId = "5c1f24e8505861694f34a3778509bf8f";
     system.stateVersion = "24.05";
 
-    hardware.graphics.extraPackages = with pkgs; [
-      #amdvlk
-      vulkan-loader
-    ];
-
     boot.loader.systemd-boot.consoleMode = "max";
     boot.kernelParams = [
       "nosplash"
