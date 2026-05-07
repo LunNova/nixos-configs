@@ -63,6 +63,11 @@ in
       "/var/lib/private/cellerd"
     ];
 
+    lun.k3s = {
+      enable = true;
+      role = "server";
+    };
+
     services.cellerd = {
       enable = true;
       package = flakeArgs.celler.packages.${pkgs.system}.celler;
