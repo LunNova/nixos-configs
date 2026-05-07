@@ -1013,11 +1013,11 @@
     "oisd": {
       "flake": false,
       "locked": {
-        "lastModified": 1778163110,
-        "narHash": "sha256-AvI/YnG6Z9AVDS69MkZb54Tus+dReDgRBP44THlZlTE=",
+        "lastModified": 1778164695,
+        "narHash": "sha256-ejgVmLtkrWsyYzmMxdsBWxwL0H+OtaCfKK/yX85l0Lo=",
         "owner": "sjhgvr",
         "repo": "oisd",
-        "rev": "f7d3855b3b13471e0551777061caeb15c13d09cb",
+        "rev": "fc58369af23bdf0430e0c717b2ca8a4a11c62c69",
         "type": "github"
       },
       "original": {
