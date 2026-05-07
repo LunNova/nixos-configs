@@ -127,7 +127,7 @@ in
           inherit name;
           value = {
             device = "${persistPath}${name}";
-            # fsType = "none";
+            fsType = "none";
             noCheck = true;
             # depends = [ "${persistPath}" ];
             options = [
